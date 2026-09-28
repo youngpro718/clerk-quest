@@ -743,6 +743,34 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .alert .btns .bold{font-weight:600}
 .alert .btns .destructive{color:#ff453a}
 
+
+/* ===== Phase 2 ===== */
+.row.q .q-claim{flex:none;min-height:36px;padding:0 16px;border-radius:18px;border:2px solid var(--ink);background:var(--mustard);color:var(--ink);font:700 15px var(--ui);box-shadow:0 3px 0 var(--ink)}
+.row.q .q-claim:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.row.q .q-reward{flex:none;font:600 13px var(--ui);color:var(--sub)}
+.row.q .q-done{flex:none;width:28px;height:28px;border-radius:14px;background:#3f8f4a;color:#fff;font:700 15px/28px var(--ui);text-align:center}
+.row.q.ready{background:linear-gradient(90deg,rgba(227,178,60,.14),transparent)}
+.row.q.claimed .row-main b{opacity:.6}
+.pill.gold{background:var(--mustard);color:var(--ink);border:2px solid var(--ink);font-weight:700}
+.reward{display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:10px}
+.reward img{height:150px;filter:drop-shadow(0 10px 14px rgba(0,0,0,.5))}
+.reward img.bob{animation:packidle 2.4s ease-in-out infinite}
+.reward p{margin:0;font:15px var(--ui);color:var(--sub)}
+.reward b{margin-top:6px;font-family:"Luckiest Guy";font-weight:400;font-size:22px;color:var(--mustard)}
+.acts.checks button{display:flex;align-items:center;justify-content:space-between}
+.acts.checks button span{color:var(--mustard);font-weight:700}
+.toggle-row{display:flex !important;align-items:center;justify-content:space-between}
+.sw{position:relative;flex:none;width:51px;height:31px;border-radius:16px;background:rgba(255,255,255,.18);transition:background .2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.3);transition:transform .2s}
+.sw.on{background:#34c759}
+.sw.on::after{transform:translateX(20px)}
+[data-lp]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.lp-pop{animation:lppop .25s ease}
+@keyframes lppop{50%{transform:scale(.94)}}
+.toast{position:fixed;left:50%;bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 14px);transform:translateX(-50%);z-index:99;padding:10px 18px;border-radius:22px;
+  background:rgba(40,36,31,.96);border:.5px solid var(--line);color:var(--paper);font:600 15px var(--ui);box-shadow:0 8px 24px rgba(0,0,0,.4);animation:toastin .25s cubic-bezier(.2,1.3,.4,1) both;white-space:nowrap}
+.toast.out{opacity:0;transition:opacity .35s}
+@keyframes toastin{from{transform:translate(-50%,20px);opacity:0}}
 </style>
 </head>
 <body>
@@ -1812,6 +1840,61 @@ function groupRow(g, label, icon, act = 'cards'){
     <span class="th emo gi">${icon}</span><span class="row-main"><b>${esc(label)}</b><small>${have} of ${list.length} collected</small>${pbar(have / Math.max(1, list.length))}</span>${chev}</button>`;
 }
 
+/* ---------- daily quests + milestones (every reward is a card pack) ---------- */
+const todayKey = () => { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
+function daily(){
+  if (!S.daily || S.daily.date !== todayKey()) S.daily = { date:todayKey(), sessions:0, correct:0, trick:0, claimed:{} };
+  return S.daily;
+}
+const DAILY_QUESTS = [
+  {id:'round', icon:'▶', label:'Finish a study round', need:1, get:d => d.sessions},
+  {id:'correct', icon:'✔', label:'Get 10 answers right', need:10, get:d => d.correct},
+  {id:'trick', icon:'🧠', label:'Get 3 Memory Trick answers right', need:3, get:d => d.trick},
+];
+const ownedCount = () => CARDS.filter(owned).length, masteredCount = () => CARDS.filter(c => S.cards[c.id].mastered).length;
+const MILESTONES = [
+  {id:'col5', icon:'🃏', label:'Collect 5 cards', need:5, get:ownedCount},
+  {id:'col15', icon:'🃏', label:'Collect 15 cards', need:15, get:ownedCount},
+  {id:'col25', icon:'🃏', label:'Collect 25 cards', need:25, get:ownedCount},
+  {id:'colall', icon:'👑', label:'Collect every card', need:() => CARDS.length, get:ownedCount},
+  {id:'master1', icon:'🏅', label:'Master a card', need:1, get:masteredCount},
+  {id:'master5', icon:'🏅', label:'Master 5 cards', need:5, get:masteredCount},
+  {id:'rounds5', icon:'▶', label:'Finish 5 study rounds', need:5, get:() => S.stats.sessions},
+  {id:'rounds25', icon:'▶', label:'Finish 25 study rounds', need:25, get:() => S.stats.sessions},
+  {id:'reopen', icon:'🧊', label:'Reopen a cold case', need:1, get:() => S.stats.reopened || 0},
+  {id:'packs10', icon:'🎁', label:'Open 10 packs', need:10, get:() => S.packsOpened},
+];
+const qNeed = q => typeof q.need === 'function' ? q.need() : q.need;
+function questState(q, kind){
+  const val = kind === 'daily' ? q.get(daily()) : q.get(), need = qNeed(q);
+  const claimed = kind === 'daily' ? !!daily().claimed[q.id] : !!(S.milestones || {})[q.id];
+  return { val:Math.min(val, need), need, done:val >= need, claimed };
+}
+const readyList = () => DAILY_QUESTS.filter(q => { const x = questState(q, 'daily'); return x.done && !x.claimed; }).map(q => ['daily', q])
+  .concat(MILESTONES.filter(q => { const x = questState(q, 'mile'); return x.done && !x.claimed; }).map(q => ['mile', q]));
+const claimableCount = () => readyList().length;
+function questRow(q, kind){
+  const x = questState(q, kind);
+  const btn = x.claimed ? `<span class="q-done">✓</span>`
+    : x.done ? `<button class="q-claim" data-act="claim" data-kind="${kind}" data-q="${q.id}">Claim</button>`
+    : `<span class="q-reward">🎁 +1</span>`;
+  return `<div class="row q ${x.claimed ? 'claimed' : ''} ${x.done && !x.claimed ? 'ready' : ''}"><span class="th emo gi">${q.icon}</span>
+    <span class="row-main"><b>${esc(q.label)}</b><small>${x.claimed ? 'Claimed' : x.val + ' / ' + x.need}</small>${x.claimed ? '' : pbar(x.val / x.need)}</span>${btn}</div>`;
+}
+function claimQuest(kind, id){
+  const q = (kind === 'daily' ? DAILY_QUESTS : MILESTONES).find(x => x.id === id); if (!q) return;
+  const x = questState(q, kind); if (!x.done || x.claimed) return;
+  if (kind === 'daily') daily().claimed[id] = true; else { S.milestones = S.milestones || {}; S.milestones[id] = true; }
+  S.packs++; save(); refresh();
+  openSheet(`<div class="reward"><img src="art/pack.webp" alt="" class="bob"><h3>Quest complete!</h3><p>${esc(q.label)}</p><b>+1 card pack</b></div>
+    <button class="btn-big gold" data-act="pack-open">🎁 OPEN IT NOW</button><button class="sheet-cancel" data-act="sheet-close">Later</button>`);
+}
+function toast(msg){
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.classList.add('out'), 1600); setTimeout(() => t.remove(), 2000);
+}
+
 /* ---------- screen definitions ---------- */
 const SCREENS = {
   home(){
@@ -1835,7 +1918,7 @@ const SCREENS = {
             <span class="hero-sub">${statusLine(target)}</span>${pbar(cardProgress(target))}
             <span class="hero-cta">${PLAY_ICON} ${isCold(tst) ? 'Reopen' : 'Study'}</span></span></button>` : ''}
         <div class="tiles">
-          <button class="tile2" data-act="tab" data-tab="profile">${ring((S.stats.xp % 250) / 250, 'L' + playerLevel(), 52, '#5fd47a')}<span><b>${playerTitle()}</b><small>${250 - S.stats.xp % 250} XP to Level ${playerLevel() + 1}</small></span></button>
+          <button class="tile2" data-act="tab" data-tab="quests">${ring(DAILY_QUESTS.filter(q => questState(q, 'daily').done).length / 3, DAILY_QUESTS.filter(q => questState(q, 'daily').done).length + '/3', 52, '#5fd47a')}<span><b>Daily Quests</b><small>${claimableCount() ? claimableCount() + ' reward' + (claimableCount() > 1 ? 's' : '') + ' ready' : 'Earn free packs'}</small></span>${claimableCount() ? `<i class="dot-badge">${claimableCount()}</i>` : ''}</button>
           <button class="tile2" data-act="push" data-s="packs"><img class="t-pack" src="${nextPackS2 ? 'art/pack_s2.webp' : 'art/pack.webp'}" alt=""><span><b>Packs</b><small>${S.packs ? S.packs + ' ready to open' : 'Study to earn more'}</small></span>${S.packs ? `<i class="dot-badge">${S.packs}</i>` : ''}</button>
           <button class="tile2" data-act="tab" data-tab="collection">${ring(ownedN / CARDS.length, ownedN + '', 52)}<span><b>Collection</b><small>${ownedN} of ${CARDS.length} cards</small></span></button>
           <button class="tile2 ${cold.length ? 'icy' : ''}" data-act="tab" data-tab="study"><span class="t-ico">${cold.length ? '🧊' : '🔥'}</span><span><b>${cold.length ? 'Cold Cases' : 'All Warm'}</b><small>${cold.length ? cold.length + ' to reopen' : 'Nothing going cold'}</small></span></button>
@@ -1887,7 +1970,7 @@ const SCREENS = {
   },
 
   cards(p){
-    const sort = 'num', showMissing = true;
+    const sort = nav.sort || 'num', showMissing = nav.showMissing !== false;
     let list = CARDS.filter(groupTest(p.g));
     const idx = c => CARDS.indexOf(c);
     const sorts = { num:(a, b) => idx(a) - idx(b), level:(a, b) => (S.cards[b.id].level - S.cards[a.id].level) || (cardProgress(b) - cardProgress(a)),
@@ -1895,6 +1978,7 @@ const SCREENS = {
     list = list.filter(c => showMissing || owned(c)).sort((a, b) => (owned(b) - owned(a)) || sorts[sort](a, b));
     return {
       title:groupLabel(p.g),
+      right:`<button class="nb-btn txt" data-act="sort-sheet">Sort</button>`,
       body:`<div class="cgrid">${list.map(c => owned(c)
         ? `<button class="gcard" data-act="push" data-s="card" data-id="${c.id}" data-lp="${c.id}">${cardEl(c, S.cards[c.id])}</button>`
         : `<button class="gcard" data-act="missing" data-id="${c.id}">${lockedCardHTML(c)}</button>`).join('')}</div>`,
@@ -1952,12 +2036,31 @@ const SCREENS = {
     return { title:'Packs', body:`
       <div class="packs-hero"><img src="${s2 ? 'art/pack_s2.webp' : 'art/pack.webp'}" alt="Clerk Quest card pack" class="${S.packs ? 'bob' : 'dim'}">
         <b>${S.packs ? S.packs + ' pack' + (S.packs > 1 ? 's' : '') + ' ready' : 'No packs right now'}</b>
-        <small>${S.packs ? (s2 ? 'Your next pack has Series 2 cards!' : 'Each pack has 3 cards.') : 'Finish a study round to earn one.'}</small></div>
+        <small>${S.packs ? (s2 ? 'Your next pack has Series 2 cards!' : 'Each pack has 3 cards.') : 'Finish a study round or a quest to earn one.'}</small></div>
       <button class="btn-big gold" data-act="pack-open" ${S.packs ? '' : 'disabled'}>🎁 OPEN A PACK</button>
       <div class="list" style="margin-top:18px">
         <div class="row"><span class="k">Packs opened</span><span class="v">${S.packsOpened}</span></div>
-        <div class="row"><span class="k">How to earn</span><span class="v">Finish study rounds</span></div>
+        <div class="row"><span class="k">How to earn</span><span class="v">Study rounds · Quests</span></div>
       </div>` };
+  },
+
+  quests(p){
+    const tab = p.tab || 'daily';
+    const now = new Date(), mid = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const hrs = Math.floor((mid - now) / 36e5), mins = Math.floor((mid - now) % 36e5 / 6e4);
+    const dDone = DAILY_QUESTS.filter(q => questState(q, 'daily').done).length;
+    const ready = claimableCount();
+    let body = `<div class="summary">${ring(dDone / DAILY_QUESTS.length, dDone + '/' + DAILY_QUESTS.length, 72, '#5fd47a')}
+        <span><b>${dDone === DAILY_QUESTS.length ? 'All daily quests done!' : 'Today\'s quests'}</b><small>New quests in ${hrs}h ${mins}m</small></span>
+        ${ready ? `<button class="pill gold" data-act="claim-all">Claim ${ready}</button>` : ''}</div>`;
+    body += `<div style="height:14px"></div>` + seg('tab', tab, [['daily', 'Daily'], ['mile', 'Milestones']]);
+    if (tab === 'daily') body += `<div class="list">${DAILY_QUESTS.map(q => questRow(q, 'daily')).join('')}</div><p class="foot">Every reward is a card pack.</p>`;
+    else {
+      const open = MILESTONES.filter(q => !questState(q, 'mile').claimed), done = MILESTONES.filter(q => questState(q, 'mile').claimed);
+      body += `<div class="list">${open.map(q => questRow(q, 'mile')).join('') || '<p class="empty">Every milestone claimed! 👑</p>'}</div>
+        ${done.length ? `<div class="sec-h"><span>Completed</span></div><div class="list">${done.map(q => questRow(q, 'mile')).join('')}</div>` : ''}`;
+    }
+    return { title:'Quests', body };
   },
 
   profile(){
@@ -2005,7 +2108,8 @@ const SCREENS = {
     return { title:'How to Play', body:`<div class="list">
       ${item('▶ Studying', 'Each round is 5 questions from one card. Correct answers earn XP. A hint (Sidebar) costs half the points. Wrong answers show the right answer and why.')}
       ${item('★ Levels & glows', 'Cards level up as you earn XP. Questions get harder and the art upgrades. Near the top level a neon ring races around the card; at the top it turns gold with a gloss.')}
-      ${item('🎁 Packs', 'Every finished study round gives a pack of 3 cards. New cards join your collection; duplicates give XP to the card you already own.')}
+      ${item('🏆 Quests', 'Three daily quests reset every midnight, and milestones reward long-term progress. Every reward is a card pack.')}
+      ${item('🎁 Packs', 'Every finished study round and every quest gives a pack of 3 cards. New cards join your collection; duplicates give XP to the card you already own.')}
       ${item('🧊 Cold cases', 'Cards you haven\'t studied in a while go cold (2 days at Level 1, up to 21 days when mastered). One correct answer reopens the case for a +' + COLD_BONUS + ' XP bonus.')}
       ${item('🧠 Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).')}
       ${item('② Series', 'Series 2 cards use a new art style and have their own pack wrapper.')}
@@ -2045,11 +2149,11 @@ const TAB_ICONS = {
   quests:'<path d="M8 4h12v4a6 6 0 0 1-12 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M20 6h3a3 3 0 0 1-3 4M14 14v5M10 23h8M11 19h6"/>',
   profile:'<circle cx="14" cy="10" r="4.5"/><path d="M5 24c1-5 4.5-7.5 9-7.5s8 2.5 9 7.5"/>',
 };
-const TABS = [['home', 'Home'], ['study', 'Study'], ['collection', 'Collection'], ['profile', 'Profile']];
+const TABS = [['home', 'Home'], ['study', 'Study'], ['collection', 'Collection'], ['quests', 'Quests'], ['profile', 'Profile']];
 function renderTabbar(){
   document.getElementById('tabbar').innerHTML = TABS.map(([id, label]) => `<button class="${nav.tab === id ? 'on' : ''}" data-act="tab" data-tab="${id}" aria-label="${label}" ${nav.tab === id ? 'aria-current="page"' : ''}>
     <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${TAB_ICONS[id]}</svg><span>${label}</span>
-    ${id === 'home' && S.packs && nav.tab !== 'home' ? `<i class="tbadge">${S.packs}</i>` : ''}</button>`).join('');
+    ${id === 'quests' && claimableCount() ? `<i class="tbadge">${claimableCount()}</i>` : ''}${id === 'home' && S.packs && nav.tab !== 'home' ? `<i class="tbadge">${S.packs}</i>` : ''}</button>`).join('');
 }
 
 /* ---------- navigation stacks ---------- */
@@ -2223,7 +2327,7 @@ function answer(v){
   let gain = 0;
   S.stats.answered++; sess.results[sess.i] = ok;
   if (ok) {
-    S.stats.correct++;
+    S.stats.correct++; daily().correct++; if (c.trickType) daily().trick++;
     gain = Math.round(REWARD[st.level-1] * (sess.hint ? .5 : 1));
     if (sess.wasCold && !sess.reopened) { sess.reopened = true; sess.justReopened = true; gain += COLD_BONUS; S.stats.reopened = (S.stats.reopened || 0) + 1; }
     st.last = Date.now();
@@ -2249,7 +2353,7 @@ function next(){
 }
 function advance(){
   sess.i++;
-  if (sess.i >= SESSION_LEN) { S.stats.sessions++; S.packs++; save(); return renderResults(); }
+  if (sess.i >= SESSION_LEN) { S.stats.sessions++; daily().sessions++; S.packs++; save(); return renderResults(); }
   const c = byId(sess.id);
   sess.q = nextQuestion(c, S.cards[sess.id].level, sess.used);
   sess.hint = false; sess.answered = null; sess.display = null;
@@ -2381,7 +2485,7 @@ function renderResults(){
       <h1>SESSION ADJOURNED</h1>
       <div class="score">${correct} / ${SESSION_LEN}</div>
       <div class="sub">correct answers</div>
-      <div class="rchips"><span class="chip">+${sess.xp} XP</span>${sess.reopened ? `<span class="chip" style="background:#bfe0ff">🔥 CASE REOPENED</span>` : ''}${leveled ? `<span class="chip">★ LEVEL ${sess.startLevel} → ${st.level}</span>` : ''}<span class="chip">🎁 +1 CARD PACK</span></div>
+      <div class="rchips"><span class="chip">+${sess.xp} XP</span>${claimableCount() ? `<span class="chip" style="background:#bfe8c4">🏆 QUEST REWARD READY</span>` : ''}${sess.reopened ? `<span class="chip" style="background:#bfe0ff">🔥 CASE REOPENED</span>` : ''}${leveled ? `<span class="chip">★ LEVEL ${sess.startLevel} → ${st.level}</span>` : ''}<span class="chip">🎁 +1 CARD PACK</span></div>
       <div class="rcard">${cardEl(c, st)}</div>
       <div class="panel">
         <b>${esc(c.name)}</b> · Level ${st.level}
@@ -2426,6 +2530,13 @@ function iosAlert({title, msg = '', buttons}){
     document.body.appendChild(w); lockScroll();
   });
 }
+function sortSheet(){
+  const cur = nav.sort || 'num', showMissing = nav.showMissing !== false;
+  const opt = (v, label) => `<button data-act="sort" data-v="${v}" class="${cur === v ? 'on' : ''}">${label}<span>${cur === v ? '✓' : ''}</span></button>`;
+  openSheet(`<h3>Sort Cards</h3><div class="acts checks">${opt('num', 'Card number')}${opt('level', 'Level, highest first')}${opt('name', 'Name, A–Z')}${opt('recent', 'Recently studied')}</div>
+    <div class="acts" style="margin-top:12px"><button class="toggle-row" data-act="toggle-missing" role="switch" aria-checked="${showMissing}">Show undiscovered cards<i class="sw ${showMissing ? 'on' : ''}"></i></button></div>
+    <button class="sheet-cancel" data-act="sheet-close">Done</button>`);
+}
 function cardMenu(id){
   const c = byId(id), st = S.cards[id];
   openSheet(`<div class="sh-head">${thumb(c)}<span><b>${esc(c.name)}</b><small>${statusLine(c)}</small></span></div>
@@ -2469,6 +2580,22 @@ function closeSessionLayer(){
   app.hidden = true; app.innerHTML = ''; sess = null; view = {name:'home'}; unlockScroll();
   refresh(); return true;
 }
+
+/* ================= LONG PRESS: card action menu ================= */
+(function longPress(){
+  let timer = null, start = null, fired = false;
+  document.addEventListener('pointerdown', e => {
+    const t = e.target.closest('[data-lp]'); if (!t) return;
+    fired = false; start = [e.clientX, e.clientY];
+    timer = setTimeout(() => { timer = null; fired = true; t.classList.add('lp-pop'); setTimeout(() => t.classList.remove('lp-pop'), 250); cardMenu(t.dataset.lp); }, 480);
+  });
+  const cancel = () => { clearTimeout(timer); timer = null; };
+  document.addEventListener('pointerup', cancel); document.addEventListener('pointercancel', cancel);
+  document.addEventListener('pointermove', e => { if (timer && start && Math.hypot(e.clientX - start[0], e.clientY - start[1]) > 10) cancel(); });
+  document.addEventListener('contextmenu', e => { if (e.target.closest('[data-lp]')) e.preventDefault(); });
+  // a long press must not also count as a tap
+  document.addEventListener('click', e => { if (fired && e.target.closest('[data-lp]')) { fired = false; e.stopImmediatePropagation(); e.preventDefault(); } }, true);
+})();
 
 /* ================= BACK / SWIPE-BACK ================= */
 // Every push, study round, and pack adds one history entry, so iPhone swipe-back and the Back button agree.
@@ -2568,9 +2695,15 @@ document.addEventListener('click', e => {
       save(); const en = topEntry(); if (en.p) delete en.p.preview;
       showLevelUp(id, pl, () => refresh()); break;
     }
-    case 't-cold': { closeSheet(true); const st = S.cards[id]; st.last = Date.now() - coldAfter(st) - DAY; save(); refresh(); break; }
-    case 't-reset': { closeSheet(true); Object.assign(S.cards[id], {level:1, xp:0, mastered:false}); save(); const en = topEntry(); if (en.p) delete en.p.preview; refresh(); break; }
-    case 't-pack': S.packs++; save(); refresh(); break;
+    case 't-cold': { closeSheet(true); const st = S.cards[id]; st.last = Date.now() - coldAfter(st) - DAY; save(); refresh(); toast('🧊 Card went cold'); break; }
+    case 't-reset': { closeSheet(true); Object.assign(S.cards[id], {level:1, xp:0, mastered:false}); save(); const en = topEntry(); if (en.p) delete en.p.preview; refresh(); toast('↺ Card reset to Level 1'); break; }
+    case 't-pack': S.packs++; save(); refresh(); toast('🎁 Test pack added'); break;
+    case 'claim': claimQuest(t.dataset.kind, t.dataset.q); break;
+    case 'claim-all': { const list = readyList(); list.forEach(([k, q]) => { if (k === 'daily') daily().claimed[q.id] = true; else { S.milestones = S.milestones || {}; S.milestones[q.id] = true; } });
+      S.packs += list.length; save(); refresh(); toast(`🎁 +${list.length} pack${list.length > 1 ? 's' : ''} claimed`); break; }
+    case 'sort-sheet': sortSheet(); break;
+    case 'sort': nav.sort = t.dataset.v; refresh(); sortSheet(); break;
+    case 'toggle-missing': nav.showMissing = nav.showMissing === false; refresh(); sortSheet(); break;
     case 'resetall':
       iosAlert({title:'Reset all progress?', msg:'Every card, level, and pack on this device will be erased. This can\'t be undone.',
         buttons:[{label:'Cancel', value:false, style:'bold'}, {label:'Reset', value:true, style:'destructive'}]})
