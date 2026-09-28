@@ -234,7 +234,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .casefile .from{margin-bottom:var(--line)}
 .casefile .readbtn{display:block;width:100%;min-height:48px;border:2px solid var(--ink);border-radius:12px;background:#f3d27a;font:inherit;color:var(--ink);cursor:pointer}
 .casefile .readbtn.done{background:#cfe6c8}
-.explain .rlink{margin-top:1.4cqw;padding:1.2cqw 2.8cqw;border:.4cqw solid var(--ink);border-radius:1.6cqw;background:#f3d27a;font:inherit;font-size:3.4cqw;color:var(--ink);cursor:pointer}
+.explain .rlink{margin:0 0 1.4cqw;padding:1.2cqw 2.8cqw;border:.4cqw solid var(--ink);border-radius:1.6cqw;background:#f3d27a;font:inherit;font-size:3.4cqw;color:var(--ink);cursor:pointer}
 .explain{cursor:pointer}
 .explain .tapnext{margin:1.6cqw 0 0;text-align:right;font-family:"Bangers";letter-spacing:.06em;font-size:3.4cqw;opacity:.55}
 .explain .cite{font-family:"Courier Prime";font-size:3.2cqw;opacity:.75;margin-top:1cqw}
@@ -564,6 +564,7 @@ body{overflow:hidden;background:var(--bg)}
 .nb-back{display:flex;align-items:center;gap:4px;background:none;border:0;color:var(--mustard);font:17px var(--ui);min-height:44px;padding:0 8px 0 4px;max-width:40vw}
 .nb-back svg{width:12px;height:20px;flex:none}
 .nb-back span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen.scrolled .navbar.tight .nb-back span,.screen.nolarge .navbar.tight .nb-back span{display:none}
 .nb-btn{position:relative;min-width:38px;height:38px;padding:0 10px;border-radius:19px;border:0;background:rgba(255,255,255,.09);color:var(--paper);font:600 16px var(--ui)}
 .nb-avatar{background:none;border:0;padding:0;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
 .scr{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:0 16px 28px}
@@ -1509,7 +1510,7 @@ const READ_XP = 10;   // player XP for reading a card's case file the first time
 function frameFor(c, lv){
   if (c.trickType) return 'art/frame_trick.webp';
   const max = maxL(c);
-  if (lv === max) return 'premiumart/frame_base.webp';
+  if (lv === max) return 'art/frame_premium.webp';
   if ((max === 3 && lv === 2) || (max === 5 && lv >= 3)) return 'art/frame_mid.webp';
   return 'art/frame_base.webp';
 }
@@ -2225,6 +2226,8 @@ function showScreen(dir = 'none'){
   const el = buildScreen(topEntry());
   box.appendChild(el); el.classList.add('current');
   const scr = el.querySelector('.scr'); scr.scrollTop = topEntry().scroll || 0; el.classList.toggle('scrolled', scr.scrollTop > 28);
+  const nbBack = el.querySelector('.nb-back'), nbTitle = el.querySelector('.nb-title');
+  if (nbBack && nbBack.getBoundingClientRect().right > nbTitle.getBoundingClientRect().left) el.querySelector('.navbar').classList.add('tight');
   if (old) old.classList.remove('current');
   const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (old && dir !== 'none' && !reduce && el.animate) {
@@ -2334,12 +2337,16 @@ function paintStudy(anim){
       <div class="explain" data-act="next" style="${PB(58,1218,966,1688)}">
         <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +${ans.gain} XP` : 'Overruled. Not quite.'}</h3>
         ${ans.reopened ? `<p class="reopen"><img src="art/stamp_reopened.webp" alt="Case reopened"><span>Includes a +${COLD_BONUS} XP cold-case bonus.</span></p>` : ''}
+        ${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}
         ${ans.ok ? '' : `<p><b>Correct answer:</b> ${esc(q.a)}</p>`}
         ${q.raw ? q.w : `<p>${esc(q.w)}</p>`}
         ${c.source ? `<p class="cite">Source: ${esc(c.source.cite)}</p>` : ''}
-        ${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}
         <p class="tapnext">Tap here to continue ▸</p>
       </div>` : ''}`;
+  back.querySelectorAll('.ans').forEach(b => {
+    const a = b.querySelector('.A'); let f = parseFloat(a.style.fontSize);
+    while (a.scrollHeight > b.clientHeight - 2 && f > 2.4) { f -= .1; a.style.fontSize = f + 'cqw'; }
+  });
   // dots + xp chip
   document.getElementById('dots').innerHTML = Array.from({length:SESSION_LEN},(_,i)=>{
     const r = sess.results[i]; return `<i class="${r===true?'ok':r===false?'no':''} ${i===sess.i?'cur':''}"></i>`; }).join('');
@@ -2655,6 +2662,11 @@ function openCaseFile(id){
   const en = topEntry();
   if (en && en.s === 'card' && en.p.id === id) { en.p = Object.assign({}, en.p, {tab:'rule'}); refresh(); }
   else push('card', {id, tab:'rule'});
+  // Scroll to the tabs; again once the card art loads, since the page is too short to scroll until then.
+  const scr = currentScreenEl().querySelector('.scr'), tabs = scr.querySelector('.seg');
+  if (!tabs) return;
+  const jump = () => { scr.scrollTop += tabs.getBoundingClientRect().top - scr.getBoundingClientRect().top - 8; };
+  jump(); scr.querySelectorAll('img').forEach(i => { if (!i.complete) i.addEventListener('load', jump, {once:true}); });
 }
 /* Edge swipe-back that follows your finger (works in Safari and in the Home Screen app). */
 (function edgeSwipe(){
@@ -2773,7 +2785,7 @@ probeArt().then(() => {
   showScreen('none');
 });
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.
-['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','premiumart/frame_base.webp','art/frame_trick.webp','art/frame_frost.webp','art/cardback.webp','art/answer_button.webp']
+['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_frost.webp','art/cardback.webp','art/answer_button.webp']
   .forEach(src => { const i = new Image(); i.src = src; if (i.decode) i.decode().catch(() => {}); });
 </script>
 </body>
