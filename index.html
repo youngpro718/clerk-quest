@@ -778,6 +778,8 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <div id="app" hidden></div>
 <div class="flash" id="flash"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<script src="cloud-sync.js"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
@@ -1474,7 +1476,7 @@ const TRICK_TYPES = { chain:{label:'Chain Trick', blurb:'Teaches the order of st
 function frameFor(c, lv){
   if (c.trickType) return 'art/frame_trick.webp';
   const max = maxL(c);
-  if (lv === max) return 'premiumart/frame_base.webp';
+  if (lv === max) return 'art/frame_premium.webp';
   if ((max === 3 && lv === 2) || (max === 5 && lv >= 3)) return 'art/frame_mid.webp';
   return 'art/frame_base.webp';
 }
@@ -1500,7 +1502,10 @@ function normalize(s){
 }
 let S;
 try { S = normalize(JSON.parse(localStorage.getItem(KEY))); } catch(e){ S = normalize(null); }
-function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){}
+  if (window.CQCloud) { CQCloud.markLocalUpdated(); CQCloud.queuePush(); }
+}
 
 /* ================= ART LOOKUP =================
    Drop files named art/<card>_<level>.webp (or .jpg/.webp) into the art folder.
@@ -2118,7 +2123,16 @@ const SCREENS = {
   },
 
   settings(){
+    const cloudUser = window.CQCloud?.getUser();
     return { title:'Settings', body:`
+      <div class="sec-h"><span>Account & cloud save</span></div>
+      <div class="list">
+        ${cloudUser
+          ? `<div class="row"><span class="th emo gi">☁️</span><span class="row-main"><b>Cloud save on</b><small>${esc(cloudUser.email || 'Signed in')}</small></span></div>
+             <button class="row" data-act="cloud-sync"><span class="th emo gi">🔄</span><span class="row-main"><b>Sync now</b></span></button>
+             <button class="row" data-act="cloud-signout"><span class="th emo gi">↪️</span><span class="row-main"><b>Sign out</b></span></button>`
+          : `<button class="row" data-act="cloud-signin"><span class="th emo gi">☁️</span><span class="row-main"><b>Sign in to save progress</b><small>Keep your cards across devices</small></span>${chev}</button>`}
+      </div>
       <div class="list">
         <button class="row" data-act="a2hs-show"><span class="th emo gi">📲</span><span class="row-main"><b>Add to Home Screen</b><small>${isStandalone() ? 'Already installed' : 'Play full screen like an app'}</small></span>${chev}</button>
         <button class="row" data-act="push" data-s="glows"><span class="th emo gi">✨</span><span class="row-main"><b>Glow tiers preview</b></span>${chev}</button>
@@ -2686,6 +2700,20 @@ document.addEventListener('click', e => {
     case 'missing': missingSheet(id); break;
     case 'sheet-close': closeSheet(); break;
     case 'a2hs-show': a2hsSheet(); break;
+    case 'cloud-signin': {
+      const email = window.prompt('Email for your Clerk Quest sign-in link:');
+      if (!email) break;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { toast('Enter a valid email address'); break; }
+      CQCloud.signIn(email.trim()).then(() => toast('Check your email for the sign-in link'))
+        .catch(err => toast(err.message || 'Could not send sign-in link'));
+      break;
+    }
+    case 'cloud-signout':
+      CQCloud.signOut().catch(err => toast(err.message || 'Could not sign out')); break;
+    case 'cloud-sync':
+      CQCloud.pushNow().then(() => toast('☁️ Progress synced'))
+        .catch(err => toast(err.message || 'Sync failed. Progress is saved on this device.'));
+      break;
     case 'a2hs-close': try { localStorage.setItem('cq-a2hs', '1'); } catch(err){} closeSheet(); refresh(); break;
     case 't-level': {
       closeSheet(true);
@@ -2713,13 +2741,19 @@ document.addEventListener('click', e => {
 });
 
 /* ================= START ================= */
-probeArt().then(() => {
+probeArt().then(async () => {
+  try { if (window.CQCloud) await CQCloud.init(); }
+  catch (error) { console.warn('Cloud save unavailable:', error); }
   if (/[?&]demo=glows/.test(location.search)) { nav.tab = 'profile'; nav.stacks.profile = [{s:'profile', p:{}}, {s:'glows', p:{}}]; }
   history.replaceState({}, '');
   showScreen('none');
 });
+window.addEventListener('cq-cloud', e => {
+  if (e.detail.status === 'error') toast('Cloud sync paused. Progress is saved on this device.');
+  if (nav.tab === 'profile') refresh();
+});
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.
-['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','premiumart/frame_base.webp','art/frame_trick.webp','art/frame_frost.webp','art/cardback.webp','art/answer_button.webp']
+['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_frost.webp','art/cardback.webp','art/answer_button.webp']
   .forEach(src => { const i = new Image(); i.src = src; if (i.decode) i.decode().catch(() => {}); });
 </script>
 </body>
