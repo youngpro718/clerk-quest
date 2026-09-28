@@ -150,11 +150,22 @@ button{font:inherit;color:inherit;cursor:pointer}
 .ra-step b{font-family:"Luckiest Guy";font-weight:400;font-size:13cqw;line-height:1;color:#7b4bb5;-webkit-text-stroke:.3cqw var(--ink);paint-order:stroke fill}
 .ra-step span{font-family:"Luckiest Guy";font-size:3.2cqw;letter-spacing:.03em}
 .ra-step small{font-family:"Patrick Hand";font-size:2.9cqw;line-height:1.05}
+.ra-clock.n3{gap:.4cqw}
+.ra-clock.n3 .ra-step{width:19cqw}
+.ra-clock.n3 .ra-step b{font-size:8.5cqw}
+.ra-clock.n3 .ra-step span{font-size:2.8cqw}
+.ra-clock.n3 .ra-step small{font-size:2.4cqw}
+.ra-clock.n3 .ra-arrow{font-size:5cqw}
 .ra-arrow{font-family:"Luckiest Guy";font-size:8cqw;color:var(--brick)}
 .ra-trig{display:flex;flex-direction:column;align-items:center;gap:.6cqw;width:100%}
 .ra-box{font-family:"Patrick Hand";font-size:3.4cqw;background:#fff7d6;border:.35cqw solid var(--ink);border-radius:1.2cqw;padding:1cqw 2.4cqw;text-align:center;width:88%}
 .ra-box b{font-family:"Luckiest Guy";font-weight:400;letter-spacing:.03em;color:#7b4bb5}
 .ra-down{font-family:"Luckiest Guy";font-size:4.6cqw;line-height:1;color:var(--brick)}
+.ra-diff{display:grid;grid-template-columns:1fr 1fr;gap:1.4cqw;width:100%}
+.ra-col{display:flex;flex-direction:column;gap:.5cqw;border:.35cqw solid var(--ink);border-radius:1.2cqw;padding:1cqw;text-align:center}
+.ra-col b{font-family:"Luckiest Guy";font-weight:400;font-size:3.3cqw}
+.ra-col span{font-family:"Patrick Hand";font-size:2.7cqw;line-height:1.05}
+.ra-col.yes{background:#dff0d4;color:#1f5a26} .ra-col.no{background:#f7d6cf;color:#7a1f14}
 .rulebox{background:#fbf6e8;border:2px solid var(--ink);border-radius:12px;padding:12px 14px}
 .rulebox .cite{font-family:"Courier Prime";font-weight:700;font-size:17px}
 .rulebox blockquote{margin:8px 0;padding:8px 12px;border-left:4px solid #7b4bb5;background:#f1e9ff;font-size:17px;line-height:1.3}
@@ -203,6 +214,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .pk-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .pk-front{transform:rotateY(180deg)}
 .pk-card:not(.flipped) .pk-front,.pk-card.flipped .pk-back{pointer-events:none}
+.pk-face{transition:visibility 0s linear .32s}
+.pk-card:not(.flipped) .pk-front,.pk-card.flipped .pk-back{visibility:hidden}
 .cbackimg{width:100%;height:100%;object-fit:cover;border-radius:6%/4%;filter:drop-shadow(0 10px 14px rgba(0,0,0,.55))}
 .pk-badge{position:absolute;left:50%;top:-12px;translate:-50% 0;z-index:9;font-family:"Bangers";letter-spacing:.06em;font-size:clamp(13px,3.4vw,18px);padding:3px 10px;border:2px solid var(--ink);border-radius:999px;white-space:nowrap;opacity:0;transition:opacity .3s .45s;color:var(--ink)}
 .pk-card.flipped .pk-badge{opacity:1}
@@ -320,6 +333,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* only the side facing the player can be tapped */
 .flip:not(.flipped) .face.back, .flip.flipped .face.front{pointer-events:none}
 .flip.flipped .face.back{z-index:2}
+.face{transition:visibility 0s linear .4s}
+.flip:not(.flipped) .face.back, .flip.flipped .face.front{visibility:hidden}
+.face > .card, .pk-face > *{-webkit-transform:translateZ(0);transform:translateZ(0)}
 .below{width:var(--cw);margin:16px auto 0;min-height:64px}
 .tans{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px}
 .tans button{min-height:60px;border:3px solid var(--ink);border-radius:14px;background:var(--paper);color:var(--ink);font-family:"Luckiest Guy";font-size:28px;box-shadow:0 5px 0 var(--ink)}
@@ -727,6 +743,146 @@ CARDS.push(
   },
 );
 
+/* Official-rule batch 2. Same rule: every fact comes from the rule text quoted in the
+   official sample-question answer key. Nothing beyond the quoted text. */
+const CUSTODY = ['Custody proceeding','NOT a custody proceeding'];
+CARDS.push(
+  {
+    id:'eightdays', art:'eightdays', num:'★07', l1:'8 DAYS', l2:'BEFORE', name:'8 Days Before', emoji:'📬',
+    category:'MEMORY TRICK', set:'FAMILY COURT ACT', rarity:'uncommon', trickType:'clock', icon:'court', maxLevel:3,
+    quote:'Serve it 8 days\nbefore you appear.',
+    source:{ cite:'FCA § 427(a)', quote:'Personal service of a summons and petition may be made by delivery of a true copy thereof to the person summoned at least eight days before the time stated therein for appearance; or by delivery of a true copy thereof to a person of suitable age and discretion at the actual place of business, dwelling place or usual place of abode of the person to be served and by mailing a true copy thereof to the person to be served at his last known residence at least eight days before the time stated in the summons for appearance; proof of service shall identify such person of suitable age and discretion and state the date, time and place of service.', from:OFFICIAL + ', Q2',
+      context:'Family Court Act Article 4: service of a summons and petition.' },
+    hook:'Count BACK from the appearance date: at least 8 days. Same 8 days whether you hand it to the person, or leave it with someone of suitable age AND mail a copy.',
+    panel:{ kind:'clock', steps:[ {n:'8', label:'DAYS BEFORE', from:'the appearance date in the summons'} ], caption:'Serve the summons & petition' },
+    lore:['Eight days. Not seven. Not "about a week."','Leave it with someone? Mail a copy too.','Count backward from the appearance date.'],
+    stickers:{},
+    bank:[
+      {lv:1,q:'Under FCA § 427(a), personal delivery of the summons and petition must be made at least how many days before the appearance date?',c:['8','13','15','30'],a:'8',h:'Eight.',w:'FCA § 427(a): delivery "at least eight days before the time stated therein for appearance."'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: Under FCA § 427(a), service may be made by leaving a copy with a person of suitable age and discretion at the home or business AND mailing a copy to the last known residence.',c:['True','False'],a:'True',h:'Two steps: leave it and mail it.',w:'True. That is the second method in FCA § 427(a), with the same 8-day deadline.'},
+      {lv:1,q:'The 8 days in FCA § 427(a) are counted back from:',c:['The time stated in the summons for appearance','The date the petition was filed','The date the copy was mailed','The end of the hearing'],a:'The time stated in the summons for appearance',h:'Count back from the appearance date.',w:'Service must be made "at least eight days before the time stated in the summons for appearance."'},
+      {lv:2,q:'With "suitable age and discretion" service under FCA § 427(a), what ELSE must happen besides leaving a copy?',c:['Mailing a true copy to the last known residence','Filing a copy with probation','Publishing a notice in a newspaper','Calling the person by phone'],a:'Mailing a true copy to the last known residence',h:'Leave it AND…',w:'FCA § 427(a) requires delivery to the person of suitable age and discretion and mailing a true copy to the last known residence.'},
+      {lv:2,q:'For suitable-age service, what must the proof of service include under FCA § 427(a)?',c:['Who the person of suitable age was, and the date, time, and place of service','Only the date of mailing','The judge\'s signature','The respondent\'s employer'],a:'Who the person of suitable age was, and the date, time, and place of service',h:'Who, when, and where.',w:'"Proof of service shall identify such person of suitable age and discretion and state the date, time and place of service."'},
+      {lv:2,q:'Exam format. Under FCA Article 4, suitable-age delivery plus mailing must be done at least how many days before the time stated in the summons for appearance?',c:['8 days','13 days','15 days','30 days'],a:'8 days',h:'Same as personal delivery.',w:'Both methods in FCA § 427(a) share the same deadline: at least eight days before the appearance.'},
+      {lv:3,q:'The appearance is set for the 20th. The summons and petition are handed to the respondent on the 15th. Is that timely under FCA § 427(a)?',c:['No. It must be at least 8 days before the appearance','Yes. Any time before the appearance works','Yes. 5 days is enough','No. It must be at least 30 days before'],a:'No. It must be at least 8 days before the appearance',h:'Is 5 days at least 8?',w:'Only 5 days before the appearance is too late. FCA § 427(a) requires at least eight days.'},
+      {lv:3,q:'A server leaves the papers with an adult relative at the respondent\'s home 10 days before the appearance, but never mails a copy. What is missing?',c:['Mailing a true copy to the last known residence','Nothing, 10 days is enough','The respondent\'s signature','A second delivery 8 days later'],a:'Mailing a true copy to the last known residence',h:'The second method has two parts.',w:'Suitable-age service under FCA § 427(a) also requires mailing a true copy to the last known residence.'},
+      {lv:3,q:'FIND THE INCORRECT STATEMENT about FCA § 427(a).',c:['Suitable-age service has a shorter deadline than personal delivery','Personal delivery must be at least 8 days before appearance','Suitable-age service requires mailing a copy too','Proof of service must state the date, time, and place'],a:'Suitable-age service has a shorter deadline than personal delivery',h:'Compare the two deadlines.',w:'Both methods have the same deadline: at least eight days before the appearance.'},
+    ],
+  },
+  {
+    id:'sealed', art:'sealed', num:'★08', l1:'SEALED', l2:'IN YOUR FAVOR', name:'Sealed in Your Favor', emoji:'🔏',
+    category:'MEMORY TRICK', set:'CRIMINAL PROCEDURE', rarity:'uncommon', trickType:'trigger', icon:'court', maxLevel:3,
+    quote:'Case ends in your\nfavor? Seal it.',
+    source:{ cite:'CPL § 160.50(1)', quote:'Upon the termination of a criminal action or proceeding against a person in favor of such person, as defined in subdivision three of this section, unless the district attorney upon motion with not less than five days notice to such person or his or her attorney demonstrates to the satisfaction of the court that the interests of justice require otherwise, or the court on its own motion with not less than five days notice to such person or his or her attorney determines that the interests of justice require otherwise and states the reasons for such determination on the record, the record of such action or proceeding shall be sealed and the clerk of the court wherein such criminal action or proceeding was terminated shall immediately notify the commissioner of the division of criminal justice services and the heads of all appropriate police departments and other law enforcement agencies that the action has been terminated in favor of the accused, and unless the court has directed otherwise, that the record of such action or proceeding shall be sealed.', from:OFFICIAL + ', Q10',
+      context:'Termination of a criminal action in favor of the accused (as defined in subdivision 3).' },
+    hook:'IF the case ends in the person\'s favor → THEN the record is SEALED → and the CLERK IMMEDIATELY notifies DCJS and police. The only way around it: a motion with at least 5 DAYS\' notice.',
+    panel:{ kind:'trigger', steps:['CASE ENDS IN YOUR FAVOR','RECORD SEALED','CLERK NOTIFIES DCJS + POLICE'], caption:'Unless: motion + 5 days\' notice' },
+    lore:['Win the case, lose the paper trail.','The clerk doesn\'t wait. "Immediately" means immediately.','Five days\' notice. No shortcuts.'],
+    stickers:{},
+    bank:[
+      {lv:1,q:'Under CPL § 160.50(1), when a criminal action ends in favor of the accused, what normally happens to the record?',c:['It is sealed','It is published','It is sent to the jury','It stays open for one year'],a:'It is sealed',h:'Look at the card title.',w:'Unless the interests-of-justice exception applies, "the record of such action or proceeding shall be sealed."'},
+      {lv:1,q:'Under CPL § 160.50(1), who IMMEDIATELY notifies DCJS and the police that the action ended in favor of the accused?',c:['The clerk of the court where it ended','The district attorney','The defense attorney','The probation department'],a:'The clerk of the court where it ended',h:'That could be you.',w:'"…the clerk of the court wherein such criminal action or proceeding was terminated shall immediately notify…"'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: Under CPL § 160.50(1), sealing can be avoided if the DA (on motion) or the court shows the interests of justice require otherwise.',c:['True','False'],a:'True',h:'There is one exception.',w:'True. The DA on motion, or the court on its own motion, may show the interests of justice require otherwise, with at least 5 days\' notice.'},
+      {lv:2,q:'If the DA moves to keep a favorably terminated record from being sealed, how much notice must the person or their attorney get?',c:['Not less than 5 days','7 days','10 days','14 days'],a:'Not less than 5 days',h:'Five.',w:'CPL § 160.50(1): "upon motion with not less than five days notice to such person or his or her attorney."'},
+      {lv:2,q:'Under CPL § 160.50(1), whom does the clerk notify?',c:['The commissioner of DCJS and the heads of appropriate police departments and law enforcement agencies','The victim and the press','The jury','The defendant\'s employer'],a:'The commissioner of DCJS and the heads of appropriate police departments and law enforcement agencies',h:'The people who keep criminal records.',w:'The clerk notifies "the commissioner of the division of criminal justice services and the heads of all appropriate police departments and other law enforcement agencies."'},
+      {lv:2,q:'If the COURT, on its own motion, decides the record should not be sealed, what must it do?',c:['Give not less than 5 days\' notice and state its reasons on the record','Nothing else','Get the jury\'s consent','Notify the defendant\'s school'],a:'Give not less than 5 days\' notice and state its reasons on the record',h:'Notice, plus reasons.',w:'The court must act "with not less than five days notice" and "state the reasons for such determination on the record."'},
+      {lv:3,q:'Which sequence matches CPL § 160.50(1) when no exception applies?',c:['Case ends in favor of the accused → record sealed → clerk immediately notifies DCJS and police','Record sealed → case ends → clerk notifies the jury','Case ends → clerk waits 30 days → record sealed','Case ends → record published → DA notifies police'],a:'Case ends in favor of the accused → record sealed → clerk immediately notifies DCJS and police',h:'IF → THEN → THEN.',w:'Termination in favor triggers sealing and the clerk\'s immediate notification.'},
+      {lv:3,q:'The DA gives the defense 2 days\' notice of a motion to keep a record unsealed. What is the problem?',c:['The notice must be not less than 5 days','Nothing is wrong','Only the defense may make that motion','The clerk must approve the motion'],a:'The notice must be not less than 5 days',h:'Count the days.',w:'CPL § 160.50(1) requires "not less than five days notice."'},
+      {lv:3,q:'FIND THE INCORRECT STEP after a criminal action ends in favor of the accused (no exception applies).',c:['The clerk waits 30 days before notifying DCJS','The record is sealed','The clerk notifies DCJS','The clerk notifies the appropriate police departments'],a:'The clerk waits 30 days before notifying DCJS',h:'"Immediately."',w:'The clerk must notify "immediately," not after a waiting period.'},
+    ],
+  },
+  {
+    id:'followpetitioner', art:'followpetitioner', num:'★09', l1:'FOLLOW THE', l2:'PETITIONER', name:'Follow the Petitioner', emoji:'🧭',
+    category:'MEMORY TRICK', set:'FAMILY COURT ACT', rarity:'uncommon', trickType:'who', icon:'court', maxLevel:3,
+    quote:'The order goes\nwhere they live.',
+    source:{ cite:'FCA § 168.2', quote:'A copy of an order of protection or temporary order of protection shall be filed by the clerk of the court with the sheriff\'s office or police department in the county in which the petitioner resides, or, if the petitioner resides within a city, with the police department of such city.', from:OFFICIAL + ', Q3',
+      context:'Filing a copy of an order of protection (or temporary order of protection).' },
+    hook:'The CLERK files it, and it goes where the PETITIONER lives: the county sheriff or police, or the city police if the petitioner lives in a city. The respondent\'s address doesn\'t decide it.',
+    panel:{ kind:'who', yes:['CLERK FILES IT','PETITIONER\'S COUNTY / CITY'], no:['RESPONDENT\'S ADDRESS','PETITIONER FILES IT'], caption:'Order of protection copy' },
+    lore:['Protection follows the person who asked for it.','The clerk does the filing.','City resident? City police.'],
+    stickers:{},
+    bank:[
+      {lv:1,q:'Under FCA § 168.2, who files a copy of an order of protection with the sheriff or police?',c:['The clerk of the court','The petitioner','The respondent','The probation department'],a:'The clerk of the court',h:'That could be you.',w:'"…shall be filed by the clerk of the court…"'},
+      {lv:1,type:'tf',q:'Under FCA § 168.2, the copy is filed where WHICH person resides?',c:['Petitioner','Respondent'],a:'Petitioner',h:'Follow the…',w:'It is filed in the county (or city) "in which the petitioner resides."'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: FCA § 168.2 also applies to TEMPORARY orders of protection.',c:['True','False'],a:'True',h:'Read the first line of the rule.',w:'True. It covers "an order of protection or temporary order of protection."'},
+      {lv:2,q:'The petitioner lives inside a city. Under FCA § 168.2, where is the copy filed?',c:['With the police department of that city','With the county sheriff, always','With the state police','With the respondent\'s local precinct'],a:'With the police department of that city',h:'City resident, city police.',w:'"…if the petitioner resides within a city, with the police department of such city."'},
+      {lv:2,q:'The petitioner lives in a county, outside any city. Under FCA § 168.2, where is the copy filed?',c:['The sheriff\'s office or police department of that county','The police of the nearest city','The respondent\'s county','Only in the Family Court file'],a:'The sheriff\'s office or police department of that county',h:'County resident, county sheriff or police.',w:'It is filed "with the sheriff\'s office or police department in the county in which the petitioner resides."'},
+      {lv:2,q:'Under FCA § 168.2, whose address decides where the copy is filed?',c:['The petitioner\'s','The respondent\'s','The clerk\'s','Both parties\''],a:'The petitioner\'s',h:'Follow the petitioner.',w:'Only the petitioner\'s residence decides it.'},
+      {lv:3,q:'The petitioner lives in County A, outside any city. The respondent lives in City B. Where does the clerk file the copy?',c:['The sheriff\'s office or police in County A','The police department of City B','Both County A and City B','Neither; it stays in court'],a:'The sheriff\'s office or police in County A',h:'Ignore the respondent\'s address.',w:'FCA § 168.2 follows the petitioner\'s residence: County A.'},
+      {lv:3,q:'A clerk files the order of protection only with the respondent\'s local police. What is wrong?',c:['It must be filed where the petitioner resides','Nothing is wrong','The petitioner must file it personally','It must be filed with the state police'],a:'It must be filed where the petitioner resides',h:'Follow the petitioner.',w:'FCA § 168.2 requires filing where the petitioner resides.'},
+      {lv:3,q:'Exam format. Under FCA § 168.2 the copy is filed with the sheriff or police where the ______ resides.',c:['Petitioner only','Respondent only','Petitioner or Respondent','Petitioner and Respondent'],a:'Petitioner only',h:'Only one person\'s address counts.',w:'Correct answer: Petitioner only. "…in the county in which the petitioner resides."'},
+    ],
+  },
+  {
+    id:'amendonce', art:'amendonce', num:'★10', l1:'AMEND ONCE,', l2:'NO PERMISSION', name:'Amend Once, No Permission', emoji:'✏️',
+    category:'MEMORY TRICK', set:'CPLR', rarity:'uncommon', trickType:'clock', icon:'court', maxLevel:3,
+    quote:'One free fix.\nThree windows.',
+    source:{ cite:'CPLR § 3025(a)', quote:'A party may amend his pleading once without leave of court within twenty days after its service, or at any time before the period for responding to it expires, or within twenty days after service of a pleading responding to it.', from:OFFICIAL + ', Q13',
+      context:'Amending a pleading once without leave (permission) of the court.' },
+    hook:'ONE free amendment, three windows: 20 days after YOU serve it · any time BEFORE their time to respond runs out · 20 days after THEY serve a response. Both numbers are 20, never 30.',
+    panel:{ kind:'clock', steps:[ {n:'20', label:'AFTER SERVICE', from:'of your pleading'}, {n:'⏳', label:'BEFORE', from:'their time to respond expires'}, {n:'20', label:'AFTER', from:'their responding pleading'} ], caption:'Amend ONCE without leave' },
+    lore:['Everyone gets one free fix.','Three windows. Pick any one.','Twenty, not thirty. The exam loves thirty.'],
+    stickers:{},
+    bank:[
+      {lv:1,q:'Under CPLR § 3025(a), how many times may a party amend a pleading WITHOUT leave of court?',c:['Once','Twice','Any number of times','Never'],a:'Once',h:'One free fix.',w:'"A party may amend his pleading once without leave of court…"'},
+      {lv:1,q:'Under CPLR § 3025(a), one window is within how many days after the pleading\'s service?',c:['20','30','10','15'],a:'20',h:'Not 30.',w:'"…within twenty days after its service…"'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: Under CPLR § 3025(a), a party may amend without leave at any time before the period for responding to the pleading expires.',c:['True','False'],a:'True',h:'That is the middle window.',w:'True: "…or at any time before the period for responding to it expires…"'},
+      {lv:2,q:'Which is NOT one of the CPLR § 3025(a) windows?',c:['Within 30 days after its service','Within 20 days after its service','Any time before the period for responding to it expires','Within 20 days after service of a pleading responding to it'],a:'Within 30 days after its service',h:'The exam loves thirty.',w:'All the day counts in 3025(a) are twenty, not thirty.'},
+      {lv:2,q:'The third CPLR § 3025(a) window is within 20 days after:',c:['Service of a pleading responding to it','The start of trial','Filing of the note of issue','Entry of judgment'],a:'Service of a pleading responding to it',h:'After THEY respond.',w:'"…or within twenty days after service of a pleading responding to it."'},
+      {lv:2,q:'Exam format. When may a party amend once without leave under CPLR § 3025(a)? (1) within 20 days after its service (2) within 30 days after its service (3) any time before the period for responding expires (4) within 30 days after service of a responding pleading',c:['1 and 3, but not 2 or 4','2 and 3, but not 1 or 4','1 and 4, but not 2 or 3','2 and 4, but not 1 or 3'],a:'1 and 3, but not 2 or 4',h:'Throw out anything with 30.',w:'Correct answer: 1 and 3. The responding-pleading window is 20 days, not 30.'},
+      {lv:3,q:'A defendant served an answer 12 days ago. The plaintiff has never amended the complaint. May the plaintiff amend once without leave under CPLR § 3025(a)?',c:['Yes. It is within 20 days after service of a responding pleading','No. The 20 days after serving the complaint have passed','No. Amending always needs leave','Yes, but only with the defendant\'s consent'],a:'Yes. It is within 20 days after service of a responding pleading',h:'Which window is still open?',w:'The third window is open: within twenty days after service of a pleading responding to it.'},
+      {lv:3,q:'A party already amended once without leave and now wants to amend again without leave. Allowed under CPLR § 3025(a)?',c:['No. Only once without leave','Yes, within 20 days','Yes, before trial','Yes, if the other side hasn\'t answered'],a:'No. Only once without leave',h:'One free fix.',w:'CPLR § 3025(a) allows amending "once" without leave of court.'},
+      {lv:3,q:'FIND THE INCORRECT STATEMENT about CPLR § 3025(a).',c:['A party may amend within 30 days after service of a responding pleading','A party may amend within 20 days after its service','A party may amend before the period for responding expires','The free amendment may be used only once'],a:'A party may amend within 30 days after service of a responding pleading',h:'Spot the 30.',w:'The responding-pleading window is twenty days, not thirty.'},
+    ],
+  },
+  {
+    id:'childvoice', art:'childvoice', num:'★11', l1:'WHO SPEAKS', l2:'FOR THE CHILD?', name:'Who Speaks for the Child?', emoji:'🧒',
+    category:'MEMORY TRICK', set:'CPLR', rarity:'uncommon', trickType:'chain', icon:'court', maxLevel:3, gen:'sequence',
+    quote:'Good Parents\nObey.',
+    source:{ cite:'CPLR § 1201', quote:'Unless the court appoints a guardian ad litem, an infant shall appear by the guardian of his property or, if there is no such guardian, by a parent having legal custody, or, if there is no such parent, by another person or agency having legal custody, or, if the infant is married, by an adult spouse residing with the infant…', from:OFFICIAL + ', Q15',
+      context:'Who appears for an infant (a minor) in an action.' },
+    mnemonic:{ sentence:'Good Parents Obey', letters:['G','P','O'], words:['Good','Parents','Obey'],
+      means:['Guardian of the property','Parent with legal custody','Other person or agency with legal custody'],
+      extra:['Any adult relative','The court clerk','A family friend'],
+      tip:'Go down the list only if the one before doesn\'t exist. Two special cases: if the court appoints a guardian ad litem, that person appears for the infant; and a married infant may appear by an adult spouse residing with the infant.' },
+    lore:['Kids don\'t go to court alone.','Guardian first. Then parent. Then others.','Married? A spouse living with them can step in.'],
+    stickers:{},
+    bank:[
+      {lv:1,q:'Under CPLR § 1201, if no guardian ad litem is appointed, who appears for an infant FIRST?',c:['The guardian of the infant\'s property','Any adult relative','The court clerk','The infant alone'],a:'The guardian of the infant\'s property',h:'G comes first.',w:'"…an infant shall appear by the guardian of his property…"'},
+      {lv:2,q:'Under CPLR § 1201, a MARRIED infant may appear by:',c:['An adult spouse residing with the infant','Any spouse, wherever they live','Only a parent','The court clerk'],a:'An adult spouse residing with the infant',h:'Adult, and living with them.',w:'"…or, if the infant is married, by an adult spouse residing with the infant."'},
+      {lv:2,q:'Under CPLR § 1201, what overrides the whole G-P-O list?',c:['The court appointing a guardian ad litem','The infant\'s written consent','A notarized letter from a relative','The clerk\'s approval'],a:'The court appointing a guardian ad litem',h:'"Unless the court appoints…"',w:'The rule begins: "Unless the court appoints a guardian ad litem…"'},
+      {lv:3,q:'Exam format. Under CPLR § 1201, an infant may be represented by: (1) the guardian of his property (2) a parent that has legal custody (3) an adult spouse who resides with the infant',c:['1, 2, and 3','1 only, but not 2 or 3','2 only, but not 1 or 3','1 and 3, but not 2'],a:'1, 2, and 3',h:'All three appear in the rule.',w:'Correct answer: 1, 2, and 3. Each appears in CPLR § 1201 (the spouse when the infant is married).'},
+      {lv:3,q:'An infant has no guardian of the property. The mother has legal custody. No guardian ad litem is appointed. Who appears for the infant under CPLR § 1201?',c:['The mother, as the parent having legal custody','Any adult relative','The court clerk','No one; the case must wait'],a:'The mother, as the parent having legal custody',h:'G is missing, so go to P.',w:'"…if there is no such guardian, by a parent having legal custody…"'},
+    ],
+  },
+  {
+    id:'custodyornot', art:'custodyornot', num:'★12', l1:'CUSTODY', l2:'OR NOT?', name:'Custody or Not?', emoji:'⚖️',
+    category:'MEMORY TRICK', set:'DOMESTIC RELATIONS LAW', rarity:'uncommon', trickType:'difference', icon:'court', maxLevel:3,
+    quote:'Custody at issue?\nIt counts.',
+    source:{ cite:'DRL § 75-a', quote:'"Child custody proceeding" means a proceeding in which legal custody, physical custody, or visitation with respect to a child is an issue. The term includes a proceeding for divorce, separation, neglect, abuse, dependency, guardianship, paternity, termination of parental rights, and protection from domestic violence, in which the issue may appear. The term does not include a proceeding involving juvenile delinquency, person in need of supervision, contractual emancipation, or enforcement under title three of this article.', from:OFFICIAL + ', Q5',
+      context:'Definition used by the Uniform Child Custody Jurisdiction and Enforcement Act (DRL Article 5-A).' },
+    diff:{
+      a:{ name:'Counts as custody', hook:'Custody or visitation is an issue', points:['Divorce · Separation','Neglect · Abuse · Dependency','Guardianship · Paternity','Termination of parental rights','Protection from domestic violence'] },
+      b:{ name:'Does NOT count', hook:'Excluded by name', points:['Juvenile delinquency','Person in need of supervision (PINS)','Contractual emancipation','Enforcement under title three'] },
+    },
+    hook:'If legal custody, physical custody, or visitation is an issue, it counts. Four things never count: juvenile delinquency, PINS, contractual emancipation, and title-three enforcement.',
+    panel:{ kind:'diff', yes:['DIVORCE','NEGLECT','ABUSE','GUARDIANSHIP','PATERNITY','DV PROTECTION'], no:['JUVENILE DELINQUENCY','PINS','CONTRACTUAL EMANCIPATION','TITLE 3 ENFORCEMENT'], caption:'Child custody proceeding?' },
+    lore:['If custody is on the table, it counts.','Four cases never count. Learn those four.','Paternity counts. Emancipation by contract doesn\'t.'],
+    stickers:{},
+    bank:[
+      {lv:1,type:'tf',q:'Under DRL § 75-a, is a PATERNITY proceeding (where custody may be an issue) a child custody proceeding?',c:CUSTODY,a:'Custody proceeding',h:'It\'s on the "includes" list.',w:'DRL § 75-a includes paternity proceedings in which the custody issue may appear.'},
+      {lv:1,type:'tf',q:'Under DRL § 75-a, is a JUVENILE DELINQUENCY proceeding a child custody proceeding?',c:CUSTODY,a:'NOT a custody proceeding',h:'One of the four exclusions.',w:'"The term does not include a proceeding involving juvenile delinquency…"'},
+      {lv:1,type:'tf',q:'Under DRL § 75-a, is a CONTRACTUAL EMANCIPATION proceeding a child custody proceeding?',c:CUSTODY,a:'NOT a custody proceeding',h:'One of the four exclusions.',w:'Contractual emancipation is specifically excluded by DRL § 75-a.'},
+      {lv:2,type:'tf',q:'Under DRL § 75-a, is a GUARDIANSHIP proceeding (where custody may be an issue) a child custody proceeding?',c:CUSTODY,a:'Custody proceeding',h:'It\'s on the "includes" list.',w:'DRL § 75-a includes guardianship proceedings.'},
+      {lv:2,type:'tf',q:'Under DRL § 75-a, is a PERSON IN NEED OF SUPERVISION (PINS) proceeding a child custody proceeding?',c:CUSTODY,a:'NOT a custody proceeding',h:'One of the four exclusions.',w:'PINS proceedings are specifically excluded by DRL § 75-a.'},
+      {lv:2,q:'Under DRL § 75-a, what makes a proceeding a "child custody proceeding"?',c:['Legal custody, physical custody, or visitation with respect to a child is an issue','A child is a witness','The case is in Family Court','A parent is a party'],a:'Legal custody, physical custody, or visitation with respect to a child is an issue',h:'Custody or visitation.',w:'"…a proceeding in which legal custody, physical custody, or visitation with respect to a child is an issue."'},
+      {lv:3,q:'Exam format. Which of the following is NOT considered a child custody proceeding under DRL § 75-a?',c:['Contractual Emancipation','Paternity','Visitation','Guardianship'],a:'Contractual Emancipation',h:'Find the exclusion.',w:'Correct answer: Contractual Emancipation. It is excluded by name.'},
+      {lv:3,q:'Which of these is INCLUDED as a child custody proceeding under DRL § 75-a?',c:['Protection from domestic violence','Juvenile delinquency','Person in need of supervision','Enforcement under title three'],a:'Protection from domestic violence',h:'Three of these are exclusions.',w:'Protection from domestic violence is on the "includes" list. The other three are excluded.'},
+      {lv:3,q:'Name ALL FOUR things DRL § 75-a excludes from "child custody proceeding."',c:['Juvenile delinquency, PINS, contractual emancipation, title-three enforcement','Divorce, separation, neglect, abuse','Paternity, guardianship, dependency, visitation','Juvenile delinquency, paternity, divorce, abuse'],a:'Juvenile delinquency, PINS, contractual emancipation, title-three enforcement',h:'Learn the four.',w:'DRL § 75-a excludes juvenile delinquency, person in need of supervision, contractual emancipation, and enforcement under title three.'},
+    ],
+  },
+);
+
 /* Memory Trick cards: special cards that teach a mnemonic. Found in packs. */
 CARDS.push(
   {
@@ -827,6 +983,7 @@ function normalize(s){
   CARDS.forEach(c => { s.cards[c.id] = Object.assign({level:1,xp:0,mastered:false,owned:STARTERS.includes(c.id)}, s.cards[c.id]||{}); });
   if (s.packs == null) s.packs = 1;
   if (s.packsOpened == null) s.packsOpened = 0;
+  if (!s.seenOfficial2) { s.seenOfficial2 = true; if (s.packsOpened > 0) { s.packs += 2; s.guarantee = [].concat(s.guarantee || [], ['eightdays','sealed','followpetitioner','amendonce','childvoice','custodyornot']); } }
   if (!s.seenOfficial) { s.seenOfficial = true; if (s.packsOpened > 0) { s.packs += 1; s.guarantee = [].concat(s.guarantee || [], ['whosigns','clock6090','ypsi']); } }
   if (!s.seenSvs) { s.seenSvs = true; if (s.packsOpened > 0 && !(s.cards.svs && s.cards.svs.owned)) { s.packs += 1; s.guarantee = [].concat(s.guarantee || [], ['svs']); } }
   CARDS.forEach(c => { const st = s.cards[c.id]; if (st.owned && st.last == null && (st.xp > 0 || st.level > 1)) st.last = Date.now(); });
@@ -870,9 +1027,10 @@ function ruleArt(c){
   const p = c.panel;
   let body = '';
   if (p.kind === 'who') body = `<div class="ra-who">${p.yes.map(t=>`<div class="ra-yes">✔ ${t}</div>`).join('')}${p.no.map(t=>`<div class="ra-no">✘ ${t}</div>`).join('')}</div>`;
-  if (p.kind === 'clock') body = `<div class="ra-clock">${p.steps.map(st=>`<div class="ra-step"><b>${st.n}</b><span>${st.label}</span><small>${st.from}</small></div>`).join('<div class="ra-arrow">→</div>')}</div>`;
+  if (p.kind === 'clock') body = `<div class="ra-clock n${p.steps.length}">${p.steps.map(st=>`<div class="ra-step"><b>${st.n}</b><span>${st.label}</span><small>${st.from}</small></div>`).join('<div class="ra-arrow">→</div>')}</div>`;
+  if (p.kind === 'diff') body = `<div class="ra-diff"><div class="ra-col yes"><b>✔ COUNTS</b>${p.yes.map(t=>`<span>${t}</span>`).join('')}</div><div class="ra-col no"><b>✘ DOESN'T</b>${p.no.map(t=>`<span>${t}</span>`).join('')}</div></div>`;
   if (p.kind === 'trigger') body = `<div class="ra-trig">${p.steps.map((t,i)=>`<div class="ra-box" style="--d:${i*.15}s">${i===0?'IF ':'THEN '}<b>${t}</b></div>`).join('<div class="ra-down">↓</div>')}</div>`;
-  return `<div class="mn"><img class="mn-bg" src="art/bg_trick.webp" alt=""><img class="mn-badge" src="art/icon_memory.webp" alt="Memory Trick">
+  return `<div class="mn"><img class="mn-bg" src="art/bg_trick.webp" alt=""><img class="mn-badge low" src="art/icon_memory.webp" alt="Memory Trick">
     <div class="mn-paper"><div class="ra-cap">${esc(p.caption)}</div>${body}<div class="ra-cite">${esc(c.source.cite)}</div></div></div>`;
 }
 function mnemonicArt(c){
@@ -1063,7 +1221,10 @@ function genSequence(c, lv){
     h:'Say the memory trick out loud, one word at a time.', w:table(idx), raw:true };
 }
 function nextQuestion(c, lv, used){
-  if (c.mnemonic && (c.gen === 'sequence' || Math.random() < .4)) return genSequence(c, lv);
+  if (c.mnemonic) {
+    const useBank = c.bank && c.bank.some(q => q.lv === lv) && Math.random() < .4;
+    if (!useBank && (c.gen === 'sequence' || Math.random() < .4)) return genSequence(c, lv);
+  }
   if (c.gen === 'compare') return genCompare(lv);
   if (c.gen === 'alpha') return genAlpha(lv);
   let pool = c.bank.filter(q => q.lv === lv && !used.has(q.q));
@@ -1350,11 +1511,11 @@ function drawPack(){
   const owned = c => S.cards[c.id].owned;
   const regular = CARDS.filter(c => !c.trickType), tricks = CARDS.filter(c => c.trickType);
   const newRegular = shuffle(regular.filter(c => !owned(c))), newTricks = shuffle(tricks.filter(c => !owned(c)));
-  const picks = []; const take = c => { if (c && !picks.includes(c)) picks.push(c); };
+  const picks = []; const take = c => { if (c && picks.length < 3 && !picks.includes(c)) picks.push(c); };
   const promised = [].concat(S.guarantee || []).filter(id => newTricks.some(c => c.id === id));
   if (promised.length) { promised.slice(0,3).forEach(id => take(byId(id))); S.guarantee = promised.slice(3); if (!S.guarantee.length) S.guarantee = null; }
   else if (S.packsOpened === 0 && newTricks.length) take(newTricks[0]);      // first pack always shows a Memory Trick
-  else if (Math.random() < .2) take(newTricks[0] || pick(tricks));      // after that, 1 in 5 packs
+  else if (Math.random() < .34) take(newTricks[0] || pick(tricks));     // after that, about 1 in 3 packs
   take(newRegular[0]);                                                  // at least one new card while any remain
   let guard = 0;
   while (picks.length < 3 && guard++ < 60) take(newRegular.length > 1 && Math.random() < .5 ? pick(newRegular) : pick(regular));
