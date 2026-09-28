@@ -139,6 +139,28 @@ button{font:inherit;color:inherit;cursor:pointer}
 .dcol ul{margin:0;padding-left:18px;line-height:1.25}
 .dvs{align-self:center;font-family:"Luckiest Guy";font-size:22px;color:var(--brick)}
 @media (max-width:480px){.diffbox{grid-template-columns:1fr}.dvs{text-align:center}}
+.ra-cap{font-family:"Bangers";letter-spacing:.06em;font-size:3.6cqw;color:#7b4bb5;text-align:center}
+.ra-cite{font-family:"Courier Prime";font-weight:700;font-size:3.2cqw;color:var(--ink);opacity:.75}
+.ra-who{display:grid;grid-template-columns:1fr 1fr;gap:1.6cqw;width:100%}
+.ra-yes,.ra-no{font-family:"Luckiest Guy";font-size:3.6cqw;letter-spacing:.03em;text-align:center;padding:1.6cqw .8cqw;border:.35cqw solid var(--ink);border-radius:1.2cqw;line-height:1.05}
+.ra-yes{background:#bfe3a8;color:#1f5a26}
+.ra-no{background:#f3c1b8;color:#7a1f14;text-decoration:line-through;text-decoration-thickness:.4cqw;font-size:2.9cqw}
+.ra-clock{display:flex;align-items:center;gap:1.2cqw}
+.ra-step{display:flex;flex-direction:column;align-items:center;text-align:center;width:27cqw;color:var(--ink)}
+.ra-step b{font-family:"Luckiest Guy";font-weight:400;font-size:13cqw;line-height:1;color:#7b4bb5;-webkit-text-stroke:.3cqw var(--ink);paint-order:stroke fill}
+.ra-step span{font-family:"Luckiest Guy";font-size:3.2cqw;letter-spacing:.03em}
+.ra-step small{font-family:"Patrick Hand";font-size:2.9cqw;line-height:1.05}
+.ra-arrow{font-family:"Luckiest Guy";font-size:8cqw;color:var(--brick)}
+.ra-trig{display:flex;flex-direction:column;align-items:center;gap:.6cqw;width:100%}
+.ra-box{font-family:"Patrick Hand";font-size:3.4cqw;background:#fff7d6;border:.35cqw solid var(--ink);border-radius:1.2cqw;padding:1cqw 2.4cqw;text-align:center;width:88%}
+.ra-box b{font-family:"Luckiest Guy";font-weight:400;letter-spacing:.03em;color:#7b4bb5}
+.ra-down{font-family:"Luckiest Guy";font-size:4.6cqw;line-height:1;color:var(--brick)}
+.rulebox{background:#fbf6e8;border:2px solid var(--ink);border-radius:12px;padding:12px 14px}
+.rulebox .cite{font-family:"Courier Prime";font-weight:700;font-size:17px}
+.rulebox blockquote{margin:8px 0;padding:8px 12px;border-left:4px solid #7b4bb5;background:#f1e9ff;font-size:17px;line-height:1.3}
+.rulebox .ctx,.rulebox .from{font-size:15px;opacity:.8;margin:4px 0 0}
+.rulebox .hook{margin:10px 0 0;font-size:18px}
+.explain .cite{font-family:"Courier Prime";font-size:3.2cqw;opacity:.75;margin-top:1cqw}
 .mnbox{background:#fbf6e8;border:2px dashed rgba(0,0,0,.35);border-radius:12px;padding:12px 14px}
 .mnsent{font-size:22px;margin:0 0 8px;font-style:italic}
 .mnlist{margin:0 0 8px;padding-left:0;list-style:none;display:grid;gap:4px;font-size:18px}
@@ -632,6 +654,79 @@ CARDS.push({
   ],
 });
 
+/* Official-rule Trick cards. Every fact comes from the text quoted in the official
+   NYS Unified Court System Court Clerk sample questions (rev. 08/06/2026).
+   Do not add facts that are not in the cited rule. */
+const OFFICIAL = 'NYS UCS Court Clerk Sample Questions (rev. 08/06/2026)';
+CARDS.push(
+  {
+    id:'whosigns', art:'whosigns', num:'★04', l1:'WHO SIGNS', l2:'THE SUMMONS?', name:'Who Signs the Summons?', emoji:'✍️',
+    category:'MEMORY TRICK', set:'FAMILY COURT ACT', rarity:'uncommon', trickType:'who', icon:'court', maxLevel:3,
+    quote:'Judge or Clerk.\nThe Court signs.',
+    source:{ cite:'FCA § 312.1', quote:'The summons shall be signed by a judge or by the clerk of the court.', from:OFFICIAL + ', Q4',
+      context:'Summons issued by Family Court upon the filing of a juvenile delinquency petition.' },
+    hook:'The COURT signs its own summons: its Judge or its Clerk. Probation and the presentment agency are not on the list.',
+    panel:{ kind:'who', yes:['JUDGE','CLERK'], no:['PROBATION','PRESENTMENT AGENCY'], caption:'Juvenile delinquency summons' },
+    lore:['The court signs its own paperwork.','Probation keeps asking. The answer is still no.','Judge or clerk. Every single time.'],
+    stickers:{},
+    bank:[
+      {lv:1,q:'Under FCA § 312.1, who may sign a summons issued on a juvenile delinquency petition?',c:['A judge or the clerk of the court','The probation department or the presentment agency','Only the presentment agency','Only the probation department'],a:'A judge or the clerk of the court',h:'The COURT signs its own summons.',w:'FCA § 312.1: "The summons shall be signed by a judge or by the clerk of the court."'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: Under FCA § 312.1, the clerk of the court may sign a juvenile delinquency summons.',c:['True','False'],a:'True',h:'Judge or ___.',w:'True. FCA § 312.1 allows a judge or the clerk of the court to sign it.'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: Under FCA § 312.1, the probation department may sign a juvenile delinquency summons.',c:['True','False'],a:'False',h:'Is probation part of "the court"?',w:'False. FCA § 312.1 lists only a judge or the clerk of the court. Probation is not mentioned.'},
+      {lv:2,q:'Which of these is NOT listed in FCA § 312.1 as able to sign the summons?',c:['The presentment agency','A judge of the court','The clerk of the court'],a:'The presentment agency',h:'Only the court\'s own people sign.',w:'Only a judge or the clerk of the court may sign. The presentment agency is not listed.'},
+      {lv:2,q:'The FCA § 312.1 summons is issued upon the filing of what kind of petition?',c:['A juvenile delinquency petition','A support petition','A custody petition','A family offense petition'],a:'A juvenile delinquency petition',h:'Article 3 of the FCA.',w:'FCA § 312.1 covers the summons issued upon the filing of a juvenile delinquency petition.'},
+      {lv:2,q:'Exam format. Under FCA § 312.1 the summons must be signed by either: (1) the probation department, (2) the presentment agency, (3) the clerk of the court, (4) a judge of the court.',c:['3 and 4, but not 1 and 2','1 and 2, but not 3 and 4','2 and 3, but not 1 and 4','1 and 3, but not 2 and 4'],a:'3 and 4, but not 1 and 2',h:'Judge or Clerk.',w:'Correct answer: 3 and 4. FCA § 312.1: "The summons shall be signed by a judge or by the clerk of the court."'},
+      {lv:3,q:'A juvenile delinquency petition is filed. The presentment agency offers to sign the summons to save time. Under FCA § 312.1, is that allowed?',c:['No. It must be signed by a judge or the clerk of the court','Yes, any attorney on the case may sign it','Yes, if probation agrees','No. Only the probation department may sign it'],a:'No. It must be signed by a judge or the clerk of the court',h:'Who is on the list?',w:'FCA § 312.1 permits only a judge or the clerk of the court to sign the summons.'},
+      {lv:3,q:'Find the INCORRECT statement about the FCA § 312.1 summons.',c:['The probation department may sign it','A judge may sign it','The clerk of the court may sign it','It is issued upon the filing of a juvenile delinquency petition'],a:'The probation department may sign it',h:'One of these people is not on the list.',w:'Probation is not listed. FCA § 312.1: signed "by a judge or by the clerk of the court."'},
+      {lv:3,q:'You are the clerk. A juvenile delinquency summons arrives signed only by a probation officer. What is the problem?',c:['It must be signed by a judge or the clerk of the court','Nothing, probation may sign','It needs the presentment agency\'s signature too','It needs the respondent\'s signature'],a:'It must be signed by a judge or the clerk of the court',h:'Judge or Clerk.',w:'Under FCA § 312.1 the summons must be signed by a judge or the clerk of the court, so a probation officer\'s signature is not enough.'},
+    ],
+  },
+  {
+    id:'clock6090', art:'clock6090', num:'★05', l1:'THE 60 / 90', l2:'CLOCK', name:'The 60 / 90 Clock', emoji:'⏰',
+    category:'MEMORY TRICK', set:'UNIFORM RULES', rarity:'uncommon', trickType:'clock', icon:'court', maxLevel:3,
+    quote:'Start in 60.\nFinish in 90.',
+    source:{ cite:'Uniform Rules § 205.43(b)', quote:'After service is made, the judge or support magistrate must commence a hearing to determine a willful violation within 60 days of the date noticed in the summons. The hearing must be concluded within 90 days of its commencement.', from:OFFICIAL + ', Q6',
+      context:'Hearing to determine a willful violation (of a support order).' },
+    hook:'START within 60 days of the date in the summons. FINISH within 90 days of the start. Two clocks, two different starting points.',
+    panel:{ kind:'clock', steps:[ {n:'60', label:'START the hearing', from:'from the date noticed in the summons'}, {n:'90', label:'FINISH the hearing', from:'from when the hearing began'} ], caption:'Willful violation hearing' },
+    lore:['Two clocks. Two different starting lines.','The first clock starts with the summons date.','The second clock starts the moment the hearing does.'],
+    stickers:{},
+    bank:[
+      {lv:1,q:'Under Uniform Rule 205.43(b), within how many days of the date noticed in the summons must a willful-violation hearing BEGIN?',c:['60','30','90','15'],a:'60',h:'Start in 60.',w:'205.43(b): the hearing must commence "within 60 days of the date noticed in the summons."'},
+      {lv:1,q:'Under Uniform Rule 205.43(b), once the hearing has begun, within how many days must it be CONCLUDED?',c:['90','60','30','120'],a:'90',h:'Finish in 90.',w:'205.43(b): "The hearing must be concluded within 90 days of its commencement."'},
+      {lv:1,q:'The 60/90 rule in Uniform Rule 205.43(b) applies to a hearing to determine:',c:['A willful violation','Youthful offender status','A motion to quash a subpoena','Custody'],a:'A willful violation',h:'Someone didn\'t pay support on purpose.',w:'205.43(b) covers the hearing to determine a willful violation (of a support order).'},
+      {lv:2,q:'WHAT STARTS THE CLOCK? The 60-day period in 205.43(b) runs from:',c:['The date noticed in the summons','The date the petition was filed','The date of the last missed payment','The date the hearing begins'],a:'The date noticed in the summons',h:'Look at the summons.',w:'The 60 days run "from the date noticed in the summons."'},
+      {lv:2,q:'WHAT STARTS THE CLOCK? The 90-day period in 205.43(b) runs from:',c:['The hearing\'s commencement','The date noticed in the summons','Service of the summons','The filing of the petition'],a:'The hearing\'s commencement',h:'The second clock starts when the hearing does.',w:'The hearing "must be concluded within 90 days of its commencement."'},
+      {lv:2,q:'Under 205.43(b), WHO must commence the willful-violation hearing?',c:['The judge or support magistrate','The clerk of the court','The probation department','The petitioner\'s attorney'],a:'The judge or support magistrate',h:'Who holds the hearing?',w:'205.43(b): "the judge or support magistrate must commence a hearing…"'},
+      {lv:3,q:'A willful-violation hearing began 50 days after the date noticed in the summons. By when must it be concluded?',c:['Within 90 days of the day it began','Within 90 days of the date noticed in the summons','Within 10 more days, since 60 days are almost up','Within 60 days of the day it began'],a:'Within 90 days of the day it began',h:'The finish clock starts at the START of the hearing.',w:'The 90 days are counted from the hearing\'s commencement, not from the summons date.'},
+      {lv:3,q:'A support magistrate plans to START the hearing 75 days after the date noticed in the summons. What is the problem?',c:['It must begin within 60 days of that date','Nothing, 90 days are allowed to start','It must begin within 30 days','Only a judge may hold the hearing'],a:'It must begin within 60 days of that date',h:'Start in 60.',w:'205.43(b) requires the hearing to commence within 60 days of the date noticed in the summons.'},
+      {lv:3,q:'Which sequence matches Uniform Rule 205.43(b)?',c:['Service → hearing begins within 60 days of the summons date → hearing ends within 90 days of beginning','Service → hearing begins within 90 days → hearing ends within 60 days','Hearing begins within 60 days of filing → ends within 90 days of the summons date','Hearing ends within 60 days of the summons date'],a:'Service → hearing begins within 60 days of the summons date → hearing ends within 90 days of beginning',h:'Start in 60, finish in 90.',w:'205.43(b): after service, commence within 60 days of the date noticed in the summons; conclude within 90 days of commencement.'},
+    ],
+  },
+  {
+    id:'ypsi', art:'ypsi', num:'★06', l1:'CONVICTION', l2:"WHAT'S NEXT?", name:"Conviction → What's Next?", emoji:'🎯',
+    category:'MEMORY TRICK', set:'CRIMINAL PROCEDURE', rarity:'uncommon', trickType:'trigger', icon:'court', maxLevel:3,
+    quote:'Investigate first.\nDecide at sentence.',
+    source:{ cite:'CPL § 720.20(1)', quote:'Upon conviction of an eligible youth, the court must order a pre-sentence investigation of the defendant. After receipt of a written report of the investigation and at the time of pronouncing sentence the court must determine whether or not the eligible youth is a youthful offender.', from:OFFICIAL + ', Q11',
+      context:'Eligible youth; youthful offender (YO) determination.' },
+    hook:'IF an eligible youth is convicted → THEN the court MUST order a pre-sentence investigation → THEN, with the written report, it decides YO status AT SENTENCING (not at conviction).',
+    panel:{ kind:'trigger', steps:['CONVICTION','PRE-SENTENCE INVESTIGATION','SENTENCING: YO?'], caption:'Eligible youth' },
+    lore:['Convicted is not the end of the story.','The report comes first. Always.','Youthful offender is decided at sentencing.'],
+    stickers:{},
+    bank:[
+      {lv:1,q:'Under CPL § 720.20(1), what must the court order upon conviction of an eligible youth?',c:['A pre-sentence investigation','An immediate youthful offender finding','A new trial','Sealing of the record'],a:'A pre-sentence investigation',h:'Investigate first.',w:'CPL § 720.20(1): "Upon conviction of an eligible youth, the court must order a pre-sentence investigation of the defendant."'},
+      {lv:1,q:'When must the court determine whether or not an eligible youth is a youthful offender?',c:['At the time of pronouncing sentence','At arraignment','At any time before trial','Upon conviction'],a:'At the time of pronouncing sentence',h:'Decide at sentence.',w:'CPL § 720.20(1): "at the time of pronouncing sentence the court must determine whether or not the eligible youth is a youthful offender."'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: Under CPL § 720.20(1), the youthful offender decision is made at the moment of conviction.',c:['True','False'],a:'False',h:'Conviction triggers the investigation, not the decision.',w:'False. Conviction triggers the pre-sentence investigation. YO status is decided at sentencing.'},
+      {lv:2,q:'Under CPL § 720.20(1), what must the court receive BEFORE making the youthful offender determination?',c:['A written report of the pre-sentence investigation','The defendant\'s school records','A jury recommendation','The prosecutor\'s consent'],a:'A written report of the pre-sentence investigation',h:'"After receipt of…"',w:'The court decides "after receipt of a written report of the investigation."'},
+      {lv:2,q:'WHAT TRIGGERS IT? Under CPL § 720.20(1), which event requires the court to order a pre-sentence investigation?',c:['Conviction of an eligible youth','Arraignment','Filing of the accusatory instrument','Jury selection'],a:'Conviction of an eligible youth',h:'IF ___ THEN investigate.',w:'"Upon conviction of an eligible youth, the court must order a pre-sentence investigation."'},
+      {lv:2,q:'Under CPL § 720.20(1), is ordering the pre-sentence investigation optional?',c:['No. The court must order it','Yes, at the court\'s discretion','Only if the prosecutor requests it','Only if the defense requests it'],a:'No. The court must order it',h:'"must order"',w:'The statute says the court "must order a pre-sentence investigation."'},
+      {lv:3,q:'Which sequence matches CPL § 720.20(1)?',c:['Conviction → PSI ordered → written report → YO decided at sentencing','Conviction → YO decided → PSI ordered → sentencing','Arraignment → YO decided → conviction → PSI','PSI ordered → conviction → YO decided at arraignment'],a:'Conviction → PSI ordered → written report → YO decided at sentencing',h:'Investigate first, decide at sentence.',w:'Conviction triggers the PSI; after the written report, YO status is decided when sentence is pronounced.'},
+      {lv:3,q:'A judge convicts an eligible youth and immediately declares them a youthful offender, before any investigation. What is wrong?',c:['A PSI must be ordered first, and YO decided at sentencing','Nothing is wrong','Only a jury can decide YO status','YO status must be decided at arraignment'],a:'A PSI must be ordered first, and YO decided at sentencing',h:'What comes right after conviction?',w:'CPL § 720.20(1) requires a pre-sentence investigation and a YO decision at the time of pronouncing sentence.'},
+      {lv:3,q:'FIND THE INCORRECT NEXT STEP. After conviction of an eligible youth, the court…',c:['declares youthful offender status on the spot','orders a pre-sentence investigation','waits for the written report','decides YO status when pronouncing sentence'],a:'declares youthful offender status on the spot',h:'One of these skips the investigation.',w:'YO status is not decided on the spot. It is decided at sentencing, after the written PSI report.'},
+    ],
+  },
+);
+
 /* Memory Trick cards: special cards that teach a mnemonic. Found in packs. */
 CARDS.push(
   {
@@ -732,7 +827,8 @@ function normalize(s){
   CARDS.forEach(c => { s.cards[c.id] = Object.assign({level:1,xp:0,mastered:false,owned:STARTERS.includes(c.id)}, s.cards[c.id]||{}); });
   if (s.packs == null) s.packs = 1;
   if (s.packsOpened == null) s.packsOpened = 0;
-  if (!s.seenSvs) { s.seenSvs = true; if (s.packsOpened > 0 && !(s.cards.svs && s.cards.svs.owned)) { s.packs += 1; s.guarantee = 'svs'; } }
+  if (!s.seenOfficial) { s.seenOfficial = true; if (s.packsOpened > 0) { s.packs += 1; s.guarantee = [].concat(s.guarantee || [], ['whosigns','clock6090','ypsi']); } }
+  if (!s.seenSvs) { s.seenSvs = true; if (s.packsOpened > 0 && !(s.cards.svs && s.cards.svs.owned)) { s.packs += 1; s.guarantee = [].concat(s.guarantee || [], ['svs']); } }
   CARDS.forEach(c => { const st = s.cards[c.id]; if (st.owned && st.last == null && (st.xp > 0 || st.level > 1)) st.last = Date.now(); });
   s.stats = Object.assign({answered:0,correct:0,xp:0,sessions:0}, s.stats||{});
   return s;
@@ -770,6 +866,15 @@ function stickerHTML(s){
   if (s.n) return `<div class="stk note" style="${st};background:${s.c}">${esc(s.n)}</div>`;
   return `<div class="stk emo ${s.a||''}" style="${st}">${s.e}</div>`;
 }
+function ruleArt(c){
+  const p = c.panel;
+  let body = '';
+  if (p.kind === 'who') body = `<div class="ra-who">${p.yes.map(t=>`<div class="ra-yes">✔ ${t}</div>`).join('')}${p.no.map(t=>`<div class="ra-no">✘ ${t}</div>`).join('')}</div>`;
+  if (p.kind === 'clock') body = `<div class="ra-clock">${p.steps.map(st=>`<div class="ra-step"><b>${st.n}</b><span>${st.label}</span><small>${st.from}</small></div>`).join('<div class="ra-arrow">→</div>')}</div>`;
+  if (p.kind === 'trigger') body = `<div class="ra-trig">${p.steps.map((t,i)=>`<div class="ra-box" style="--d:${i*.15}s">${i===0?'IF ':'THEN '}<b>${t}</b></div>`).join('<div class="ra-down">↓</div>')}</div>`;
+  return `<div class="mn"><img class="mn-bg" src="art/bg_trick.webp" alt=""><img class="mn-badge" src="art/icon_memory.webp" alt="Memory Trick">
+    <div class="mn-paper"><div class="ra-cap">${esc(p.caption)}</div>${body}<div class="ra-cite">${esc(c.source.cite)}</div></div></div>`;
+}
 function mnemonicArt(c){
   const m = c.mnemonic, n = m.letters.length;
   const colors = ['#ffe27a','#ff9fb6','#a9d4f5','#bfe3a8','#ffc48a','#d6c2ff','#ffe27a','#a9d4f5'];
@@ -780,6 +885,7 @@ function mnemonicArt(c){
 }
 function artHTML(c, lv){
   if (c.mnemonic) return mnemonicArt(c) + (lv >= 3 ? `<div class="foil"></div>` : '');
+  if (c.panel && !(ART[c.id] && ART[c.id][1])) return ruleArt(c) + (lv >= 3 ? `<div class="foil"></div>` : '');
   let base = 0;
   for (let l=lv; l>=1; l--) if (ART[c.id] && ART[c.id][l]) { base = l; break; }
   let h = (c.trickType && !c.mnemonic) ? `<img class="mn-badge low" src="art/icon_memory.webp" alt="Memory Trick">` : '';
@@ -811,7 +917,7 @@ function frontHTML(c, st, opt={}){
       <span class="t2" style="font-size:${fitTitle(c.l2,12.5,74)}cqw">${esc(c.l2)}</span>
     </div>
     <div class="t quote" style="${P(246,1092,782,1262)}">“${esc(c.quote)}”</div>
-    <div class="t rar" style="${P(82,1290,312,1448)}"><span class="gem r-${c.rarity}">★</span><span>${c.rarity.toUpperCase()}</span></div>
+    <div class="t rar" style="${P(82,1290,312,1448)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:${c.rarity.length > 6 ? 3.3 : 4.2}cqw">${c.rarity.toUpperCase()}</span></div>
     <div class="t set" style="${P(334,1294,706,1446)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl" style="${P(728,1290,944,1448)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${sparks}
@@ -1035,6 +1141,9 @@ function renderDetail(){
           : st.last ? `<div class="warmnote">Last studied ${agoText(st.last)}. Goes cold if not studied for ${Math.round(coldAfter(st)/DAY)} days.</div>` : ''}
         <button class="btn-big" data-act="study" data-id="${c.id}">▶ STUDY THIS CARD</button>
         ${c.trickType ? `<div class="ttype"><img src="art/icon_memory.webp" alt=""><img src="art/icon_${c.trickType}.webp" alt=""><div><b>${TRICK_TYPES[c.trickType].label}</b><span>${TRICK_TYPES[c.trickType].blurb}</span></div></div>` : ''}
+        ${c.source ? `<h3>THE OFFICIAL RULE</h3><div class="rulebox"><div class="cite">${esc(c.source.cite)}</div>
+          <blockquote>“${esc(c.source.quote)}”</blockquote><p class="ctx">${esc(c.source.context)}</p>
+          ${c.hook ? `<p class="hook">🧠 <b>How to remember it:</b> ${esc(c.hook)}</p>` : ''}<p class="from">Source: ${esc(c.source.from)}</p></div>` : ''}
         ${c.diff ? `<h3>HOW TO TELL THEM APART</h3><div class="diffbox">${['a','b'].map(k => `<div class="dcol ${k}"><b>${esc(c.diff[k].name)}</b><i>“${esc(c.diff[k].hook)}”</i><ul>${c.diff[k].points.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`).join('<div class="dvs">VS</div>')}</div>` : ''}
         ${c.mnemonic ? `<h3>HOW TO REMEMBER IT</h3><div class="mnbox"><p class="mnsent">“${esc(c.mnemonic.sentence)}”</p>
           <ol class="mnlist">${c.mnemonic.letters.map((L,i)=>`<li><b>${L}</b>${esc(c.mnemonic.words[i])} → <strong>${esc(c.mnemonic.means[i])}</strong></li>`).join('')}</ol>
@@ -1131,6 +1240,7 @@ function paintStudy(anim){
         ${ans.reopened ? `<p class="reopen"><img src="art/stamp_reopened.webp" alt="Case reopened"><span>Includes a +${COLD_BONUS} XP cold-case bonus.</span></p>` : ''}
         ${ans.ok ? '' : `<p><b>Correct answer:</b> ${esc(q.a)}</p>`}
         ${q.raw ? q.w : `<p>${esc(q.w)}</p>`}
+        ${c.source ? `<p class="cite">Source: ${esc(c.source.cite)}</p>` : ''}
       </div>` : ''}`;
   // dots + xp chip
   document.getElementById('dots').innerHTML = Array.from({length:SESSION_LEN},(_,i)=>{
@@ -1241,7 +1351,8 @@ function drawPack(){
   const regular = CARDS.filter(c => !c.trickType), tricks = CARDS.filter(c => c.trickType);
   const newRegular = shuffle(regular.filter(c => !owned(c))), newTricks = shuffle(tricks.filter(c => !owned(c)));
   const picks = []; const take = c => { if (c && !picks.includes(c)) picks.push(c); };
-  if (S.guarantee && newTricks.some(c => c.id === S.guarantee)) { take(byId(S.guarantee)); S.guarantee = null; }
+  const promised = [].concat(S.guarantee || []).filter(id => newTricks.some(c => c.id === id));
+  if (promised.length) { promised.slice(0,3).forEach(id => take(byId(id))); S.guarantee = promised.slice(3); if (!S.guarantee.length) S.guarantee = null; }
   else if (S.packsOpened === 0 && newTricks.length) take(newTricks[0]);      // first pack always shows a Memory Trick
   else if (Math.random() < .2) take(newTricks[0] || pick(tricks));      // after that, 1 in 5 packs
   take(newRegular[0]);                                                  // at least one new card while any remain
