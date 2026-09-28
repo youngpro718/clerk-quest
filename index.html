@@ -338,6 +338,11 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .ans.wrong{opacity:.6}
 .ans.wrong .A{text-decoration:line-through;text-decoration-color:var(--bad);text-decoration-thickness:.5cqw}
 .ans[disabled]{cursor:default}
+.ans.cut .A,.ans.cut .A.wrap{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;padding-right:9cqw}
+.qtext.cut{cursor:pointer}
+.qtext.cut .qt{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;padding-right:9cqw}
+.ans .more,.qtext .more{position:absolute;right:1.4cqw;bottom:1.2cqw;padding:.3cqw 1.2cqw;border-radius:1.2cqw;background:var(--ink);color:#f6e7c8;font-family:"Bangers";letter-spacing:.06em;font-size:2.8cqw;line-height:1.2}
+.qtext .more{bottom:.4cqw}
 .mascot{z-index:3;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .mascot img{width:100%;height:100%;object-fit:contain;-webkit-mask-image:radial-gradient(ellipse 60% 58% at 50% 50%, #000 70%, transparent 100%);mask-image:radial-gradient(ellipse 60% 58% at 50% 50%, #000 70%, transparent 100%)}
 .mascot img.cutm{-webkit-mask-image:none;mask-image:none;filter:drop-shadow(0 1cqw 0 rgba(0,0,0,.2));animation:bob 3s ease-in-out infinite}
@@ -738,6 +743,13 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .acts-sep{padding:10px 16px 6px;font:600 12px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--sub);background:rgba(0,0,0,.18)}
 .sheet-cancel{display:block;width:100%;min-height:52px;margin-top:10px;border:0;border-radius:14px;background:var(--bg2);color:var(--mustard);font:600 17px var(--ui)}
 .sheet .btn-big{margin-top:6px}
+.as-q{margin:0 4px 14px;font:17px/1.4 var(--ui);color:var(--paper)}
+.as-list{display:flex;flex-direction:column;gap:10px}
+.as-list button{display:flex;align-items:stretch;width:100%;min-height:56px;padding:0;border:3px solid var(--ink);border-radius:14px;overflow:hidden;background:#f6e7c8;color:var(--ink);text-align:left;box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.as-list button b{flex:none;width:46px;display:flex;align-items:center;justify-content:center;background:#5d7d8c;border-right:3px solid var(--ink);color:#fff;font:400 26px "Luckiest Guy";-webkit-text-stroke:1px var(--ink)}
+.as-list button span{padding:10px 12px;font:20px/1.25 "Patrick Hand"}
+.as-list button.hl{outline:3px solid var(--mustard);outline-offset:2px}
+.as-list button:active{transform:translateY(2px)}
 .sh-missing{display:flex;flex-direction:column;align-items:center;text-align:center}
 .sh-mcard{width:120px;margin-bottom:6px}
 .sh-missing p{font:15px/1.4 var(--ui);color:var(--sub);margin:0 8px 14px}
@@ -2297,12 +2309,12 @@ function paintStudy(anim){
     </div>`;
   } else {
     const len = q.q.length;
-    const fs = len > 200 ? 3.4 : len > 150 ? 3.8 : len > 100 ? 4.4 : 5;
+    const fs = len > 100 ? 4.4 : 5;   // never smaller; longer text opens the full-text sheet
     const ys = [596,758,920,1082];   // tall, well-spaced answers
-    mid = `<div class="t qtext" style="${PB(96,386,934,566)};font-size:${fs}cqw">${esc(q.q)}</div>
+    mid = `<div class="t qtext" style="${PB(96,386,934,566)};font-size:${fs}cqw"><span class="qt">${esc(q.q)}</span></div>
       ${q.opts.map((o,i)=>{ let cls=''; if (ans){ if (o===q.a) cls='right'; else if (o===ans.choice) cls='wrong'; }
-        const afs = o.length > 26 ? 3.3 : o.length > 22 ? 3.6 : o.length > 16 ? 4.3 : 5;
-        const wrap = o.length > 26 ? 'wrap' : '';
+        const afs = o.length > 22 ? 4 : o.length > 16 ? 4.3 : 5;   // never smaller; longer text opens the full-text sheet
+        const wrap = o.length > 22 ? 'wrap' : '';
         return `<button class="ans ${cls}" style="${PB(86,ys[i],632,ys[i]+126)}" data-act="answer" data-v="${esc(o)}" ${ans?'disabled':''} aria-label="${letters[i]}: ${esc(o)}">
           <span class="L">${letters[i]}</span><span class="A ${wrap}" style="font-size:${afs}cqw">${esc(o)}</span></button>`; }).join('')}
       <div class="mascot" style="${PB(640,572,958,1218)}">${(c.mascot || (c.cutout && ART[c.id][1])) ? `<img src="${c.mascot || ART[c.id][1]}" alt="" class="${c.mascot?'':'cutm'}">` : `<span class="me">${c.emoji}</span><span class="bub">?</span>`}</div>`;
@@ -2343,9 +2355,25 @@ function paintStudy(anim){
         ${c.source ? `<p class="cite">Source: ${esc(c.source.cite)}</p>` : ''}
         <p class="tapnext">Tap here to continue ▸</p>
       </div>` : ''}`;
+  // Answers keep a readable size. One that doesn't fit is clipped with a "more" tag and opens the full-answer sheet.
+  let anyCut = false, qCut = false;
+  const qbox = back.querySelector('.qtext');
+  if (qbox && q.type !== 'table') {
+    const qs = qbox.querySelector('.qt');
+    if (qs.scrollHeight > qbox.clientHeight + 2) {
+      qCut = true;
+      qs.style.webkitLineClamp = Math.max(1, Math.floor(qbox.clientHeight / parseFloat(getComputedStyle(qs).lineHeight)));
+      qbox.classList.add('cut'); qbox.insertAdjacentHTML('beforeend', '<span class="more">more</span>');
+      if (!ans) qbox.dataset.act = 'ans-sheet';
+    }
+  }
   back.querySelectorAll('.ans').forEach(b => {
-    const a = b.querySelector('.A'); let f = parseFloat(a.style.fontSize);
-    while (a.scrollHeight > b.clientHeight - 2 && f > 2.4) { f -= .1; a.style.fontSize = f + 'cqw'; }
+    const a = b.querySelector('.A');
+    if (a.scrollHeight <= b.clientHeight - 2) return;
+    anyCut = true;
+    a.style.webkitLineClamp = Math.max(1, Math.floor((b.clientHeight - 4) / parseFloat(getComputedStyle(a).lineHeight)));
+    b.classList.add('cut'); a.insertAdjacentHTML('afterend', '<span class="more">more</span>');
+    if (!ans) b.dataset.act = 'ans-sheet';
   });
   // dots + xp chip
   document.getElementById('dots').innerHTML = Array.from({length:SESSION_LEN},(_,i)=>{
@@ -2359,6 +2387,7 @@ function paintStudy(anim){
       let cls=''; if (ans){ if (o===q.a) cls='right'; else if (o===ans.choice) cls='wrong'; }
       return `<button class="${cls}" data-act="answer" data-v="${o}" ${ans?'disabled':''}>${o}</button>`; }).join('')}</div>`;
   }
+  if ((anyCut || qCut) && !ans) bh += `<button class="btn-big alt" data-act="ans-sheet">${anyCut ? 'READ FULL ANSWERS' : 'READ FULL QUESTION'}</button>`;
   if (ans) {
     const last = sess.i + 1 >= SESSION_LEN;
     const label = sess.pendingLevel ? (sess.pendingLevel.mastered ? '🏅 CLAIM MASTERY' : '★ LEVEL UP!') : last ? 'SEE RESULTS →' : 'NEXT QUESTION →';
@@ -2564,6 +2593,13 @@ function openSheet(html){
   sh.addEventListener('touchend', () => { if (y0 == null) return; sh.style.transition = ''; if (dy > 90) closeSheet(); else sh.style.transform = ''; y0 = null; });
   return w;
 }
+function answerSheet(focus){
+  const q = sess.q;
+  const w = openSheet(`<h3>Read the answers</h3><p class="as-q">${esc(q.q)}</p>
+    <div class="as-list">${q.opts.map((o, i) => `<button class="${o === focus ? 'hl' : ''}" data-act="answer" data-v="${esc(o)}"><b>${'ABCD'[i]}</b><span>${esc(o)}</span></button>`).join('')}</div>
+    <button class="sheet-cancel" data-act="sheet-close">Back to the card</button>`);
+  const hl = w.querySelector('.as-list .hl'); if (hl) hl.scrollIntoView({block:'nearest'});
+}
 function closeSheet(instant){
   const w = document.querySelector('.sheet-wrap'); if (!w) return false;
   if (instant) { w.remove(); unlockScroll(); return true; }
@@ -2732,7 +2768,8 @@ document.addEventListener('click', e => {
     case 'stage': { const en = topEntry(); en.p = Object.assign({}, en.p, {preview:+t.dataset.l}); refresh(); break; }
     case 'study': closeSheet(true); startSession(id); break;
     case 'quick': closeSheet(true); quickRound(); break;
-    case 'answer': answer(t.dataset.v); break;
+    case 'answer': closeSheet(true); answer(t.dataset.v); break;
+    case 'ans-sheet': answerSheet(t.dataset.v); break;
     case 'hint': if (sess && !sess.answered) { sess.hint = true; paintStudy(); } break;
     case 'next': next(); break;
     case 'lu-close': { const ov = t.closest('.lu'); ov && ov._done(); break; }
