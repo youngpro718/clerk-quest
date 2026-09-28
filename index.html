@@ -1826,7 +1826,7 @@ const SERIES = [
 ];
 function groupTest(g){
   if (g.startsWith('set:')) { const n = g.slice(4); return c => c.set === n; }
-  return ({all:() => true, s1:c => !c.series, s2:c => c.series === 2, tricks:c => !!c.trickType})[g] || (() => true);
+  return ({all:() => true, s1:c => !c.series && !c.trickType, s2:c => c.series === 2, tricks:c => !!c.trickType})[g] || (() => true);
 }
 function groupLabel(g){
   if (g.startsWith('set:')) return titleCase(g.slice(4));
