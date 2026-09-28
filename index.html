@@ -1,0 +1,1366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#211e1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clerk Quest">
+<link rel="apple-touch-icon" href="art/app_icon.webp">
+<link rel="icon" href="art/app_icon.webp">
+<title>Clerk Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Courier+Prime:wght@400;700&family=Luckiest+Guy&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1d1b17; --paper:#f1e5c9; --paper2:#e8d8b4; --brick:#cf3b2a; --navy:#2b3a55;
+  --mustard:#e3b23c; --sage:#9bb68a; --sky:#8fb3d1; --desk:#211e1a;
+  --good:#3f8f4a; --bad:#c23a2b;
+  --common:#8d8d8d; --uncommon:#5f9e5a; --rare:#3f78c9; --epic:#8a4fc2; --legendary:#d8a526;
+  --cw:min(calc(100vw - 32px), 470px);
+}
+@supports (height:100dvh){ :root{ --cw:min(calc(100vw - 32px), 470px, calc((100dvh - 150px) / 1.5)); } }
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:hidden}
+@supports (overflow:clip){html,body{overflow-x:clip}}
+body{
+  min-height:100vh; color:var(--paper); font-family:"Patrick Hand",system-ui,sans-serif; font-size:18px;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(255,220,160,.10), transparent 60%),
+    radial-gradient(ellipse at 50% 120%, rgba(0,0,0,.5), transparent 60%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.012) 0 2px, transparent 2px 7px),
+    var(--desk);
+  -webkit-tap-highlight-color:transparent;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+#app{max-width:1100px;margin:0 auto;padding:max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(40px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left))}
+
+/* ---------- CARD ---------- */
+.card{position:relative;width:100%;aspect-ratio:1024/1536;container-type:inline-size;user-select:none}
+.card > *{position:absolute}
+.card .frame{inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.card .bg{inset:0;width:100%;height:100%;z-index:0}
+.t{z-index:3;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1;color:var(--ink);font-family:"Luckiest Guy",sans-serif}
+.art-win{z-index:1;overflow:hidden;border-radius:2.5cqw;background:#2a2622}
+.art-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.art-back{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%, #f6ead0 0%, #e2cc9f 45%, #9c8360 100%)}
+.art-back::after{content:"";position:absolute;left:0;right:0;bottom:0;height:30%;background:linear-gradient(#7a5a3a,#5e4329);border-top:.5cqw solid #3b2a1a;opacity:.55}
+.art-bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.9) saturate(.92)}
+.art-vig{position:absolute;inset:0;background:radial-gradient(ellipse 70% 65% at 50% 55%, transparent 55%, rgba(20,12,4,.45) 100%)}
+.art-img.cut{inset:1% 2% 12% 2%;width:96%;height:87%;object-fit:contain;z-index:1;filter:drop-shadow(0 1.2cqw 0 rgba(0,0,0,.25))}
+.art-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 45%, #efe2c3 0%, #d9c49b 45%, #6d5b43 100%)}
+.ph-emoji{font-size:30cqw;filter:drop-shadow(0 1.2cqw 0 rgba(0,0,0,.25));transform:translateY(-4%)}
+.ph-tag{position:absolute;top:9%;left:50%;transform:translateX(-50%) rotate(-3deg);font-family:"Bangers";letter-spacing:.06em;
+  font-size:3.6cqw;color:var(--ink);background:rgba(255,255,255,.55);padding:.6cqw 2cqw;border:.35cqw dashed var(--ink);border-radius:1cqw;white-space:nowrap}
+.stk{position:absolute;z-index:2;transform:rotate(var(--r,0deg));pointer-events:none}
+.stk.note{font-family:"Patrick Hand";color:var(--ink);padding:1.4cqw 2.2cqw;line-height:1;
+  box-shadow:.4cqw .6cqw 0 rgba(0,0,0,.25);border:.25cqw solid rgba(0,0,0,.55);white-space:nowrap}
+.stk.emo{line-height:1;filter:drop-shadow(.4cqw .6cqw 0 rgba(0,0,0,.3))}
+.stk.float{animation:float 3s ease-in-out infinite}
+.stk.float2{animation:float 3.6s ease-in-out -1.2s infinite}
+@keyframes float{50%{transform:rotate(var(--r,0deg)) translateY(-2.5cqw)}}
+.foil{position:absolute;inset:0;z-index:3;pointer-events:none;mix-blend-mode:screen;
+  background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.28) 45%,rgba(180,220,255,.18) 52%,transparent 62%);
+  background-size:300% 100%;animation:foil 4.5s linear infinite}
+.lv5 .foil{background-image:linear-gradient(115deg,transparent 35%,rgba(255,236,160,.45) 45%,rgba(255,200,80,.25) 52%,transparent 62%)}
+@keyframes foil{from{background-position:100% 0}to{background-position:-100% 0}}
+.rays{position:absolute;inset:-30%;z-index:0;pointer-events:none;mix-blend-mode:soft-light;opacity:.8;
+  background:repeating-conic-gradient(from 0deg at 50% 45%, rgba(255,220,120,.9) 0 6deg, transparent 6deg 18deg);animation:spin 30s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* front texts */
+.num{font-size:7.2cqw;letter-spacing:.04em}
+.xpstrip{flex-direction:column;gap:1cqw;color:#f6ecd4;font-family:"Bangers";font-size:3.4cqw;letter-spacing:.06em}
+.xpstrip i{display:block;width:80%;height:1.6cqw;border-radius:1cqw;background:rgba(0,0,0,.35);overflow:hidden;border:.25cqw solid rgba(0,0,0,.4)}
+.xpstrip b{display:block;height:100%;background:linear-gradient(90deg,#f7d56a,#e3a42c)}
+.cat{font-size:3.7cqw;padding:0 2cqw;letter-spacing:.045em;line-height:1.08}
+.icon svg{width:70%;height:70%}
+.icon img{width:92%;height:92%;object-fit:contain}
+.card.special .cat,.card.special .lvl,.card.special .xpstrip{color:#fff;text-shadow:0 .3cqw 0 rgba(0,0,0,.5)}
+.card.special .stars{color:#fff}
+.title{flex-direction:column;gap:1.2cqw}
+.title span{display:block;white-space:nowrap;letter-spacing:.035em;line-height:1.02}
+.t1{color:var(--ink);text-shadow:0 .5cqw 0 rgba(0,0,0,.12)}
+.t2{color:var(--brick);-webkit-text-stroke:.38cqw var(--ink);paint-order:stroke fill;text-shadow:0 .6cqw 0 rgba(0,0,0,.18)}
+.quote{font-family:"Patrick Hand";font-size:6.4cqw;line-height:1.05;white-space:pre-line;transform:rotate(-2deg);
+  text-decoration:underline;text-decoration-color:var(--brick);text-decoration-thickness:.45cqw;text-underline-offset:1.4cqw}
+.rar{flex-direction:column;gap:1.4cqw;font-size:4.2cqw;letter-spacing:.04em}
+.gem{width:9.5cqw;height:9.5cqw;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:5.4cqw;
+  border:.45cqw solid var(--ink);box-shadow:inset 0 -1cqw 0 rgba(0,0,0,.2), inset 0 .8cqw 0 rgba(255,255,255,.35)}
+.r-special{background:linear-gradient(135deg,#8a4fc2,#d8a526)}
+.r-common{background:var(--common)} .r-uncommon{background:var(--uncommon)} .r-rare{background:var(--rare)} .r-epic{background:var(--epic)} .r-legendary{background:var(--legendary)}
+.set{flex-direction:column;gap:1cqw;font-size:4.1cqw;letter-spacing:.04em;padding:0 2cqw}
+.set small{font-family:"Bangers";font-size:3.4cqw;letter-spacing:.08em}
+.set hr{width:80%;border:0;border-top:.3cqw solid var(--ink);margin:0}
+.lvl{flex-direction:column;gap:1.4cqw;font-size:4.5cqw;letter-spacing:.04em}
+.stars{font-size:4.4cqw;letter-spacing:.1cqw;color:var(--ink)}
+.stars .on{color:#e8a91d;-webkit-text-stroke:.25cqw var(--ink)}
+.stars .off{opacity:.35}
+.stars .new{display:inline-block;animation:starpop .7s cubic-bezier(.2,1.8,.4,1) both}
+@keyframes starpop{0%{transform:scale(0) rotate(-90deg)}100%{transform:scale(1)}}
+.spark{z-index:4;color:#fff5c2;font-size:5cqw;text-shadow:0 0 2cqw #ffd76a;animation:twinkle 1.8s ease-in-out infinite;pointer-events:none}
+@keyframes twinkle{50%{opacity:.15;transform:scale(.6)}}
+
+/* level glows follow the card's transparent corners */
+.card.lv2{filter:drop-shadow(0 0 .6cqw rgba(255,255,255,.35))}
+.card.lv3{filter:drop-shadow(0 0 1.2cqw rgba(90,160,255,.7))}
+.card.lv4{filter:drop-shadow(0 0 1.6cqw rgba(170,100,255,.8))}
+.card.lv5{animation:goldglow 2.4s ease-in-out infinite}
+@keyframes goldglow{0%,100%{filter:drop-shadow(0 0 1.4cqw rgba(255,200,60,.7))}50%{filter:drop-shadow(0 0 3.2cqw rgba(255,210,80,1))}}
+.card.locked{filter:grayscale(1) brightness(.7)}
+.card.special{filter:drop-shadow(0 0 1.4cqw rgba(190,120,255,.85))}
+/* memory trick art */
+.mn{position:absolute;inset:0}
+.mn-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mn-badge{position:absolute;left:1%;top:0;width:25%;z-index:3;transform:rotate(-10deg);filter:drop-shadow(0 .6cqw .6cqw rgba(0,0,0,.4))}
+.mn-paper{position:absolute;left:11%;right:9%;top:15%;bottom:20%;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3cqw;
+  padding:3cqw;border:.45cqw solid var(--ink);border-radius:1.6cqw;transform:rotate(-1.5deg);box-shadow:.8cqw 1cqw 0 rgba(0,0,0,.35);
+  background:repeating-linear-gradient(0deg,transparent 0 6.6cqw,rgba(80,120,170,.2) 6.6cqw 6.9cqw),#fbf6e8}
+.mn-tag{font-family:"Bangers";letter-spacing:.08em;font-size:4.2cqw;background:#7b4bb5;color:#fff;padding:.6cqw 2.6cqw;border-radius:1.4cqw;border:.35cqw solid var(--ink);transform:rotate(-3deg)}
+.mn-row{display:flex;gap:1.2cqw;justify-content:center}
+.mn-tile{aspect-ratio:.82;border:.4cqw solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(var(--r));box-shadow:.4cqw .6cqw 0 rgba(0,0,0,.3);border-radius:.8cqw}
+.mn-tile b{font-family:"Luckiest Guy";font-weight:400;line-height:1;color:var(--ink)}
+.mn-tile small{font-family:"Patrick Hand";color:var(--ink);line-height:1;margin-top:.5cqw;white-space:nowrap}
+.mn-means{display:grid;gap:.8cqw 4cqw;font-family:"Patrick Hand";color:var(--ink);line-height:1.1}
+.mn-means b{font-family:"Luckiest Guy";font-weight:400;color:#7b4bb5;margin-right:1cqw}
+.ttype{display:flex;align-items:center;gap:10px;margin:14px 0 0}
+.ttype img{width:56px;height:56px;object-fit:contain}
+.ttype b{display:block;font-family:"Luckiest Guy";font-weight:400;font-size:20px;letter-spacing:.04em}
+.ttype span{font-size:17px;opacity:.8}
+.diffbox{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch}
+.dcol{border:2px solid var(--ink);border-radius:12px;padding:10px;font-size:16px}
+.dcol.a{background:#ffe3b8} .dcol.b{background:#cfe3ff}
+.dcol b{display:block;font-family:"Luckiest Guy";font-weight:400;font-size:20px;letter-spacing:.04em}
+.dcol i{display:block;margin:4px 0 6px;font-size:17px}
+.dcol ul{margin:0;padding-left:18px;line-height:1.25}
+.dvs{align-self:center;font-family:"Luckiest Guy";font-size:22px;color:var(--brick)}
+@media (max-width:480px){.diffbox{grid-template-columns:1fr}.dvs{text-align:center}}
+.mnbox{background:#fbf6e8;border:2px dashed rgba(0,0,0,.35);border-radius:12px;padding:12px 14px}
+.mnsent{font-size:22px;margin:0 0 8px;font-style:italic}
+.mnlist{margin:0 0 8px;padding-left:0;list-style:none;display:grid;gap:4px;font-size:18px}
+.mnlist b{display:inline-block;width:28px;text-align:center;font-family:"Luckiest Guy";font-weight:400;color:#fff;background:#7b4bb5;border-radius:6px;margin-right:8px}
+.mntip{margin:0;font-size:17px;opacity:.85}
+/* card back (pack reveal) */
+.cback{position:absolute;inset:0;border-radius:7%/4.7%;border:3px solid #f1e5c9;box-shadow:0 0 0 3px var(--ink),0 10px 18px rgba(0,0,0,.55);
+  background:radial-gradient(circle at 50% 50%,#3a4d70 0 30%,transparent 31%),repeating-linear-gradient(45deg,#2b3a55 0 10px,#26344d 10px 20px);display:flex;align-items:center;justify-content:center}
+.cback span{font-family:"Luckiest Guy";color:#f1e5c9;text-align:center;font-size:clamp(14px,4vw,24px);line-height:.95;letter-spacing:.04em;-webkit-text-stroke:1px var(--ink);paint-order:stroke fill;transform:rotate(-8deg)}
+.cback span i{font-style:normal;color:var(--brick)}
+/* home pack button */
+.packbtn{display:flex;align-items:center;gap:14px;width:100%;margin:14px 0 0;padding:10px 16px;border:3px solid var(--ink);border-radius:16px;background:var(--mustard);color:var(--ink);box-shadow:0 6px 0 var(--ink);text-align:left}
+.packbtn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--ink)}
+.packbtn img{height:74px;transform:rotate(-8deg);animation:packidle 2.4s ease-in-out infinite;filter:drop-shadow(0 4px 4px rgba(0,0,0,.4))}
+.packbtn b{display:block;font-family:"Luckiest Guy";font-weight:400;font-size:22px;letter-spacing:.05em}
+.packbtn small{font-size:17px}
+.packnote{text-align:center;margin:14px 0 0;opacity:.75;font-size:17px}
+/* pack opening */
+.pk{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px;
+  background:radial-gradient(circle at 50% 42%,rgba(70,48,14,.92),rgba(0,0,0,.96));overflow:hidden;animation:fadein .3s both}
+.pk-rays{position:absolute;width:160vmax;height:160vmax;left:50%;top:42%;translate:-50% -50%;pointer-events:none;
+  background:repeating-conic-gradient(rgba(255,210,90,.12) 0 8deg,transparent 8deg 20deg);animation:spin 30s linear infinite}
+.pk-stage{position:relative;width:min(94vw,600px);height:min(60vh,520px);display:flex;align-items:center;justify-content:center}
+.pk-pack{position:absolute;width:min(56vw,250px,36vh);aspect-ratio:640/975;border:0;background:none;padding:0;z-index:3;animation:packidle 2.4s ease-in-out infinite}
+.pk-pack img{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 14px 18px rgba(0,0,0,.6))}
+@keyframes packidle{50%{transform:translateY(-8px) rotate(1.5deg)}}
+.pk-pack.shake{animation:shake .45s linear 2}
+.pk-pack.torn{animation:none;pointer-events:none}
+.pk-pack.torn .pk-top{transition:transform .7s cubic-bezier(.3,.8,.4,1),opacity .6s .25s;transform:translate(35%,-130%) rotate(30deg);opacity:0}
+.pk-pack.torn .pk-body{transition:transform .8s .5s ease-in,opacity .5s .85s;transform:translateY(80%);opacity:0}
+.pk-cards{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:clamp(8px,2.4vw,18px);z-index:2;pointer-events:none}
+.pk-card{position:relative;width:min(29vw,170px,22vh);aspect-ratio:1024/1536;border:0;background:none;padding:0;perspective:1000px;opacity:0;transform:translateY(45%) scale(.45);
+  transition:transform .7s cubic-bezier(.2,1.4,.4,1),opacity .4s;transition-delay:calc(.55s + var(--i) * .18s)}
+.pk.out .pk-cards{pointer-events:auto}
+.pk.out .pk-card{opacity:1;transform:none}
+.pk.out .pk-card:nth-child(1){transform:rotate(-6deg) translateY(12px)}
+.pk.out .pk-card:nth-child(3){transform:rotate(6deg) translateY(12px)}
+.pk-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.3,1.3,.5,1)}
+.pk-card.flipped .pk-inner{transform:rotateY(180deg)}
+.pk-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.pk-front{transform:rotateY(180deg)}
+.pk-card:not(.flipped) .pk-front,.pk-card.flipped .pk-back{pointer-events:none}
+.cbackimg{width:100%;height:100%;object-fit:cover;border-radius:6%/4%;filter:drop-shadow(0 10px 14px rgba(0,0,0,.55))}
+.pk-badge{position:absolute;left:50%;top:-12px;translate:-50% 0;z-index:9;font-family:"Bangers";letter-spacing:.06em;font-size:clamp(13px,3.4vw,18px);padding:3px 10px;border:2px solid var(--ink);border-radius:999px;white-space:nowrap;opacity:0;transition:opacity .3s .45s;color:var(--ink)}
+.pk-card.flipped .pk-badge{opacity:1}
+.pk-badge.new{background:#ffe27a} .pk-badge.dup{background:#bfe0b5} .pk-badge.trick{background:#d6c2ff}
+.pk-hint{margin:0;font-size:20px;color:var(--paper);z-index:3;text-align:center;min-height:26px}
+.pk-done{max-width:340px;z-index:3;opacity:0;pointer-events:none;transition:opacity .3s}
+.pk.all .pk-done{opacity:1;pointer-events:auto}
+
+/* stamps */
+.stamp{z-index:6;font-family:"Luckiest Guy";padding:1.2cqw 3cqw;border:.9cqw solid currentColor;border-radius:2cqw;letter-spacing:.07em;
+  background:rgba(255,255,255,.12);mix-blend-mode:multiply;opacity:.92;transform:rotate(-12deg);pointer-events:none;
+  -webkit-mask-image:radial-gradient(circle at 30% 40%, #000 60%, rgba(0,0,0,.75) 100%);animation:slam .35s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes slam{0%{transform:rotate(-12deg) scale(2.4);opacity:0}100%{transform:rotate(-12deg) scale(1);opacity:.92}}
+.stampimg{position:absolute;z-index:6;pointer-events:none;filter:drop-shadow(0 .6cqw .6cqw rgba(0,0,0,.35));animation:slamimg .35s cubic-bezier(.2,1.6,.4,1) both}
+.stampimg.big{width:58%;left:21%;top:23.5%;--rot:-6deg}
+.card.cold .art-win > *{filter:saturate(.2) brightness(.92) contrast(.95)}
+.card.cold .art-win::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
+  background:linear-gradient(160deg,rgba(190,225,255,.3),rgba(120,170,220,.15) 60%,rgba(220,240,255,.35))}
+.card.cold{filter:drop-shadow(0 0 1.2cqw rgba(140,200,255,.7))}
+.mn-badge.low{top:auto;bottom:17%;left:1%;width:21%}
+.goingcold{position:absolute;z-index:7;width:34%;right:3%;top:26%;pointer-events:none;filter:drop-shadow(0 .6cqw .6cqw rgba(0,0,0,.4));animation:wobble 2.2s ease-in-out infinite}
+@keyframes wobble{0%,100%{transform:rotate(8deg)}50%{transform:rotate(-2deg) scale(1.06)}}
+.stampimg.coldcase{width:70%;left:15%;top:38%;--rot:-12deg;z-index:7}
+.stampimg.mastered{width:52%;right:2%;top:57%;--rot:-10deg}
+@keyframes slamimg{0%{transform:rotate(var(--rot)) scale(2.2);opacity:0}100%{transform:rotate(var(--rot)) scale(1);opacity:1}}
+.stampimg{transform:rotate(var(--rot))}
+.stamp.mastered{color:#b8860b;font-size:7cqw;right:4%;top:56%}
+.stamp.big{font-size:11cqw;left:50%;top:26%;translate:-50% 0}
+.stamp.ok{color:var(--good)} .stamp.no{color:var(--bad)}
+
+/* back */
+.lvtag{font-size:6.8cqw;letter-spacing:.04em;transform:rotate(-3deg)}
+.counter{font-family:"Bangers";font-size:4.6cqw;letter-spacing:.05em}
+.bnum{font-size:6.2cqw;letter-spacing:.04em}
+.brar{font-family:"Bangers";font-size:3.8cqw;letter-spacing:.08em;color:#fff}
+.bcat{font-family:"Bangers";font-size:3.5cqw;letter-spacing:.04em;line-height:1.05;padding:0 1cqw}
+.qtext{font-family:"Patrick Hand";justify-content:flex-start;text-align:left;padding:0 2cqw;line-height:1.12;color:var(--ink)}
+.ans{z-index:3;border:0;padding:0;background:url(art/answer_button.webp) center/100% 100% no-repeat;display:flex;align-items:center;
+  transition:transform .12s, filter .2s;touch-action:manipulation}
+.ans:hover:not([disabled]){transform:translateX(.8cqw)}
+.ans:active:not([disabled]){transform:scale(.97)}
+.ans .L{width:17.4%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:"Luckiest Guy";font-size:6cqw;-webkit-text-stroke:.3cqw var(--ink);paint-order:stroke fill}
+.ans .A{flex:1;text-align:left;padding-left:3cqw;padding-right:1.5cqw;font-family:"Patrick Hand";font-size:5cqw;color:var(--ink);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ans .A.wrap{white-space:normal;line-height:1.02;overflow:visible}
+.ans.right{filter:drop-shadow(0 0 1.4cqw rgba(63,143,74,.9))}
+.ans.right .A{color:#1f6b2b;font-weight:bold}
+.ans.wrong{opacity:.6}
+.ans.wrong .A{text-decoration:line-through;text-decoration-color:var(--bad);text-decoration-thickness:.5cqw}
+.ans[disabled]{cursor:default}
+.mascot{z-index:3;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.mascot img{width:100%;height:100%;object-fit:contain;-webkit-mask-image:radial-gradient(ellipse 60% 58% at 50% 50%, #000 70%, transparent 100%);mask-image:radial-gradient(ellipse 60% 58% at 50% 50%, #000 70%, transparent 100%)}
+.mascot img.cutm{-webkit-mask-image:none;mask-image:none;filter:drop-shadow(0 1cqw 0 rgba(0,0,0,.2));animation:bob 3s ease-in-out infinite}
+.mascot .me{font-size:22cqw;position:relative;filter:drop-shadow(0 1cqw 0 rgba(0,0,0,.2));animation:bob 3s ease-in-out infinite}
+.mascot .bub{position:absolute;right:6%;top:6%;font-family:"Luckiest Guy";font-size:8cqw;color:var(--ink);background:#fffaf0;border:.5cqw solid var(--ink);border-radius:50%;width:13cqw;height:13cqw;display:flex;align-items:center;justify-content:center}
+@keyframes bob{50%{transform:translateY(-1.5cqw) rotate(-3deg)}}
+.hint{z-index:3;border:0;background:none;padding:0 2.5cqw;gap:2.4cqw;justify-content:flex-start;text-align:left;font-family:"Patrick Hand";font-size:4cqw;line-height:1.1;touch-action:manipulation}
+.hint .bulb{font-size:9cqw;flex:none;filter:grayscale(.2)}
+.hint b{font-family:"Luckiest Guy";font-size:4.4cqw;display:block;margin-bottom:.6cqw;letter-spacing:.05em}
+.hint.used .bulb{filter:drop-shadow(0 0 2cqw #ffe26a)}
+.pts{flex-direction:column;gap:1.6cqw;font-size:4.2cqw;letter-spacing:.04em}
+.pts .v{font-size:9.5cqw;display:flex;align-items:center;gap:1.5cqw;white-space:nowrap}
+.pts .v.half{font-size:7.4cqw}
+.pts .v s{font-size:4cqw;opacity:.55}
+.nxtab{font-size:5cqw;letter-spacing:.04em}
+.nxl{flex-direction:column;align-items:flex-start;gap:1.6cqw;font-family:"Patrick Hand";font-size:4cqw;text-align:left;padding:0 1cqw}
+.bar{width:100%;height:4cqw;border:.45cqw solid var(--ink);border-radius:2cqw;background:rgba(255,255,255,.55);overflow:hidden}
+.bar b{display:block;height:100%;background:repeating-linear-gradient(45deg,#58a35f 0 2cqw,#4b9453 2cqw 4cqw);transition:width .8s cubic-bezier(.2,.9,.3,1)}
+.nxr{flex-direction:column;align-items:flex-start;justify-content:center;gap:.8cqw;font-family:"Patrick Hand";font-size:3.9cqw;text-align:left;padding-left:3cqw;border-left:.35cqw solid rgba(0,0,0,.6)}
+.nxr b{font-family:"Luckiest Guy";font-size:4cqw;letter-spacing:.04em;display:flex;gap:1.5cqw;align-items:center;margin-bottom:.6cqw}
+/* explanation note */
+.explain{z-index:7;background:#fbf4e2;border:.5cqw solid var(--ink);border-radius:2cqw;padding:3cqw 4cqw;color:var(--ink);overflow:auto;
+  box-shadow:0 1.2cqw 0 rgba(0,0,0,.35);transform:rotate(-.6deg);animation:slideup .35s cubic-bezier(.2,1.3,.4,1) both;font-size:4.1cqw;line-height:1.15}
+.explain::before{content:"";position:absolute;top:-2cqw;left:42%;width:16cqw;height:4.5cqw;background:rgba(222,196,130,.85);transform:rotate(-4deg);border:.2cqw solid rgba(0,0,0,.15)}
+.explain h3{margin:0 0 1.4cqw;font-family:"Luckiest Guy";font-weight:400;font-size:5.4cqw;letter-spacing:.05em;text-transform:uppercase}
+.explain h3.ok{color:var(--good)} .explain h3.no{color:var(--bad)}
+.explain p{margin:0 0 1.4cqw}
+.explain .reopen img{display:block;width:62%;margin:0 auto .6cqw;transform:rotate(-3deg);animation:slamimg .35s cubic-bezier(.2,1.6,.4,1) both;--rot:-3deg}
+.explain .reopen span{display:block;text-align:center}
+.explain .reopen{background:#dff0ff;border:.3cqw solid #3d7fb8;border-radius:1.4cqw;padding:1cqw 2cqw;color:#1d4f7a}
+.explain mark{background:#ffd76a;color:inherit;border-radius:.6cqw;padding:0 .3cqw}
+.explain .mono{font-family:"Courier Prime";font-size:3.5cqw}
+@keyframes slideup{from{transform:translateY(20%) rotate(-.6deg);opacity:0}}
+/* record-compare panel */
+.rec{z-index:3;flex-direction:column;align-items:stretch;justify-content:flex-start;background:#fbf6e8;border:.45cqw solid var(--ink);border-radius:2.4cqw;padding:3cqw 3cqw 2cqw;gap:1.6cqw;
+  background-image:repeating-linear-gradient(0deg, transparent 0 7.4cqw, rgba(80,120,170,.18) 7.4cqw 7.7cqw)}
+.rec .rq{font-family:"Patrick Hand";font-size:4.8cqw;text-align:left;line-height:1.05}
+.rec .rh,.rec .rr{display:grid;grid-template-columns:5cqw 1fr 1fr;gap:1.6cqw;align-items:center;text-align:left}
+.rec .rh{font-family:"Bangers";font-size:3.4cqw;letter-spacing:.08em;opacity:.7}
+.rec .rr{font-family:"Courier Prime";font-weight:700;font-size:3.3cqw;padding:1.2cqw 0;border-bottom:.25cqw dashed rgba(0,0,0,.25)}
+.rec .rr span:first-child{font-family:"Luckiest Guy";font-weight:400;font-size:4.2cqw}
+.rec .rr mark{background:#ffd76a}
+
+/* ---------- LAYOUT PIECES ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 auto 12px;max-width:640px}
+.btn-ghost{background:rgba(255,255,255,.06);border:2px solid rgba(241,229,201,.25);border-radius:999px;padding:8px 14px;min-height:44px;color:var(--paper)}
+.btn-ghost:hover{background:rgba(255,255,255,.12)}
+.dots{display:flex;gap:6px}
+.dots i{width:12px;height:12px;border-radius:50%;border:2px solid var(--paper);opacity:.5}
+.dots i.ok{background:var(--good);border-color:var(--good);opacity:1}
+.dots i.no{background:var(--bad);border-color:var(--bad);opacity:1}
+.dots i.cur{opacity:1;box-shadow:0 0 0 3px rgba(241,229,201,.25)}
+.chip{font-family:"Bangers";letter-spacing:.06em;font-size:18px;background:var(--mustard);color:var(--ink);border-radius:999px;padding:6px 12px;border:2px solid var(--ink)}
+.btn-big{display:block;width:100%;min-height:58px;border:3px solid var(--ink);border-radius:16px;background:var(--brick);color:#fff8ea;
+  font-family:"Luckiest Guy";font-size:23px;letter-spacing:.07em;box-shadow:0 6px 0 var(--ink);transition:transform .08s, box-shadow .08s;-webkit-text-stroke:1px var(--ink);paint-order:stroke fill}
+.btn-big:active{transform:translateY(4px);box-shadow:0 2px 0 var(--ink)}
+.btn-big.alt{background:var(--paper);color:var(--ink);-webkit-text-stroke:0}
+.btn-big.gold{background:var(--mustard);color:var(--ink);-webkit-text-stroke:0}
+
+/* study */
+.stage{perspective:1600px;display:flex;justify-content:center}
+.flip{position:relative;width:var(--cw);aspect-ratio:1024/1536;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,1.3,.5,1)}
+.flip.flipped{transform:rotateY(180deg)}
+.face{position:absolute !important;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face.back{transform:rotateY(180deg)}
+/* only the side facing the player can be tapped */
+.flip:not(.flipped) .face.back, .flip.flipped .face.front{pointer-events:none}
+.flip.flipped .face.back{z-index:2}
+.below{width:var(--cw);margin:16px auto 0;min-height:64px}
+.tans{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px}
+.tans button{min-height:60px;border:3px solid var(--ink);border-radius:14px;background:var(--paper);color:var(--ink);font-family:"Luckiest Guy";font-size:28px;box-shadow:0 5px 0 var(--ink)}
+.tans button:active:not([disabled]){transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.tans button.right{background:#bfe0b5}
+.tans button.wrong{background:#f1b3a8;opacity:.8}
+.tans-label{font-family:"Bangers";letter-spacing:.08em;opacity:.8;text-align:center;margin-bottom:8px}
+.fade-swap{animation:fadeswap .35s ease both}
+@keyframes fadeswap{from{opacity:0;transform:translateX(4%)}}
+
+/* home */
+.logo{font-family:"Luckiest Guy";font-size:clamp(46px,11.5vw,84px);line-height:.95;letter-spacing:.04em;text-align:center;margin:18px 0 4px;color:var(--paper);
+  -webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:0 6px 0 var(--ink), 0 10px 22px rgba(0,0,0,.5);transform:rotate(-2deg)}
+.logo span{color:var(--brick)}
+.tagline{text-align:center;font-size:20px;opacity:.85;margin:10px 0 22px}
+.home-top{max-width:560px;margin:0 auto}
+.nudge{display:flex;align-items:center;gap:12px;background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:16px;padding:12px 16px;margin-bottom:14px;
+  transform:rotate(-.6deg);box-shadow:0 5px 0 rgba(0,0,0,.4);font-size:20px;line-height:1.15}
+.nudge .z{font-size:30px}
+.nudge .nz{width:40px;height:auto}
+.coldnudge{background:#e3f1ff;border-color:#1d3f5f}
+.btn-big.coldbtn{background:#3d7fb8}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0 26px}
+.stat{background:rgba(255,255,255,.05);border:2px solid rgba(241,229,201,.18);border-radius:14px;padding:10px 6px;text-align:center}
+.stat b{display:block;font-family:"Luckiest Guy";font-size:23px;letter-spacing:.04em;color:var(--mustard);font-weight:400}
+.stat small{font-size:14px;opacity:.75}
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin:8px 0 12px}
+.sec h2{font-family:"Luckiest Guy";font-weight:400;font-size:27px;margin:0;letter-spacing:.05em}
+.sec small{font-size:17px;opacity:.75}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
+@media (min-width:700px){.grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:24px}}
+.tile{background:none;border:0;padding:0;text-align:left;transition:transform .15s}
+.tile:hover{transform:translateY(-4px) rotate(-.6deg)}
+.tile .cap{margin-top:8px;font-size:16px;opacity:.85;display:flex;justify-content:space-between;gap:6px}
+.lock-ov{z-index:5;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1cqw;color:#f6ecd4;font-family:"Bangers";font-size:7cqw;letter-spacing:.06em;text-shadow:0 .5cqw 0 #000}
+.lock-ov.mys{justify-content:flex-end;padding-bottom:9%;gap:.6cqw}
+.lock-ov.mys span{background:rgba(0,0,0,.55);padding:1cqw 3cqw;border-radius:2cqw;border:.3cqw solid #d8a526;color:#ffe9a8}
+.lock-ov small{font-family:"Patrick Hand";font-size:5.2cqw;letter-spacing:0}
+footer{margin-top:40px;text-align:center;font-size:15px;opacity:.6;line-height:1.5}
+footer button{background:none;border:0;text-decoration:underline;opacity:.9;min-height:44px}
+
+/* detail */
+.detail{display:grid;gap:22px;justify-items:center}
+.detail .dcard{width:var(--cw)}
+.panel{width:100%;max-width:520px;background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:18px;padding:18px;box-shadow:0 6px 0 rgba(0,0,0,.45)}
+.panel h1{font-family:"Luckiest Guy";font-weight:400;font-size:30px;margin:0;line-height:1.05;letter-spacing:.04em;text-transform:uppercase}
+.panel .meta{margin:6px 0 14px;font-size:18px;opacity:.8}
+.coldnote img{height:28px;vertical-align:middle}
+.coldnote{background:#e3f1ff;border:2px solid #3d7fb8;border-radius:12px;padding:8px 12px;margin:-4px 0 14px;font-size:17px}
+.warmnote{font-size:16px;opacity:.7;margin:-8px 0 14px}
+.panel h3{font-family:"Bangers";letter-spacing:.08em;font-weight:400;font-size:20px;margin:18px 0 8px}
+.pbar{height:18px;border:3px solid var(--ink);border-radius:10px;background:#fff;overflow:hidden}
+.pbar b{display:block;height:100%;background:repeating-linear-gradient(45deg,#58a35f 0 10px,#4b9453 10px 20px)}
+.prow{display:flex;justify-content:space-between;margin:8px 0 16px;font-size:18px}
+.stages{display:flex;gap:8px;flex-wrap:wrap}
+.stages button{width:52px;height:52px;border:3px solid var(--ink);border-radius:12px;background:#fff;font-family:"Luckiest Guy";font-size:22px}
+.stages button.cur{background:var(--mustard)}
+.stages button[disabled]{opacity:.4;cursor:not-allowed}
+.lore{margin:0;padding-left:20px;font-size:18px;line-height:1.35}
+.lore li.lk{opacity:.45;font-style:italic}
+details{margin-top:18px;border-top:2px dashed rgba(0,0,0,.25);padding-top:10px}
+summary{cursor:pointer;font-family:"Bangers";letter-spacing:.08em;font-size:18px;min-height:32px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.tools button{border:2px solid var(--ink);border-radius:10px;background:#fff;padding:8px 12px;min-height:44px}
+.preview-note{font-family:"Bangers";letter-spacing:.08em;color:var(--mustard);min-height:24px;text-align:center}
+@media (min-width:900px){.detail{grid-template-columns:auto 1fr;align-items:start;justify-items:start}}
+
+/* results */
+.results{max-width:520px;margin:0 auto;text-align:center}
+.results h1{font-family:"Luckiest Guy";font-weight:400;font-size:clamp(34px,8.5vw,54px);letter-spacing:.04em;margin:16px 0 0;color:var(--paper);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:0 5px 0 var(--ink);transform:rotate(-2deg)}
+.score{font-family:"Luckiest Guy";font-size:78px;line-height:1;margin:16px 0 0;color:var(--mustard);text-shadow:0 5px 0 var(--ink)}
+.results .sub{font-size:20px;opacity:.85;margin:4px 0 16px}
+.rchips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.rcard{width:min(58vw,240px);margin:0 auto 18px}
+.results .panel{text-align:left;margin-bottom:18px}
+.almost{font-family:"Luckiest Guy";font-size:22px;color:var(--brick);margin-top:10px}
+.stack{display:grid;gap:14px}
+
+/* level up overlay */
+.lu{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;
+  background:radial-gradient(circle at 50% 45%, rgba(60,40,10,.85), rgba(0,0,0,.93));animation:fadein .3s both;overflow:hidden}
+@keyframes fadein{from{opacity:0}}
+.lu .rays2{position:absolute;width:160vmax;height:160vmax;left:50%;top:45%;translate:-50% -50%;opacity:0;pointer-events:none;
+  background:repeating-conic-gradient(rgba(255,210,90,.16) 0 8deg, transparent 8deg 20deg);animation:spin 24s linear infinite}
+.lu.done .rays2{opacity:1;transition:opacity .6s}
+.lu .lucard{width:min(72vw,340px, calc((100dvh - 230px)/1.5));animation:rise .5s cubic-bezier(.2,1.4,.4,1) both;position:relative}
+@keyframes rise{from{transform:translateY(40px) scale(.7);opacity:0}}
+.lu .lucard.shake{animation:shake .5s linear}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-6px) rotate(-2deg)}40%{transform:translateX(6px) rotate(2deg)}60%{transform:translateX(-5px) rotate(-1deg)}80%{transform:translateX(5px) rotate(1deg)}}
+.lu .lucard.pop{animation:cardpop .6s cubic-bezier(.2,1.8,.4,1)}
+@keyframes cardpop{0%{transform:scale(.9)}50%{transform:scale(1.07)}100%{transform:scale(1)}}
+.flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:80}
+.flash.go{animation:flash .5s ease-out}
+@keyframes flash{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
+.lu h2{margin:0;font-family:"Luckiest Guy";font-weight:400;font-size:clamp(40px,11vw,64px);letter-spacing:.05em;color:var(--mustard);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:0 5px 0 var(--ink);opacity:0;position:relative}
+.lu p{margin:0;font-size:20px;opacity:0;text-align:center;position:relative}
+.lu .btn-big{max-width:340px;opacity:0;position:relative}
+.lu.done h2{animation:titlepop .6s cubic-bezier(.2,1.8,.4,1) both}
+.lu.done p{opacity:.9;transition:opacity .4s .2s}
+.lu.done .btn-big{opacity:1;transition:opacity .3s .5s}
+@keyframes titlepop{from{transform:scale(0) rotate(-10deg);opacity:0}to{opacity:1}}
+.confetti{position:absolute;top:-20px;width:10px;height:14px;z-index:55;pointer-events:none;border:1px solid rgba(0,0,0,.4);animation:fall linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--rot))}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="flash" id="flash"></div>
+
+<script>window.ART_MANIFEST = {"adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "summons": {"1": "art/summons_1.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}};</script>
+<script>
+/* ================= DATA ================= */
+const REWARD = [25, 35, 50, 75, 100];     // XP per correct answer at each level
+const NEED   = [100, 140, 200, 300, 300]; // XP needed to finish each level (level 5 -> MASTERED)
+const SESSION_LEN = 5;
+
+const ICON = {
+  court:`<svg viewBox="0 0 64 64" fill="none" stroke="#1d1b17" stroke-width="4" stroke-linejoin="round"><path d="M6 24 32 8l26 16z" fill="#fff"/><path d="M12 28v20M22 28v20M32 28v20M42 28v20M52 28v20"/><path d="M6 54h52M9 50h46" /></svg>`,
+  copier:`<svg viewBox="0 0 64 64" fill="none" stroke="#1d1b17" stroke-width="4" stroke-linejoin="round"><rect x="8" y="20" width="48" height="30" rx="4" fill="#fff"/><path d="M16 20V8h32v12M16 50v6h32v-6"/><circle cx="46" cy="30" r="3" fill="#cf3b2a" stroke="none"/><path d="M16 38h22"/></svg>`,
+  folder:`<svg viewBox="0 0 64 64" fill="none" stroke="#1d1b17" stroke-width="4" stroke-linejoin="round"><path d="M6 16h18l6 6h28v30H6z" fill="#f3d27a"/><path d="M6 28h52"/></svg>`,
+};
+
+const CARDS = [
+  {
+    id:'gavel', art:'gavel', cutout:true, bgs:{1:'art/bg_gavel_1.webp', 3:'art/bg_gavel_2.webp'}, num:'#001', l1:'OVERBOOKED', l2:'GAVEL', name:'Overbooked Gavel',
+    category:'COURT PROCEDURES', set:'COURT PROCEDURES', rarity:'rare', icon:'court', emoji:'🔨',
+    mascot:'art/gavel_think.webp',
+    quote:'Same court.\nMore cases.',
+    lore:[
+      'Every courthouse has one. This one has had enough.',
+      'It started drinking coffee in 1998. It never stopped.',
+      'Legend says it once heard 212 cases before lunch.',
+      'The desk cracked. The gavel did not.',
+      'It no longer bangs for order. Order comes to it.',
+    ],
+    stickers:{
+      2:[{n:'PART 2?!',c:'#ffe27a',x:67,y:7,r:7,s:4.4}],
+      3:[{n:'URGENT',c:'#ff9fb6',x:34,y:3,r:-8,s:4},{n:'4:59 PM',c:'#a9d4f5',x:74,y:28,r:10,s:4},{e:'📄',x:30,y:14,r:-20,s:7,a:'float'}],
+      4:[{n:'SEND HELP',c:'#ffb38a',x:3,y:2,r:-10,s:4.2},{e:'☕',x:66,y:62,r:6,s:9},{e:'☕',x:4,y:66,r:-6,s:8},{e:'📄',x:60,y:12,r:18,s:7,a:'float2'},{e:'📄',x:14,y:34,r:-30,s:6,a:'float'}],
+      5:[{e:'👑',x:46,y:3,r:-10,s:16},{rays:1}],
+    },
+    bank: null, // set below
+  },
+  {
+    id:'paperjam', art:'paperjam', cutout:true, bgs:{1:'art/bg_copyroom.webp'}, num:'#002', l1:'PAPER JAM', l2:'PRINCE', name:'Paper Jam Prince',
+    category:'CLERICAL ACCURACY', set:'CORE: CHECKING', rarity:'rare', icon:'copier', emoji:'🖨️',
+    quote:'I simply cannot\nprocess this.',
+    lore:[
+      'Once a humble fax machine with big dreams.',
+      'It only jams when you are in a hurry. It knows.',
+      'It has refused to copy 4,000 documents on principle.',
+      'Its loyal subjects: three staplers and a hole punch.',
+      'Long may it reign. Slowly.',
+    ],
+    stickers:{
+      2:[{n:'ERROR',c:'#ff9d8a',x:64,y:12,r:8,s:4.6}],
+      3:[{n:'OUT OF ORDER (AGAIN)',c:'#ffe27a',x:5,y:5,r:-6,s:3.6},{e:'📄',x:14,y:34,r:-20,s:7,a:'float'},{e:'📄',x:74,y:40,r:25,s:7,a:'float2'}],
+      4:[{e:'📎',x:22,y:66,r:-10,s:8},{e:'📎',x:36,y:68,r:5,s:8},{e:'📎',x:50,y:66,r:-4,s:8},{n:'ALL HAIL',c:'#c8b6ff',x:66,y:64,r:6,s:4}],
+      5:[{e:'👑',x:37,y:4,r:-10,s:17},{rays:1}],
+    },
+    gen:'compare',
+  },
+  {
+    id:'missingfile', art:'missingfile', cutout:true, bgs:{1:'art/bg_records.webp'}, num:'#003', l1:'MISSING FILE', l2:'MONSTER', name:'Missing File Monster',
+    category:'FILING & RECORDS', set:'CORE: FILING', rarity:'rare', icon:'folder', emoji:'📁',
+    quote:'It was here a\nsecond ago.',
+    lore:[
+      'It lives in the gap between two filing cabinets.',
+      'Nobody has ever seen it take a file. Nobody.',
+      'Its favorite letter is M, because M is in the middle of everything.',
+      'Last seen: the drawer marked "MISC".',
+      'It is retired now. The files are with it.',
+    ],
+    stickers:{
+      2:[{n:'NOT ME',c:'#ffe27a',x:64,y:12,r:8,s:4.6}],
+      3:[{n:'WHERE?',c:'#a9d4f5',x:6,y:62,r:-8,s:4.6},{e:'👣',x:70,y:62,r:10,s:8}],
+      4:[{e:'🥸',x:48,y:28,r:0,s:13}],
+      5:[{e:'🏝️',x:4,y:52,r:0,s:14},{e:'🕶️',x:40,y:30,r:0,s:11},{e:'🍹',x:72,y:58,r:8,s:10},{rays:1}],
+    },
+    gen:'alpha',
+  },
+];
+CARDS.push({
+  id:'summons', art:'summons', cutout:true, bgs:{1:'art/bg_summons_1.webp', 2:'art/bg_summons_2.webp', 3:'art/bg_summons_3.webp'}, maxLevel:3, num:'#004', l1:'THE', l2:'SUMMONS', name:'Summons',
+  category:'COURT TERMS', set:'COURT TERMS', rarity:'common', icon:'court', emoji:'✉️',
+  quote:'You\'ve been\nexpected.',
+  lore:[
+    'Always on time. Always in a hurry.',
+    'It has never once been happy to see you. It just looks that way.',
+    'It has personally started 10,000 lawsuits. It remembers every one.',
+  ],
+  stickers:{
+    2:[{n:'SERVED!',c:'#ffe27a',x:62,y:6,r:8,s:4.6}],
+    3:[{e:'📣',x:6,y:8,r:-12,s:10},{n:'RUSH',c:'#ff9fb6',x:66,y:52,r:-6,s:4.4}],
+  },
+  bank:[
+    {lv:1,q:'What document notifies a defendant that a lawsuit has been started against them?',c:['Summons','Subpoena','Verdict','Affidavit'],a:'Summons',h:'It "summons" the defendant into the case.',w:'A summons notifies the defendant that an action has been started and that they must respond or appear.'},
+    {lv:1,type:'tf',q:'TRUE or FALSE: A summons and a subpoena are the same document.',c:['True','False'],a:'False',h:'One is for defendants, one is for witnesses.',w:'False. A summons starts the case against a defendant. A subpoena orders someone (often a witness) to appear or produce records.'},
+    {lv:1,q:'In a civil case, the person who receives the summons is usually the:',c:['Defendant','Plaintiff','Judge','Court clerk'],a:'Defendant',h:'The one being sued.',w:'The summons is served on the defendant, the party being sued.'},
+    {lv:1,q:'Fill in the blank: A ______ tells the defendant they must respond to the lawsuit.',c:['summons','verdict','calendar','transcript'],a:'summons',h:'It is card #004.',w:'The summons tells the defendant that a case has started and that they must respond or appear.'},
+    {lv:2,q:'Formally delivering a summons to the defendant is called:',c:['Service','Filing','Docketing','Arraignment'],a:'Service',h:'"You\'ve been ____."',w:'Delivering court papers to a party is called service (or "service of process").'},
+    {lv:2,q:'What document usually proves that the summons was delivered?',c:['Affidavit of service','Notice of appearance','Stipulation','Judgment'],a:'Affidavit of service',h:'It is sworn, and it is about delivery.',w:'An affidavit of service is a sworn statement by the person who delivered the papers, describing when, where, and how they were served.'},
+    {lv:2,type:'tf',q:'TRUE or FALSE: A summons is directed to a party in the case, not to an outside witness.',c:['True','False'],a:'True',h:'Witnesses get a different document.',w:'True. Witnesses who are not parties are brought in with a subpoena, not a summons.'},
+    {lv:3,q:'A process server hands the summons directly to the defendant. This is called:',c:['Personal service','Substituted service','Service by publication','Filing'],a:'Personal service',h:'Hand to hand.',w:'Delivering the papers directly to the person is personal (in-hand) service.'},
+    {lv:3,q:'A summons is often served together with which document that states the plaintiff\'s claims?',c:['Complaint','Answer','Verdict','Affidavit of service'],a:'Complaint',h:'The defendant later responds to it with an answer.',w:'The complaint states the plaintiff\'s claims. It is commonly served with the summons.'},
+    {lv:3,q:'A person who is NOT a party must come to court to testify. Which document should be used?',c:['Subpoena','Summons','Complaint','Notice of motion'],a:'Subpoena',h:'Summons is for parties.',w:'A subpoena compels a witness to appear. A summons is for bringing a defendant into the case.'},
+  ],
+});
+/* Court Terms commons #005–#009. Characters are cut-outs; backgrounds can be added later with bgs:{}. */
+const commonCard = (o) => Object.assign({ cutout:true, maxLevel:3, category:'COURT TERMS', set:'COURT TERMS', rarity:'common', icon:'court' }, o);
+CARDS.push(
+  commonCard({
+    id:'motion', art:'motion', num:'#005', l1:'THE', l2:'MOTION', name:'Motion', emoji:'🏃',
+    quote:'Always moving.\nRarely finished.',
+    lore:['It has never once walked. Not one time.','Its stopwatch is set to "return date."','It has run 4,000 laps around the motion part.'],
+    stickers:{2:[{n:'PENDING',c:'#ffe27a',x:64,y:6,r:8,s:4.4}], 3:[{n:'SUBMITTED!',c:'#bfe3a8',x:4,y:6,r:-8,s:4.2}]},
+    bank:[
+      {lv:1,q:'A request asking the court to make a ruling or issue an order is a:',c:['Motion','Complaint','Verdict','Summons'],a:'Motion',h:'It "moves" the court to act.',w:'A motion is a request asking the court to issue a ruling or take a particular action.'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: A motion can be made in writing or out loud in court.',c:['True','False'],a:'True',h:'Think about a lawyer standing up in court.',w:'True. Motions are often written, but they can also be made orally in court.'},
+      {lv:1,q:'The party who makes a motion is often called the:',c:['Movant','Respondent','Juror','Clerk'],a:'Movant',h:'The one who "moves."',w:'The party making the motion is the movant (or moving party).'},
+      {lv:2,q:'An attorney asks the court to throw the case out. This is a motion to:',c:['Dismiss','Adjourn','Appeal','Serve'],a:'Dismiss',h:'Throw it out = ?',w:'Asking the court to throw out a case is a motion to dismiss.'},
+      {lv:2,q:'The side that disagrees with a motion submits papers called:',c:['Opposition papers','A summons','A verdict sheet','A subpoena'],a:'Opposition papers',h:'They oppose it.',w:'The other side answers a motion with opposition (answering) papers.'},
+      {lv:2,q:'The date a motion is scheduled to be heard is often called the:',c:['Return date','Verdict date','Index date','Filing fee'],a:'Return date',h:'The motion "returns" to court on this day.',w:'The return date is the day the motion is scheduled to be heard or submitted.'},
+      {lv:3,q:'One side refuses to hand over documents in discovery. The other side asks the court to order it. Which motion is this?',c:['Motion to compel','Motion to dismiss','Motion to adjourn','Motion to reargue'],a:'Motion to compel',h:'"Compel" means force.',w:'A motion to compel asks the court to order the other side to comply, for example with discovery.'},
+      {lv:3,q:'A party asks the court to decide the case without a trial because no important facts are in dispute. This is a motion for:',c:['Summary judgment','Default','Adjournment','Service'],a:'Summary judgment',h:'It skips the trial.',w:'Summary judgment decides a case without trial when there is no genuine dispute about the key facts.'},
+      {lv:3,q:'The papers that tell the other side when and where a motion will be heard are the:',c:['Notice of motion','Affidavit of service','Summons','Stipulation'],a:'Notice of motion',h:'It gives notice.',w:'A notice of motion tells the other side what is being requested and when it will be heard.'},
+    ],
+  }),
+  commonCard({
+    id:'affidavit', art:'affidavit', num:'#006', l1:'THE', l2:'AFFIDAVIT', name:'Affidavit', emoji:'✋',
+    quote:'I swear.\nLiterally.',
+    lore:['It has never told a lie. It is physically incapable.','The little stamp goes everywhere it goes.','It once swore so hard the notary needed a nap.'],
+    stickers:{2:[{n:'SWORN',c:'#ffe27a',x:64,y:6,r:8,s:4.4}], 3:[{n:'NOTARIZED',c:'#a9d4f5',x:4,y:6,r:-8,s:4.2}]},
+    bank:[
+      {lv:1,q:'A written statement of facts sworn to be true is a(n):',c:['Affidavit','Motion','Verdict','Calendar'],a:'Affidavit',h:'Written + sworn.',w:'An affidavit is a written statement made under oath.'},
+      {lv:1,q:'The person who signs and swears to an affidavit is called the:',c:['Affiant','Plaintiff','Notary','Movant'],a:'Affiant',h:'It sounds like "affidavit."',w:'The affiant (sometimes called the deponent) is the person who makes the sworn statement.'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: An affidavit is made under oath.',c:['True','False'],a:'True',h:'Look at the raised hand.',w:'True. The oath is what makes it an affidavit.'},
+      {lv:2,q:'Who commonly administers the oath for an affidavit?',c:['A notary public','A juror','A process server','The plaintiff'],a:'A notary public',h:'They have a stamp.',w:'Affidavits are commonly sworn before a notary public or another official authorized to give oaths.'},
+      {lv:2,q:'Knowingly lying in a sworn affidavit can be the crime of:',c:['Perjury','Adjournment','Stipulation','Service'],a:'Perjury',h:'Lying under oath.',w:'Lying under oath can be perjury.'},
+      {lv:2,q:'An affidavit attached to motion papers is mainly used to:',c:['Present facts under oath','Schedule a hearing','Notify a defendant of a lawsuit','Appeal a decision'],a:'Present facts under oath',h:'What does an affidavit contain?',w:'Affidavits put facts before the court under oath, often to support or oppose a motion.'},
+      {lv:3,q:'Sworn proof that court papers were delivered is an:',c:['Affidavit of service','Affidavit of merit','Notice of motion','Order to show cause'],a:'Affidavit of service',h:'It is about delivery.',w:'An affidavit of service is sworn by the person who delivered the papers, describing when, where, and how.'},
+      {lv:3,q:'What is the main difference between an affidavit and a deposition?',c:['An affidavit is written; a deposition is spoken testimony','An affidavit is not sworn','A deposition always happens in court','There is no difference'],a:'An affidavit is written; a deposition is spoken testimony',h:'One is on paper, one is out loud.',w:'Both are under oath. An affidavit is a written statement; a deposition is oral testimony recorded outside of court.'},
+      {lv:3,q:'The section at the end of an affidavit showing when, where, and before whom it was sworn is the:',c:['Jurat','Caption','Index number','Verdict'],a:'Jurat',h:'It sounds like "jury," but it isn\'t one.',w:'The jurat is the notary\'s certification at the end showing the oath was taken.'},
+    ],
+  }),
+  commonCard({
+    id:'adjournment', art:'adjournment', bgs:{1:'art/bg_adjournment_1.webp'}, num:'#007', l1:'THE', l2:'ADJOURNMENT', name:'Adjournment', emoji:'🧳',
+    quote:'Not today.',
+    lore:['It packs a suitcase every morning, just in case.','It has been "see you next month" since 2019.','It once adjourned its own birthday party.'],
+    stickers:{2:[{n:'NEXT MONTH',c:'#ffe27a',x:62,y:6,r:8,s:4.2}], 3:[{n:'AGAIN?!',c:'#ff9fb6',x:4,y:6,r:-8,s:4.4}]},
+    bank:[
+      {lv:1,q:'Postponing a court proceeding to a later date is an:',c:['Adjournment','Appeal','Arraignment','Affidavit'],a:'Adjournment',h:'The case gets a new date.',w:'An adjournment moves a case or proceeding to a later date.'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: An adjournment ends the case permanently.',c:['True','False'],a:'False',h:'It is a pause, not an ending.',w:'False. An adjournment just moves the matter to another date.'},
+      {lv:1,q:'When a case is adjourned, it usually gets a new:',c:['Court date','Plaintiff','Index number','Verdict'],a:'Court date',h:'Look at the calendar.',w:'An adjourned case is given a new date to come back.'},
+      {lv:2,q:'A lawyer is on trial in another courtroom and cannot appear. What will they most likely ask for?',c:['An adjournment','A judgment','A subpoena','An affidavit'],a:'An adjournment',h:'They need a new date.',w:'When a party needs more time or a new date, they ask for an adjournment.'},
+      {lv:2,q:'When both sides agree to an adjournment in writing, it is often done by:',c:['Stipulation','Subpoena','Verdict','Summons'],a:'Stipulation',h:'An agreement between the parties.',w:'A stipulation is a written agreement between the parties, often used for adjournments.'},
+      {lv:2,q:'A short break during the SAME day\'s session is a:',c:['Recess','Adjournment','Appeal','Default'],a:'Recess',h:'It is short and the same day.',w:'A recess is a short break. An adjournment moves the matter to another time or date.'},
+      {lv:3,q:'In New York criminal court, an "ACD" is an adjournment in contemplation of:',c:['Dismissal','Discovery','Deposition','Default'],a:'Dismissal',h:'The case may go away later.',w:'An ACD is an adjournment in contemplation of dismissal: the case is dismissed later if conditions are met.'},
+      {lv:3,q:'A case adjourned with no future date set is sometimes said to be adjourned:',c:['Sine die','Pro se','Ex parte','Nunc pro tunc'],a:'Sine die',h:'Latin for "without a day."',w:'"Sine die" means without a day: no new date has been set.'},
+      {lv:3,q:'Which one moves a matter to ANOTHER date: an adjournment or a recess?',c:['Adjournment','Recess','Both','Neither'],a:'Adjournment',h:'Which one packs a suitcase?',w:'An adjournment moves the matter to a later date. A recess is a short break in the same session.'},
+    ],
+  }),
+  commonCard({
+    id:'calendarcall', art:'calendarcall', bgs:{1:'art/bg_calendarcall_1.webp'}, num:'#008', l1:'CALENDAR', l2:'CALL', name:'Calendar Call', emoji:'🎤',
+    quote:'Is the party\npresent?',
+    lore:['It has read 1.2 million names out loud.','Its list is never shorter than the room.','Nobody knows who wrote the list. It just appears.'],
+    stickers:{2:[{n:'SECOND CALL',c:'#ffe27a',x:60,y:6,r:8,s:4.2}], 3:[{n:'READY?',c:'#bfe3a8',x:4,y:6,r:-8,s:4.4}]},
+    bank:[
+      {lv:1,q:'The list of cases scheduled to be heard by the court is the court:',c:['Calendar','Transcript','Exhibit','Pleading'],a:'Calendar',h:'It is about scheduling.',w:'The court calendar lists the cases scheduled to be heard.'},
+      {lv:1,q:'At a calendar call, the court:',c:['Calls each case on the list to see who is present','Sentences defendants','Selects a jury','Collects filing fees'],a:'Calls each case on the list to see who is present',h:'It is a roll call for cases.',w:'At a calendar call, each case on the list is called to check who is present and ready.'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: At a calendar call, cases are called to check whether the parties are ready.',c:['True','False'],a:'True',h:'Roll call.',w:'True. The calendar call checks attendance and readiness.'},
+      {lv:2,q:'In a civil case, the defendant does not appear when the case is called. The plaintiff may ask for a:',c:['Default','Recess','Subpoena','Verdict'],a:'Default',h:'The other side did not show up.',w:'When a party fails to appear, the other side may ask the court to find that party in default.'},
+      {lv:2,q:'A "second call" means:',c:['Cases not ready the first time are called again later','The case is sent to a higher court','A new jury is selected','The case is dismissed'],a:'Cases not ready the first time are called again later',h:'Try again later.',w:'On second call, cases that were not ready the first time are called again.'},
+      {lv:2,q:'Who typically reads out the cases at a calendar call?',c:['The court clerk','The jury','The plaintiff','The process server'],a:'The court clerk',h:'This is your future job.',w:'The court clerk usually calls the calendar.'},
+      {lv:3,q:'The plaintiff appears, but the defendant never answered the complaint and does not show up. What might the plaintiff request?',c:['A default judgment','A deposition','A recess','A subpoena'],a:'A default judgment',h:'Default + judgment.',w:'When a defendant fails to answer or appear, the plaintiff may seek a default judgment.'},
+      {lv:3,q:'Neither side appears when a case is called. What may the court do?',c:['Mark it off or dismiss it','Enter judgment for the plaintiff','Issue a new summons','Swear in a jury'],a:'Mark it off or dismiss it',h:'Nobody showed up.',w:'If no one appears, the court may mark the case off the calendar or dismiss it.'},
+      {lv:3,q:'A case removed from the active calendar is often described as being:',c:['Marked off','Sworn','Notarized','Served'],a:'Marked off',h:'Crossed off the list.',w:'A case taken off the active calendar is "marked off."'},
+    ],
+  }),
+  commonCard({
+    id:'judgment', art:'judgment', bgs:{1:'art/bg_judgment_1.webp', 2:'art/bg_judgment_2.webp'}, num:'#009', l1:'THE', l2:'JUDGMENT', name:'Judgment', emoji:'⚖️',
+    quote:'It\'s decided.',
+    lore:['It has never once been rushed. Not once.','It weighs every file. Even the sticky notes.','Its robe was a gift from the Chief Clerk.'],
+    stickers:{2:[{n:'FINAL',c:'#ffe27a',x:64,y:6,r:8,s:4.4}], 3:[{n:'SO ORDERED',c:'#a9d4f5',x:4,y:6,r:-8,s:4.2}]},
+    bank:[
+      {lv:1,q:'The court\'s final decision in a case is the:',c:['Judgment','Motion','Summons','Calendar'],a:'Judgment',h:'It comes at the end.',w:'A judgment is the court\'s final decision determining the rights of the parties.'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: A jury\'s verdict and the court\'s judgment are the same thing.',c:['True','False'],a:'False',h:'The jury does one; the court does the other.',w:'False. The jury returns a verdict; the court enters the judgment.'},
+      {lv:1,q:'The party who WINS a money judgment is the judgment:',c:['Creditor','Debtor','Juror','Clerk'],a:'Creditor',h:'They are owed the money.',w:'The judgment creditor is owed the money. The judgment debtor owes it.'},
+      {lv:2,q:'The party who OWES money under a judgment is the judgment:',c:['Debtor','Creditor','Movant','Affiant'],a:'Debtor',h:'Debt = owes.',w:'The judgment debtor owes the money.'},
+      {lv:2,q:'A judgment entered because the defendant never answered or appeared is a:',c:['Default judgment','Summary judgment','Verdict','Stipulation'],a:'Default judgment',h:'They did not show up.',w:'A default judgment is entered when a defendant fails to answer or appear.'},
+      {lv:2,q:'Officially recording a judgment in the court\'s records is called:',c:['Entering the judgment','Serving the judgment','Adjourning the judgment','Calendaring the judgment'],a:'Entering the judgment',h:'It is "entered" into the record.',w:'A judgment becomes official when it is entered by the clerk.'},
+      {lv:3,q:'A party unhappy with a final judgment usually starts an appeal by filing a:',c:['Notice of appeal','Notice of motion','Summons','Affidavit of service'],a:'Notice of appeal',h:'It gives notice of the appeal.',w:'An appeal is generally started by filing a notice of appeal.'},
+      {lv:3,q:'A judgment decided without a trial because no important facts are in dispute is a:',c:['Summary judgment','Default judgment','Verdict','Recess'],a:'Summary judgment',h:'It skips the trial.',w:'Summary judgment decides a case without trial when no genuine factual dispute exists.'},
+      {lv:3,q:'The jury finds for the plaintiff. What makes the result final and official?',c:['The court enters judgment','The clerk calls the calendar','The defendant is served a summons','The plaintiff files an affidavit of service'],a:'The court enters judgment',h:'Verdict first, then…',w:'After the verdict, the court enters judgment, which makes the result official.'},
+    ],
+  }),
+);
+
+/* Difference Trick: two look-alike terms, taught side by side. Found in packs. */
+const PAIR = ['Summons','Subpoena'];
+CARDS.push({
+  id:'svs', art:'summonsvssubpoena', num:'★03', l1:'SUMMONS', l2:'VS SUBPOENA', name:'Summons vs. Subpoena', emoji:'⚖️',
+  category:'MEMORY TRICK', set:'LOOK-ALIKES', rarity:'rare', trickType:'difference', icon:'court', maxLevel:5,
+  mascot:'art/summonsvssubpoena_1.webp',
+  quote:"You're IN vs.\nYou're NEEDED.",
+  diff:{
+    a:{ name:'Summons', hook:"You're IN the case.", points:['Goes to the party being sued (the defendant)','Gives notice that a case has started','Requires them to respond or appear','Ignore it → risk a default judgment'] },
+    b:{ name:'Subpoena', hook:"You're NEEDED for the case.", points:['Goes to someone whose testimony or records are needed (often a witness)','Orders them to appear and testify, or to bring records ("duces tecum")','Ignore it → risk contempt of court'] },
+  },
+  lore:['Two documents. Same paper. Very different jobs.','Summons brings you INTO the case.','Subpoena brings what the case NEEDS.','Mixing them up is a classic exam trap.','Now you never will.'],
+  stickers:{},
+  bank:[
+    {lv:1,type:'tf',q:'Which document gives a defendant formal notice that a case has been started against them?',c:PAIR,a:'Summons',h:'"You\'re IN the case."',w:'A summons notifies the defendant that an action has started and that they must respond or appear.'},
+    {lv:1,type:'tf',q:'Which document orders a witness to come to court and testify?',c:PAIR,a:'Subpoena',h:'"You\'re NEEDED for the case."',w:'A subpoena commands a person to appear and testify (or produce records).'},
+    {lv:1,type:'tf',q:'Memory hook: "You\'re IN the case." Which document is that?',c:PAIR,a:'Summons',h:'Who is IN a case? The parties.',w:'Summons = you\'re IN the case. It goes to the party being sued.'},
+    {lv:2,type:'tf',q:'Which document can require someone to produce documents or records?',c:PAIR,a:'Subpoena',h:'The case NEEDS the records.',w:'A subpoena (duces tecum) can require a person to bring documents or records.'},
+    {lv:2,q:'A "subpoena duces tecum" requires a person to:',c:['Bring documents or records','Answer the complaint','Pay a judgment','Leave the courtroom'],a:'Bring documents or records',h:'"Duces tecum" = bring with you.',w:'"Duces tecum" means "bring with you": the person must produce documents or records.'},
+    {lv:2,type:'tf',q:'Memory hook: "You\'re NEEDED for the case." Which document is that?',c:PAIR,a:'Subpoena',h:'Witnesses and records are NEEDED.',w:'Subpoena = you\'re NEEDED for the case: to testify or to bring records.'},
+    {lv:3,type:'tf',q:'Hospital records are needed for a trial. The hospital is not being sued. Which document gets the records?',c:PAIR,a:'Subpoena',h:'The hospital isn\'t IN the case. Its records are NEEDED.',w:'A subpoena duces tecum is used to get records, including from people or businesses that are not parties.'},
+    {lv:3,type:'tf',q:'A landlord sues a tenant. The tenant must be formally told about the case and respond. Which document?',c:PAIR,a:'Summons',h:'The tenant is IN the case.',w:'The defendant (the tenant) receives a summons notifying them of the case.'},
+    {lv:3,type:'tf',q:'A neighbor saw the accident and must testify. The neighbor is not being sued. Which document?',c:PAIR,a:'Subpoena',h:'The neighbor is NEEDED, not IN.',w:'A witness who is not a party is brought to court with a subpoena.'},
+    {lv:4,q:'Which of these is an INCORRECT use?',c:['Serving a summons on a witness to make them testify','Serving a summons on the defendant to start the case','Serving a subpoena on a bank for account records','Serving a subpoena on a witness to testify'],a:'Serving a summons on a witness to make them testify',h:'Which one sends the wrong document to a witness?',w:'Witnesses are brought in by subpoena. A summons is for notifying the party being sued.'},
+    {lv:4,q:'Which statement is WRONG?',c:['A summons is used to get records from a non-party','A subpoena can require records','A summons notifies a defendant of a lawsuit','A subpoena can require testimony'],a:'A summons is used to get records from a non-party',h:'Records are NEEDED…',w:'Records from a non-party are obtained with a subpoena (duces tecum), not a summons.'},
+    {lv:4,q:'A "summons" is addressed to a store\'s records custodian, asking for receipts in a case the store isn\'t part of. What\'s the problem?',c:['It should be a subpoena','Nothing is wrong','It should be a judgment','It should be an affidavit'],a:'It should be a subpoena',h:'The store is NEEDED, not IN.',w:'Getting records from someone who is not a party is the job of a subpoena duces tecum.'},
+    {lv:5,q:'A plaintiff (1) starts a lawsuit against a company and (2) needs the company\'s former employee to testify. Which documents, in order?',c:['Summons, then subpoena','Subpoena, then summons','Two summonses','Two subpoenas'],a:'Summons, then subpoena',h:'First bring the company IN, then get who is NEEDED.',w:'The summons starts the case against the company. The subpoena later compels the witness to testify.'},
+    {lv:5,q:'Ignoring a SUMMONS can lead to ______; ignoring a SUBPOENA can lead to ______.',c:['a default judgment; contempt of court','contempt of court; a default judgment','an appeal; a recess','a verdict; a stipulation'],a:'a default judgment; contempt of court',h:'A party who never answers can lose by default.',w:'A defendant who ignores a summons risks a default judgment. A person who ignores a subpoena risks being held in contempt.'},
+    {lv:5,q:'Which document is commonly served together with the complaint?',c:['Summons','Subpoena','Verdict','Judgment'],a:'Summons',h:'It starts the case.',w:'The summons is commonly served with the complaint to start the case.'},
+  ],
+});
+
+/* Memory Trick cards: special cards that teach a mnemonic. Found in packs. */
+CARDS.push(
+  {
+    id:'lfm', art:'none', num:'★01', l1:'LAWYERS FILE', l2:'MOTIONS', name:'Lawyers File Motions', emoji:'🧠',
+    category:'MEMORY TRICK', set:'FILING ORDER', rarity:'uncommon', trickType:'chain', icon:'folder', maxLevel:3, gen:'alpha',
+    quote:'Last. First.\nMiddle.',
+    mnemonic:{ sentence:'Lawyers File Motions', letters:['L','F','M'], words:['Lawyers','File','Motions'],
+      means:['Last name','First name','Middle initial'], extra:['Date of birth','Case number','Street address'],
+      tip:'File by Last name, then First name, then Middle initial. And remember: nothing comes before something, so SMITH is filed before SMITHSON.' },
+    lore:['A memory trick for alphabetical filing.','Say it three times before a filing test.','Clerks have used tricks like this for decades.'],
+    stickers:{},
+  },
+  {
+    id:'caseorder', art:'none', num:'★02', l1:'SILLY CLERKS', l2:'DRINK MOCHA', name:'Silly Clerks Drink Mocha', emoji:'🧠',
+    category:'MEMORY TRICK', set:'LIFE OF A CASE', rarity:'uncommon', trickType:'chain', icon:'court', maxLevel:3, gen:'sequence',
+    quote:'The life of a\ncase, in order.',
+    mnemonic:{ sentence:'Silly Clerks Always Drink Mocha Till Judges Arrive', letters:['S','C','A','D','M','T','J','A'],
+      words:['Silly','Clerks','Always','Drink','Mocha','Till','Judges','Arrive'],
+      means:['Summons','Complaint','Answer','Discovery','Motions','Trial','Judgment','Appeal'],
+      tip:'The usual order of a civil case. Real cases can skip steps, and motions can come up at many points. This is the big picture.' },
+    lore:['A memory trick for the life of a civil case.','Every step has its own card. Collect them all.','Mocha optional. Order mandatory.'],
+    stickers:{},
+  },
+);
+
+/* Court Procedures question bank. SAMPLE CONTENT — fact-check before real use. */
+const GAVEL_BANK = [
+  // L1 — basic definitions
+  {lv:1,q:'What is a request, made in writing or orally to the court, asking the judge to make a ruling or take a specific action?',c:['Complaint','Motion','Summons','Affidavit'],a:'Motion',h:'It is commonly used to ask for things like a dismissal or an adjournment.',w:'A motion is a request asking the court to issue a ruling or take a particular action.'},
+  {lv:1,q:'A written statement of facts, sworn to be true before someone authorized to give oaths, is called a(n):',c:['Affidavit','Motion','Verdict','Calendar'],a:'Affidavit',h:'Think "written" + "sworn".',w:'An affidavit is a written statement made under oath, usually signed in front of a notary public.'},
+  {lv:1,q:'Postponing a court proceeding to a later date is called a(n):',c:['Adjournment','Judgment','Arraignment','Appeal'],a:'Adjournment',h:'The case gets a new date.',w:'An adjournment moves a case or proceeding to a later date.'},
+  {lv:1,q:'The party who starts a civil lawsuit is usually called the:',c:['Plaintiff','Defendant','Respondent','Witness'],a:'Plaintiff',h:'Not the one being sued.',w:'The plaintiff starts a civil lawsuit. The defendant is the party being sued.'},
+  {lv:1,q:'A court order requiring a person to appear and testify is a:',c:['Subpoena','Affidavit','Stipulation','Judgment'],a:'Subpoena',h:'It comes from Latin for "under penalty."',w:'A subpoena orders a person to appear (and often testify). Ignoring it can lead to penalties.'},
+  {lv:1,q:'The list of cases scheduled to be heard by the court on a given day is called the:',c:['Calendar','Transcript','Exhibit','Pleading'],a:'Calendar',h:'It is about scheduling.',w:'The court calendar lists the cases scheduled to be heard on a given day.'},
+  // L2 — basic application
+  {lv:2,q:'An attorney stands up and asks the judge to dismiss the case. What is the attorney making?',c:['A motion','An objection','A stipulation','A verdict'],a:'A motion',h:'It is a request for a ruling.',w:'Asking the court to dismiss is a motion (a "motion to dismiss").'},
+  {lv:2,q:'A lawyer cannot attend next Tuesday\'s appearance because of another trial. What will they most likely ask the court for?',c:['An adjournment','A judgment','A subpoena','An affidavit'],a:'An adjournment',h:'They need a new date.',w:'When a party needs more time or a new date, they request an adjournment.'},
+  {lv:2,type:'tf',q:'TRUE or FALSE: An affidavit is sworn to (or affirmed) before an official authorized to administer oaths, such as a notary public.',c:['True','False'],a:'True',h:'What makes an affidavit different from an ordinary letter?',w:'True. The oath is what makes an affidavit a sworn statement.'},
+  {lv:2,q:'A company must be formally notified that a lawsuit has been started against it. Which document does that?',c:['Summons','Subpoena','Motion','Judgment'],a:'Summons',h:'It "summons" the defendant into the case.',w:'A summons notifies the defendant that an action has been started and that they must respond or appear.'},
+  {lv:2,type:'tf',q:'TRUE or FALSE: A subpoena can only be served on a party to the case.',c:['True','False'],a:'False',h:'Think about witnesses.',w:'False. Subpoenas are often directed to non-parties, such as witnesses or record keepers.'},
+  {lv:2,q:'Fill in the blank: The court\'s final decision that determines the rights of the parties is the ______.',c:['Judgment','Motion','Summons','Calendar'],a:'Judgment',h:'It comes at the end of the case.',w:'A judgment is the court\'s final decision determining the rights of the parties.'},
+  // L3 — scenarios
+  {lv:3,q:'A witness must bring employment records to court. Which document requires this?',c:['Subpoena duces tecum','Summons','Affidavit of service','Notice of motion'],a:'Subpoena duces tecum',h:'"Duces tecum" means "bring with you."',w:'A subpoena duces tecum requires a person to produce documents or records.'},
+  {lv:3,q:'The plaintiff must prove the summons was delivered to the defendant. What document typically shows this?',c:['Affidavit of service','Notice of appearance','Stipulation','Judgment'],a:'Affidavit of service',h:'It is sworn, and it is about delivery.',w:'An affidavit of service is a sworn statement by the person who delivered the papers, describing when, where, and how they were served.'},
+  {lv:3,q:'Both sides agree in writing to postpone a hearing and submit that agreement to the court. The written agreement is a:',c:['Stipulation','Subpoena','Verdict','Summons'],a:'Stipulation',h:'Both parties agree to it.',w:'A stipulation is an agreement between the parties, often put in writing and filed with the court.'},
+  {lv:3,q:'A party disagrees with a lower court\'s final judgment and asks a higher court to review it. This is an:',c:['Appeal','Adjournment','Arraignment','Affidavit'],a:'Appeal',h:'A higher court gets involved.',w:'An appeal asks a higher court to review the decision of a lower court.'},
+  {lv:3,q:'A party files papers asking the court to order the other side to hand over documents. What are these papers?',c:['Motion papers','A summons','A verdict sheet','An affidavit of service'],a:'Motion papers',h:'They ask the court to order something.',w:'Asking the court to order something is done by motion (for example, a motion to compel).'},
+  // L4 — similar-looking answers
+  {lv:4,q:'In a jury trial, the jury\'s finding is the ______, and the court\'s final decision on the case is the ______.',c:['verdict; judgment','judgment; verdict','verdict; order','ruling; verdict'],a:'verdict; judgment',h:'Juries deliver one; courts enter the other.',w:'The jury returns a verdict; the court then enters a judgment.'},
+  {lv:4,q:'Which document ORDERS a non-party witness to appear, rather than notifying a defendant that they are being sued?',c:['Subpoena','Summons','Notice of motion','Complaint'],a:'Subpoena',h:'Summons is for defendants.',w:'A subpoena compels a witness to appear. A summons notifies a defendant that an action has been started.'},
+  {lv:4,q:'The judge calls a 15-minute break in the middle of today\'s session. This is a:',c:['Recess','Adjournment','Continuance','Stay'],a:'Recess',h:'It is short and the same day.',w:'A recess is a short break within a session. An adjournment moves the matter to another time or date.'},
+  {lv:4,q:'Sworn testimony given out of court, recorded, and later used in the case is a(n):',c:['Deposition','Affidavit','Interrogatory','Transcript'],a:'Deposition',h:'It is spoken, not written.',w:'A deposition is oral testimony under oath taken outside of court. An affidavit is written; interrogatories are written questions answered in writing.'},
+  {lv:4,q:'The papers that start an action and state the plaintiff\'s claims are the:',c:['Complaint','Answer','Reply','Motion'],a:'Complaint',h:'The defendant responds to it.',w:'The complaint states the plaintiff\'s claims. The defendant responds with an answer.'},
+  // L5 — exam-style: apply a written rule
+  {lv:5,q:'RULE: Papers received after 4:30 PM are stamped with the next business day\'s date. Papers arrive Friday at 4:45 PM. Monday is a court holiday. Which day goes on the stamp?',c:['Tuesday','Friday','Monday','Saturday'],a:'Tuesday',h:'Skip the weekend AND the holiday.',w:'After 4:30 PM means the next business day. Saturday and Sunday are not business days, and Monday is a holiday, so the stamp shows Tuesday.'},
+  {lv:5,q:'RULE: Adjournment requests must be received at least 2 business days before the appearance. The appearance is on Thursday. What is the LATEST day the request can be received?',c:['Tuesday','Wednesday','Monday','Thursday'],a:'Tuesday',h:'Count back two business days from Thursday.',w:'Two business days before Thursday is Tuesday. Wednesday would be only one business day before.'},
+  {lv:5,q:'RULE: The fee is $45 per motion, plus $10 for each exhibit over 5 in a motion. A party files 2 motions: one with 3 exhibits, one with 8 exhibits. What is the total fee?',c:['$120','$110','$170','$90'],a:'$120',h:'Only exhibits OVER 5 cost extra.',w:'2 motions × $45 = $90. The first motion has no extra exhibits. The second has 3 over the limit × $10 = $30. Total: $120.'},
+  {lv:5,q:'RULE: Call cases in this order: (1) both attorneys ready, (2) self-represented parties, (3) awaiting an interpreter. Case A: self-represented, present. Case B: interpreter not here yet. Case C: both attorneys ready. What is the order?',c:['C, A, B','A, C, B','C, B, A','B, C, A'],a:'C, A, B',h:'Match each case to its rule number.',w:'C fits rule 1, A fits rule 2, B fits rule 3. So: C, A, B.'},
+  {lv:5,q:'RULE: Plaintiff\'s exhibits are numbered (1, 2, 3...). Defendant\'s exhibits are lettered (A, B, C...). The plaintiff has marked 1–4 and the defendant has marked A and B. The DEFENDANT offers a new exhibit. How is it marked?',c:['C','5','3','B-1'],a:'C',h:'Whose exhibit is it?',w:'Defendant\'s exhibits use letters. A and B are taken, so the next one is C.'},
+];
+CARDS[0].bank = GAVEL_BANK;
+
+/* ================= HELPERS ================= */
+const rnd = n => Math.floor(Math.random()*n);
+const pick = a => a[rnd(a.length)];
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=rnd(i+1); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+const P = (x1,y1,x2,y2) => `left:${(x1/10.24).toFixed(2)}%;top:${(y1/15.36).toFixed(2)}%;width:${((x2-x1)/10.24).toFixed(2)}%;height:${((y2-y1)/15.36).toFixed(2)}%`;
+const byId = id => CARDS.find(c => c.id === id);
+const maxL = c => c.maxLevel || 5;
+/* Cold cases: a card goes cold when it hasn't had a correct answer for a while.
+   The wait grows with level (spaced repetition). One correct answer reopens it. */
+const DAY = 864e5;
+const COLD_DAYS = [2, 4, 7, 10, 14], COLD_DAYS_MASTERED = 21, COLD_BONUS = 15;
+const coldAfter = st => (st.mastered ? COLD_DAYS_MASTERED : COLD_DAYS[st.level-1]) * DAY;
+const isCold = st => !!(st && st.owned && st.last && Date.now() - st.last > coldAfter(st));
+const goingCold = st => !!(st && st.owned && st.last && !isCold(st) && coldAfter(st) - (Date.now() - st.last) < DAY);
+const daysAgo = t => Math.floor((Date.now() - t) / DAY);
+const agoText = t => { const d = daysAgo(t); return d === 0 ? 'today' : d === 1 ? 'yesterday' : `${d} days ago`; };
+const TRICK_TYPES = { chain:{label:'Chain Trick', blurb:'Teaches the order of steps.'}, who:{label:'Who Trick', blurb:'Teaches who does what.'},
+  clock:{label:'Clock Trick', blurb:'Teaches deadlines.'}, difference:{label:'Difference Trick', blurb:'Teaches look-alike terms apart.'}, trigger:{label:'Trigger Trick', blurb:'Teaches what happens next.'} };
+function frameFor(c, lv){
+  if (c.trickType) return 'art/frame_trick.webp';
+  const max = maxL(c);
+  if (lv === max) return 'premiumart/frame_base.webp';
+  if ((max === 3 && lv === 2) || (max === 5 && lv >= 3)) return 'art/frame_mid.webp';
+  return 'art/frame_base.webp';
+}
+const bgFor = (c, lv) => { if (!c.bgs) return null; let b = null; for (let l=1; l<=lv; l++) if (c.bgs[l]) b = c.bgs[l]; return b; };
+const fitTitle = (txt, max, width) => Math.min(max, width / (txt.length * 0.86)).toFixed(2);
+
+/* ================= SAVE STATE ================= */
+const KEY = 'clerkquest-proto-v1';
+const STARTERS = ['gavel','paperjam','missingfile','summons'];
+function freshState(){ return { cards:{}, stats:{answered:0,correct:0,xp:0,sessions:0}, packs:1, packsOpened:0 }; }
+function normalize(s){
+  s = s && s.cards ? s : freshState();
+  CARDS.forEach(c => { s.cards[c.id] = Object.assign({level:1,xp:0,mastered:false,owned:STARTERS.includes(c.id)}, s.cards[c.id]||{}); });
+  if (s.packs == null) s.packs = 1;
+  if (s.packsOpened == null) s.packsOpened = 0;
+  if (!s.seenSvs) { s.seenSvs = true; if (s.packsOpened > 0 && !(s.cards.svs && s.cards.svs.owned)) { s.packs += 1; s.guarantee = 'svs'; } }
+  CARDS.forEach(c => { const st = s.cards[c.id]; if (st.owned && st.last == null && (st.xp > 0 || st.level > 1)) st.last = Date.now(); });
+  s.stats = Object.assign({answered:0,correct:0,xp:0,sessions:0}, s.stats||{});
+  return s;
+}
+let S;
+try { S = normalize(JSON.parse(localStorage.getItem(KEY))); } catch(e){ S = normalize(null); }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+
+/* ================= ART LOOKUP =================
+   Drop files named art/<card>_<level>.webp (or .jpg/.webp) into the art folder.
+   The card uses the highest stage it has; missing stages get sticker jokes on top. */
+const ART = {};
+function probeArt(){
+  // The published build lists its art files up front, so nothing has to be guessed.
+  if (window.ART_MANIFEST) { CARDS.forEach(c => { ART[c.id] = window.ART_MANIFEST[c.art] || {}; }); return Promise.resolve(); }
+  const jobs = [];
+  CARDS.forEach(c => {
+    ART[c.id] = {};
+    for (let l=1; l<=5; l++) for (const ext of ['png','jpg','webp']) {
+      jobs.push(new Promise(res => {
+        const img = new Image(); const done = () => res();
+        img.onload = () => { if (!ART[c.id][l]) ART[c.id][l] = `art/${c.art}_${l}.${ext}`; done(); };
+        img.onerror = done; setTimeout(done, 2500);
+        img.src = `art/${c.art}_${l}.${ext}`;
+      }));
+    }
+  });
+  return Promise.all(jobs);
+}
+
+/* ================= CARD RENDERING ================= */
+function stickerHTML(s){
+  if (s.rays) return `<div class="rays"></div>`;
+  const st = `left:${s.x}%;top:${s.y}%;--r:${s.r||0}deg;font-size:${s.s}cqw`;
+  if (s.n) return `<div class="stk note" style="${st};background:${s.c}">${esc(s.n)}</div>`;
+  return `<div class="stk emo ${s.a||''}" style="${st}">${s.e}</div>`;
+}
+function mnemonicArt(c){
+  const m = c.mnemonic, n = m.letters.length;
+  const colors = ['#ffe27a','#ff9fb6','#a9d4f5','#bfe3a8','#ffc48a','#d6c2ff','#ffe27a','#a9d4f5'];
+  const tw = Math.min(19, 80/n - 1.2);
+  return `<div class="mn"><img class="mn-bg" src="art/bg_trick.webp" alt=""><img class="mn-badge" src="art/icon_memory.webp" alt="Memory Trick">
+    <div class="mn-paper"><div class="mn-row">${m.letters.map((L,i)=>`<div class="mn-tile" style="width:${tw}cqw;background:${colors[i%8]};--r:${i%2?3:-3}deg"><b style="font-size:${(tw*.6).toFixed(1)}cqw">${L}</b>${n<=4?`<small style="font-size:3.4cqw">${esc(m.words[i])}</small>`:''}</div>`).join('')}</div>
+    <div class="mn-means" style="grid-template-columns:${n>4?'1fr 1fr':'1fr'};font-size:${n>4?3.3:4.6}cqw">${m.means.map((w,i)=>`<span><b>${m.letters[i]}</b>${esc(w)}</span>`).join('')}</div></div></div>`;
+}
+function artHTML(c, lv){
+  if (c.mnemonic) return mnemonicArt(c) + (lv >= 3 ? `<div class="foil"></div>` : '');
+  let base = 0;
+  for (let l=lv; l>=1; l--) if (ART[c.id] && ART[c.id][l]) { base = l; break; }
+  let h = (c.trickType && !c.mnemonic) ? `<img class="mn-badge low" src="art/icon_memory.webp" alt="Memory Trick">` : '';
+  h += base
+    ? (c.cutout ? (bgFor(c, lv) ? `<img class="art-bgimg" src="${bgFor(c, lv)}" alt=""><div class="art-vig"></div>` : `<div class="art-back"></div>`) : '') + `<img class="art-img ${c.cutout?'cut':''}" src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`
+    : `<div class="art-ph"><span class="ph-tag">ART COMING SOON</span><div class="ph-emoji">${c.emoji}</div></div>`;
+  for (let l = Math.max(base+1, 2); l <= lv; l++) (c.stickers[l]||[]).forEach(s => h += stickerHTML(s));
+  if (lv >= 3) h += `<div class="foil"></div>`;
+  return h;
+}
+function starsHTML(lv, newStar, max=5){
+  let h = '';
+  for (let i=1;i<=max;i++) h += `<span class="${i<=lv?'on':'off'} ${i===newStar?'new':''}">${i<=lv?'★':'☆'}</span>`;
+  return h;
+}
+function frontHTML(c, st, opt={}){
+  const lv = st.level, need = NEED[lv-1];
+  const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
+  const sparks = lv >= 4 ? [[2,1],[92,2],[1,62],[93,58],[48,0],[40,93]].map((p,i)=>`<div class="spark" style="left:${p[0]}%;top:${p[1]}%;animation-delay:${i*.3}s">✦</div>`).join('') : '';
+  return `
+    <div class="art-win" style="${P(66,383,958,1207)}">${artHTML(c, lv)}</div>
+    <img class="frame" src="${isCold(st) ? 'art/frame_frost.webp' : frameFor(c, lv)}" alt="">
+    <div class="t num" style="${P(58,64,230,160)}">${c.num}</div>
+    <div class="t xpstrip" style="${P(236,62,496,146)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
+    <div class="t cat" style="${P(502,62,856,144)}">${esc(c.category)}</div>
+    <div class="t icon" style="${P(862,62,958,156)}">${c.trickType ? `<img src="art/icon_${c.trickType}.webp" alt="${TRICK_TYPES[c.trickType].label}">` : ICON[c.icon]}</div>
+    <div class="t title" style="${P(104,176,922,434)}">
+      <span class="t1" style="font-size:${fitTitle(c.l1,12,74)}cqw">${esc(c.l1)}</span>
+      <span class="t2" style="font-size:${fitTitle(c.l2,12.5,74)}cqw">${esc(c.l2)}</span>
+    </div>
+    <div class="t quote" style="${P(246,1092,782,1262)}">“${esc(c.quote)}”</div>
+    <div class="t rar" style="${P(82,1290,312,1448)}"><span class="gem r-${c.rarity}">★</span><span>${c.rarity.toUpperCase()}</span></div>
+    <div class="t set" style="${P(334,1294,706,1446)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
+    <div class="t lvl" style="${P(728,1290,944,1448)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
+    ${sparks}
+    ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
+}
+function cardEl(c, st, opt={}, extraClass=''){
+  const cold = isCold(st);
+  return `<div class="card lv${st.level} ${c.trickType?'special':''} ${cold?'cold':''} ${extraClass}">${frontHTML(c, st, opt)}${goingCold(st) ? `<img class="goingcold" src="art/badge_goingcold.webp" alt="Going cold">` : ''}${cold ? `<img class="stampimg coldcase" src="art/stamp_coldcase.webp" alt="Cold case">` : ''}</div>`;
+}
+function lockedCardHTML(c){
+  return `<div class="card mystery"><img class="bg" src="art/mysteryback.webp" alt="" style="object-fit:cover;border-radius:6%/4%">
+    <div class="lock-ov mys"><span>FIND IN PACKS</span><small>${c.trickType ? 'Memory Trick' : esc(c.num)}</small></div></div>`;
+}
+
+/* ================= QUESTION GENERATORS ================= */
+const LASTS = ['Kowalski','Rodriguez','Nguyen','Okafor','Fitzgerald','Castellano','Abramowitz','Mahmoud','Sullivan','Delgado','Petrakis','Washington','Harrington','Morrissey','Goldstein','Villanueva','Tanaka','Brennan','Olsson','Pellegrino'];
+const FIRSTS = ['Maria','James','Theresa','Kwame','Priya','Luis','Deborah','Anthony','Mei','Francesca','Samuel','Rachel','Darnell','Annette','Victor','Colleen','Ibrahim','Joanne'];
+const LOOKALIKE = {a:'o',o:'a',e:'c',c:'e',i:'l',l:'i',m:'n',n:'m',r:'n',u:'v',v:'u',h:'b',b:'h',t:'f',f:'t',s:'z',z:'s',g:'q',d:'b',k:'h',y:'v',w:'v',p:'q',j:'i'};
+const DIGITALIKE = {'0':'8','1':'7','2':'7','3':'8','4':'9','5':'6','6':'5','7':'1','8':'3','9':'4'};
+
+function mutate(s, lv){
+  const ops = [];
+  const letters = [...s].map((ch,i)=>/[a-z]/i.test(ch)&&i>0?i:-1).filter(i=>i>0);
+  const digits = [...s].map((ch,i)=>/\d/.test(ch)?i:-1).filter(i=>i>=0);
+  ops.push(() => { // change a letter
+    const i = pick(letters); const ch = s[i], low = ch.toLowerCase();
+    let r = lv<=2 ? pick('abcdefghijklmnoprstuvwy'.split('').filter(x=>x!==low)) : (LOOKALIKE[low] || 'e');
+    if (ch !== low) r = r.toUpperCase();
+    return s.slice(0,i) + r + s.slice(i+1);
+  });
+  if (digits.length && lv>=2) ops.push(() => { const i = pick(digits); return s.slice(0,i) + (lv<=2 ? String((+s[i]+1+rnd(8))%10) : DIGITALIKE[s[i]]) + s.slice(i+1); });
+  if (lv>=3) {
+    const pairs = [];
+    for (let i=0;i<s.length-1;i++) if (/\d/.test(s[i]) && /\d/.test(s[i+1]) && s[i]!==s[i+1]) pairs.push(i);
+    if (pairs.length) ops.push(() => { const i = pick(pairs); return s.slice(0,i) + s[i+1] + s[i] + s.slice(i+2); });
+    const m = s.match(/ ([A-Z])\. /g);
+    if (m && m.length > 1) ops.push(() => s.replace(/ ([A-Z])\. (\d)/, (_, L, d) => ` ${L==='M'?'N':'M'}. ${d}`));
+  }
+  if (lv>=4) {
+    const dbl = s.search(/([a-z])\1/i);
+    if (dbl > 0) ops.push(() => s.slice(0,dbl) + s.slice(dbl+1));
+    const lp = [];
+    for (let i=1;i<s.length-1;i++) if (/[a-z]/.test(s[i]) && /[a-z]/.test(s[i+1]) && s[i]!==s[i+1]) lp.push(i);
+    if (lp.length) ops.push(() => { const i = pick(lp); return s.slice(0,i) + s[i+1] + s[i] + s.slice(i+2); });
+  }
+  for (let t=0;t<20;t++){ const out = pick(ops)(); if (out !== s) return out; }
+  return s + 'x';
+}
+function markDiff(a, b){
+  let p = 0; while (p < a.length && p < b.length && a[p] === b[p]) p++;
+  let q = 0; while (q < a.length-p && q < b.length-p && a[a.length-1-q] === b[b.length-1-q]) q++;
+  const m = (s) => esc(s.slice(0,p)) + `<mark>${esc(s.slice(p, s.length-q)) || '&nbsp;'}</mark>` + esc(s.slice(s.length-q));
+  return [m(a), m(b)];
+}
+function genCompare(lv){
+  const n = lv<=2 ? 3 : lv<=4 ? 4 : 5;
+  const opts = n===3 ? ['0','1','2','3'] : ['1','2','3','4'];
+  const alike = +pick(opts);
+  const same = new Set(shuffle([...Array(n).keys()]).slice(0, alike));
+  const used = new Set();
+  const make = () => {
+    const last = pick(LASTS), first = pick(FIRSTS), mi = pick('ABCDEFGHJKLMNPRSTW'.split(''));
+    const num = String(10000 + rnd(89999));
+    if (lv === 1) return `${last}, ${first}`;
+    if (lv === 2) return Math.random() < .5 ? `${last}, ${first}` : `Index ${20+rnd(6)}-${String(rnd(99999)).padStart(5,'0')}`;
+    return `${last}, ${first[0]}. ${mi}. ${num}`;
+  };
+  const rows = [];
+  for (let i=0;i<n;i++){
+    let a; do { a = make(); } while (used.has(a)); used.add(a);
+    rows.push([a, same.has(i) ? a : mutate(a, lv)]);
+  }
+  const diffs = rows.map((r,i)=>({i, r})).filter(x => x.r[0] !== x.r[1]);
+  const why = (diffs.length ? diffs.map(d => { const [ma, mb] = markDiff(d.r[0], d.r[1]); return `<p class="mono"><b>Pair ${d.i+1}:</b> ${ma}<br>&nbsp;&nbsp;vs&nbsp;&nbsp;${mb}</p>`; }).join('') : '')
+    + `<p>${alike === 0 ? 'None of the pairs were exactly alike.' : `${alike} pair${alike>1?'s were':' was'} exactly alike.`} Tip: check numbers two digits at a time.</p>`;
+  return { type:'table', q:'How many of these pairs are EXACTLY alike?', rows, opts, a:String(alike),
+    h:'Read each pair letter by letter and digit by digit. Errors love to hide in the middle.', w:why, raw:true };
+}
+const FAMS = [
+  ['Smith','Smithson','Smyth','Smithers','Smit','Smithe'],
+  ['Martin','Martinez','Martino','Marten','Martins','Marti'],
+  ['Johnson','Johns','Johnston','Johnstone','Jonas','Johnsen'],
+  ['Castell','Castellano','Castillo','Castro','Castle','Castelli'],
+  ['Rodgers','Roderick','Rodman','Rodriguez','Rodin','Rodd'],
+  ['Kowal','Kowalski','Kowalczyk','Kovac','Kowalsky'],
+];
+const cmp = (a,b) => { a=a.toLowerCase(); b=b.toLowerCase(); return a<b?-1:a>b?1:0; };
+const nameCmp = (x,y) => cmp(x.last,y.last) || cmp(x.first,y.first) || cmp(x.mi||'', y.mi||'');
+const fmt = x => `${x.last}, ${x.first}${x.mi ? ' '+x.mi+'.' : ''}`;
+function genAlpha(lv){
+  let names = [];
+  const key = x => fmt(x).toLowerCase();
+  const add = x => { if (!names.some(y => key(y)===key(x))) names.push(x); };
+  let guard = 0;
+  while (names.length < 4 && guard++ < 200){
+    if (lv === 1) {
+      const last = pick(LASTS);
+      if (!names.some(y => y.last[0]===last[0])) add({last, first:pick(FIRSTS)});
+    } else if (lv === 2) {
+      const fam = names.length ? names._fam : (names._fam = pick(FAMS));
+      add({last:pick(fam), first:pick(FIRSTS)});
+    } else if (lv === 3) {
+      if (!names._fam) { names._fam = pick(FAMS); names._same = pick(names._fam); }
+      add(names.length < 2 ? {last:names._same, first:pick(FIRSTS)} : {last:pick(names._fam), first:pick(FIRSTS)});
+    } else {
+      if (!names._fam) { names._fam = pick(FAMS); names._same = pick(names._fam); names._first = pick(['Ann','Anna','Anne','Andrea','Rob','Robert','Roberta','Robin']); }
+      const r = Math.random();
+      if (r < .4) add({last:names._same, first:names._first, mi: Math.random()<.35 ? '' : pick('ABCDJKLMRST'.split(''))});
+      else if (r < .75) add({last:names._same, first:pick(['Ann','Anna','Anne','Andrea','Rob','Robert','Roberta','Robin'])});
+      else add({last:pick(names._fam), first:pick(FIRSTS)});
+    }
+  }
+  const sorted = names.slice().sort(nameCmp);
+  const ord = lv<=3 ? pick([['FIRST',0],['LAST',3]]) : pick([['SECOND',1],['THIRD',2]]);
+  const answer = fmt(sorted[ord[1]]);
+  const prefixCase = sorted.some((x,i)=> sorted.some((y,j)=> i!==j && y.last.toLowerCase().startsWith(x.last.toLowerCase()) && y.last.length > x.last.length));
+  const sameLast = new Set(sorted.map(x=>x.last)).size < sorted.length;
+  let rule = 'File by LAST name, letter by letter.';
+  if (prefixCase) rule = 'Nothing comes before something: a shorter name that matches the start of a longer one is filed first (Smith before Smithson).';
+  if (sameLast) rule += ' When last names match, go to the first name, then the middle initial. No middle initial comes first.';
+  const why = `<p><b>Filing order:</b></p><p>${sorted.map((x,i)=>`${i+1}. ${i===ord[1]?'<mark>':''}${esc(fmt(x))}${i===ord[1]?'</mark>':''}`).join('<br>')}</p><p>${esc(rule)}</p>`;
+  return { type:'mc', q:`Alphabetical filing: which name should be filed ${ord[0]}?`, opts:shuffle(names.map(fmt)), a:answer,
+    h:'Last name first, letter by letter. If last names match, use the first name, then the middle initial.', w:why, raw:true };
+}
+function genSequence(c, lv){
+  const m = c.mnemonic, n = m.means.length, pool = m.means.concat(m.extra||[]);
+  const others = (skip) => shuffle(pool.filter(x => !skip.includes(x))).slice(0,3);
+  const table = (hi) => `<p>${m.letters.map((L,j)=>`${hi.includes(j)?'<mark>':''}<b>${L}</b> = ${esc(m.means[j])}${hi.includes(j)?'</mark>':''}`).join('<br>')}</p>`;
+  if (lv === 1) {
+    const i = rnd(n), a = m.means[i];
+    return { type:'mc', q:`Memory trick: "${m.sentence}". What does "${m.words[i]}" (${m.letters[i]}) stand for?`, opts:shuffle([a, ...others([a])]), a,
+      h:`It starts with the letter ${m.letters[i]}.`, w:table([i]), raw:true };
+  }
+  if (lv === 2) {
+    const i = rnd(n-1), a = m.means[i+1];
+    return { type:'mc', q:`Using "${m.sentence}": what comes right AFTER ${m.means[i]}?`, opts:shuffle([a, ...others([a, m.means[i]])]), a,
+      h:`Find the letter after ${m.letters[i]}.`, w:table([i, i+1]), raw:true };
+  }
+  const idx = shuffle([...Array(n).keys()]).slice(0,3).sort((x,y)=>x-y);
+  const right = idx.map(j=>m.means[j]).join(' → ');
+  const perms = [[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]].map(p => p.map(k => m.means[idx[k]]).join(' → '));
+  return { type:'mc', q:`Which list is in the CORRECT order? (Hint: "${m.sentence}")`, opts:shuffle([right, ...shuffle(perms).slice(0,3)]), a:right,
+    h:'Say the memory trick out loud, one word at a time.', w:table(idx), raw:true };
+}
+function nextQuestion(c, lv, used){
+  if (c.mnemonic && (c.gen === 'sequence' || Math.random() < .4)) return genSequence(c, lv);
+  if (c.gen === 'compare') return genCompare(lv);
+  if (c.gen === 'alpha') return genAlpha(lv);
+  let pool = c.bank.filter(q => q.lv === lv && !used.has(q.q));
+  if (!pool.length) pool = c.bank.filter(q => q.lv === lv);
+  const q = pick(pool); used.add(q.q);
+  return { type: q.type || 'mc', q:q.q, opts: q.type==='tf' ? q.c.slice() : shuffle(q.c), a:q.a, h:q.h, w:q.w };
+}
+
+/* ================= SCREENS ================= */
+const app = document.getElementById('app');
+let view = { name:'home' };
+let sess = null;
+
+function nearestGoal(){
+  let best = null;
+  CARDS.forEach(c => { const st = S.cards[c.id]; if (st.mastered || !st.owned) return;
+    const left = NEED[st.level-1] - st.xp;
+    const isMax = st.level === maxL(c);
+    const answers = Math.ceil(left / REWARD[st.level-1]);
+    if (!best || answers < best.answers || (answers === best.answers && left < best.left)) best = {c, st, left, answers}; });
+  return best;
+}
+function renderHome(){
+  const g = nearestGoal();
+  const cold = CARDS.filter(c => isCold(S.cards[c.id])).sort((a,b) => S.cards[a.id].last - S.cards[b.id].last);
+  const warm = CARDS.filter(c => goingCold(S.cards[c.id]));
+  const target = cold[0] || warm[0] || (g && g.c);
+  const acc = S.stats.answered ? Math.round(S.stats.correct / S.stats.answered * 100) + '%' : '—';
+  const mastered = CARDS.filter(c => S.cards[c.id].mastered).length;
+  const plv = 1 + Math.floor(S.stats.xp / 250);
+  app.innerHTML = `
+    <div class="home-top">
+      <div class="logo">CLERK <span>QUEST</span></div>
+      <p class="tagline">Study it. Collect it. Master it.</p>
+      ${cold.length ? `<div class="nudge coldnudge"><span class="z">🧊</span><div><b>${cold.length === 1 ? esc(cold[0].name) + ' has' : cold.length + ' cards have'} gone cold.</b><br><small>${cold.length > 1 ? esc(cold.map(c=>c.name).join(', ')) + '. ' : ''}One correct answer reopens a case: +${COLD_BONUS} XP bonus.</small></div></div>`
+      : warm.length ? `<div class="nudge coldnudge"><img class="nz" src="art/icon_thermo.webp" alt=""><div><b>${esc(warm.map(c=>c.name).join(', '))} ${warm.length>1?'are':'is'} going cold.</b><br><small>Study it today to keep it warm.</small></div></div>`
+      : g ? `<div class="nudge"><span class="z">⚡</span><div><b>${esc(g.c.name)}</b> is <b>${g.left} XP</b> from ${g.st.level===maxL(g.c)?'<b>MASTERED</b>':`Level ${g.st.level+1}`}.<br><small>About ${g.answers} correct answer${g.answers>1?'s':''}.</small></div></div>`
+           : `<div class="nudge"><span class="z">👑</span><div><b>Every card mastered.</b> The court is in awe.</div></div>`}
+      <button class="btn-big ${cold.length ? 'coldbtn' : ''}" data-act="study" data-id="${target ? target.id : CARDS[0].id}">${cold.length ? '🧊 REOPEN' : '▶ STUDY'} ${target ? esc(target.name.toUpperCase()) : ''}</button>
+      ${S.packs > 0
+        ? `<button class="packbtn" data-act="pack-open"><img src="art/pack.webp" alt=""><span><b>OPEN A CARD PACK</b><small>You have ${S.packs} pack${S.packs>1?'s':''} waiting</small></span></button>`
+        : `<div class="packnote">🎁 Finish a study session to earn a card pack.</div>`}
+      <div class="stats">
+        <div class="stat"><b>${plv}</b><small>Player Lv</small></div>
+        <div class="stat"><b>${S.stats.xp}</b><small>Total XP</small></div>
+        <div class="stat"><b>${acc}</b><small>Accuracy</small></div>
+        <div class="stat"><b>${mastered}/${CARDS.length}</b><small>Mastered</small></div>
+      </div>
+    </div>
+    <div class="sec"><h2>My Cards</h2><small>${CARDS.filter(c=>S.cards[c.id].owned).length} / ${CARDS.length} collected</small></div>
+    <div class="grid">
+      ${CARDS.filter(c => S.cards[c.id].owned).map(c => { const st = S.cards[c.id]; return `<button class="tile" data-act="open" data-id="${c.id}" aria-label="${esc(c.name)}, level ${st.level}">
+        ${cardEl(c, st)}<div class="cap"><span>${esc(c.name)}</span><span>Lv ${st.level}</span></div></button>`; }).join('')}
+      ${CARDS.filter(c => !S.cards[c.id].owned).map(c => `<div class="tile" aria-label="Card not found yet">${lockedCardHTML(c)}<div class="cap"><span>${c.trickType ? 'Memory Trick' : esc(c.name)}</span><span>🎁</span></div></div>`).join('')}
+    </div>
+    <footer>Prototype · sample questions, fact-check before real use.<br>
+      Art: add <code>art/&lt;card&gt;_&lt;level&gt;.webp</code> to upgrade a stage.<br>
+      <button data-act="t-pack">🎁 Add a test pack</button> · <button data-act="resetall">Reset all progress</button></footer>`;
+}
+function renderDetail(){
+  const c = byId(view.id), st = S.cards[c.id];
+  const pv = view.preview || st.level;
+  const shown = pv === st.level ? st : {level:pv, xp:0, mastered:false};
+  const need = NEED[st.level-1];
+  app.innerHTML = `
+    <div class="topbar"><button class="btn-ghost" data-act="home">← Collection</button><span class="chip">${esc(c.rarity.toUpperCase())}</span></div>
+    <div class="detail">
+      <div class="dcard">${cardEl(c, shown)}<div class="preview-note">${pv !== st.level ? `Previewing Level ${pv} art` : ''}</div></div>
+      <div class="panel">
+        <h1>${esc(c.name)}</h1>
+        <div class="meta">${esc(c.num)} · ${esc(c.category)} · ${esc(c.set)}</div>
+        <div class="pbar"><b style="width:${st.mastered?100:Math.round(st.xp/need*100)}%"></b></div>
+        <div class="prow"><span>Level ${st.level}${st.mastered?' · MASTERED':''}</span><span>${st.mastered?'Max':`${st.xp} / ${need} XP`}</span></div>
+        ${isCold(st) ? `<div class="coldnote"><img src="art/icon_thermo_snow.webp" alt=""> <b>Cold case.</b> Last studied ${agoText(st.last)}. One correct answer reopens it (+${COLD_BONUS} XP).</div>`
+          : st.last ? `<div class="warmnote">Last studied ${agoText(st.last)}. Goes cold if not studied for ${Math.round(coldAfter(st)/DAY)} days.</div>` : ''}
+        <button class="btn-big" data-act="study" data-id="${c.id}">▶ STUDY THIS CARD</button>
+        ${c.trickType ? `<div class="ttype"><img src="art/icon_memory.webp" alt=""><img src="art/icon_${c.trickType}.webp" alt=""><div><b>${TRICK_TYPES[c.trickType].label}</b><span>${TRICK_TYPES[c.trickType].blurb}</span></div></div>` : ''}
+        ${c.diff ? `<h3>HOW TO TELL THEM APART</h3><div class="diffbox">${['a','b'].map(k => `<div class="dcol ${k}"><b>${esc(c.diff[k].name)}</b><i>“${esc(c.diff[k].hook)}”</i><ul>${c.diff[k].points.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`).join('<div class="dvs">VS</div>')}</div>` : ''}
+        ${c.mnemonic ? `<h3>HOW TO REMEMBER IT</h3><div class="mnbox"><p class="mnsent">“${esc(c.mnemonic.sentence)}”</p>
+          <ol class="mnlist">${c.mnemonic.letters.map((L,i)=>`<li><b>${L}</b>${esc(c.mnemonic.words[i])} → <strong>${esc(c.mnemonic.means[i])}</strong></li>`).join('')}</ol>
+          <p class="mntip">${esc(c.mnemonic.tip)}</p></div>` : ''}
+        <h3>ART STAGES</h3>
+        <div class="stages">${Array.from({length:maxL(c)},(_,i)=>i+1).map(l => `<button data-act="stage" data-l="${l}" class="${l===pv?'cur':''}" ${l>st.level?'disabled aria-label="Locked"':''}>${l>st.level?'🔒':l}</button>`).join('')}</div>
+        <h3>CARD LORE</h3>
+        <ol class="lore">${c.lore.map((t,i)=> i < st.level ? `<li>${esc(t)}</li>` : `<li class="lk">??? (reach Level ${i+1})</li>`).join('')}</ol>
+        <details><summary>TESTER TOOLS</summary>
+          <div class="tools">
+            <button data-act="t-level">⚡ Level up now</button>
+            <button data-act="t-cold">🧊 Make it go cold</button>
+            <button data-act="t-reset">↺ Reset this card</button>
+          </div>
+        </details>
+      </div>
+    </div>`;
+}
+
+/* ---- study session ---- */
+function startSession(id){
+  const c = byId(id);
+  sess = { id, i:0, results:[], xp:0, used:new Set(), startLevel:S.cards[id].level, startXP:S.cards[id].xp, wasCold:isCold(S.cards[id]), reopened:false };
+  sess.q = nextQuestion(c, S.cards[id].level, sess.used);
+  sess.hint = false; sess.answered = null;
+  view = { name:'study' };
+  const st = S.cards[id];
+  app.innerHTML = `
+    <div class="topbar"><button class="btn-ghost" data-act="home">← Quit</button><div class="dots" id="dots"></div><span class="chip" id="sxp">+0 XP</span></div>
+    <div class="stage"><div class="flip" id="flip">
+      <div class="face front">${cardEl(c, st)}</div>
+      <div class="face back"><div class="card" id="back"></div></div>
+    </div></div>
+    <div class="below" id="below"></div>`;
+  paintStudy();
+  setTimeout(() => document.getElementById('flip')?.classList.add('flipped'), 650);
+}
+function paintStudy(anim){
+  const c = byId(sess.id), st = S.cards[sess.id];
+  const disp = sess.display || st; // frozen display state while a level-up is pending
+  const lv = disp.level, q = sess.q, ans = sess.answered;
+  const reward = Math.round(REWARD[lv-1] * (sess.hint ? .5 : 1));
+  const need = NEED[lv-1];
+  const pct = disp.mastered ? 100 : Math.min(100, disp.xp/need*100);
+  const letters = 'ABCD';
+  let mid = '';
+  if (q.type === 'table') {
+    mid = `<div class="t rec" style="${P(78,382,946,958)}">
+      <div class="rq"><b>${esc(q.q)}</b></div>
+      <div class="rh"><span>#</span><span>ORIGINAL</span><span>COPY</span></div>
+      ${q.rows.map((r,i)=>{ const [a,b] = ans && r[0]!==r[1] ? markDiff(r[0],r[1]) : [esc(r[0]),esc(r[1])]; return `<div class="rr"><span>${i+1}</span><span>${a}</span><span>${b}</span></div>`; }).join('')}
+    </div>`;
+  } else {
+    const len = q.q.length;
+    const fs = len > 200 ? 3.4 : len > 150 ? 3.8 : len > 100 ? 4.4 : 5;
+    const ys = [598,687,777,866];
+    mid = `<div class="t qtext" style="${P(96,386,934,566)};font-size:${fs}cqw">${esc(q.q)}</div>
+      ${q.opts.map((o,i)=>{ let cls=''; if (ans){ if (o===q.a) cls='right'; else if (o===ans.choice) cls='wrong'; }
+        const afs = o.length > 26 ? 3.3 : o.length > 22 ? 3.6 : o.length > 16 ? 4.3 : 5;
+        const wrap = o.length > 26 ? 'wrap' : '';
+        return `<button class="ans ${cls}" style="${P(86,ys[i],632,ys[i]+76)}" data-act="answer" data-v="${esc(o)}" ${ans?'disabled':''} aria-label="${letters[i]}: ${esc(o)}">
+          <span class="L">${letters[i]}</span><span class="A ${wrap}" style="font-size:${afs}cqw">${esc(o)}</span></button>`; }).join('')}
+      <div class="mascot" style="${P(640,572,958,962)}">${(c.mascot || (c.cutout && ART[c.id][1])) ? `<img src="${c.mascot || ART[c.id][1]}" alt="" class="${c.mascot?'':'cutm'}">` : `<span class="me">${c.emoji}</span><span class="bub">?</span>`}</div>`;
+  }
+  const lock = lv < maxL(c)
+    ? `<b>🔒 LEVEL ${lv+1} UNLOCKS:</b><span>• Harder questions</span><span>• +${REWARD[lv]} XP per answer</span><span>• New card art</span>`
+    : `<b>🏅 MASTERY:</b><span>• Gold MASTERED stamp</span><span>• Bragging rights</span><span>• Final lore line</span>`;
+  const back = document.getElementById('back');
+  back.className = 'card' + (anim ? ' fade-swap' : '');
+  back.innerHTML = `
+    <img class="bg" src="art/back_card.webp" alt="">
+    <div class="t bnum" style="${P(62,62,228,152)}">${c.num}</div>
+    <div class="t brar" style="${P(72,158,228,220)}">${c.rarity.toUpperCase()}</div>
+    <div class="t title" style="${P(262,72,772,262)}">
+      <span class="t1" style="font-size:${fitTitle(c.l1,8.2,45)}cqw">${esc(c.l1)}</span>
+      <span class="t2" style="font-size:${fitTitle(c.l2,8.6,45)}cqw">${esc(c.l2)}</span></div>
+    <div class="t bcat" style="${P(794,60,968,168)}">${esc(c.category)}</div>
+    <div class="t icon" style="${P(836,168,950,270)}">${ICON[c.icon]}</div>
+    <div class="t lvtag" style="${P(66,284,328,392)}">LEVEL ${lv}</div>
+    <div class="t counter" style="${P(610,316,912,372)}">QUESTION ${sess.i+1} OF ${SESSION_LEN}</div>
+    ${mid}
+    <button class="t hint ${sess.hint?'used':''}" style="${P(68,974,642,1152)}" data-act="hint" ${sess.hint||ans?'disabled':''}>
+      <span class="bulb">💡</span><span><b>${sess.hint ? 'HINT:' : 'SIDEBAR?'}</b>${esc(sess.hint ? q.h : 'Tap for a hint. Costs half the points.')}</span></button>
+    <div class="t pts" style="${P(664,984,956,1152)}"><span>POINT VALUE</span><span class="v ${sess.hint?'half':''}">⭐ +${reward}${sess.hint?` <s>+${REWARD[lv-1]}</s>`:''}</span></div>
+    <div class="t nxtab" style="${P(70,1180,358,1252)}">NEXT LEVEL</div>
+    <div class="t nxl" style="${P(86,1264,596,1414)}">
+      <span>${disp.mastered ? 'Card MASTERED!' : sess.display ? '<b>LEVEL UP READY!</b>' : `${need - disp.xp} XP to ${lv<maxL(c)?`Level ${lv+1}`:'MASTERED'}`}</span>
+      <div class="bar"><b style="width:${pct}%"></b></div>
+      <span>${disp.mastered ? 'XP maxed' : `${disp.xp} / ${need} XP`}</span></div>
+    <div class="t nxr" style="${P(606,1190,950,1414)}">${lock}</div>
+    ${ans ? `<img class="stampimg big" src="art/stamp_${ans.ok?'sustained':'overruled'}.webp" alt="${ans.ok?'Sustained':'Overruled'}">
+      <div class="explain" style="${P(58,962,966,1432)}">
+        <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +${ans.gain} XP` : 'Overruled. Not quite.'}</h3>
+        ${ans.reopened ? `<p class="reopen"><img src="art/stamp_reopened.webp" alt="Case reopened"><span>Includes a +${COLD_BONUS} XP cold-case bonus.</span></p>` : ''}
+        ${ans.ok ? '' : `<p><b>Correct answer:</b> ${esc(q.a)}</p>`}
+        ${q.raw ? q.w : `<p>${esc(q.w)}</p>`}
+      </div>` : ''}`;
+  // dots + xp chip
+  document.getElementById('dots').innerHTML = Array.from({length:SESSION_LEN},(_,i)=>{
+    const r = sess.results[i]; return `<i class="${r===true?'ok':r===false?'no':''} ${i===sess.i?'cur':''}"></i>`; }).join('');
+  document.getElementById('sxp').textContent = `+${sess.xp} XP`;
+  // below the card
+  const below = document.getElementById('below');
+  let bh = '';
+  if (q.type === 'table') {
+    bh += `<div class="tans-label">PAIRS EXACTLY ALIKE:</div><div class="tans">${q.opts.map(o => {
+      let cls=''; if (ans){ if (o===q.a) cls='right'; else if (o===ans.choice) cls='wrong'; }
+      return `<button class="${cls}" data-act="answer" data-v="${o}" ${ans?'disabled':''}>${o}</button>`; }).join('')}</div>`;
+  }
+  if (ans) {
+    const last = sess.i + 1 >= SESSION_LEN;
+    const label = sess.pendingLevel ? (sess.pendingLevel.mastered ? '🏅 CLAIM MASTERY' : '★ LEVEL UP!') : last ? 'SEE RESULTS →' : 'NEXT QUESTION →';
+    bh += `<button class="btn-big ${sess.pendingLevel?'gold':''}" data-act="next">${label}</button>`;
+  }
+  below.innerHTML = bh;
+}
+function answer(v){
+  if (!sess || sess.answered) return;
+  const c = byId(sess.id), st = S.cards[sess.id];
+  const ok = v === sess.q.a;
+  const lvBefore = st.level;
+  let gain = 0;
+  S.stats.answered++; sess.results[sess.i] = ok;
+  if (ok) {
+    S.stats.correct++;
+    gain = Math.round(REWARD[st.level-1] * (sess.hint ? .5 : 1));
+    if (sess.wasCold && !sess.reopened) { sess.reopened = true; sess.justReopened = true; gain += COLD_BONUS; }
+    st.last = Date.now();
+    S.stats.xp += gain; sess.xp += gain;
+    if (!st.mastered) {
+      st.xp += gain;
+      if (st.xp >= NEED[st.level-1]) {
+        sess.display = {level:st.level, xp:NEED[st.level-1], mastered:false};
+        if (st.level < maxL(c)) { st.xp -= NEED[st.level-1]; st.level++; sess.pendingLevel = {from:lvBefore, to:st.level}; }
+        else { st.xp = NEED[st.level-1]; st.mastered = true; sess.pendingLevel = {from:st.level, to:st.level, mastered:true}; }
+      }
+    }
+  }
+  save();
+  sess.answered = { choice:v, ok, gain, reopened: !!sess.justReopened }; sess.justReopened = false;
+  paintStudy();
+}
+function next(){
+  if (sess.pendingLevel) { const pl = sess.pendingLevel; sess.pendingLevel = null; showLevelUp(sess.id, pl, () => { sess.display = null; advance(); }); return; }
+  advance();
+}
+function advance(){
+  sess.i++;
+  if (sess.i >= SESSION_LEN) { S.stats.sessions++; S.packs++; save(); return renderResults(); }
+  const c = byId(sess.id);
+  sess.q = nextQuestion(c, S.cards[sess.id].level, sess.used);
+  sess.hint = false; sess.answered = null; sess.display = null;
+  // refresh the front face too (hidden, but keeps level in sync)
+  document.querySelector('.face.front').innerHTML = cardEl(c, S.cards[sess.id]);
+  paintStudy(true);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ---- level up ---- */
+function showLevelUp(id, pl, done){
+  const c = byId(id), st = S.cards[id];
+  const before = {level:pl.from, xp:NEED[pl.from-1], mastered:false};
+  const ov = document.createElement('div');
+  ov.className = 'lu';
+  ov.innerHTML = `<div class="rays2"></div><div class="lucard" id="lucard">${cardEl(c, before)}</div>
+    <h2>${pl.mastered ? 'MASTERED!' : 'LEVEL UP!'}</h2>
+    <p>${pl.mastered ? `${esc(c.name)} is fully mastered.` : `${esc(c.name)} is now <b>Level ${pl.to}</b>. New art, harder questions.`}</p>
+    <button class="btn-big gold" data-act="lu-close">KEEP GOING →</button>`;
+  document.body.appendChild(ov);
+  const lc = ov.querySelector('#lucard');
+  setTimeout(() => lc.classList.add('shake'), 550);
+  setTimeout(() => { const f = document.getElementById('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }, 1050);
+  setTimeout(() => {
+    lc.classList.remove('shake');
+    lc.innerHTML = cardEl(c, st, {newStar: pl.mastered ? 0 : pl.to});
+    lc.classList.add('pop'); ov.classList.add('done'); confetti(ov);
+  }, 1150);
+  ov._done = () => { ov.remove(); done && done(); };
+}
+function confetti(host){
+  const colors = ['#e3b23c','#cf3b2a','#8fb3d1','#9bb68a','#f1e5c9','#c8b6ff'];
+  for (let i=0;i<46;i++){
+    const d = document.createElement('div'); d.className = 'confetti';
+    d.style.left = Math.random()*100 + '%'; d.style.background = pick(colors);
+    d.style.setProperty('--dx', (Math.random()*160-80) + 'px'); d.style.setProperty('--rot', (Math.random()*900-450) + 'deg');
+    d.style.animationDuration = (1.6 + Math.random()*1.4) + 's'; d.style.animationDelay = (Math.random()*.3) + 's';
+    host.appendChild(d); setTimeout(() => d.remove(), 3500);
+  }
+}
+
+/* ---- card packs ---- */
+const DUP_XP = 25;
+function addCardXP(id, amt){
+  const c = byId(id), st = S.cards[id]; if (st.mastered) return false;
+  st.xp += amt; let up = false;
+  while (st.xp >= NEED[st.level-1]) {
+    if (st.level < maxL(c)) { st.xp -= NEED[st.level-1]; st.level++; up = true; }
+    else { st.xp = NEED[st.level-1]; st.mastered = true; up = true; break; }
+  }
+  return up;
+}
+function drawPack(){
+  const owned = c => S.cards[c.id].owned;
+  const regular = CARDS.filter(c => !c.trickType), tricks = CARDS.filter(c => c.trickType);
+  const newRegular = shuffle(regular.filter(c => !owned(c))), newTricks = shuffle(tricks.filter(c => !owned(c)));
+  const picks = []; const take = c => { if (c && !picks.includes(c)) picks.push(c); };
+  if (S.guarantee && newTricks.some(c => c.id === S.guarantee)) { take(byId(S.guarantee)); S.guarantee = null; }
+  else if (S.packsOpened === 0 && newTricks.length) take(newTricks[0]);      // first pack always shows a Memory Trick
+  else if (Math.random() < .2) take(newTricks[0] || pick(tricks));      // after that, 1 in 5 packs
+  take(newRegular[0]);                                                  // at least one new card while any remain
+  let guard = 0;
+  while (picks.length < 3 && guard++ < 60) take(newRegular.length > 1 && Math.random() < .5 ? pick(newRegular) : pick(regular));
+  return shuffle(picks).map(c => {
+    const st = S.cards[c.id], isNew = !st.owned; let up = false;
+    if (isNew) st.owned = true; else up = addCardXP(c.id, DUP_XP);
+    return { c, isNew, up, st:{...st} };
+  });
+}
+function zig(y){ const pts = []; for (let i=0;i<=16;i++) pts.push(`${(i/16*100).toFixed(1)}% ${(y + (i%2 ? 1.4 : -1.4)).toFixed(1)}%`); return pts; }
+function openPack(){
+  if (S.packs <= 0) return;
+  S.packs--; const first = S.packsOpened === 0; S.packsOpened++;
+  const pulls = drawPack(); save();
+  const ov = document.createElement('div'); ov.className = 'pk';
+  const topClip = `polygon(0% 0%, 100% 0%, ${zig(12).reverse().join(',')})`, bodyClip = `polygon(${zig(12).join(',')}, 100% 100%, 0% 100%)`;
+  ov.innerHTML = `<div class="pk-rays"></div>
+    <div class="pk-stage">
+      <button class="pk-pack" data-act="pk-tear" aria-label="Open the pack">
+        <img class="pk-body" src="art/pack.webp" alt="" style="clip-path:${bodyClip}">
+        <img class="pk-top" src="art/pack.webp" alt="" style="clip-path:${topClip}">
+      </button>
+      <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
+        <div class="pk-inner"><div class="pk-face pk-back"><img class="cbackimg" src="art/cardback.webp" alt="Card back"></div>
+        <div class="pk-face pk-front">${cardEl(p.c, p.st)}</div></div>
+        <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? '🧠 MEMORY TRICK!' : 'NEW!') : `+${DUP_XP} XP${p.up ? ' · LEVEL UP!' : ''}`}</span>
+      </button>`).join('')}</div>
+    </div>
+    <p class="pk-hint">${first ? 'Your first pack! Tap it to tear it open.' : 'Tap the pack to tear it open.'}</p>
+    <button class="btn-big gold pk-done" data-act="pk-done">COLLECT →</button>`;
+  document.body.appendChild(ov);
+}
+function tearPack(btn){
+  const ov = btn.closest('.pk'); if (ov.classList.contains('out')) return;
+  btn.classList.add('shake');
+  setTimeout(() => {
+    btn.classList.remove('shake'); btn.classList.add('torn');
+    const f = document.getElementById('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+    ov.classList.add('out'); ov.querySelector('.pk-hint').textContent = 'Tap each card to flip it.';
+  }, 900);
+}
+function flipPackCard(card){
+  if (card.classList.contains('flipped')) return;
+  card.classList.add('flipped');
+  const ov = card.closest('.pk');
+  if (card.querySelector('.pk-badge.new, .pk-badge.trick')) confetti(ov);
+  if (!ov.querySelector('.pk-card:not(.flipped)')) { ov.classList.add('all'); ov.querySelector('.pk-hint').textContent = 'Nice pull! New cards are in your collection.'; }
+}
+
+/* ---- results ---- */
+function renderResults(){
+  const c = byId(sess.id), st = S.cards[sess.id];
+  const correct = sess.results.filter(Boolean).length;
+  const need = NEED[st.level-1];
+  const left = need - st.xp;
+  const answers = Math.ceil(left / REWARD[st.level-1]);
+  const leveled = st.level > sess.startLevel;
+  view = { name:'results' };
+  app.innerHTML = `
+    <div class="results">
+      <h1>SESSION ADJOURNED</h1>
+      <div class="score">${correct} / ${SESSION_LEN}</div>
+      <div class="sub">correct answers</div>
+      <div class="rchips"><span class="chip">+${sess.xp} XP</span>${sess.reopened ? `<span class="chip" style="background:#bfe0ff">🔥 CASE REOPENED</span>` : ''}${leveled ? `<span class="chip">★ LEVEL ${sess.startLevel} → ${st.level}</span>` : ''}<span class="chip">🎁 +1 CARD PACK</span></div>
+      <div class="rcard">${cardEl(c, st)}</div>
+      <div class="panel">
+        <b>${esc(c.name)}</b> · Level ${st.level}
+        <div class="pbar" style="margin-top:10px"><b style="width:${st.mastered?100:Math.round(st.xp/need*100)}%"></b></div>
+        <div class="prow"><span>${st.mastered ? 'MASTERED' : `${st.xp} / ${need} XP`}</span><span>${st.mastered ? '🏅' : `${left} XP to go`}</span></div>
+        ${st.mastered ? '' : `<div class="almost">${answers <= 2 ? `Almost ${st.level<maxL(c)?`Level ${st.level+1}`:'MASTERED'}! Just ${answers} more correct.` : `About ${answers} correct answers to ${st.level<maxL(c)?`Level ${st.level+1}`:'MASTERED'}.`}</div>`}
+      </div>
+      <div class="stack">
+        <button class="btn-big" data-act="study" data-id="${c.id}">▶ ONE MORE ROUND</button>
+        <button class="btn-big gold" data-act="pack-open">🎁 OPEN YOUR PACK</button>
+        <button class="btn-big alt" data-act="home">Back to collection</button>
+      </div>
+    </div>`;
+  window.scrollTo({top:0});
+}
+
+/* ================= ROUTER / EVENTS ================= */
+function render(){
+  if (view.name === 'home') renderHome();
+  else if (view.name === 'detail') renderDetail();
+  window.scrollTo({top:0});
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act]'); if (!t || t.disabled) return;
+  const act = t.dataset.act;
+  if (act === 'home') { sess = null; view = {name:'home'}; render(); }
+  else if (act === 'open') { view = {name:'detail', id:t.dataset.id}; render(); }
+  else if (act === 'study') startSession(t.dataset.id);
+  else if (act === 'answer') answer(t.dataset.v);
+  else if (act === 'hint') { if (!sess.answered) { sess.hint = true; paintStudy(); } }
+  else if (act === 'next') next();
+  else if (act === 'lu-close') { const ov = t.closest('.lu'); ov && ov._done(); }
+  else if (act === 'stage') { view.preview = +t.dataset.l; renderDetail(); }
+  else if (act === 't-level') {
+    const st = S.cards[view.id]; const from = st.level;
+    if (st.mastered) return;
+    let pl;
+    const c = byId(view.id);
+    if (st.level < maxL(c)) { st.level++; st.xp = 0; pl = {from, to:st.level}; } else { st.mastered = true; st.xp = NEED[st.level-1]; pl = {from:st.level, to:st.level, mastered:true}; }
+    save(); view.preview = null;
+    showLevelUp(view.id, pl, () => renderDetail());
+  }
+  else if (act === 't-reset') { Object.assign(S.cards[view.id], {level:1,xp:0,mastered:false}); save(); view.preview = null; renderDetail(); }
+  else if (act === 't-cold') { const st = S.cards[view.id]; st.last = Date.now() - coldAfter(st) - DAY; save(); view.preview = null; renderDetail(); }
+  else if (act === 'pack-open') openPack();
+  else if (act === 'pk-tear') tearPack(t);
+  else if (act === 'pk-flip') flipPackCard(t);
+  else if (act === 'pk-done') { t.closest('.pk').remove(); sess = null; view = {name:'home'}; render(); }
+  else if (act === 't-pack') { S.packs++; save(); render(); }
+  else if (act === 'resetall') { if (confirm('Reset all Clerk Quest progress?')) { S = normalize(null); save(); render(); } }
+});
+
+probeArt().then(render);
+</script>
+</body>
+</html>
