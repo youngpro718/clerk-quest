@@ -207,6 +207,9 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .ra-col b{font-family:"Luckiest Guy";font-weight:400;font-size:3.3cqw}
 .ra-col span{font-family:"Patrick Hand";font-size:2.7cqw;line-height:1.05}
 .ra-col.yes{background:#dff0d4;color:#1f5a26} .ra-col.no{background:#f7d6cf;color:#7a1f14}
+.ra-diff.neutral .ra-col.yes{background:#ffe7c2;color:#6b3c00} .ra-diff.neutral .ra-col.no{background:#d6e6ff;color:#12386b}
+.series{z-index:6;display:flex;align-items:center;justify-content:center;font-family:"Bangers";letter-spacing:.1em;font-size:3.8cqw;color:#fff5dc;
+  background:linear-gradient(135deg,#d7263d,#8e1024);border:.35cqw solid var(--ink);border-radius:1.2cqw;transform:rotate(5deg);box-shadow:.4cqw .6cqw 0 rgba(0,0,0,.35);pointer-events:none}
 .rulebox{background:#fbf6e8;border:2px solid var(--ink);border-radius:12px;padding:12px 14px}
 .rulebox .cite{font-family:"Courier Prime";font-weight:700;font-size:17px}
 .rulebox blockquote{margin:8px 0;padding:8px 12px;border-left:4px solid #7b4bb5;background:#f1e9ff;font-size:17px;line-height:1.3}
@@ -278,7 +281,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
   background:linear-gradient(160deg,rgba(190,225,255,.3),rgba(120,170,220,.15) 60%,rgba(220,240,255,.35))}
 
 .mn-badge.low{top:auto;bottom:17%;left:1%;width:21%}
-.goingcold{position:absolute;z-index:7;width:34%;right:3%;top:26%;pointer-events:none;filter:drop-shadow(0 .6cqw .6cqw rgba(0,0,0,.4));animation:wobble 2.2s ease-in-out infinite}
+.goingcold{position:absolute;z-index:7;width:34%;right:3%;top:32%;pointer-events:none;filter:drop-shadow(0 .6cqw .6cqw rgba(0,0,0,.4));animation:wobble 2.2s ease-in-out infinite}
 @keyframes wobble{0%,100%{transform:rotate(8deg)}50%{transform:rotate(-2deg) scale(1.06)}}
 .stampimg.coldcase{width:70%;left:15%;top:38%;--rot:-12deg;z-index:7}
 .stampimg.mastered{width:52%;right:2%;top:57%;--rot:-10deg}
@@ -934,6 +937,182 @@ CARDS.push(
   },
 );
 
+/* Official-rule batch 3 — SERIES 2 (new art style). Same rule: only facts from the rule text
+   quoted in the official sample-question answer key (rev. 08/06/2026). */
+const LISTED = ['Listed as bail','Not listed'];
+const START = ['Date of entry','Date of docketing'];
+const S2 = { series:2, category:'MEMORY TRICK', rarity:'uncommon', icon:'court', maxLevel:3, stickers:{} };
+CARDS.push(
+  Object.assign({}, S2, {
+    id:'jurywaiver', art:'jurywaiver', num:'★13', l1:'WAIVE', l2:'THE JURY', name:'Waive the Jury', emoji:'✍️',
+    set:'CRIMINAL PROCEDURE', trickType:'who', quote:'Write it. Sign it.\nJudge approves it.',
+    source:{ cite:'CPL § 320.10(2)', quote:'Such waiver must be in writing and must be signed by the defendant in person in open court in the presence of the court, and with the approval of the court.', from:OFFICIAL + ', Q8',
+      context:'A defendant waiving a jury trial in the superior court where the indictment is pending.' },
+    hook:'WRITE it (must be in writing) · SIGN it (the defendant, in person, in open court, in front of the court) · APPROVE it (the court). The prosecutor\'s consent is not on the list.',
+    panel:{ kind:'who', yes:['IN WRITING','DEFENDANT SIGNS IN OPEN COURT','COURT APPROVES'], no:['SAID OUT LOUD ONLY','PROSECUTOR\'S CONSENT'], caption:'Jury trial waiver' },
+    lore:['No jury? Then paperwork.','"May be in writing" is a trap. It MUST be.','The judge has to sign off, too.'],
+    bank:[
+      {lv:1,q:'Under CPL § 320.10(2), a waiver of a jury trial must be:',c:['In writing','Oral only','Sent by email','Made by the attorney by phone'],a:'In writing',h:'Write it.',w:'CPL § 320.10(2): "Such waiver must be in writing…"'},
+      {lv:1,q:'Under CPL § 320.10(2), WHO must sign the jury-trial waiver?',c:['The defendant, in person','The defense attorney','The prosecutor','The court clerk'],a:'The defendant, in person',h:'Sign it yourself.',w:'The waiver "must be signed by the defendant in person."'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: Under CPL § 320.10(2), the waiver needs the approval of the court.',c:['True','False'],a:'True',h:'Judge approves it.',w:'True: "…and with the approval of the court."'},
+      {lv:2,q:'WHERE must the defendant sign the waiver under CPL § 320.10(2)?',c:['In open court, in the presence of the court','At home, then mail it in','In the clerk\'s office','In the jury room'],a:'In open court, in the presence of the court',h:'In front of the judge.',w:'It must be signed "in person in open court in the presence of the court."'},
+      {lv:2,q:'Exam format. A jury-trial waiver: (1) may be made in writing (2) must be signed by the defendant in person in open court in the presence of the court (3) must have the consent of the prosecutor (4) must be approved by the court.',c:['2 and 4, but not 1 or 3','1, 2 and 3, but not 4','1 and 4, but not 2 or 3','2 and 3, but not 1 or 4'],a:'2 and 4, but not 1 or 3',h:'"May" is a trap, and the prosecutor isn\'t in the rule.',w:'Correct answer: 2 and 4. Statement 1 is wrong because the waiver MUST be in writing; the prosecutor\'s consent is not among the listed requirements.'},
+      {lv:2,q:'Which is NOT one of the requirements listed in CPL § 320.10(2)?',c:['The prosecutor\'s consent','Being in writing','Signed by the defendant in open court','The court\'s approval'],a:'The prosecutor\'s consent',h:'Three are listed. One isn\'t.',w:'CPL § 320.10(2) lists writing, the defendant\'s signature in open court, and the court\'s approval. It does not list the prosecutor\'s consent.'},
+      {lv:3,q:'The defense attorney signs the jury waiver for the defendant in the judge\'s chambers. What is the problem?',c:['The defendant must sign it in person, in open court','Nothing is wrong','The prosecutor must sign too','The clerk must sign instead'],a:'The defendant must sign it in person, in open court',h:'Who signs, and where?',w:'CPL § 320.10(2) requires the defendant\'s own signature, in person, in open court, in the presence of the court.'},
+      {lv:3,q:'In open court, the defendant says "I waive the jury," and the judge approves. Nothing is signed. What is missing?',c:['A written waiver signed by the defendant','The prosecutor\'s consent','A new indictment','Nothing is missing'],a:'A written waiver signed by the defendant',h:'Write it. Sign it.',w:'The waiver must be in writing and signed by the defendant.'},
+      {lv:3,q:'Why is "the waiver MAY be made in writing" a WRONG answer?',c:['Because it MUST be in writing','Because it must be made orally','Because only the attorney may write it','Because the jury writes it'],a:'Because it MUST be in writing',h:'May vs. must.',w:'CPL § 320.10(2) says the waiver "must be in writing," so "may" is incorrect.'},
+    ],
+  }),
+  Object.assign({}, S2, {
+    id:'interest', art:'interest', num:'★14', l1:'THE INTEREST', l2:'CLOCK', name:'The Interest Clock', emoji:'💰',
+    set:'CPLR', trickType:'difference', quote:'Judgment? Entry.\nOrder? Docketing.',
+    source:{ cite:'CPLR § 5003', quote:'Every money judgment shall bear interest from the date of its entry. Every order directing the payment of money which has been docketed as a judgment shall bear interest from the date of such docketing.', from:OFFICIAL + ', Q17',
+      context:'When interest starts running on money judgments and money orders.' },
+    diff:{
+      a:{ name:'Money judgment', hook:'Interest from the date of ENTRY', points:['Every money judgment bears interest','The clock starts when the judgment is entered'] },
+      b:{ name:'Order to pay money', hook:'Interest from the date of DOCKETING', points:['Only once it has been docketed as a judgment','The clock starts on the docketing date'] },
+    },
+    hook:'A JUDGMENT starts earning interest when it is ENTERED. An ORDER to pay money starts when it is DOCKETED as a judgment. J goes with E (judgment → entry); O goes with D (order → docketing).',
+    panel:{ kind:'diff', neutral:true, heads:['MONEY JUDGMENT','ORDER TO PAY'], yes:['Interest from the','DATE OF ENTRY'], no:['Interest from the','DATE OF DOCKETING'], caption:'When does interest start?' },
+    lore:['Money never sleeps. Neither does interest.','Two documents, two starting lines.','Entry for judgments. Docketing for orders.'],
+    bank:[
+      {lv:1,q:'Under CPLR § 5003, a money judgment bears interest from:',c:['The date of its entry','The date of the verdict','The date the complaint was served','The date of payment'],a:'The date of its entry',h:'Judgment → Entry.',w:'"Every money judgment shall bear interest from the date of its entry."'},
+      {lv:1,q:'Under CPLR § 5003, an order directing payment of money that has been docketed as a judgment bears interest from:',c:['The date of such docketing','The earliest ascertainable date of deposition','The final report','The date of reasonable breach'],a:'The date of such docketing',h:'Order → Docketing.',w:'"…shall bear interest from the date of such docketing." (Official sample Q17.)'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: Under CPLR § 5003, every money judgment bears interest.',c:['True','False'],a:'True',h:'"Every money judgment…"',w:'True: "Every money judgment shall bear interest from the date of its entry."'},
+      {lv:2,type:'tf',q:'A MONEY JUDGMENT. When does interest start under CPLR § 5003?',c:START,a:'Date of entry',h:'J goes with E.',w:'Money judgments bear interest from the date of entry.'},
+      {lv:2,type:'tf',q:'An ORDER directing payment of money, docketed as a judgment. When does interest start under CPLR § 5003?',c:START,a:'Date of docketing',h:'O goes with D.',w:'Such orders bear interest from the date of docketing.'},
+      {lv:2,q:'For an order to pay money to earn interest under CPLR § 5003, what must happen to it first?',c:['It must be docketed as a judgment','It must be appealed','It must be served by mail','It must be read aloud in court'],a:'It must be docketed as a judgment',h:'"…which has been docketed as a judgment…"',w:'The rule covers orders "which [have] been docketed as a judgment."'},
+      {lv:3,q:'A money judgment is entered on March 3 and docketed on March 10. Under CPLR § 5003, interest runs from:',c:['March 3, the date of entry','March 10, the date of docketing','The date of the verdict','The date it is paid'],a:'March 3, the date of entry',h:'Is it a judgment or an order?',w:'It is a money judgment, so interest runs from the date of entry: March 3.'},
+      {lv:3,q:'An order directing payment of money is signed May 1 and docketed as a judgment May 12. Under CPLR § 5003, interest runs from:',c:['May 12, the date of docketing','May 1, the date it was signed','The date of the motion','The date of payment'],a:'May 12, the date of docketing',h:'Is it a judgment or an order?',w:'It is an order docketed as a judgment, so interest runs from the date of docketing: May 12.'},
+      {lv:3,q:'FIND THE INCORRECT STATEMENT about CPLR § 5003.',c:['A money judgment bears interest from the date it is docketed','A money judgment bears interest from the date of its entry','An order docketed as a judgment bears interest from the docketing date','Every money judgment bears interest'],a:'A money judgment bears interest from the date it is docketed',h:'Swap check: J→E, O→D.',w:'Money judgments run from ENTRY. Docketing is the start date for orders directing payment of money.'},
+    ],
+  }),
+  Object.assign({}, S2, {
+    id:'quash', art:'quash', num:'★15', l1:'QUASH IT', l2:'WHERE IT RETURNS', name:'Quash It Where It Returns', emoji:'🚪',
+    set:'CPLR', trickType:'who', quote:'Fight the subpoena\nwhere it returns.',
+    source:{ cite:'CPLR § 2304', quote:'A motion to quash, fix conditions or modify a subpoena shall be made promptly in the court in which the subpoena is returnable.', from:OFFICIAL + ', Q16',
+      context:'Challenging a subpoena.' },
+    hook:'Three asks (QUASH it, FIX CONDITIONS on it, or MODIFY it), one place (the court where the subpoena is RETURNABLE), one speed (PROMPTLY).',
+    panel:{ kind:'who', yes:['COURT WHERE IT\'S RETURNABLE','PROMPTLY'], no:['ANY SUPREME COURT','COURT OF CLAIMS'], caption:'Motion to quash a subpoena' },
+    lore:['Go back to where it came from.','Quash, fix, or modify. Pick one.','"Promptly" means don\'t wait.'],
+    bank:[
+      {lv:1,q:'Under CPLR § 2304, a motion to quash, fix conditions, or modify a subpoena must be made in the:',c:['Court in which the subpoena is returnable','Supreme Court','Court of record','Court of Claims'],a:'Court in which the subpoena is returnable',h:'Where it returns.',w:'CPLR § 2304: "…shall be made promptly in the court in which the subpoena is returnable." (Official sample Q16.)'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: Under CPLR § 2304, the motion must be made promptly.',c:['True','False'],a:'True',h:'Speed matters.',w:'True: the motion "shall be made promptly."'},
+      {lv:1,q:'Besides quashing it, a CPLR § 2304 motion can ask the court to:',c:['Fix conditions on or modify the subpoena','Enter a default judgment','Seal the record','Change the jury'],a:'Fix conditions on or modify the subpoena',h:'Three asks.',w:'The motion may be "to quash, fix conditions or modify a subpoena."'},
+      {lv:2,q:'Which three things can a CPLR § 2304 motion ask for?',c:['Quash, fix conditions, or modify','Quash, seal, or dismiss','Modify, appeal, or stay','Serve, file, or docket'],a:'Quash, fix conditions, or modify',h:'Q-F-M.',w:'CPLR § 2304 covers a motion "to quash, fix conditions or modify a subpoena."'},
+      {lv:2,q:'Under CPLR § 2304, how quickly must the motion be made?',c:['Promptly','Within 60 days','Only after trial','At any time'],a:'Promptly',h:'Don\'t wait.',w:'The motion "shall be made promptly."'},
+      {lv:2,type:'tf',q:'Where do you move to modify a subpoena under CPLR § 2304?',c:['Where it\'s returnable','Any court you choose'],a:'Where it\'s returnable',h:'Where it returns.',w:'The motion is made in the court in which the subpoena is returnable.'},
+      {lv:3,q:'A subpoena is returnable in County Court. The recipient files a motion to quash in a different county\'s Supreme Court. What is the problem?',c:['It must be made in the court where the subpoena is returnable','Nothing is wrong','It must be made in the Court of Claims','Only the issuing attorney can move'],a:'It must be made in the court where the subpoena is returnable',h:'Where does it return?',w:'CPLR § 2304 requires the motion in the court in which the subpoena is returnable.'},
+      {lv:3,q:'A witness waits months, until after testifying, to move to quash. What rule does that ignore?',c:['The motion must be made promptly','The motion must be in the Court of Claims','Only a judge may quash','Subpoenas can never be challenged'],a:'The motion must be made promptly',h:'Speed.',w:'CPLR § 2304 requires the motion to be made "promptly."'},
+      {lv:3,q:'FIND THE INCORRECT STATEMENT about CPLR § 2304.',c:['The motion may be made in any court of record','The motion may seek to fix conditions','The motion must be made promptly','The motion goes to the court where the subpoena is returnable'],a:'The motion may be made in any court of record',h:'One place only.',w:'The motion must be made in the court in which the subpoena is returnable, not any court of record.'},
+    ],
+  }),
+  Object.assign({}, S2, {
+    id:'newtrial', art:'newtrial', num:'★16', l1:'MID-TRIAL', l2:'RESET', name:'Mid-Trial Reset', emoji:'🔁',
+    set:'CPLR', trickType:'trigger', quote:'Any time during\ntrial. Any party.',
+    source:{ cite:'CPLR § 4402', quote:'At any time during the trial, the court, on motion of any party, may order a continuance or a new trial in the interest of justice on such terms as may be just.', from:OFFICIAL + ', Q14',
+      context:'Continuance or new trial during trial (CPLR Article 44).' },
+    hook:'IF any party moves, at ANY time DURING trial → THEN the court MAY order a CONTINUANCE or a NEW TRIAL, in the interest of justice, on just terms.',
+    panel:{ kind:'trigger', steps:['DURING TRIAL','MOTION BY ANY PARTY','CONTINUANCE OR NEW TRIAL'], caption:'In the interest of justice' },
+    lore:['Sometimes a trial needs a restart.','Either side can ask.','Only during the trial. Not before, not after.'],
+    bank:[
+      {lv:1,q:'Under CPLR § 4402, when may the court order a continuance or new trial?',c:['At any time during the trial','Twenty days before the trial','Eight days after service of the summons','Fifteen days after the joinder of claims'],a:'At any time during the trial',h:'"During."',w:'CPLR § 4402: "At any time during the trial…" (Official sample Q14.)'},
+      {lv:1,q:'Under CPLR § 4402, who may make the motion?',c:['Any party','Only the plaintiff','Only the defendant','Only the jury'],a:'Any party',h:'Either side.',w:'The court acts "on motion of any party."'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: The standard in CPLR § 4402 is "in the interest of justice."',c:['True','False'],a:'True',h:'Read the rule.',w:'True: "…in the interest of justice on such terms as may be just."'},
+      {lv:2,q:'What two things may the court order under CPLR § 4402?',c:['A continuance or a new trial','A dismissal or a default','An appeal or a stay','Sealing or expungement'],a:'A continuance or a new trial',h:'Pause, or restart.',w:'The court "may order a continuance or a new trial."'},
+      {lv:2,q:'Under CPLR § 4402, on what terms may the court order it?',c:['Such terms as may be just','Only the plaintiff\'s terms','Terms set by the jury','No terms at all'],a:'Such terms as may be just',h:'"…as may be just."',w:'"…on such terms as may be just."'},
+      {lv:2,q:'WHAT TRIGGERS IT? The court\'s power under CPLR § 4402 is triggered by:',c:['A motion of any party during the trial','The jury\'s request','A settlement offer','Filing of the complaint'],a:'A motion of any party during the trial',h:'IF a party moves…',w:'The court acts "on motion of any party" "at any time during the trial."'},
+      {lv:3,q:'Halfway through trial, the DEFENDANT moves for a new trial in the interest of justice. Can the court grant it under CPLR § 4402?',c:['Yes. Any party may move at any time during the trial','No. Only after the verdict','No. Only the plaintiff may ask','No. Only before trial begins'],a:'Yes. Any party may move at any time during the trial',h:'Any party, any time during.',w:'CPLR § 4402 allows the motion by any party at any time during the trial.'},
+      {lv:3,q:'FIND THE INCORRECT STATEMENT about CPLR § 4402.',c:['Only the plaintiff may move under it','The court may order a continuance','The court may order a new trial','The motion may be made at any time during the trial'],a:'Only the plaintiff may move under it',h:'Who can move?',w:'Any party may move, not only the plaintiff.'},
+      {lv:3,q:'Which sequence matches CPLR § 4402?',c:['Trial underway → a party moves → court may order a continuance or new trial','Trial ends → jury moves → court orders appeal','Before trial → clerk moves → court orders default','Trial underway → court must order a new trial automatically'],a:'Trial underway → a party moves → court may order a continuance or new trial',h:'IF → THEN.',w:'During trial, on a party\'s motion, the court may (not must) order a continuance or new trial.'},
+    ],
+  }),
+  Object.assign({}, S2, {
+    id:'schoolnotice', art:'schoolnotice', num:'★17', l1:'THE SCHOOL GETS', l2:'NOTIFIED', name:'The School Gets Notified', emoji:'🏫',
+    set:'CRIMINAL PROCEDURE', trickType:'trigger', quote:'Under 19 + sentenced\n= school is told.',
+    source:{ cite:'CPL § 380.90(2)', quote:'Whenever a person under the age of nineteen who is enrolled as a student in a public or private elementary or secondary school is sentenced for a crime, the court that has sentenced such person shall provide notification of the conviction and sentence to the designated educational official of the school in which such person is enrolled as a student.', from:OFFICIAL + ', Q9',
+      context:'Notifying a student\'s school after sentencing.' },
+    hook:'IF a student UNDER 19 (so up to and including 18) at a public or private elementary or secondary school is SENTENCED for a crime → THEN the SENTENCING COURT notifies the school\'s DESIGNATED EDUCATIONAL OFFICIAL of the conviction and sentence.',
+    panel:{ kind:'trigger', steps:['STUDENT UNDER 19','SENTENCED FOR A CRIME','COURT NOTIFIES THE SCHOOL'], caption:'Elementary or secondary school' },
+    lore:['The court tells the school. Not the parents.','Under 19 means 18 and younger.','College isn\'t covered. K–12 is.'],
+    bank:[
+      {lv:1,q:'Under CPL § 380.90(2), who must notify the school?',c:['The court that sentenced the person','The probation department','The district attorney','The student\'s parents'],a:'The court that sentenced the person',h:'The sentencing court.',w:'"…the court that has sentenced such person shall provide notification…"'},
+      {lv:1,q:'CPL § 380.90(2) notice is required for students up to and including what age?',c:['18','16','17','19'],a:'18',h:'"Under the age of nineteen."',w:'"Under the age of nineteen" means up to and including 18. (Official sample Q9.)'},
+      {lv:1,q:'Under CPL § 380.90(2), which schools are covered?',c:['Public or private elementary or secondary schools','Only public high schools','Colleges and universities','Only private schools'],a:'Public or private elementary or secondary schools',h:'K–12, public or private.',w:'The rule covers a student "in a public or private elementary or secondary school."'},
+      {lv:2,q:'Under CPL § 380.90(2), who RECEIVES the notice?',c:['The designated educational official of the school','Every teacher','The school board president','The student\'s classmates'],a:'The designated educational official of the school',h:'One designated person.',w:'Notice goes "to the designated educational official of the school."'},
+      {lv:2,q:'What does the notice under CPL § 380.90(2) cover?',c:['The conviction and sentence','Only the arrest','Only the charges','Only the bail amount'],a:'The conviction and sentence',h:'What happened at the end.',w:'The court notifies the school "of the conviction and sentence."'},
+      {lv:2,q:'WHAT TRIGGERS IT? The CPL § 380.90(2) notice is triggered when the student is:',c:['Sentenced for a crime','Arrested','Arraigned','Indicted'],a:'Sentenced for a crime',h:'IF sentenced…',w:'The duty arises when the student "is sentenced for a crime."'},
+      {lv:3,q:'A 19-year-old high school student is sentenced for a crime. Is notice required under CPL § 380.90(2)?',c:['No. The rule covers persons under 19','Yes, all high school students','Yes, if the school asks','Only if the crime was at school'],a:'No. The rule covers persons under 19',h:'Under 19.',w:'CPL § 380.90(2) applies to persons "under the age of nineteen."'},
+      {lv:3,q:'A 17-year-old enrolled in a private high school is sentenced for a crime. What must happen?',c:['The sentencing court notifies the school\'s designated educational official','Nothing, private schools are excluded','The DA notifies the principal','The student must tell the school'],a:'The sentencing court notifies the school\'s designated educational official',h:'Public or private.',w:'Private secondary schools are covered, and the sentencing court sends the notice.'},
+      {lv:3,q:'A 17-year-old COLLEGE student is sentenced for a crime. Does CPL § 380.90(2) require school notice?',c:['No. It covers elementary or secondary schools','Yes, any school','Yes, if under 19','Only public colleges'],a:'No. It covers elementary or secondary schools',h:'What kind of school?',w:'The rule is limited to "elementary or secondary" schools.'},
+    ],
+  }),
+  Object.assign({}, S2, {
+    id:'bail', art:'bail', num:'★18', l1:'WHAT COUNTS', l2:'AS BAIL', name:'What Counts as Bail', emoji:'💳',
+    set:'CRIMINAL PROCEDURE', trickType:'difference', quote:'Cash, bond,\nor card.',
+    source:{ cite:'CPL § 500.10(9)', quote:'"Bail" means cash bail, a bail bond or money paid with a credit card.', from:OFFICIAL + ', Q7',
+      context:'The definition of "bail."' },
+    diff:{
+      a:{ name:'Listed in 500.10(9)', hook:'Cash, bond, or card', points:['Cash bail','A bail bond','Money paid with a credit card'] },
+      b:{ name:'Not in the definition', hook:'Not on the list', points:['Real property (by the official sample)','"Equity in full force and effect"'] },
+    },
+    hook:'"CASH, BOND, or CARD." Those three are the definition of bail in CPL § 500.10(9).',
+    panel:{ kind:'diff', heads:['✔ BAIL','✘ NOT LISTED'], yes:['CASH BAIL','BAIL BOND','CREDIT CARD PAYMENT'], no:['REAL PROPERTY','"EQUITY"'], caption:'CPL § 500.10(9)' },
+    lore:['Cash. Bond. Card.','The exam loves adding things that aren\'t on the list.','Three forms. That\'s it.'],
+    bank:[
+      {lv:1,q:'Under CPL § 500.10(9), "bail" means:',c:['Cash bail, a bail bond, or money paid with a credit card','Only cash','Cash or real property','Any property worth the bail amount'],a:'Cash bail, a bail bond, or money paid with a credit card',h:'Cash, bond, or card.',w:'CPL § 500.10(9): "\'Bail\' means cash bail, a bail bond or money paid with a credit card."'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: Money paid with a credit card is part of the definition of bail in CPL § 500.10(9).',c:['True','False'],a:'True',h:'Cash, bond, or…',w:'True. Credit card payment is expressly included.'},
+      {lv:1,q:'Exam format. Under CPL § 500.10(9), "bail" means: (1) cash bail or a bail bond (2) real property (3) equity in full force and effect',c:['1 only, but not 2 or 3','1 and 2, but not 3','1 and 3, but not 2','1, 2, and 3'],a:'1 only, but not 2 or 3',h:'Only one item matches the definition.',w:'Correct answer: 1 only. The definition lists cash bail, a bail bond, or money paid with a credit card. (Official sample Q7.)'},
+      {lv:2,type:'tf',q:'CASH BAIL. Is it in the CPL § 500.10(9) definition?',c:LISTED,a:'Listed as bail',h:'Cash, bond, or card.',w:'Cash bail is listed.'},
+      {lv:2,type:'tf',q:'REAL PROPERTY. Is it in the CPL § 500.10(9) definition?',c:LISTED,a:'Not listed',h:'Cash, bond, or card.',w:'Real property is not one of the three items in the definition.'},
+      {lv:2,type:'tf',q:'A BAIL BOND. Is it in the CPL § 500.10(9) definition?',c:LISTED,a:'Listed as bail',h:'Cash, bond, or card.',w:'A bail bond is listed.'},
+      {lv:3,q:'How many forms of bail does CPL § 500.10(9) list?',c:['Three','Two','Four','Five'],a:'Three',h:'Cash, bond, card.',w:'Three: cash bail, a bail bond, and money paid with a credit card.'},
+      {lv:3,q:'Which is NOT listed in CPL § 500.10(9)?',c:['Real property','Cash bail','A bail bond','Money paid with a credit card'],a:'Real property',h:'Find the extra.',w:'Real property is not in the definition. The three listed forms are cash bail, a bail bond, and credit card payment.'},
+      {lv:3,q:'A defendant\'s family asks to pay the bail amount by credit card. Under CPL § 500.10(9), is that within the definition of bail?',c:['Yes. Money paid with a credit card is bail','No. Only cash counts','No. Only a bail bond counts','Only with the prosecutor\'s consent'],a:'Yes. Money paid with a credit card is bail',h:'Cash, bond, or card.',w:'The definition expressly includes "money paid with a credit card."'},
+    ],
+  }),
+  Object.assign({}, S2, {
+    id:'acd', art:'acd', num:'★19', l1:'12 MONTHS,', l2:'MAX', name:'12 Months, Max', emoji:'⏳',
+    set:'CRIMINAL PROCEDURE', trickType:'clock', quote:'Adjust it all you\nwant. Max: 12.',
+    source:{ cite:'CPL § 170.56(1–2)', quote:'Upon ordering the action adjourned in contemplation of dismissal, the court must set and specify such conditions for the adjournment as may be appropriate, and such conditions may include placing the defendant under the supervision of any public or private agency. At any time prior to dismissal the court may modify the conditions or extend or reduce the term of the adjournment, except that the total period of adjournment shall not exceed twelve months.', from:OFFICIAL + ', Q12',
+      context:'ACD in a local criminal court where the only remaining counts charge violations of Penal Law §§ 222.10, 222.15, 222.25, 222.30, 222.45, or 222.50, before a guilty plea or trial.' },
+    hook:'The court MUST set conditions (supervision is allowed). Before dismissal it MAY modify the conditions or stretch or shrink the term, but the TOTAL can never exceed 12 MONTHS.',
+    panel:{ kind:'clock', steps:[ {n:'12', label:'MONTHS MAX', from:'total adjournment, even if extended'} ], caption:'ACD under CPL § 170.56' },
+    lore:['Extend it. Shrink it. Never past twelve.','Conditions are a must.','Supervision is an option.'],
+    bank:[
+      {lv:1,q:'Under CPL § 170.56, the total period of this adjournment in contemplation of dismissal may not exceed:',c:['12 months','90 days','30 days','6 months'],a:'12 months',h:'Max: 12.',w:'"…the total period of adjournment shall not exceed twelve months." (Official sample Q12.)'},
+      {lv:1,q:'"ACD" in CPL § 170.56 stands for adjournment in contemplation of:',c:['Dismissal','Discovery','Default','Deposition'],a:'Dismissal',h:'What happens at the end?',w:'An ACD is an adjournment in contemplation of dismissal.'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: Under CPL § 170.56, the court may modify the conditions at any time before dismissal.',c:['True','False'],a:'True',h:'Adjustable.',w:'True: "At any time prior to dismissal the court may modify the conditions…"'},
+      {lv:2,q:'When ordering the ACD, what MUST the court do under CPL § 170.56?',c:['Set and specify appropriate conditions','Dismiss the case immediately','Enter a guilty plea','Order a jury trial'],a:'Set and specify appropriate conditions',h:'"must set and specify…"',w:'"…the court must set and specify such conditions for the adjournment as may be appropriate."'},
+      {lv:2,q:'Which condition does CPL § 170.56 expressly allow?',c:['Supervision by a public or private agency','A jail sentence','Loss of a driver\'s license','A $10,000 fine'],a:'Supervision by a public or private agency',h:'"…may include placing the defendant under…"',w:'Conditions "may include placing the defendant under the supervision of any public or private agency."'},
+      {lv:2,q:'Before dismissal, what may the court do to the ACD under CPL § 170.56?',c:['Modify the conditions or extend or reduce the term','Nothing, it is locked in','Only shorten it','Convert it to a conviction automatically'],a:'Modify the conditions or extend or reduce the term',h:'Adjust it, within the cap.',w:'"…the court may modify the conditions or extend or reduce the term of the adjournment."'},
+      {lv:3,q:'An ACD was set for 9 months. The court wants to extend it by 5 more months. Allowed under CPL § 170.56?',c:['No. The total would be 14 months, over the 12-month cap','Yes, extensions are unlimited','Yes, if the defendant agrees','No. ACDs can never be extended'],a:'No. The total would be 14 months, over the 12-month cap',h:'Add it up.',w:'9 + 5 = 14 months, which exceeds the twelve-month total limit.'},
+      {lv:3,q:'An ACD was set for 6 months. The court extends it by 6 more. Allowed under CPL § 170.56?',c:['Yes. The total is exactly 12 months','No. Extensions are not allowed','No. The limit is 6 months','Only with the prosecutor\'s consent'],a:'Yes. The total is exactly 12 months',h:'"shall not exceed" twelve.',w:'6 + 6 = 12 months, which does not exceed the limit.'},
+      {lv:3,q:'In the official sample, this 12-month ACD applies where the only remaining counts charge violations of which Penal Law sections?',c:['§§ 222.10, 222.15, 222.25, 222.30, 222.45, or 222.50','§§ 120.00 and 120.05','§ 155.25 only','Any felony'],a:'§§ 222.10, 222.15, 222.25, 222.30, 222.45, or 222.50',h:'The 222 series.',w:'The official sample question describes counts charging violations of Penal Law §§ 222.10, 222.15, 222.25, 222.30, 222.45, or 222.50.'},
+    ],
+  }),
+  Object.assign({}, S2, {
+    id:'military', art:'military', num:'★20', l1:'THE MILITARY', l2:'CALENDAR', name:'The Military Calendar', emoji:'🎖️',
+    set:'UNIFORM RULES', trickType:'who', quote:'Serving, unavailable,\nno good deposition.',
+    source:{ cite:'Uniform Rules § 202.22(a)(7)', quote:'(a) A judge to whom cases are assigned under the individual assignment system may establish such calendars of cases as the judge shall deem necessary or desirable for proper case management. These calendars may include: (7) Military Calendar. A military calendar is for cases where a party to an action or a witness necessary upon the trial is in military service, and is not presently available for trial, and a deposition cannot be taken, or, if taken, would not provide adequate evidence.', from:OFFICIAL + ', Q18',
+      context:'Special calendars under the individual assignment system.' },
+    hook:'All three must be true: a PARTY or NEEDED WITNESS is IN military service · NOT presently available for trial · NO adequate deposition (can\'t be taken, or wouldn\'t be enough).',
+    panel:{ kind:'who', yes:['PARTY OR NEEDED WITNESS SERVING','NOT AVAILABLE FOR TRIAL','NO ADEQUATE DEPOSITION'], no:['MILITARY CONTRACTOR CASES','DISCHARGED YEARS AGO'], caption:'Who goes on it?' },
+    lore:['Service comes first. The case can wait.','All three boxes must be checked.','A good deposition means no special calendar.'],
+    bank:[
+      {lv:1,q:'Under Uniform Rules § 202.22(a)(7), a Military Calendar is:',c:['A listing of cases where a party or witness is presently not available for trial due to military service','A calendar of cases where a party is a military contractor','Cases where the defendant was discharged three years ago','Cases where the military is suing someone'],a:'A listing of cases where a party or witness is presently not available for trial due to military service',h:'Serving and unavailable.',w:'Official sample Q18, answer D. It is for cases where a party or needed witness is in military service and not presently available for trial.'},
+      {lv:1,q:'Under Uniform Rules § 202.22(a), who may establish calendars like the military calendar?',c:['A judge to whom cases are assigned under the individual assignment system','The court clerk','Any attorney','The jury'],a:'A judge to whom cases are assigned under the individual assignment system',h:'The assigned judge.',w:'"A judge to whom cases are assigned under the individual assignment system may establish such calendars…"'},
+      {lv:1,type:'tf',q:'TRUE or FALSE: The witness must be one "necessary upon the trial" to qualify under 202.22(a)(7).',c:['True','False'],a:'True',h:'Not just any witness.',w:'True: "…a witness necessary upon the trial is in military service…"'},
+      {lv:2,q:'A party is in military service and not available for trial. What ELSE must be true for the military calendar?',c:['A deposition cannot be taken, or would not provide adequate evidence','The party must be overseas for 2 years','The other side must agree','The case must be a felony'],a:'A deposition cannot be taken, or would not provide adequate evidence',h:'Could a deposition fix it?',w:'"…and a deposition cannot be taken, or, if taken, would not provide adequate evidence."'},
+      {lv:2,type:'tf',q:'A party is a contractor selling supplies to the military. Is that, by itself, a military-calendar case?',c:['Yes','No'],a:'No',h:'Is anyone serving?',w:'No. The calendar is for a party or needed witness who is in military service and unavailable.'},
+      {lv:2,type:'tf',q:'The defendant was discharged from the military three years ago. Is that a military-calendar case?',c:['Yes','No'],a:'No',h:'Are they serving now?',w:'No. The person must be in military service and not presently available.'},
+      {lv:3,q:'A needed witness is deployed overseas, but a video deposition can be taken and would provide adequate evidence. Military calendar?',c:['No. A deposition that is adequate is available','Yes. Deployment is enough','Yes, if the judge prefers','No. Only parties qualify'],a:'No. A deposition that is adequate is available',h:'Check all three boxes.',w:'The calendar applies only if a deposition cannot be taken or would not provide adequate evidence.'},
+      {lv:3,q:'A party is on active duty, not available for trial, and no deposition could provide adequate evidence. Military calendar?',c:['Yes. All three conditions are met','No. Only witnesses qualify','No. Parties must appear anyway','Only if the case is criminal'],a:'Yes. All three conditions are met',h:'Serving · unavailable · no adequate deposition.',w:'All three conditions of 202.22(a)(7) are met.'},
+      {lv:3,q:'Why may an assigned judge establish special calendars like this under 202.22(a)?',c:['For proper case management','To punish late parties','To speed up appeals','Because the jury requests it'],a:'For proper case management',h:'"…necessary or desirable for…"',w:'Calendars may be established "as the judge shall deem necessary or desirable for proper case management."'},
+    ],
+  }),
+);
+
 /* Memory Trick cards: special cards that teach a mnemonic. Found in packs. */
 CARDS.push(
   {
@@ -1034,6 +1213,7 @@ function normalize(s){
   CARDS.forEach(c => { s.cards[c.id] = Object.assign({level:1,xp:0,mastered:false,owned:STARTERS.includes(c.id)}, s.cards[c.id]||{}); });
   if (s.packs == null) s.packs = 1;
   if (s.packsOpened == null) s.packsOpened = 0;
+  if (!s.seenOfficial3) { s.seenOfficial3 = true; if (s.packsOpened > 0) { s.packs += 3; s.guarantee = [].concat(s.guarantee || [], ['jurywaiver','interest','quash','newtrial','schoolnotice','bail','acd','military']); } }
   if (!s.seenOfficial2) { s.seenOfficial2 = true; if (s.packsOpened > 0) { s.packs += 2; s.guarantee = [].concat(s.guarantee || [], ['eightdays','sealed','followpetitioner','amendonce','childvoice','custodyornot']); } }
   if (!s.seenOfficial) { s.seenOfficial = true; if (s.packsOpened > 0) { s.packs += 1; s.guarantee = [].concat(s.guarantee || [], ['whosigns','clock6090','ypsi']); } }
   if (!s.seenSvs) { s.seenSvs = true; if (s.packsOpened > 0 && !(s.cards.svs && s.cards.svs.owned)) { s.packs += 1; s.guarantee = [].concat(s.guarantee || [], ['svs']); } }
@@ -1079,7 +1259,7 @@ function ruleArt(c){
   let body = '';
   if (p.kind === 'who') body = `<div class="ra-who">${p.yes.map(t=>`<div class="ra-yes">✔ ${t}</div>`).join('')}${p.no.map(t=>`<div class="ra-no">✘ ${t}</div>`).join('')}</div>`;
   if (p.kind === 'clock') body = `<div class="ra-clock n${p.steps.length}">${p.steps.map(st=>`<div class="ra-step"><b>${st.n}</b><span>${st.label}</span><small>${st.from}</small></div>`).join('<div class="ra-arrow">→</div>')}</div>`;
-  if (p.kind === 'diff') body = `<div class="ra-diff"><div class="ra-col yes"><b>✔ COUNTS</b>${p.yes.map(t=>`<span>${t}</span>`).join('')}</div><div class="ra-col no"><b>✘ DOESN'T</b>${p.no.map(t=>`<span>${t}</span>`).join('')}</div></div>`;
+  if (p.kind === 'diff') { const [h1, h2] = p.heads || ['✔ COUNTS', '✘ DOESN\'T']; body = `<div class="ra-diff ${p.neutral?'neutral':''}"><div class="ra-col yes"><b>${h1}</b>${p.yes.map(t=>`<span>${t}</span>`).join('')}</div><div class="ra-col no"><b>${h2}</b>${p.no.map(t=>`<span>${t}</span>`).join('')}</div></div>`; }
   if (p.kind === 'trigger') body = `<div class="ra-trig">${p.steps.map((t,i)=>`<div class="ra-box" style="--d:${i*.15}s">${i===0?'IF ':'THEN '}<b>${t}</b></div>`).join('<div class="ra-down">↓</div>')}</div>`;
   return `<div class="mn"><img class="mn-bg" src="art/bg_trick.webp" alt=""><img class="mn-badge low" src="art/icon_memory.webp" alt="Memory Trick">
     <div class="mn-paper"><div class="ra-cap">${esc(p.caption)}</div>${body}<div class="ra-cite">${esc(c.source.cite)}</div></div></div>`;
@@ -1131,6 +1311,7 @@ function frontHTML(c, st, opt={}){
     <div class="t set" style="${P(334,1294,706,1446)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl" style="${P(728,1290,944,1448)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${sparks}
+    ${c.series ? `<div class="series" style="${P(720,400,940,456)}">SERIES ${c.series}</div>` : ''}
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
 }
 /* Glow tiers: neon ring on the levels just below the top, gold ring + gloss at the top. */
@@ -1359,7 +1540,7 @@ function renderDetail(){
       <div class="dcard">${cardEl(c, shown)}<div class="preview-note">${pv !== st.level ? `Previewing Level ${pv} art` : ''}</div></div>
       <div class="panel">
         <h1>${esc(c.name)}</h1>
-        <div class="meta">${esc(c.num)} · ${esc(c.category)} · ${esc(c.set)}</div>
+        <div class="meta">${esc(c.num)} · ${esc(c.category)} · ${esc(c.set)}${c.series ? ` · Series ${c.series}` : ''}</div>
         <div class="pbar"><b style="width:${st.mastered?100:Math.round(st.xp/need*100)}%"></b></div>
         <div class="prow"><span>Level ${st.level}${st.mastered?' · MASTERED':''}</span><span>${st.mastered?'Max':`${st.xp} / ${need} XP`}</span></div>
         ${isCold(st) ? `<div class="coldnote"><img src="art/icon_thermo_snow.webp" alt=""> <b>Cold case.</b> Last studied ${agoText(st.last)}. One correct answer reopens it (+${COLD_BONUS} XP).</div>`
