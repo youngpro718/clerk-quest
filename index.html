@@ -522,10 +522,222 @@ summary{cursor:pointer;font-family:"Bangers";letter-spacing:.08em;font-size:18px
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
 }
+/* ================= APP SHELL (native-style) ================= */
+:root{--bg:#1d1a16;--bg2:#27231e;--line:rgba(241,229,201,.12);--sub:rgba(241,229,201,.62);--ui:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",system-ui,sans-serif;--tabh:56px}
+body{overflow:hidden;background:var(--bg)}
+#shell{position:fixed;inset:0;overflow:hidden}
+#screens{position:absolute;left:0;right:0;top:0;bottom:calc(var(--tabh) + env(safe-area-inset-bottom))}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;
+  background:radial-gradient(ellipse at 50% -10%,rgba(255,220,160,.08),transparent 55%),var(--bg)}
+.navbar{flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;min-height:44px;
+  padding:env(safe-area-inset-top) 8px 0;background:rgba(29,26,22,.82);-webkit-backdrop-filter:saturate(1.5) blur(16px);backdrop-filter:saturate(1.5) blur(16px);
+  border-bottom:.5px solid transparent;transition:border-color .2s;position:relative;z-index:3}
+.screen.scrolled .navbar{border-bottom-color:var(--line)}
+.nb-left{justify-self:start;min-width:0}
+.nb-title{font-family:"Bangers";letter-spacing:.06em;font-size:20px;color:var(--paper);opacity:0;transition:opacity .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw;text-align:center}
+.screen.scrolled .nb-title,.screen.nolarge .nb-title{opacity:1}
+.nb-right{justify-self:end;display:flex;gap:6px;align-items:center}
+.nb-back{display:flex;align-items:center;gap:4px;background:none;border:0;color:var(--mustard);font:17px var(--ui);min-height:44px;padding:0 8px 0 4px;max-width:40vw}
+.nb-back svg{width:12px;height:20px;flex:none}
+.nb-back span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nb-btn{position:relative;min-width:38px;height:38px;padding:0 10px;border-radius:19px;border:0;background:rgba(255,255,255,.09);color:var(--paper);font:600 16px var(--ui)}
+.nb-avatar{background:none;border:0;padding:0;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
+.scr{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:0 16px 28px}
+.screen.has-cta .scr{padding-bottom:104px}
+.large-title{font-family:"Luckiest Guy";font-weight:400;font-size:34px;letter-spacing:.03em;line-height:1.05;margin:6px 0 14px;color:var(--paper)}
+
+/* tab bar */
+#tabbar{position:absolute;left:0;right:0;bottom:0;z-index:30;display:flex;padding:0 6px env(safe-area-inset-bottom);height:calc(var(--tabh) + env(safe-area-inset-bottom));
+  background:rgba(24,21,17,.88);-webkit-backdrop-filter:saturate(1.5) blur(18px);backdrop-filter:saturate(1.5) blur(18px);border-top:.5px solid var(--line)}
+#tabbar button{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:0;color:rgba(241,229,201,.5);font:600 10.5px var(--ui);letter-spacing:.01em;transition:color .15s}
+#tabbar button svg{width:27px;height:27px}
+#tabbar button svg .fill{fill:currentColor;stroke:none}
+#tabbar button.on{color:var(--mustard)}
+#tabbar button:active svg{transform:scale(.9)}
+.tbadge,.dot-badge{position:absolute;min-width:18px;height:18px;border-radius:9px;padding:0 5px;background:#ff3b30;color:#fff;font:700 11px/18px var(--ui);font-style:normal;text-align:center}
+.tbadge{top:4px;left:calc(50% + 5px)}
+.dot-badge{top:8px;right:8px}
+.dot-badge.sm{top:-4px;right:-4px}
+.dot-badge.in{position:static;margin-right:6px}
+
+/* study round = full-screen layer above the tabs */
+#app{position:fixed;inset:0;z-index:40;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;max-width:none;margin:0;
+  padding:max(10px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));background:radial-gradient(ellipse at 50% -10%,rgba(255,220,160,.1),transparent 60%),var(--bg)}
+#app[hidden]{display:none}
+#app.opening{animation:layerup .42s cubic-bezier(.2,.9,.2,1)}
+@keyframes layerup{from{transform:translateY(100%)}}
+.topbar .x{min-width:44px;min-height:44px;border-radius:22px;border:0;background:rgba(255,255,255,.09);color:var(--paper);font:600 18px var(--ui)}
+
+/* common building blocks */
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;margin:22px 2px 8px}
+.sec-h span{font-family:"Bangers";letter-spacing:.07em;font-size:19px;color:var(--paper)}
+.sec-h button{background:none;border:0;color:var(--mustard);font:16px var(--ui);min-height:36px}
+.list{background:var(--bg2);border-radius:16px;overflow:hidden;border:.5px solid var(--line)}
+.row{display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:9px 12px;background:none;border:0;border-bottom:.5px solid var(--line);color:var(--paper);text-align:left;font:inherit}
+.row:last-child{border-bottom:0}
+button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:active{transform:scale(.975);transition:transform .08s}
+.row-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.row-main b{font-weight:400;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-main small{font:13px var(--ui);color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row.danger b{color:#ff6b5e}
+.chev{width:9px;height:15px;flex:none;color:rgba(241,229,201,.35)}
+.list.info .row{min-height:46px}
+.row .k{flex:1;font:15px var(--ui);color:var(--sub);display:flex;align-items:center;gap:8px}
+.row .v{font:600 15px var(--ui);color:var(--paper);display:flex;align-items:center;gap:6px}
+.row .v .ti{width:22px;height:22px;object-fit:contain}
+.gem-dot{width:12px;height:12px;border-radius:50%;display:inline-block;border:1.5px solid var(--ink)}
+.th{flex:none;width:46px;height:46px;border-radius:11px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#3a342c;border:1px solid rgba(0,0,0,.4)}
+.th img{width:100%;height:100%;object-fit:cover}
+.th.cut{background:radial-gradient(circle at 50% 40%,#f6ead0,#c9ae7e)}
+.th.cut img{object-fit:contain;padding:3px}
+.th.emo{font-size:24px}
+.th.emo.trick{background:linear-gradient(135deg,#6a3aa8,#b8862a)}
+.th.gi{background:rgba(255,255,255,.07);border-color:transparent;font-size:22px;color:var(--paper);font-family:var(--ui)}
+.th-missing{font-family:"Luckiest Guy";font-size:22px;color:var(--mustard);background:#141210}
+.mbar{display:block;height:5px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:2px}
+.mbar b{display:block;height:100%;background:linear-gradient(90deg,#58a35f,#7fd08a);border-radius:3px}
+.seg{display:flex;padding:3px;border-radius:12px;background:rgba(255,255,255,.08);margin:0 0 16px}
+.seg button{flex:1;min-height:36px;border:0;border-radius:9px;background:none;color:var(--sub);font:600 14px var(--ui)}
+.seg button.on{background:#4a4238;color:var(--paper);box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.carousel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:4px 16px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.carousel::-webkit-scrollbar{display:none}
+.mini{flex:none;width:118px;scroll-snap-align:start;background:none;border:0;padding:0;color:var(--paper);text-align:center}
+.mini-cap{display:block;margin-top:6px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.foot{font:13px var(--ui);color:var(--sub);text-align:center;margin:12px 8px 0;line-height:1.4}
+.empty{padding:18px;text-align:center;color:var(--sub);margin:0}
+.pill{margin-left:auto;display:flex;align-items:center;gap:6px;border:0;border-radius:18px;background:rgba(255,255,255,.09);color:var(--paper);font:600 14px var(--ui);min-height:36px;padding:0 12px}
+
+/* home dashboard */
+.home-logo{font-family:"Luckiest Guy";font-size:clamp(34px,10vw,48px);line-height:1;color:var(--paper);-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 var(--ink);transform:rotate(-2deg);margin:0 0 14px 2px;letter-spacing:.03em}
+.home-logo span{color:var(--brick)}
+.a2hs-mini{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;margin:0 0 12px;padding:8px 12px;border-radius:12px;border:1px solid rgba(143,179,209,.4);background:rgba(143,179,209,.12);color:var(--paper);font:14px var(--ui);text-align:left}
+.a2hs-mini .chev{margin-left:auto}
+.hero{display:flex;gap:14px;align-items:center;width:100%;padding:12px;border-radius:20px;border:1px solid rgba(227,178,60,.35);color:var(--paper);text-align:left;
+  background:linear-gradient(135deg,rgba(227,178,60,.2),rgba(207,59,42,.12)),var(--bg2);box-shadow:0 10px 24px rgba(0,0,0,.35)}
+.hero.cold{border-color:rgba(143,200,255,.5);background:linear-gradient(135deg,rgba(120,180,255,.22),rgba(40,80,140,.2)),var(--bg2)}
+.hero-card{flex:none;width:92px}
+.hero-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.hero-info small{font-family:"Bangers";letter-spacing:.1em;font-size:14px;color:var(--mustard)}
+.hero.cold .hero-info small{color:#9fd0ff}
+.hero-info b{font-family:"Luckiest Guy";font-weight:400;font-size:21px;line-height:1.05}
+.hero-sub{font:13px var(--ui);color:var(--sub)}
+.hero-cta{align-self:flex-start;margin-top:6px;padding:8px 16px;border-radius:999px;background:var(--brick);border:2px solid var(--ink);font-family:"Luckiest Guy";font-size:16px;letter-spacing:.05em;box-shadow:0 3px 0 var(--ink)}
+.hero.cold .hero-cta{background:#3d7fb8}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.tile2{position:relative;display:flex;align-items:center;gap:10px;min-height:78px;padding:10px;border-radius:18px;border:.5px solid var(--line);background:var(--bg2);color:var(--paper);text-align:left}
+.tile2 b{display:block;font-weight:400;font-size:17px;line-height:1.1}
+.tile2 small{display:block;font:12px var(--ui);color:var(--sub);margin-top:2px}
+.tile2 .t-pack{height:56px;transform:rotate(-8deg);filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
+.tile2 .t-ico{font-size:34px;width:52px;text-align:center}
+.tile2.icy{border-color:rgba(143,200,255,.45);background:linear-gradient(135deg,rgba(120,180,255,.18),transparent),var(--bg2)}
+
+/* study hub */
+.quick{display:flex;flex-direction:column;align-items:flex-start;width:100%;padding:14px 16px;border-radius:18px;border:2px solid var(--ink);background:var(--brick);color:#fff8ea;
+  font-family:"Luckiest Guy";font-size:22px;letter-spacing:.04em;box-shadow:0 5px 0 var(--ink);text-align:left}
+.quick small{font:13px var(--ui);letter-spacing:0;opacity:.85;margin-top:2px}
+
+/* collection */
+.summary{display:flex;align-items:center;gap:14px;padding:14px;border-radius:18px;background:var(--bg2);border:.5px solid var(--line)}
+.summary b{display:block;font-weight:400;font-size:19px}
+.summary small{display:block;font:13px var(--ui);color:var(--sub)}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px}
+.cgrid.two{grid-template-columns:repeat(2,1fr)}
+@media (min-width:700px){.cgrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+.gcard{background:none;border:0;padding:0}
+.gl small{display:block;text-align:center;font:13px var(--ui);color:var(--sub);margin-top:6px}
+
+/* card page */
+.cd-top{display:flex;flex-direction:column;align-items:center;padding-top:6px}
+.cd-card{width:min(62vw,300px,calc((100dvh - 330px) / 1.5))}
+.stage-dots{display:flex;gap:8px;margin-top:12px}
+.stage-dots button{width:34px;height:34px;border-radius:17px;border:1.5px solid var(--line);background:rgba(255,255,255,.06);color:var(--paper);font-family:"Luckiest Guy";font-size:14px}
+.stage-dots button.cur{background:var(--mustard);color:var(--ink);border-color:var(--ink)}
+.stage-dots button.lk{font-size:12px;opacity:.45}
+.preview-note{margin:6px 0 0;font:13px var(--ui);color:var(--mustard)}
+.cd-name{font-family:"Luckiest Guy";font-weight:400;font-size:26px;letter-spacing:.03em;margin:14px 0 2px;text-align:center}
+.cd-level{display:flex;justify-content:space-between;font:13px var(--ui);color:var(--sub);margin:6px 2px 2px}
+.cd-level + .mbar{margin-bottom:16px}
+.cd-panel .rulebox,.cd-panel .mnbox,.cd-panel .diffbox{color:var(--ink)}
+.cd-panel .lore{color:var(--paper)}
+.hookbox{margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(123,75,181,.22);border:1px solid rgba(190,140,255,.35);font-size:16px;line-height:1.35}
+.cd-panel .coldnote{margin:12px 0 0;color:var(--ink)}
+.screen .cta-bar{position:absolute;left:0;right:0;bottom:0;padding:18px 16px 12px;z-index:3}
+.btn-big.coldbtn{background:#3d7fb8}
+
+/* packs screen */
+.packs-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;margin:4px 0 16px}
+.packs-hero img{height:min(40dvh,300px);filter:drop-shadow(0 14px 20px rgba(0,0,0,.6))}
+.packs-hero img.bob{animation:packidle 2.4s ease-in-out infinite}
+.packs-hero img.dim{filter:grayscale(.7) brightness(.6)}
+.packs-hero b{font-weight:400;font-size:22px;margin-top:8px}
+.packs-hero small{font:14px var(--ui);color:var(--sub)}
+.btn-big[disabled]{opacity:.45;box-shadow:none}
+
+/* profile + stats */
+.prof-head{display:flex;align-items:center;gap:16px;margin:0 0 14px}
+.prof-head b{display:block;font-family:"Luckiest Guy";font-weight:400;font-size:24px}
+.prof-head small{display:block;font:13px var(--ui);color:var(--sub);margin-top:4px}
+.stat4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.stat4 div{padding:10px 4px;border-radius:14px;background:var(--bg2);border:.5px solid var(--line);text-align:center}
+.stat4 b{display:block;font-family:"Luckiest Guy";font-weight:400;font-size:20px;color:var(--mustard)}
+.stat4 small{font:11px var(--ui);color:var(--sub)}
+.bars{display:grid;gap:8px;padding:12px;border-radius:16px;background:var(--bg2);border:.5px solid var(--line)}
+.bars div{display:grid;grid-template-columns:44px 1fr 28px;align-items:center;gap:8px;font:13px var(--ui);color:var(--sub)}
+.bars i{display:block;height:12px;min-width:3px;border-radius:6px;background:linear-gradient(90deg,var(--mustard),#f7d56a)}
+.bars b{font:600 13px var(--ui);color:var(--paper);text-align:right}
+.xrow{border-bottom:.5px solid var(--line)}
+.xrow:last-child{border-bottom:0}
+.xrow summary{display:flex;align-items:center;justify-content:space-between;min-height:54px;padding:0 14px;font-size:18px;list-style:none;cursor:pointer}
+.xrow summary::-webkit-details-marker{display:none}
+.xrow[open] summary .chev{transform:rotate(90deg)}
+.xrow div{padding:0 14px 14px;font:15px/1.45 var(--ui);color:var(--sub)}
+
+/* bottom sheets */
+.sheet-wrap{position:fixed;inset:0;z-index:85}
+.sheet-bg{position:absolute;inset:0;background:rgba(0,0,0,.5);animation:fadein .25s both}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;max-height:88dvh;overflow-y:auto;overscroll-behavior:contain;
+  padding:8px 16px calc(14px + env(safe-area-inset-bottom));border-radius:20px 20px 0 0;background:#2b2621;border-top:.5px solid var(--line);
+  box-shadow:0 -12px 40px rgba(0,0,0,.5);animation:layerup .34s cubic-bezier(.2,.9,.2,1) both;transition:transform .22s}
+.sheet-wrap.closing .sheet{transform:translateY(105%);transition:transform .22s ease-in}
+.sheet-wrap.closing .sheet-bg{opacity:0;transition:opacity .22s}
+.grabber{width:38px;height:5px;border-radius:3px;background:rgba(241,229,201,.28);margin:0 auto 12px}
+.sheet h3{font-family:"Bangers";font-weight:400;letter-spacing:.06em;font-size:24px;margin:2px 0 10px;text-align:center}
+.sh-head{display:flex;align-items:center;gap:12px;padding:0 4px 12px}
+.sh-head b{display:block;font-weight:400;font-size:19px}
+.sh-head small{font:13px var(--ui);color:var(--sub)}
+.acts{background:var(--bg2);border-radius:14px;overflow:hidden}
+.acts button{display:block;width:100%;min-height:52px;padding:0 16px;border:0;border-bottom:.5px solid var(--line);background:none;color:var(--paper);font:17px var(--ui);text-align:left}
+.acts button:last-child{border-bottom:0}
+.acts button.danger{color:#ff6b5e}
+.acts button[disabled]{opacity:.4}
+.acts-sep{padding:10px 16px 6px;font:600 12px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--sub);background:rgba(0,0,0,.18)}
+.sheet-cancel{display:block;width:100%;min-height:52px;margin-top:10px;border:0;border-radius:14px;background:var(--bg2);color:var(--mustard);font:600 17px var(--ui)}
+.sheet .btn-big{margin-top:6px}
+.sh-missing{display:flex;flex-direction:column;align-items:center;text-align:center}
+.sh-mcard{width:120px;margin-bottom:6px}
+.sh-missing p{font:15px/1.4 var(--ui);color:var(--sub);margin:0 8px 14px}
+.steps{list-style:none;margin:0 0 6px;padding:0;display:grid;gap:10px}
+.steps li{display:flex;align-items:center;gap:12px;font:16px var(--ui)}
+.steps li span{flex:none;width:28px;height:28px;border-radius:14px;background:var(--mustard);color:var(--ink);font:700 15px/28px var(--ui);text-align:center}
+.shareico{display:inline-block;border:1.5px solid currentColor;border-radius:4px;padding:0 4px;font-size:13px;font-style:normal}
+
+/* alerts */
+.alert-wrap{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);animation:fadein .15s both}
+.alert{width:min(280px,78vw);border-radius:16px;overflow:hidden;background:rgba(48,44,38,.97);text-align:center;animation:alertin .2s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes alertin{from{transform:scale(1.12);opacity:0}}
+.alert h4{margin:18px 16px 4px;font:600 17px var(--ui);color:#fff}
+.alert p{margin:0 16px 16px;font:13px/1.35 var(--ui);color:rgba(255,255,255,.75)}
+.alert .btns{display:flex;border-top:.5px solid rgba(255,255,255,.18)}
+.alert .btns button{flex:1;min-height:44px;border:0;background:none;color:#4da3ff;font:17px var(--ui)}
+.alert .btns button + button{border-left:.5px solid rgba(255,255,255,.18)}
+.alert .btns .bold{font-weight:600}
+.alert .btns .destructive{color:#ff453a}
+
 </style>
 </head>
 <body>
-<div id="app"></div>
+<div id="shell"><div id="screens"></div><nav id="tabbar" aria-label="Main"></nav></div>
+<div id="app" hidden></div>
 <div class="flash" id="flash"></div>
 
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
@@ -1503,122 +1715,400 @@ function nextQuestion(c, lv, used){
   return { type: q.type || 'mc', q:q.q, opts: q.type==='tf' ? q.c.slice() : shuffle(q.c), a:q.a, h:q.h, w:q.w };
 }
 
-/* ================= SCREENS ================= */
-const app = document.getElementById('app');
-let view = { name:'home' };
+/* ================= APP SHELL: native-style screens, tabs, and navigation stacks ================= */
+const app = document.getElementById('app');          // full-screen layer for study rounds + results
+let view = { name:'home' };                           // 'study' / 'results' while a round is open
 let sess = null;
 
 function nearestGoal(){
   let best = null;
   CARDS.forEach(c => { const st = S.cards[c.id]; if (st.mastered || !st.owned) return;
     const left = NEED[st.level-1] - st.xp;
-    const isMax = st.level === maxL(c);
     const answers = Math.ceil(left / REWARD[st.level-1]);
     if (!best || answers < best.answers || (answers === best.answers && left < best.left)) best = {c, st, left, answers}; });
   return best;
 }
 function showInstallTip(){
   const ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const standalone = navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
   let dismissed = false; try { dismissed = localStorage.getItem('cq-a2hs') === '1'; } catch(e){}
-  return ios && !standalone && !dismissed;
+  return ios && !isStandalone() && !dismissed;
 }
-const FILTERS = [
-  {id:'all', label:'All', test:() => true},
-  {id:'s1', label:'Series 1', test:c => !c.series},
-  {id:'s2', label:'Series 2', test:c => c.series === 2},
-  {id:'tricks', label:'Memory Tricks', test:c => !!c.trickType},
+const isStandalone = () => !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
+
+/* ---------- small building blocks ---------- */
+const PLAY_ICON = '&#9654;&#xFE0E;';
+const owned = c => S.cards[c.id].owned;
+const playerLevel = () => 1 + Math.floor(S.stats.xp / 250);
+function ring(pct, label, size = 64, color = 'var(--mustard)'){
+  const r = 26, C = 2 * Math.PI * r, p = Math.max(0, Math.min(1, pct));
+  return `<svg class="ring-svg" viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true">
+    <circle cx="32" cy="32" r="${r}" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="7"/>
+    <circle cx="32" cy="32" r="${r}" fill="none" stroke="${color}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-p)).toFixed(1)}" transform="rotate(-90 32 32)"/>
+    <text x="32" y="37.5" text-anchor="middle" font-family="Luckiest Guy" font-size="${label.length > 3 ? 13 : 16}" fill="#f1e5c9">${label}</text></svg>`;
+}
+function thumb(c){
+  const st = S.cards[c.id];
+  if (!st.owned) return `<span class="th th-missing">?</span>`;
+  let src = null; for (let l = st.level; l >= 1; l--) if (ART[c.id] && ART[c.id][l]) { src = ART[c.id][l]; break; }
+  if (src) return `<span class="th ${c.cutout ? 'cut' : ''}"><img src="${src}" alt="" loading="lazy"></span>`;
+  return `<span class="th emo ${c.trickType ? 'trick' : ''}">${c.emoji || '🃏'}</span>`;
+}
+const pbar = pct => `<span class="mbar"><b style="width:${Math.round(Math.max(0, Math.min(1, pct)) * 100)}%"></b></span>`;
+const chev = `<svg class="chev" viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+function cardProgress(c){ const st = S.cards[c.id]; return st.mastered ? 1 : st.xp / NEED[st.level-1]; }
+function statusLine(c){
+  const st = S.cards[c.id];
+  if (!st.owned) return 'Find it in packs';
+  if (isCold(st)) return '🧊 Cold case · reopen for +' + COLD_BONUS + ' XP';
+  if (st.mastered) return '🏅 Mastered';
+  return `Level ${st.level} · ${NEED[st.level-1] - st.xp} XP to ${st.level < maxL(c) ? 'Level ' + (st.level + 1) : 'Mastered'}`;
+}
+function cardRow(c, act){
+  const st = S.cards[c.id];
+  const a = act || (st.owned ? `data-act="push" data-s="card" data-id="${c.id}"` : `data-act="missing" data-id="${c.id}"`);
+  return `<button class="row" ${a} ${st.owned ? `data-lp="${c.id}"` : ''}>${thumb(c)}
+    <span class="row-main"><b>${st.owned ? esc(c.name) : 'Undiscovered card'}</b><small>${statusLine(c)}</small>${st.owned ? pbar(cardProgress(c)) : ''}</span>${chev}</button>`;
+}
+function miniCard(c, cls = ''){
+  const st = S.cards[c.id];
+  return `<button class="mini ${cls}" data-act="push" data-s="card" data-id="${c.id}" data-lp="${c.id}">${cardEl(c, st)}<span class="mini-cap">${esc(c.name)}</span></button>`;
+}
+function seg(key, value, options){
+  return `<div class="seg" role="tablist">${options.map(([v, label]) => `<button role="tab" class="${v === value ? 'on' : ''}" data-act="seg" data-k="${key}" data-v="${v}">${label}</button>`).join('')}</div>`;
+}
+
+/* ---------- groups: series and subjects ---------- */
+const SERIES = [
+  {g:'all', label:'All Cards', icon:'🃏'},
+  {g:'s1', label:'Series 1', icon:'①'},
+  {g:'s2', label:'Series 2', icon:'②'},
+  {g:'tricks', label:'Memory Tricks', icon:'🧠'},
 ];
-function renderHome(){
-  const g = nearestGoal();
-  const cold = CARDS.filter(c => isCold(S.cards[c.id])).sort((a,b) => S.cards[a.id].last - S.cards[b.id].last);
-  const warm = CARDS.filter(c => goingCold(S.cards[c.id]));
-  const target = cold[0] || warm[0] || (g && g.c);
-  const acc = S.stats.answered ? Math.round(S.stats.correct / S.stats.answered * 100) + '%' : '—';
-  const mastered = CARDS.filter(c => S.cards[c.id].mastered).length;
-  const plv = 1 + Math.floor(S.stats.xp / 250);
-  app.innerHTML = `
-    <div class="home-top">
-      <div class="logo">CLERK <span>QUEST</span></div>
-      <p class="tagline">Study it. Collect it. Master it.</p>
-      ${showInstallTip() ? `<div class="a2hs"><span>📲</span><div><b>Play it like an app.</b> Tap <b>Share</b> <span class="shareico">⬆︎</span>, then <b>Add to Home Screen</b>.</div><button data-act="a2hs-close" aria-label="Dismiss">✕</button></div>` : ''}
-      ${cold.length ? `<div class="nudge coldnudge"><span class="z">🧊</span><div><b>${cold.length === 1 ? esc(cold[0].name) + ' has' : cold.length + ' cards have'} gone cold.</b><br><small>${cold.length > 1 ? esc(cold.map(c=>c.name).join(', ')) + '. ' : ''}One correct answer reopens a case: +${COLD_BONUS} XP bonus.</small></div></div>`
-      : warm.length ? `<div class="nudge coldnudge"><img class="nz" src="art/icon_thermo.webp" alt=""><div><b>${esc(warm.map(c=>c.name).join(', '))} ${warm.length>1?'are':'is'} going cold.</b><br><small>Study it today to keep it warm.</small></div></div>`
-      : g ? `<div class="nudge"><span class="z">⚡</span><div><b>${esc(g.c.name)}</b> is <b>${g.left} XP</b> from ${g.st.level===maxL(g.c)?'<b>MASTERED</b>':`Level ${g.st.level+1}`}.<br><small>About ${g.answers} correct answer${g.answers>1?'s':''}.</small></div></div>`
-           : `<div class="nudge"><span class="z">👑</span><div><b>Every card mastered.</b> The court is in awe.</div></div>`}
-      <button class="btn-big ${cold.length ? 'coldbtn' : ''}" data-act="study" data-id="${target ? target.id : CARDS[0].id}">${cold.length ? '🧊 REOPEN' : '&#9654;&#xFE0E; STUDY'} ${target ? esc(target.name.toUpperCase()) : ''}</button>
-      ${S.packs > 0
-        ? `<button class="packbtn" data-act="pack-open"><img src="${[].concat(S.guarantee || []).some(id => (byId(id)||{}).series === 2) ? 'art/pack_s2.webp' : 'art/pack.webp'}" alt=""><span><b>OPEN A CARD PACK</b><small>You have ${S.packs} pack${S.packs>1?'s':''} waiting</small></span></button>`
-        : `<div class="packnote">🎁 Finish a study session to earn a card pack.</div>`}
-      <div class="stats">
-        <div class="stat"><b>${plv}</b><small>Player Lv</small></div>
-        <div class="stat"><b>${S.stats.xp}</b><small>Total XP</small></div>
-        <div class="stat"><b>${acc}</b><small>Accuracy</small></div>
-        <div class="stat"><b>${mastered}/${CARDS.length}</b><small>Mastered</small></div>
-      </div>
-    </div>
-    <div class="sec"><h2>My Cards</h2><small>${CARDS.filter(c=>S.cards[c.id].owned).length} / ${CARDS.length} collected</small></div>
-    <div class="filters" role="tablist">${FILTERS.map(f => { const n = CARDS.filter(f.test).length; return `<button role="tab" class="${f.id === homeFilter ? 'on' : ''}" data-act="filter" data-f="${f.id}">${f.label} <i>${n}</i></button>`; }).join('')}</div>
-    <div class="grid">
-      ${CARDS.filter(c => S.cards[c.id].owned && FILTERS.find(f => f.id === homeFilter).test(c)).map(c => { const st = S.cards[c.id]; return `<button class="tile" data-act="open" data-id="${c.id}" aria-label="${esc(c.name)}, level ${st.level}">
-        ${cardEl(c, st)}<div class="cap"><span>${esc(c.name)}</span><span>Lv ${st.level}</span></div></button>`; }).join('')}
-      ${CARDS.filter(c => !S.cards[c.id].owned && FILTERS.find(f => f.id === homeFilter).test(c)).map(c => `<div class="tile" aria-label="Card not found yet">${lockedCardHTML(c)}<div class="cap"><span>${c.trickType ? 'Memory Trick' : esc(c.name)}</span><span>🎁</span></div></div>`).join('')}
-    </div>
-    <footer>Prototype · sample questions, fact-check before real use.<br>
-      Art: add <code>art/&lt;card&gt;_&lt;level&gt;.webp</code> to upgrade a stage.<br>
-      <button data-act="t-pack">🎁 Add a test pack</button> · <button data-act="resetall">Reset all progress</button></footer>`;
+function groupTest(g){
+  if (g.startsWith('set:')) { const n = g.slice(4); return c => c.set === n; }
+  return ({all:() => true, s1:c => !c.series, s2:c => c.series === 2, tricks:c => !!c.trickType})[g] || (() => true);
 }
-function renderDetail(){
-  const c = byId(view.id), st = S.cards[c.id];
-  const pv = view.preview || st.level;
-  const shown = pv === st.level ? st : {level:pv, xp:0, mastered:false};
-  const need = NEED[st.level-1];
-  app.innerHTML = `
-    <div class="topbar"><button class="btn-ghost" data-act="home">← Collection</button><span class="chip">${esc(c.rarity.toUpperCase())}</span></div>
-    <div class="detail">
-      <div class="dcard">${cardEl(c, shown)}<div class="preview-note">${pv !== st.level ? `Previewing Level ${pv} art` : ''}</div></div>
-      <div class="panel">
-        <h1>${esc(c.name)}</h1>
-        <div class="meta">${esc(c.num)} · ${esc(c.category)} · ${esc(c.set)}${c.series ? ` · Series ${c.series}` : ''}</div>
-        <div class="pbar"><b style="width:${st.mastered?100:Math.round(st.xp/need*100)}%"></b></div>
-        <div class="prow"><span>Level ${st.level}${st.mastered?' · MASTERED':''}</span><span>${st.mastered?'Max':`${st.xp} / ${need} XP`}</span></div>
-        ${isCold(st) ? `<div class="coldnote"><img src="art/icon_thermo_snow.webp" alt=""> <b>Cold case.</b> Last studied ${agoText(st.last)}. One correct answer reopens it (+${COLD_BONUS} XP).</div>`
-          : st.last ? `<div class="warmnote">Last studied ${agoText(st.last)}. Goes cold if not studied for ${Math.round(coldAfter(st)/DAY)} days.</div>` : ''}
-        ${c.trickType ? `<div class="ttype"><img src="art/icon_memory.webp" alt=""><img src="art/icon_${c.trickType}.webp" alt=""><div><b>${TRICK_TYPES[c.trickType].label}</b><span>${TRICK_TYPES[c.trickType].blurb}</span></div></div>` : ''}
-        ${c.source ? `<h3>THE OFFICIAL RULE</h3><div class="rulebox"><div class="cite">${esc(c.source.cite)}</div>
-          <blockquote>“${esc(c.source.quote)}”</blockquote><p class="ctx">${esc(c.source.context)}</p>
-          ${c.hook ? `<p class="hook">🧠 <b>How to remember it:</b> ${esc(c.hook)}</p>` : ''}<p class="from">Source: ${esc(c.source.from)}</p></div>` : ''}
-        ${c.diff ? `<h3>HOW TO TELL THEM APART</h3><div class="diffbox">${['a','b'].map(k => `<div class="dcol ${k}"><b>${esc(c.diff[k].name)}</b><i>“${esc(c.diff[k].hook)}”</i><ul>${c.diff[k].points.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`).join('<div class="dvs">VS</div>')}</div>` : ''}
-        ${c.mnemonic ? `<h3>HOW TO REMEMBER IT</h3><div class="mnbox"><p class="mnsent">“${esc(c.mnemonic.sentence)}”</p>
-          <ol class="mnlist">${c.mnemonic.letters.map((L,i)=>`<li><b>${L}</b>${esc(c.mnemonic.words[i])} → <strong>${esc(c.mnemonic.means[i])}</strong></li>`).join('')}</ol>
-          <p class="mntip">${esc(c.mnemonic.tip)}</p></div>` : ''}
-        <h3>ART STAGES</h3>
-        <div class="stages">${Array.from({length:maxL(c)},(_,i)=>i+1).map(l => `<button data-act="stage" data-l="${l}" class="${l===pv?'cur':''}" ${l>st.level?'disabled aria-label="Locked"':''}>${l>st.level?'🔒':l}</button>`).join('')}</div>
-        <h3>CARD LORE</h3>
-        <ol class="lore">${c.lore.map((t,i)=> i < st.level ? `<li>${esc(t)}</li>` : `<li class="lk">??? (reach Level ${i+1})</li>`).join('')}</ol>
-        <details><summary>TESTER TOOLS</summary>
-          <div class="tools">
-            <button data-act="t-level">⚡ Level up now</button>
-            <button data-act="t-cold">🧊 Make it go cold</button>
-            <button data-act="t-reset">↺ Reset this card</button>
-          </div>
-        </details>
-      </div>
-    </div>
-    <div class="cta-bar"><div><button class="btn-big" data-act="study" data-id="${c.id}">&#9654;&#xFE0E; STUDY THIS CARD</button></div></div>`;
+function groupLabel(g){
+  if (g.startsWith('set:')) return titleCase(g.slice(4));
+  return (SERIES.find(x => x.g === g) || {}).label || 'Cards';
 }
+const titleCase = s => s.toLowerCase().replace(/(^|[\s:&(])([a-z])/g, (m, a, b) => a + b.toUpperCase()).replace(/\bCplr\b/, 'CPLR').replace(/\bAct\b/, 'Act');
+function subjects(){ return [...new Set(CARDS.map(c => c.set))].map(set => ({g:'set:' + set, label:titleCase(set)})); }
+function groupRow(g, label, icon, act = 'cards'){
+  const list = CARDS.filter(groupTest(g)), have = list.filter(owned).length;
+  return `<button class="row" data-act="push" data-s="${act}" data-g="${esc(g)}">
+    <span class="th emo gi">${icon}</span><span class="row-main"><b>${esc(label)}</b><small>${have} of ${list.length} collected</small>${pbar(have / Math.max(1, list.length))}</span>${chev}</button>`;
+}
+
+/* ---------- screen definitions ---------- */
+const SCREENS = {
+  home(){
+    const cold = CARDS.filter(c => isCold(S.cards[c.id])).sort((a, b) => S.cards[a.id].last - S.cards[b.id].last);
+    const g = nearestGoal();
+    const target = cold[0] || (g && g.c) || CARDS.find(owned);
+    const tst = target && S.cards[target.id];
+    const ownedN = CARDS.filter(owned).length;
+    const recent = CARDS.filter(c => owned(c) && S.cards[c.id].last).sort((a, b) => S.cards[b.id].last - S.cards[a.id].last).slice(0, 8);
+    const car = recent.length ? recent : CARDS.filter(owned).slice(-8).reverse();
+    const nextPackS2 = [].concat(S.guarantee || []).some(id => (byId(id) || {}).series === 2);
+    return {
+      title:'Clerk Quest', hideLarge:true, titleOnScroll:true,
+      right:`<button class="nb-avatar" data-act="tab" data-tab="profile" aria-label="Profile, level ${playerLevel()}">${ring((S.stats.xp % 250) / 250, 'L' + playerLevel(), 40)}</button>`,
+      body:`
+        <div class="home-logo">CLERK <span>QUEST</span></div>
+        ${showInstallTip() ? `<button class="a2hs-mini" data-act="a2hs-show"><span>📲</span> Add Clerk Quest to your Home Screen ${chev}</button>` : ''}
+        ${target ? `<button class="hero ${isCold(tst) ? 'cold' : ''}" data-act="study" data-id="${target.id}">
+          <span class="hero-card">${cardEl(target, tst)}</span>
+          <span class="hero-info"><small>${isCold(tst) ? '🧊 COLD CASE' : 'CONTINUE'}</small><b>${esc(target.name)}</b>
+            <span class="hero-sub">${statusLine(target)}</span>${pbar(cardProgress(target))}
+            <span class="hero-cta">${PLAY_ICON} ${isCold(tst) ? 'Reopen' : 'Study'}</span></span></button>` : ''}
+        <div class="tiles">
+          <button class="tile2" data-act="tab" data-tab="profile">${ring((S.stats.xp % 250) / 250, 'L' + playerLevel(), 52, '#5fd47a')}<span><b>${playerTitle()}</b><small>${250 - S.stats.xp % 250} XP to Level ${playerLevel() + 1}</small></span></button>
+          <button class="tile2" data-act="push" data-s="packs"><img class="t-pack" src="${nextPackS2 ? 'art/pack_s2.webp' : 'art/pack.webp'}" alt=""><span><b>Packs</b><small>${S.packs ? S.packs + ' ready to open' : 'Study to earn more'}</small></span>${S.packs ? `<i class="dot-badge">${S.packs}</i>` : ''}</button>
+          <button class="tile2" data-act="tab" data-tab="collection">${ring(ownedN / CARDS.length, ownedN + '', 52)}<span><b>Collection</b><small>${ownedN} of ${CARDS.length} cards</small></span></button>
+          <button class="tile2 ${cold.length ? 'icy' : ''}" data-act="tab" data-tab="study"><span class="t-ico">${cold.length ? '🧊' : '🔥'}</span><span><b>${cold.length ? 'Cold Cases' : 'All Warm'}</b><small>${cold.length ? cold.length + ' to reopen' : 'Nothing going cold'}</small></span></button>
+        </div>
+        <div class="sec-h"><span>${recent.length ? 'Recently Studied' : 'Your Cards'}</span><button data-act="tab" data-tab="collection">See All</button></div>
+        <div class="carousel">${car.map(c => miniCard(c)).join('')}</div>`,
+    };
+  },
+
+  study(p){
+    const tab = p.tab || 'foryou';
+    let body = seg('tab', tab, [['foryou', 'For You'], ['subjects', 'By Subject']]);
+    if (tab === 'foryou') {
+      const mine = CARDS.filter(owned);
+      const cold = mine.filter(c => isCold(S.cards[c.id]));
+      const almost = mine.filter(c => { const st = S.cards[c.id]; return !st.mastered && Math.ceil((NEED[st.level-1] - st.xp) / REWARD[st.level-1]) <= 2; });
+      const upNext = mine.filter(c => !S.cards[c.id].mastered && !isCold(S.cards[c.id])).sort((a, b) => cardProgress(b) - cardProgress(a)).slice(0, 5);
+      body += `<button class="quick" data-act="quick">${PLAY_ICON} Quick Round<small>A random card from your collection</small></button>
+        ${cold.length ? `<div class="sec-h"><span>🧊 Cold Cases</span></div><div class="list">${cold.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('')}</div>` : ''}
+        ${almost.length ? `<div class="sec-h"><span>⚡ Almost Leveled Up</span></div><div class="carousel">${almost.map(c => miniCard(c)).join('')}</div>` : ''}
+        <div class="sec-h"><span>Up Next</span></div><div class="list">${upNext.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('') || '<p class="empty">Every card you own is mastered or cold. 🎉</p>'}</div>`;
+    } else {
+      body += `<div class="list">${subjects().map(s => groupRow(s.g, s.label, '📚', 'studyset')).join('')}</div>`;
+    }
+    return { title:'Study', body };
+  },
+
+  studyset(p){
+    const list = CARDS.filter(groupTest(p.g)), mine = list.filter(owned), missing = list.length - mine.length;
+    return { title:groupLabel(p.g), body:`
+      <div class="list">${mine.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('') || '<p class="empty">No cards from this subject yet.</p>'}</div>
+      ${missing ? `<p class="foot">${missing} more ${missing > 1 ? 'cards' : 'card'} to find in packs.</p>` : ''}` };
+  },
+
+  collection(){
+    const ownedN = CARDS.filter(owned).length, mastered = CARDS.filter(c => S.cards[c.id].mastered).length;
+    return {
+      title:'Collection',
+      right:`<button class="nb-btn" data-act="push" data-s="packs" aria-label="Packs">🎁${S.packs ? `<i class="dot-badge sm">${S.packs}</i>` : ''}</button>`,
+      body:`
+        <div class="summary">${ring(ownedN / CARDS.length, Math.round(ownedN / CARDS.length * 100) + '%', 72)}
+          <span><b>${ownedN} of ${CARDS.length} collected</b><small>${mastered} mastered</small></span>
+          <button class="pill" data-act="push" data-s="stats">Statistics ${chev}</button></div>
+        <div class="sec-h"><span>Series</span></div>
+        <div class="list">${SERIES.map(s => groupRow(s.g, s.label, s.icon)).join('')}</div>
+        <div class="sec-h"><span>Subjects</span></div>
+        <div class="list">${subjects().map(s => groupRow(s.g, s.label, '📚')).join('')}</div>`,
+    };
+  },
+
+  cards(p){
+    const sort = 'num', showMissing = true;
+    let list = CARDS.filter(groupTest(p.g));
+    const idx = c => CARDS.indexOf(c);
+    const sorts = { num:(a, b) => idx(a) - idx(b), level:(a, b) => (S.cards[b.id].level - S.cards[a.id].level) || (cardProgress(b) - cardProgress(a)),
+      name:(a, b) => a.name.localeCompare(b.name), recent:(a, b) => (S.cards[b.id].last || 0) - (S.cards[a.id].last || 0) };
+    list = list.filter(c => showMissing || owned(c)).sort((a, b) => (owned(b) - owned(a)) || sorts[sort](a, b));
+    return {
+      title:groupLabel(p.g),
+      body:`<div class="cgrid">${list.map(c => owned(c)
+        ? `<button class="gcard" data-act="push" data-s="card" data-id="${c.id}" data-lp="${c.id}">${cardEl(c, S.cards[c.id])}</button>`
+        : `<button class="gcard" data-act="missing" data-id="${c.id}">${lockedCardHTML(c)}</button>`).join('')}</div>`,
+    };
+  },
+
+  card(p){
+    const c = byId(p.id), st = S.cards[c.id];
+    const pv = p.preview || st.level;
+    const shown = pv === st.level ? st : {level:pv, xp:0, mastered:false, owned:true};
+    const hasRule = c.source || c.diff || c.mnemonic;
+    const tab = p.tab || 'overview';
+    const tabs = [['overview', 'Overview']].concat(hasRule ? [['rule', c.source ? 'Rule' : 'Trick']] : []).concat([['lore', 'Lore']]);
+    let panel = '';
+    if (tab === 'overview') {
+      panel = `<div class="list info">
+          <div class="row"><span class="k">Number</span><span class="v">${esc(c.num)}</span></div>
+          <div class="row"><span class="k">Rarity</span><span class="v">${esc(c.rarity[0].toUpperCase() + c.rarity.slice(1))}</span></div>
+          <div class="row"><span class="k">Subject</span><span class="v">${esc(titleCase(c.set))}</span></div>
+          ${c.series ? `<div class="row"><span class="k">Series</span><span class="v">Series ${c.series}</span></div>` : ''}
+          ${c.trickType ? `<div class="row"><span class="k">Trick type</span><span class="v"><img class="ti" src="art/icon_${c.trickType}.webp" alt=""> ${TRICK_TYPES[c.trickType].label}</span></div>` : ''}
+          ${st.last ? `<div class="row"><span class="k">Last studied</span><span class="v">${agoText(st.last)}</span></div>` : ''}
+        </div>
+        ${isCold(st) ? `<div class="coldnote"><img src="art/icon_thermo_snow.webp" alt=""> <b>Cold case.</b> One correct answer reopens it (+${COLD_BONUS} XP).</div>`
+          : st.last ? `<p class="foot">Goes cold if not studied for ${Math.round(coldAfter(st) / DAY)} days.</p>` : ''}
+        ${c.hook ? `<div class="hookbox">🧠 ${esc(c.hook)}</div>` : ''}`;
+    } else if (tab === 'rule') {
+      panel = `${c.source ? `<div class="rulebox"><div class="cite">${esc(c.source.cite)}</div>
+          <blockquote>“${esc(c.source.quote)}”</blockquote><p class="ctx">${esc(c.source.context)}</p><p class="from">Source: ${esc(c.source.from)}</p></div>` : ''}
+        ${c.diff ? `<div class="sec-h"><span>How to tell them apart</span></div><div class="diffbox">${['a', 'b'].map(k => `<div class="dcol ${k}"><b>${esc(c.diff[k].name)}</b><i>“${esc(c.diff[k].hook)}”</i><ul>${c.diff[k].points.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>`).join('<div class="dvs">VS</div>')}</div>` : ''}
+        ${c.mnemonic ? `<div class="sec-h"><span>How to remember it</span></div><div class="mnbox"><p class="mnsent">“${esc(c.mnemonic.sentence)}”</p>
+          <ol class="mnlist">${c.mnemonic.letters.map((L, i) => `<li><b>${L}</b>${esc(c.mnemonic.words[i])} → <strong>${esc(c.mnemonic.means[i])}</strong></li>`).join('')}</ol>
+          <p class="mntip">${esc(c.mnemonic.tip)}</p></div>` : ''}`;
+    } else {
+      panel = `<ol class="lore">${c.lore.map((t, i) => i < st.level ? `<li>${esc(t)}</li>` : `<li class="lk">??? (reach Level ${i + 1})</li>`).join('')}</ol>`;
+    }
+    return {
+      title:c.name, hideLarge:true, cta:true,
+      right:`<button class="nb-btn" data-act="card-menu" data-id="${c.id}" aria-label="More">•••</button>`,
+      body:`
+        <div class="cd-top"><div class="cd-card">${cardEl(c, shown)}</div>
+          <div class="stage-dots">${Array.from({length:maxL(c)}, (_, i) => i + 1).map(l => `<button data-act="stage" data-l="${l}" class="${l === pv ? 'cur' : ''} ${l > st.level ? 'lk' : ''}" ${l > st.level ? 'disabled aria-label="Locked"' : `aria-label="Level ${l} art"`}>${l > st.level ? '🔒' : l}</button>`).join('')}</div>
+          ${pv !== st.level ? `<p class="preview-note">Previewing Level ${pv} art</p>` : ''}
+        </div>
+        <h2 class="cd-name">${esc(c.name)}</h2>
+        <div class="cd-level"><span>${st.mastered ? '🏅 Mastered' : 'Level ' + st.level}</span><span>${st.mastered ? 'Max' : st.xp + ' / ' + NEED[st.level-1] + ' XP'}</span></div>${pbar(cardProgress(c))}
+        ${seg('tab', tab, tabs)}
+        <div class="cd-panel">${panel}</div>`,
+      after:`<div class="cta-bar"><div><button class="btn-big ${isCold(st) ? 'coldbtn' : ''}" data-act="study" data-id="${c.id}">${PLAY_ICON} ${isCold(st) ? 'REOPEN THIS CASE' : 'STUDY THIS CARD'}</button></div></div>`,
+    };
+  },
+
+  packs(){
+    const s2 = [].concat(S.guarantee || []).some(id => (byId(id) || {}).series === 2);
+    return { title:'Packs', body:`
+      <div class="packs-hero"><img src="${s2 ? 'art/pack_s2.webp' : 'art/pack.webp'}" alt="Clerk Quest card pack" class="${S.packs ? 'bob' : 'dim'}">
+        <b>${S.packs ? S.packs + ' pack' + (S.packs > 1 ? 's' : '') + ' ready' : 'No packs right now'}</b>
+        <small>${S.packs ? (s2 ? 'Your next pack has Series 2 cards!' : 'Each pack has 3 cards.') : 'Finish a study round to earn one.'}</small></div>
+      <button class="btn-big gold" data-act="pack-open" ${S.packs ? '' : 'disabled'}>🎁 OPEN A PACK</button>
+      <div class="list" style="margin-top:18px">
+        <div class="row"><span class="k">Packs opened</span><span class="v">${S.packsOpened}</span></div>
+        <div class="row"><span class="k">How to earn</span><span class="v">Finish study rounds</span></div>
+      </div>` };
+  },
+
+  profile(){
+    const acc = S.stats.answered ? Math.round(S.stats.correct / S.stats.answered * 100) + '%' : '—';
+    const mastered = CARDS.filter(c => S.cards[c.id].mastered).length;
+    return { title:'Profile', body:`
+      <div class="prof-head">${ring((S.stats.xp % 250) / 250, 'L' + playerLevel(), 88)}
+        <span><b>${playerTitle()}</b><small>${S.stats.xp} XP · ${250 - S.stats.xp % 250} XP to Level ${playerLevel() + 1}</small></span></div>
+      <div class="stat4">
+        <div><b>${acc}</b><small>Accuracy</small></div><div><b>${S.stats.sessions}</b><small>Rounds</small></div>
+        <div><b>${CARDS.filter(owned).length}</b><small>Cards</small></div><div><b>${mastered}</b><small>Mastered</small></div></div>
+      <div class="list">
+        <button class="row" data-act="push" data-s="stats"><span class="th emo gi">📊</span><span class="row-main"><b>Statistics</b></span>${chev}</button>
+        <button class="row" data-act="push" data-s="packs"><span class="th emo gi">🎁</span><span class="row-main"><b>Packs</b></span>${S.packs ? `<i class="dot-badge in">${S.packs}</i>` : ''}${chev}</button>
+        <button class="row" data-act="push" data-s="help"><span class="th emo gi">❓</span><span class="row-main"><b>How to Play</b></span>${chev}</button>
+        <button class="row" data-act="push" data-s="settings"><span class="th emo gi">⚙️</span><span class="row-main"><b>Settings</b></span>${chev}</button>
+      </div>` };
+  },
+
+  stats(){
+    const mine = CARDS.filter(owned);
+    const byLevel = [1, 2, 3, 4, 5].map(l => mine.filter(c => S.cards[c.id].level === l).length);
+    const maxN = Math.max(1, ...byLevel);
+    const rar = ['common', 'uncommon', 'rare', 'epic', 'legendary'].map(r => [r, CARDS.filter(c => c.rarity === r)]).filter(x => x[1].length);
+    return { title:'Statistics', body:`
+      <div class="sec-h"><span>Studying</span></div>
+      <div class="list info">
+        <div class="row"><span class="k">Answers</span><span class="v">${S.stats.answered}</span></div>
+        <div class="row"><span class="k">Correct</span><span class="v">${S.stats.correct}</span></div>
+        <div class="row"><span class="k">Accuracy</span><span class="v">${S.stats.answered ? Math.round(S.stats.correct / S.stats.answered * 100) + '%' : '—'}</span></div>
+        <div class="row"><span class="k">Rounds finished</span><span class="v">${S.stats.sessions}</span></div>
+        <div class="row"><span class="k">Total XP</span><span class="v">${S.stats.xp}</span></div>
+        <div class="row"><span class="k">Cold cases reopened</span><span class="v">${S.stats.reopened || 0}</span></div>
+      </div>
+      <div class="sec-h"><span>Cards by level</span></div>
+      <div class="bars">${byLevel.map((n, i) => `<div><span>Lv ${i + 1}</span><i style="width:${n / maxN * 100}%"></i><b>${n}</b></div>`).join('')}</div>
+      <div class="sec-h"><span>Collection by rarity</span></div>
+      <div class="list info">${rar.map(([r, l]) => `<div class="row"><span class="k"><span class="gem-dot r-${r}"></span>${r[0].toUpperCase() + r.slice(1)}</span><span class="v">${l.filter(owned).length} / ${l.length}</span></div>`).join('')}</div>
+      <div class="sec-h"><span>Packs</span></div>
+      <div class="list info"><div class="row"><span class="k">Opened</span><span class="v">${S.packsOpened}</span></div><div class="row"><span class="k">Waiting</span><span class="v">${S.packs}</span></div></div>` };
+  },
+
+  help(){
+    const item = (t, b) => `<details class="xrow"><summary>${t}${chev}</summary><div>${b}</div></details>`;
+    return { title:'How to Play', body:`<div class="list">
+      ${item('▶ Studying', 'Each round is 5 questions from one card. Correct answers earn XP. A hint (Sidebar) costs half the points. Wrong answers show the right answer and why.')}
+      ${item('★ Levels & glows', 'Cards level up as you earn XP. Questions get harder and the art upgrades. Near the top level a neon ring races around the card; at the top it turns gold with a gloss.')}
+      ${item('🎁 Packs', 'Every finished study round gives a pack of 3 cards. New cards join your collection; duplicates give XP to the card you already own.')}
+      ${item('🧊 Cold cases', 'Cards you haven\'t studied in a while go cold (2 days at Level 1, up to 21 days when mastered). One correct answer reopens the case for a +' + COLD_BONUS + ' XP bonus.')}
+      ${item('🧠 Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).')}
+      ${item('② Series', 'Series 2 cards use a new art style and have their own pack wrapper.')}
+      ${item('⚖️ Official sources', 'Rule cards are built only from the rule text quoted in the NYS Unified Court System Court Clerk sample questions and cite their source. Other questions are sample content. Fact-check before relying on them.')}
+      </div>` };
+  },
+
+  settings(){
+    return { title:'Settings', body:`
+      <div class="list">
+        <button class="row" data-act="a2hs-show"><span class="th emo gi">📲</span><span class="row-main"><b>Add to Home Screen</b><small>${isStandalone() ? 'Already installed' : 'Play full screen like an app'}</small></span>${chev}</button>
+        <button class="row" data-act="push" data-s="glows"><span class="th emo gi">✨</span><span class="row-main"><b>Glow tiers preview</b></span>${chev}</button>
+      </div>
+      <div class="sec-h"><span>Tester tools</span></div>
+      <div class="list">
+        <button class="row" data-act="t-pack"><span class="th emo gi">🎁</span><span class="row-main"><b>Add a test pack</b></span></button>
+        <button class="row danger" data-act="resetall"><span class="th emo gi">⚠️</span><span class="row-main"><b>Reset all progress</b></span></button>
+      </div>
+      <p class="foot">Clerk Quest prototype. Sample questions; fact-check before real use.</p>` };
+  },
+
+  glows(){
+    const g = byId('gavel'), cell = (lv, xp, label) => `<div class="gl">${cardEl(g, {level:lv, xp, mastered:false, owned:true})}<small>${label}</small></div>`;
+    return { title:'Glow Tiers', body:`<div class="cgrid two">${cell(2, 0, 'Level 2')}${cell(3, 0, 'Level 3 · cyan')}${cell(4, 0, 'Level 4 · magenta')}${cell(4, 250, 'Level 4 · charged')}${cell(5, 0, 'Level 5 · gold + gloss')}</div>` };
+  },
+};
+function playerTitle(){
+  const l = playerLevel();
+  return l >= 20 ? 'Keeper of the Calendar' : l >= 12 ? 'Chief Clerk' : l >= 7 ? 'Senior Clerk' : l >= 3 ? 'Clerk' : 'Temp';
+}
+
+/* ---------- tab bar ---------- */
+const TAB_ICONS = {
+  home:'<path d="M4 11.5 14 4l10 7.5V23a1 1 0 0 1-1 1h-6v-7h-6v7H5a1 1 0 0 1-1-1z"/>',
+  study:'<circle cx="14" cy="14" r="10"/><path d="M11.5 9.5v9l7-4.5z" class="fill"/>',
+  collection:'<rect x="6" y="4" width="13" height="18" rx="2.5" transform="rotate(-8 12 13)"/><rect x="10" y="6" width="13" height="18" rx="2.5" transform="rotate(6 16 15)"/>',
+  quests:'<path d="M8 4h12v4a6 6 0 0 1-12 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M20 6h3a3 3 0 0 1-3 4M14 14v5M10 23h8M11 19h6"/>',
+  profile:'<circle cx="14" cy="10" r="4.5"/><path d="M5 24c1-5 4.5-7.5 9-7.5s8 2.5 9 7.5"/>',
+};
+const TABS = [['home', 'Home'], ['study', 'Study'], ['collection', 'Collection'], ['profile', 'Profile']];
+function renderTabbar(){
+  document.getElementById('tabbar').innerHTML = TABS.map(([id, label]) => `<button class="${nav.tab === id ? 'on' : ''}" data-act="tab" data-tab="${id}" aria-label="${label}" ${nav.tab === id ? 'aria-current="page"' : ''}>
+    <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${TAB_ICONS[id]}</svg><span>${label}</span>
+    ${id === 'home' && S.packs && nav.tab !== 'home' ? `<i class="tbadge">${S.packs}</i>` : ''}</button>`).join('');
+}
+
+/* ---------- navigation stacks ---------- */
+const nav = { tab:'home', stacks:{} };
+TABS.forEach(([id]) => nav.stacks[id] = [{s:id, p:{}}]);
+const topEntry = () => { const st = nav.stacks[nav.tab]; return st[st.length - 1]; };
+function currentScreenEl(){ return document.querySelector('#screens .screen.current'); }
+function saveScroll(){ const el = currentScreenEl(); if (el && el._entry) el._entry.scroll = el.querySelector('.scr').scrollTop; }
+function buildScreen(entry, depth = nav.stacks[nav.tab].length - 1){
+  const def = SCREENS[entry.s](entry.p || {});
+  const root = depth === 0;
+  const el = document.createElement('section');
+  el.className = 'screen' + (def.hideLarge && !def.titleOnScroll ? ' nolarge' : '') + (def.cta ? ' has-cta' : '');
+  el.innerHTML = `<header class="navbar"><div class="nb-left">${root ? '' : `<button class="nb-back" data-act="back">${'<svg viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'}<span>${esc(backLabel(depth))}</span></button>`}</div>
+    <div class="nb-title">${esc(def.title)}</div><div class="nb-right">${def.right || ''}</div></header>
+    <div class="scr">${def.hideLarge ? '' : `<h1 class="large-title">${esc(def.title)}</h1>`}${def.body}</div>${def.after || ''}`;
+  el._entry = entry;
+  const scr = el.querySelector('.scr');
+  scr.addEventListener('scroll', () => el.classList.toggle('scrolled', scr.scrollTop > 28), {passive:true});
+  return el;
+}
+function backLabel(depth = nav.stacks[nav.tab].length - 1){
+  const st = nav.stacks[nav.tab]; if (depth < 1) return '';
+  const prev = st[depth - 1];
+  try { const t = SCREENS[prev.s](prev.p || {}).title; return t.length > 12 ? 'Back' : t; } catch(e){ return 'Back'; }
+}
+function showScreen(dir = 'none'){
+  const box = document.getElementById('screens');
+  const old = currentScreenEl();
+  const el = buildScreen(topEntry());
+  box.appendChild(el); el.classList.add('current');
+  const scr = el.querySelector('.scr'); scr.scrollTop = topEntry().scroll || 0; el.classList.toggle('scrolled', scr.scrollTop > 28);
+  if (old) old.classList.remove('current');
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (old && dir !== 'none' && !reduce && el.animate) {
+    const ease = 'cubic-bezier(.2,.8,.2,1)', dur = 380;
+    if (dir === 'push') {
+      el.animate([{transform:'translateX(100%)'}, {transform:'none'}], {duration:dur, easing:ease});
+      old.animate([{transform:'none', filter:'brightness(1)'}, {transform:'translateX(-28%)', filter:'brightness(.7)'}], {duration:dur, easing:ease}).finished.then(() => old.remove(), () => old.remove());
+    } else {
+      old.style.zIndex = 2;
+      el.animate([{transform:'translateX(-28%)', filter:'brightness(.7)'}, {transform:'none', filter:'brightness(1)'}], {duration:dur, easing:ease});
+      old.animate([{transform:'none'}, {transform:'translateX(100%)'}], {duration:dur, easing:ease}).finished.then(() => old.remove(), () => old.remove());
+    }
+  } else if (old) old.remove();
+  renderTabbar();
+}
+function push(s, p = {}){ saveScroll(); nav.stacks[nav.tab].push({s, p}); history.pushState({cq:'push'}, ''); showScreen('push'); }
+function pop(){ const st = nav.stacks[nav.tab]; if (st.length > 1) { st.pop(); showScreen('pop'); return true; } return false; }
+function switchTab(id){
+  if (id === nav.tab) {                                // tapping the active tab: pop to its root, or scroll to top
+    const st = nav.stacks[id];
+    if (st.length > 1) { st.length = 1; showScreen('pop'); }
+    else { const s = currentScreenEl() && currentScreenEl().querySelector('.scr'); s && s.scrollTo({top:0, behavior:'smooth'}); }
+    return;
+  }
+  saveScroll(); nav.tab = id; showScreen('none');
+}
+function refresh(){ saveScroll(); showScreen('none'); }   // re-render the current screen in place (keeps scroll)
 
 /* ---- study session ---- */
 function startSession(id){
   const c = byId(id);
-  leaveHome(); history.pushState({v:{name:'study', id}}, '');
+  openSessionLayer();
   sess = { id, i:0, results:[], xp:0, used:new Set(), startLevel:S.cards[id].level, startXP:S.cards[id].xp, wasCold:isCold(S.cards[id]), reopened:false };
   sess.q = nextQuestion(c, S.cards[id].level, sess.used);
   sess.hint = false; sess.answered = null;
   view = { name:'study' };
   const st = S.cards[id];
   app.innerHTML = `
-    <div class="topbar"><button class="btn-ghost" data-act="home">← Quit</button><div class="dots" id="dots"></div><span class="chip" id="sxp">+0 XP</span></div>
+    <div class="topbar"><button class="x" data-act="session-close" aria-label="Close">✕</button><div class="dots" id="dots"></div><span class="chip" id="sxp">+0 XP</span></div>
     <div class="stage" id="stage"><div class="lifter"><div class="flip" id="flip">
       <div class="face front">${cardEl(c, st)}</div>
       <div class="face back"><div class="card" id="back"></div></div>
@@ -1723,7 +2213,7 @@ function answer(v){
   if (ok) {
     S.stats.correct++;
     gain = Math.round(REWARD[st.level-1] * (sess.hint ? .5 : 1));
-    if (sess.wasCold && !sess.reopened) { sess.reopened = true; sess.justReopened = true; gain += COLD_BONUS; }
+    if (sess.wasCold && !sess.reopened) { sess.reopened = true; sess.justReopened = true; gain += COLD_BONUS; S.stats.reopened = (S.stats.reopened || 0) + 1; }
     st.last = Date.now();
     S.stats.xp += gain; sess.xp += gain;
     if (!st.mastered) {
@@ -1754,7 +2244,7 @@ function advance(){
   // refresh the front face too (hidden, but keeps level in sync)
   document.querySelector('.face.front').innerHTML = cardEl(c, S.cards[sess.id]);
   paintStudy(true);
-  window.scrollTo({top:0, behavior:'smooth'});
+  app.scrollTo({top:0, behavior:'smooth'});
 }
 
 /* ---- level up ---- */
@@ -1824,7 +2314,7 @@ function openPack(){
   S.packs--; const first = S.packsOpened === 0; S.packsOpened++;
   const pulls = drawPack(); save();
   const packImg = pulls.some(p => p.c.series === 2) ? 'art/pack_s2.webp' : 'art/pack.webp';
-  lockScroll(); history.pushState({v:{name:'pack'}}, '');
+  lockScroll(); history.pushState({cq:'pack'}, '');
   const ov = document.createElement('div'); ov.className = 'pk';
   const topClip = `polygon(0% 0%, 100% 0%, ${zig(12).reverse().join(',')})`, bodyClip = `polygon(${zig(12).join(',')}, 100% 100%, 0% 100%)`;
   ov.innerHTML = `<div class="pk-rays"></div>
@@ -1874,7 +2364,6 @@ function renderResults(){
   const answers = Math.ceil(left / REWARD[st.level-1]);
   const leveled = st.level > sess.startLevel;
   view = { name:'results' };
-  history.replaceState({v:{name:'results'}}, '');
   app.innerHTML = `
     <div class="results">
       <h1>SESSION ADJOURNED</h1>
@@ -1891,87 +2380,198 @@ function renderResults(){
       <div class="stack">
         <button class="btn-big" data-act="study" data-id="${c.id}">&#9654;&#xFE0E; ONE MORE ROUND</button>
         <button class="btn-big gold" data-act="pack-open">🎁 OPEN YOUR PACK</button>
-        <button class="btn-big alt" data-act="home">Back to collection</button>
+        <button class="btn-big alt" data-act="session-close">Done</button>
       </div>
     </div>`;
-  window.scrollTo({top:0});
+  app.scrollTo({top:0});
 }
 
-/* ================= ROUTER / EVENTS ================= */
-let homeFilter = 'all', homeScroll = 0;
-if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-function leaveHome(){ if (view.name === 'home') homeScroll = scrollY; }
-function backToHome(){ sess = null; view = {name:'home'}; render(); window.scrollTo(0, homeScroll); }
+/* ================= LAYERS: sheets, alerts, study round ================= */
 function lockScroll(){ document.documentElement.classList.add('noscroll'); }
-function unlockScroll(){ if (!document.querySelector('.pk,.lu,.zoom')) document.documentElement.classList.remove('noscroll'); }
-function goHome(){
-  // Use the history stack when we pushed an entry, so iPhone swipe-back and our buttons agree.
-  if (history.state && history.state.v && history.state.v.name !== 'home') history.back();
-  else backToHome();
+function unlockScroll(){ if (!document.querySelector('.pk,.lu,.zoom,.sheet-wrap,.alert-wrap')) document.documentElement.classList.remove('noscroll'); }
+function openSheet(html){
+  closeSheet(true);
+  const w = document.createElement('div'); w.className = 'sheet-wrap';
+  w.innerHTML = `<div class="sheet-bg" data-act="sheet-close"></div><div class="sheet" role="dialog" aria-modal="true"><div class="grabber"></div>${html}</div>`;
+  document.body.appendChild(w); lockScroll();
+  const sh = w.querySelector('.sheet'); let y0 = null, dy = 0;        // drag the sheet down to dismiss
+  sh.addEventListener('touchstart', e => { if (sh.scrollTop > 0) return; y0 = e.touches[0].clientY; dy = 0; sh.style.transition = 'none'; }, {passive:true});
+  sh.addEventListener('touchmove', e => { if (y0 == null) return; dy = Math.max(0, e.touches[0].clientY - y0); sh.style.transform = `translateY(${dy}px)`; }, {passive:true});
+  sh.addEventListener('touchend', () => { if (y0 == null) return; sh.style.transition = ''; if (dy > 90) closeSheet(); else sh.style.transform = ''; y0 = null; });
+  return w;
 }
-window.addEventListener('popstate', e => {
-  const v = (e.state && e.state.v) || {name:'home'};
-  document.querySelectorAll('.zoom').forEach(z => z.remove());
+function closeSheet(instant){
+  const w = document.querySelector('.sheet-wrap'); if (!w) return false;
+  if (instant) { w.remove(); unlockScroll(); return true; }
+  w.classList.add('closing'); setTimeout(() => { w.remove(); unlockScroll(); }, 230); return true;
+}
+function iosAlert({title, msg = '', buttons}){
+  return new Promise(res => {
+    const w = document.createElement('div'); w.className = 'alert-wrap';
+    w.innerHTML = `<div class="alert" role="alertdialog" aria-label="${esc(title)}"><h4>${esc(title)}</h4>${msg ? `<p>${esc(msg)}</p>` : ''}
+      <div class="btns">${buttons.map((b, i) => `<button data-i="${i}" class="${b.style || ''}">${esc(b.label)}</button>`).join('')}</div></div>`;
+    w.addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if (!b) return; e.stopPropagation(); w.remove(); unlockScroll(); res(buttons[+b.dataset.i].value); });
+    document.body.appendChild(w); lockScroll();
+  });
+}
+function cardMenu(id){
+  const c = byId(id), st = S.cards[id];
+  openSheet(`<div class="sh-head">${thumb(c)}<span><b>${esc(c.name)}</b><small>${statusLine(c)}</small></span></div>
+    <div class="acts">
+      <button data-act="study" data-id="${id}">${PLAY_ICON} ${isCold(st) ? 'Reopen this case' : 'Study this card'}</button>
+      <div class="acts-sep">Tester tools</div>
+      <button data-act="t-level" data-id="${id}" ${st.mastered ? 'disabled' : ''}>⚡ Level up now</button>
+      <button data-act="t-cold" data-id="${id}">🧊 Make it go cold</button>
+      <button data-act="t-reset" data-id="${id}" class="danger">↺ Reset this card</button>
+    </div><button class="sheet-cancel" data-act="sheet-close">Cancel</button>`);
+}
+function missingSheet(id){
+  const c = byId(id);
+  openSheet(`<div class="sh-missing"><div class="sh-mcard">${lockedCardHTML(c)}</div>
+      <h3>Not found yet</h3><p>This ${c.trickType ? 'Memory Trick' : 'card'} is waiting in a pack. ${S.packs ? `You have ${S.packs} pack${S.packs > 1 ? 's' : ''} to open.` : 'Finish a study round to earn a pack.'}</p></div>
+    ${S.packs ? `<button class="btn-big gold" data-act="pack-open">🎁 OPEN A PACK</button>` : `<button class="btn-big" data-act="quick">${PLAY_ICON} QUICK ROUND</button>`}
+    <button class="sheet-cancel" data-act="sheet-close">Not now</button>`);
+}
+function a2hsSheet(){
+  openSheet(`<h3>Add to Home Screen</h3>
+    <ol class="steps"><li><span>1</span>Open Clerk Quest in <b>Safari</b></li><li><span>2</span>Tap <b>Share</b> <i class="shareico">⬆︎</i></li>
+      <li><span>3</span>Choose <b>Add to Home Screen</b></li><li><span>4</span>Open it from your Home Screen. It runs full screen, like an app.</li></ol>
+    <p class="foot">Your progress stays saved in Safari on this phone.</p>
+    <button class="sheet-cancel" data-act="a2hs-close">Got it</button>`);
+}
+function quickRound(){
+  const mine = CARDS.filter(owned);
+  const cold = mine.filter(c => isCold(S.cards[c.id]));
+  const open = mine.filter(c => !S.cards[c.id].mastered);
+  const c = cold[0] || (open.length ? open[rnd(open.length)] : mine[rnd(mine.length)]);
+  if (c) startSession(c.id);
+}
+function openSessionLayer(){
+  if (!app.hidden) return;
+  history.pushState({cq:'session'}, '');
+  app.hidden = false; app.scrollTop = 0; app.classList.remove('opening'); void app.offsetWidth; app.classList.add('opening');
+}
+function closeSessionLayer(){
+  if (app.hidden) return false;
+  document.querySelectorAll('.lu').forEach(x => x.remove());
+  app.hidden = true; app.innerHTML = ''; sess = null; view = {name:'home'}; unlockScroll();
+  refresh(); return true;
+}
+
+/* ================= BACK / SWIPE-BACK ================= */
+// Every push, study round, and pack adds one history entry, so iPhone swipe-back and the Back button agree.
+let swipeCommit = null;
+window.addEventListener('popstate', () => {
+  if (swipeCommit) { const f = swipeCommit; swipeCommit = null; f(); return; }
+  document.querySelectorAll('.zoom,.alert-wrap').forEach(x => x.remove()); closeSheet(true);
   const pk = document.querySelector('.pk');
-  if (pk) {                                   // closing a pack overlay returns to the screen underneath
-    pk.remove(); unlockScroll();
-    if (v.name === 'results') return;
-    if (v.name === 'detail') { view = {name:'detail', id:v.id}; render(); return; }
-    backToHome(); return;
-  }
-  document.querySelectorAll('.lu').forEach(x => x.remove()); unlockScroll();
-  sess = null;
-  if (v.name === 'detail') { view = {name:'detail', id:v.id}; render(); }
-  else backToHome();
+  if (pk) { pk.remove(); unlockScroll(); if (app.hidden) refresh(); return; }
+  if (closeSessionLayer()) return;
+  pop();
 });
-function render(){
-  document.body.classList.toggle('on-detail', view.name === 'detail');
-  if (view.name === 'home') renderHome();
-  else if (view.name === 'detail') renderDetail();
-  window.scrollTo({top:0});
-}
+/* Edge swipe-back that follows your finger (works in Safari and in the Home Screen app). */
+(function edgeSwipe(){
+  let sx = null, sy = 0, dx = 0, active = false, cur = null, under = null;
+  const W = () => window.innerWidth;
+  const blocked = () => !app.hidden || document.querySelector('.pk,.sheet-wrap,.alert-wrap,.zoom,.lu');
+  document.addEventListener('touchstart', e => {
+    if (blocked() || nav.stacks[nav.tab].length < 2) return;
+    const t = e.touches[0]; if (t.clientX > 28) return;
+    sx = t.clientX; sy = t.clientY; dx = 0; active = false; cur = currentScreenEl();
+  }, {passive:true});
+  document.addEventListener('touchmove', e => {
+    if (sx == null || !cur) return;
+    const t = e.touches[0]; dx = t.clientX - sx;
+    if (!active) {
+      if (Math.abs(t.clientY - sy) > Math.abs(dx)) { sx = null; return; }
+      if (dx < 10) return;
+      active = true; saveScroll();
+      const st = nav.stacks[nav.tab], depth = st.length - 2;
+      under = buildScreen(st[depth], depth); under.style.zIndex = 0; cur.style.zIndex = 2;
+      document.getElementById('screens').insertBefore(under, cur);
+      under.querySelector('.scr').scrollTop = st[depth].scroll || 0;
+      cur.style.boxShadow = '-10px 0 30px rgba(0,0,0,.45)';
+    }
+    e.preventDefault();
+    const x = Math.max(0, dx), f = x / W();
+    cur.style.transform = `translateX(${x}px)`;
+    under.style.transform = `translateX(${-28 + 28 * f}%)`; under.style.filter = `brightness(${.7 + .3 * f})`;
+  }, {passive:false});
+  const end = () => {
+    if (sx == null) return; sx = null;
+    if (!active) return; active = false;
+    const done = dx > W() * .33, ease = 'transform .26s cubic-bezier(.2,.8,.2,1), filter .26s';
+    cur.style.transition = ease; under.style.transition = ease;
+    const c = cur, u = under; cur = under = null;
+    if (done) {
+      c.style.transform = `translateX(${W()}px)`; u.style.transform = 'none'; u.style.filter = 'none';
+      setTimeout(() => {
+        swipeCommit = () => {
+          nav.stacks[nav.tab].pop(); c.remove();
+          u.style.cssText = ''; u.classList.add('current'); renderTabbar();
+        };
+        history.back();
+      }, 260);
+    } else {
+      c.style.transform = 'none'; u.style.transform = 'translateX(-28%)';
+      setTimeout(() => { u.remove(); c.style.cssText = ''; }, 270);
+    }
+  };
+  document.addEventListener('touchend', end); document.addEventListener('touchcancel', end);
+})();
+function goBack(){ if (history.state && history.state.cq) history.back(); else pop(); }
+
+/* ================= TAPS ================= */
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if (!t || t.disabled) return;
-  const act = t.dataset.act;
-  if (act === 'home') goHome();
-  else if (act === 'open') { leaveHome(); view = {name:'detail', id:t.dataset.id}; history.pushState({v:view}, ''); render(); }
-  else if (act === 'study') startSession(t.dataset.id);
-  else if (act === 'answer') answer(t.dataset.v);
-  else if (act === 'hint') { if (!sess.answered) { sess.hint = true; paintStudy(); } }
-  else if (act === 'next') next();
-  else if (act === 'lu-close') { const ov = t.closest('.lu'); ov && ov._done(); }
-  else if (act === 'stage') { view.preview = +t.dataset.l; renderDetail(); }
-  else if (act === 't-level') {
-    const st = S.cards[view.id]; const from = st.level;
-    if (st.mastered) return;
-    let pl;
-    const c = byId(view.id);
-    if (st.level < maxL(c)) { st.level++; st.xp = 0; pl = {from, to:st.level}; } else { st.mastered = true; st.xp = NEED[st.level-1]; pl = {from:st.level, to:st.level, mastered:true}; }
-    save(); view.preview = null;
-    showLevelUp(view.id, pl, () => renderDetail());
+  const act = t.dataset.act, id = t.dataset.id;
+  switch (act) {
+    case 'tab': closeSheet(true); switchTab(t.dataset.tab); break;
+    case 'back': goBack(); break;
+    case 'push': { const p = {}; if (id) p.id = id; if (t.dataset.g) p.g = t.dataset.g; closeSheet(true); push(t.dataset.s, p); break; }
+    case 'seg': { const en = topEntry(); en.p = Object.assign({}, en.p, {[t.dataset.k]:t.dataset.v}); refresh(); break; }
+    case 'stage': { const en = topEntry(); en.p = Object.assign({}, en.p, {preview:+t.dataset.l}); refresh(); break; }
+    case 'study': closeSheet(true); startSession(id); break;
+    case 'quick': closeSheet(true); quickRound(); break;
+    case 'answer': answer(t.dataset.v); break;
+    case 'hint': if (sess && !sess.answered) { sess.hint = true; paintStudy(); } break;
+    case 'next': next(); break;
+    case 'lu-close': { const ov = t.closest('.lu'); ov && ov._done(); break; }
+    case 'session-close': goBack(); break;
+    case 'pack-open': closeSheet(true); openPack(); break;
+    case 'pk-tear': tearPack(t); break;
+    case 'pk-flip': flipPackCard(t); break;
+    case 'pk-done': goBack(); break;
+    case 'zoom-close': t.closest('.zoom').remove(); unlockScroll(); break;
+    case 'card-menu': cardMenu(id); break;
+    case 'missing': missingSheet(id); break;
+    case 'sheet-close': closeSheet(); break;
+    case 'a2hs-show': a2hsSheet(); break;
+    case 'a2hs-close': try { localStorage.setItem('cq-a2hs', '1'); } catch(err){} closeSheet(); refresh(); break;
+    case 't-level': {
+      closeSheet(true);
+      const st = S.cards[id], c = byId(id), from = st.level; if (st.mastered) break;
+      let pl;
+      if (st.level < maxL(c)) { st.level++; st.xp = 0; pl = {from, to:st.level}; } else { st.mastered = true; st.xp = NEED[st.level-1]; pl = {from:st.level, to:st.level, mastered:true}; }
+      save(); const en = topEntry(); if (en.p) delete en.p.preview;
+      showLevelUp(id, pl, () => refresh()); break;
+    }
+    case 't-cold': { closeSheet(true); const st = S.cards[id]; st.last = Date.now() - coldAfter(st) - DAY; save(); refresh(); break; }
+    case 't-reset': { closeSheet(true); Object.assign(S.cards[id], {level:1, xp:0, mastered:false}); save(); const en = topEntry(); if (en.p) delete en.p.preview; refresh(); break; }
+    case 't-pack': S.packs++; save(); refresh(); break;
+    case 'resetall':
+      iosAlert({title:'Reset all progress?', msg:'Every card, level, and pack on this device will be erased. This can\'t be undone.',
+        buttons:[{label:'Cancel', value:false, style:'bold'}, {label:'Reset', value:true, style:'destructive'}]})
+        .then(ok => { if (!ok) return; S = normalize(null); save(); TABS.forEach(([tid]) => nav.stacks[tid] = [{s:tid, p:{}}]); nav.tab = 'home'; showScreen('none'); });
+      break;
   }
-  else if (act === 't-reset') { Object.assign(S.cards[view.id], {level:1,xp:0,mastered:false}); save(); view.preview = null; renderDetail(); }
-  else if (act === 't-cold') { const st = S.cards[view.id]; st.last = Date.now() - coldAfter(st) - DAY; save(); view.preview = null; renderDetail(); }
-  else if (act === 'filter') { homeFilter = t.dataset.f; const y = scrollY; renderHome(); window.scrollTo(0, y); }
-  else if (act === 'a2hs-close') { try { localStorage.setItem('cq-a2hs','1'); } catch(e){} t.closest('.a2hs').remove(); }
-  else if (act === 'pack-open') openPack();
-  else if (act === 'pk-tear') tearPack(t);
-  else if (act === 'pk-flip') flipPackCard(t);
-  else if (act === 'pk-done') history.back();
-  else if (act === 'zoom-close') { t.closest('.zoom').remove(); unlockScroll(); }
-  else if (act === 't-pack') { S.packs++; save(); render(); }
-  else if (act === 'resetall') { if (confirm('Reset all Clerk Quest progress?')) { S = normalize(null); save(); render(); } }
 });
 
+/* ================= START ================= */
 probeArt().then(() => {
-  // ?demo=glows shows every glow tier side by side (handy for checking on a phone). Doesn't touch progress.
-  if (/[?&]demo=glows/.test(location.search)) {
-    const g = byId('gavel'), row = (lv, xp, label) => `<div>${cardEl(g, {level:lv, xp, mastered:false, owned:true})}<p style="text-align:center;margin:6px 0 0">${label}</p></div>`;
-    app.innerHTML = `<div class="logo" style="font-size:40px">GLOW TIERS</div><div class="grid" style="margin-top:18px">${row(2,0,'Level 2')}${row(3,0,'Level 3 · cyan')}${row(4,0,'Level 4 · magenta')}${row(4,250,'Level 4 · charged')}${row(5,0,'Level 5 · gold + gloss')}</div>`;
-    return;
-  }
-  history.replaceState({v:{name:'home'}}, '');
-  render();
+  if (/[?&]demo=glows/.test(location.search)) { nav.tab = 'profile'; nav.stacks.profile = [{s:'profile', p:{}}, {s:'glows', p:{}}]; }
+  history.replaceState({}, '');
+  showScreen('none');
 });
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.
 ['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','premiumart/frame_base.webp','art/frame_trick.webp','art/frame_frost.webp','art/cardback.webp','art/answer_button.webp']
