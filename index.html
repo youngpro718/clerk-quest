@@ -221,6 +221,20 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .rulebox blockquote{margin:8px 0;padding:8px 12px;border-left:4px solid #7b4bb5;background:#f1e9ff;font-size:17px;line-height:1.3}
 .rulebox .ctx,.rulebox .from{font-size:15px;opacity:.8;margin:4px 0 0}
 .rulebox .hook{margin:10px 0 0;font-size:18px}
+/* Case File: the rule on lined notebook paper, with reading questions */
+.casefile{--line:28px;color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:calc(var(--line) - 4px) 14px 14px 46px;
+  background:linear-gradient(90deg,transparent 33px,#dc7a6e 33px,#dc7a6e 35px,transparent 35px),
+    repeating-linear-gradient(#f6ecd6 0 calc(var(--line) - 1px),#a9bfd6 calc(var(--line) - 1px) var(--line));
+  background-position:0 6px;font-family:"Patrick Hand";font-size:19px;line-height:var(--line)}
+.casefile h4{margin:0;font-family:"Bangers";font-weight:400;letter-spacing:.06em;font-size:16px;line-height:var(--line);color:#a8321f}
+.casefile .cite{font-family:"Courier Prime";font-weight:700;font-size:17px;line-height:var(--line)}
+.casefile .cf-quote{margin:0 0 var(--line)}
+.casefile ol{margin:0 0 var(--line);padding-left:22px}
+.casefile .ctx,.casefile .from{margin:0;font-size:17px;opacity:.8}
+.casefile .from{margin-bottom:var(--line)}
+.casefile .readbtn{display:block;width:100%;min-height:48px;border:2px solid var(--ink);border-radius:12px;background:#f3d27a;font:inherit;color:var(--ink);cursor:pointer}
+.casefile .readbtn.done{background:#cfe6c8}
+.explain .rlink{margin-top:1.4cqw;padding:1.2cqw 2.8cqw;border:.4cqw solid var(--ink);border-radius:1.6cqw;background:#f3d27a;font:inherit;font-size:3.4cqw;color:var(--ink);cursor:pointer}
 .explain{cursor:pointer}
 .explain .tapnext{margin:1.6cqw 0 0;text-align:right;font-family:"Bangers";letter-spacing:.06em;font-size:3.4cqw;opacity:.55}
 .explain .cite{font-family:"Courier Prime";font-size:3.2cqw;opacity:.75;margin-top:1cqw}
@@ -1471,6 +1485,15 @@ const daysAgo = t => Math.floor((Date.now() - t) / DAY);
 const agoText = t => { const d = daysAgo(t); return d === 0 ? 'today' : d === 1 ? 'yesterday' : `${d} days ago`; };
 const TRICK_TYPES = { chain:{label:'Chain Trick', blurb:'Teaches the order of steps.'}, who:{label:'Who Trick', blurb:'Teaches who does what.'},
   clock:{label:'Clock Trick', blurb:'Teaches deadlines.'}, difference:{label:'Difference Trick', blurb:'Teaches look-alike terms apart.'}, trigger:{label:'Trigger Trick', blurb:'Teaches what happens next.'} };
+/* Case File reading questions, one set per trick type, so every rule card gets them without per-card writing. */
+const READ_QS = {
+  clock:['How long is the time limit?', 'What event starts (or ends) the count?', 'Who does the deadline apply to?'],
+  who:['Who acts, signs, or decides?', 'What exactly do they do?', 'Where or how must it happen?'],
+  trigger:['What event sets this rule off?', 'What has to happen next?', 'Is it automatic, or does someone have to ask?'],
+  difference:['What two things are being compared?', 'What puts something on one side or the other?', 'Which detail is easiest to mix up?'],
+  chain:['What comes first?', 'What comes next, step by step?', 'What comes last?'],
+};
+const READ_XP = 10;   // player XP for reading a card's case file the first time
 function frameFor(c, lv){
   if (c.trickType) return 'art/frame_trick.webp';
   const max = maxL(c);
@@ -1991,7 +2014,7 @@ const SCREENS = {
     const shown = pv === st.level ? st : {level:pv, xp:0, mastered:false, owned:true};
     const hasRule = c.source || c.diff || c.mnemonic;
     const tab = p.tab || 'overview';
-    const tabs = [['overview', 'Overview']].concat(hasRule ? [['rule', c.source ? 'Rule' : 'Trick']] : []).concat([['lore', 'Lore']]);
+    const tabs = [['overview', 'Overview']].concat(hasRule ? [['rule', c.source ? 'Case File' : 'Trick']] : []).concat([['lore', 'Lore']]);
     let panel = '';
     if (tab === 'overview') {
       panel = `<div class="list info">
@@ -2006,8 +2029,12 @@ const SCREENS = {
           : st.last ? `<p class="foot">Goes cold if not studied for ${Math.round(coldAfter(st) / DAY)} days.</p>` : ''}
         ${c.hook ? `<div class="hookbox">🧠 ${esc(c.hook)}</div>` : ''}`;
     } else if (tab === 'rule') {
-      panel = `${c.source ? `<div class="rulebox"><div class="cite">${esc(c.source.cite)}</div>
-          <blockquote>“${esc(c.source.quote)}”</blockquote><p class="ctx">${esc(c.source.context)}</p><p class="from">Source: ${esc(c.source.from)}</p></div>` : ''}
+      const read = !!(S.read || {})[c.id];
+      panel = `${c.source ? `<div class="casefile"><h4>The source rule</h4><div class="cite">${esc(c.source.cite)}</div>
+          <p class="cf-quote">“${esc(c.source.quote)}”</p>
+          <h4>Read it with these questions</h4><ol>${(READ_QS[c.trickType] || READ_QS.who).map(q => `<li>${esc(q)}</li>`).join('')}</ol>
+          <h4>When it comes up</h4><p class="ctx">${esc(c.source.context)}</p><p class="from">Source: ${esc(c.source.from)}</p>
+          <button class="readbtn ${read ? 'done' : ''}" data-act="mark-read" data-id="${c.id}" ${read ? 'disabled' : ''}>${read ? '✓ Read. Now quiz it below.' : `✓ I read it (+${READ_XP} XP)`}</button></div>` : ''}
         ${c.diff ? `<div class="sec-h"><span>How to tell them apart</span></div><div class="diffbox">${['a', 'b'].map(k => `<div class="dcol ${k}"><b>${esc(c.diff[k].name)}</b><i>“${esc(c.diff[k].hook)}”</i><ul>${c.diff[k].points.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>`).join('<div class="dvs">VS</div>')}</div>` : ''}
         ${c.mnemonic ? `<div class="sec-h"><span>How to remember it</span></div><div class="mnbox"><p class="mnsent">“${esc(c.mnemonic.sentence)}”</p>
           <ol class="mnlist">${c.mnemonic.letters.map((L, i) => `<li><b>${L}</b>${esc(c.mnemonic.words[i])} → <strong>${esc(c.mnemonic.means[i])}</strong></li>`).join('')}</ol>
@@ -2027,7 +2054,7 @@ const SCREENS = {
         <div class="cd-level"><span>${st.mastered ? '🏅 Mastered' : 'Level ' + st.level}</span><span>${st.mastered ? 'Max' : st.xp + ' / ' + NEED[st.level-1] + ' XP'}</span></div>${pbar(cardProgress(c))}
         ${seg('tab', tab, tabs)}
         <div class="cd-panel">${panel}</div>`,
-      after:`<div class="cta-bar"><div><button class="btn-big ${isCold(st) ? 'coldbtn' : ''}" data-act="study" data-id="${c.id}">${PLAY_ICON} ${isCold(st) ? 'REOPEN THIS CASE' : 'STUDY THIS CARD'}</button></div></div>`,
+      after:`<div class="cta-bar"><div><button class="btn-big ${isCold(st) ? 'coldbtn' : ''}" data-act="study" data-id="${c.id}">${PLAY_ICON} ${isCold(st) ? 'REOPEN THIS CASE' : tab === 'rule' && c.source ? 'QUIZ THIS CARD' : 'STUDY THIS CARD'}</button></div></div>`,
     };
   },
 
@@ -2298,6 +2325,7 @@ function paintStudy(anim){
         ${ans.ok ? '' : `<p><b>Correct answer:</b> ${esc(q.a)}</p>`}
         ${q.raw ? q.w : `<p>${esc(q.w)}</p>`}
         ${c.source ? `<p class="cite">Source: ${esc(c.source.cite)}</p>` : ''}
+        ${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">📖 Open the case file</button>` : ''}
         <p class="tapnext">Tap here to continue ▸</p>
       </div>` : ''}`;
   // dots + xp chip
@@ -2496,6 +2524,7 @@ function renderResults(){
       <div class="stack">
         <button class="btn-big" data-act="study" data-id="${c.id}">&#9654;&#xFE0E; ONE MORE ROUND</button>
         <button class="btn-big gold" data-act="pack-open">🎁 OPEN YOUR PACK</button>
+        ${c.source && correct < SESSION_LEN ? `<button class="btn-big alt" data-act="read-rule" data-id="${c.id}">📖 READ THE CASE FILE</button>` : ''}
         <button class="btn-big alt" data-act="session-close">Done</button>
       </div>
     </div>`;
@@ -2605,9 +2634,16 @@ window.addEventListener('popstate', () => {
   document.querySelectorAll('.zoom,.alert-wrap').forEach(x => x.remove()); closeSheet(true);
   const pk = document.querySelector('.pk');
   if (pk) { pk.remove(); unlockScroll(); if (app.hidden) refresh(); return; }
-  if (closeSessionLayer()) return;
+  if (closeSessionLayer()) { if (afterSessionClose) { const f = afterSessionClose; afterSessionClose = null; f(); } return; }
   pop();
 });
+/* Open a card's Case File tab: switch tabs if its card page is on top, otherwise push it. */
+let afterSessionClose = null;
+function openCaseFile(id){
+  const en = topEntry();
+  if (en && en.s === 'card' && en.p.id === id) { en.p = Object.assign({}, en.p, {tab:'rule'}); refresh(); }
+  else push('card', {id, tab:'rule'});
+}
 /* Edge swipe-back that follows your finger (works in Safari and in the Home Screen app). */
 (function edgeSwipe(){
   let sx = null, sy = 0, dx = 0, active = false, cur = null, under = null;
@@ -2677,6 +2713,12 @@ document.addEventListener('click', e => {
     case 'next': next(); break;
     case 'lu-close': { const ov = t.closest('.lu'); ov && ov._done(); break; }
     case 'session-close': goBack(); break;
+    case 'read-rule': if (app.hidden) openCaseFile(id); else { afterSessionClose = () => openCaseFile(id); goBack(); } break;
+    case 'mark-read': {
+      S.read = S.read || {};
+      if (!S.read[id]) { S.read[id] = Date.now(); S.stats.xp += READ_XP; save(); toast(`📖 Case file read · +${READ_XP} XP`); }
+      refresh(); break;
+    }
     case 'pack-open': closeSheet(true); openPack(); break;
     case 'pk-tear': tearPack(t); break;
     case 'pk-flip': flipPackCard(t); break;
