@@ -9,11 +9,59 @@ function ruleSubjects(){
   return sets.map(set => ({ set, label:titleCase(set), cards:ruleCards().filter(c => c.set === set) }));
 }
 
+/* ---------- notebook storage (in the main save, so cloud save carries it) ---------- */
+function nb(){
+  const n = S.notebook = S.notebook && typeof S.notebook === 'object' ? S.notebook : {};
+  if (!n.hl || typeof n.hl !== 'object') n.hl = {};
+  if (!n.notes || typeof n.notes !== 'object') n.notes = {};
+  if (!Array.isArray(n.saved)) n.saved = [];
+  if (!Array.isArray(n.pages)) n.pages = [];
+  return n;
+}
+
+/* ---------- phrases: rule text split at , ; : and sentence ends (then long ones at clause starts); every word lands in exactly one phrase ---------- */
+function splitPhrases(text){
+  const out = [], re = /[,;:](?=\s)|[.?!]+(?=\s|$)/g; let last = 0, m;
+  while ((m = re.exec(text))) { const end = m.index + m[0].length; out.push(text.slice(last, end)); last = end; }
+  if (last < text.length) out.push(text.slice(last));
+  return out.flatMap(splitLong).filter(p => p.trim());
+}
+/* A long phrase also breaks where a new clause starts ("and the", "or by", "unless", "at least"…), keeping each piece 40+ characters */
+function splitLong(p){
+  if (p.trim().length <= 110) return [p];
+  const out = [], re = /\s(?=(?:(?:and|or) (?:the|by|such|a|an)|unless|at least|except|that the)\s)/g; let last = 0, m;
+  while ((m = re.exec(p))) if (m.index - last >= 40 && p.length - m.index >= 40) { out.push(p.slice(last, m.index)); last = m.index; }
+  out.push(p.slice(last));
+  return out;
+}
+function isHighlighted(id, phrase){ return (nb().hl[id] || []).includes(phrase); }
+function toggleHighlight(id, phrase){
+  const n = nb(), list = n.hl[id] || [];
+  const i = list.indexOf(phrase);
+  if (i >= 0) list.splice(i, 1); else list.push(phrase);
+  if (list.length) n.hl[id] = list; else delete n.hl[id];
+  save();
+  return i < 0;
+}
+/* Rule text as tappable phrases (whitespace stays outside the spans so the text reads normally) */
+function phrasesHTML(c){
+  return splitPhrases(c.source.quote).map((raw, i) => {
+    const lead = raw.match(/^\s*/)[0], ph = raw.trim(), on = isHighlighted(c.id, ph);
+    return `${lead}<span class="ph ${on ? 'on' : ''}" role="button" aria-pressed="${on}" data-act="hl" data-id="${c.id}" data-i="${i}">${esc(ph)}</span>`;
+  }).join('');
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act="hl"]'); if (!t) return;
+  const c = byId(t.dataset.id), ph = splitPhrases(c.source.quote)[+t.dataset.i].trim();
+  const on = toggleHighlight(c.id, ph);
+  t.classList.toggle('on', on); t.setAttribute('aria-pressed', on);
+});
+
 /* The Case File block: the rule on lined paper. Shared by the card's Case File tab and the Read rule page. */
 function caseFileHTML(c){
   const read = !!(S.read || {})[c.id];
   return `<div class="casefile"><h4>The source rule</h4><div class="cite">${esc(c.source.cite)}</div>
-    <p class="cf-quote">“${esc(c.source.quote)}”</p>
+    <p class="cf-quote">“${phrasesHTML(c)}”</p><p class="hl-tip">Tap a phrase to highlight it. Tap again to clear it.</p>
     ${READ_QS[c.id] ? `<h4>Read it with these questions</h4><ol>${READ_QS[c.id].map(q => `<li>${esc(q)}</li>`).join('')}</ol>` : ''}
     <h4>When it comes up</h4><p class="ctx">${esc(c.source.context)}</p><p class="from">Source: ${esc(c.source.from)}</p>
     <button class="readbtn ${read ? 'done' : ''}" data-act="mark-read" data-id="${c.id}" ${read ? 'disabled' : ''}>${read ? 'Case file reviewed' : `Mark as reviewed · +${READ_XP} XP`}</button></div>`;
@@ -107,6 +155,9 @@ const STUDY_CSS = `
 .results .row .th{margin-top:3px}
 .snip{font:14px/1.35 var(--ui);color:var(--paper);opacity:.85;white-space:normal}
 .row-main mark,.snip mark{background:#f3d27a;color:var(--ink);border-radius:3px;padding:0 1px}
+.casefile .ph{cursor:pointer;-webkit-tap-highlight-color:transparent;border-radius:3px;transition:background-color .15s}
+.casefile .ph.on{background:linear-gradient(transparent 12%,rgba(255,214,64,.85) 12%,rgba(255,214,64,.85) 88%,transparent 88%);box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.casefile .hl-tip{margin:calc(var(--line) * -1) 0 var(--line);font-size:15px;line-height:var(--line);opacity:.6}
 .rule-sub{margin:-4px 2px 12px;font:15px var(--ui);color:var(--sub)}
 .openrow{margin-top:14px;background:var(--bg2);border:.5px solid var(--line);border-radius:16px}
 `;
