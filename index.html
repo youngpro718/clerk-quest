@@ -1485,13 +1485,25 @@ const daysAgo = t => Math.floor((Date.now() - t) / DAY);
 const agoText = t => { const d = daysAgo(t); return d === 0 ? 'today' : d === 1 ? 'yesterday' : `${d} days ago`; };
 const TRICK_TYPES = { chain:{label:'Chain Trick', blurb:'Teaches the order of steps.'}, who:{label:'Who Trick', blurb:'Teaches who does what.'},
   clock:{label:'Clock Trick', blurb:'Teaches deadlines.'}, difference:{label:'Difference Trick', blurb:'Teaches look-alike terms apart.'}, trigger:{label:'Trigger Trick', blurb:'Teaches what happens next.'} };
-/* Case File reading questions, one set per trick type, so every rule card gets them without per-card writing. */
+/* Case File reading questions, written per card. Each one is answered by the card's source rule text. */
 const READ_QS = {
-  clock:['How long is the time limit?', 'What event starts (or ends) the count?', 'Who does the deadline apply to?'],
-  who:['Who acts, signs, or decides?', 'What exactly do they do?', 'Where or how must it happen?'],
-  trigger:['What event sets this rule off?', 'What has to happen next?', 'Is it automatic, or does someone have to ask?'],
-  difference:['What two things are being compared?', 'What puts something on one side or the other?', 'Which detail is easiest to mix up?'],
-  chain:['What comes first?', 'What comes next, step by step?', 'What comes last?'],
+  whosigns:['Who may sign the summons? (There are two answers.)', 'Which court issues it?', 'What filing leads to it?'],
+  clock6090:['How many days to start the hearing, and counted from what date?', 'How many days to finish it, counted from when?', 'Who holds the hearing?'],
+  ypsi:['What event sets this rule off?', 'What must the court order first?', 'When does the court decide youthful offender status?'],
+  eightdays:['How many days before the appearance must papers be served?', 'What are the two ways to serve them?', 'What must the proof of service state?'],
+  sealed:['What ends the case and triggers sealing?', 'Who can stop the sealing, and how much notice is required?', 'Whom does the clerk notify?'],
+  followpetitioner:['Who files the copy of the order?', 'Where is it filed when the petitioner lives in a county?', 'Where is it filed when the petitioner lives in a city?'],
+  amendonce:['How many times can a party amend without leave of court?', 'What are the three time windows?', 'What does "without leave of court" mean?'],
+  childvoice:['What court action overrides the whole list?', 'Who appears for the infant first?', 'Who is next if there is no such guardian?'],
+  custodyornot:['What issue makes a case a child custody proceeding?', 'Name three proceedings that count.', 'Which proceedings do not count?'],
+  jurywaiver:['What form must the waiver take?', 'Who signs it, and where?', 'Whose approval is needed?'],
+  interest:['When does interest start on a money judgment?', 'When does it start on an order to pay money?', 'Which two dates are easy to mix up?'],
+  quash:['What three things can the motion ask for?', 'In which court must it be made?', 'How soon must it be made?'],
+  newtrial:['When can the court order this?', 'Who makes the motion?', 'What two things can the court order?'],
+  schoolnotice:['Which students does this rule cover?', 'What event triggers the notice?', 'Who sends the notice, and to whom?'],
+  bail:['What are the three forms of bail?', 'Which form is the easiest to forget?', 'Where is "bail" defined?'],
+  acd:['What must the court set when it orders an ACD?', 'What can the court change before dismissal?', 'What is the longest total adjournment?'],
+  military:['Who may set up special calendars?', 'Who must be in military service?', 'What must be true about a deposition?'],
 };
 const READ_XP = 10;   // player XP for reading a card's case file the first time
 function frameFor(c, lv){
@@ -2032,9 +2044,9 @@ const SCREENS = {
       const read = !!(S.read || {})[c.id];
       panel = `${c.source ? `<div class="casefile"><h4>The source rule</h4><div class="cite">${esc(c.source.cite)}</div>
           <p class="cf-quote">“${esc(c.source.quote)}”</p>
-          <h4>Read it with these questions</h4><ol>${(READ_QS[c.trickType] || READ_QS.who).map(q => `<li>${esc(q)}</li>`).join('')}</ol>
+          ${READ_QS[c.id] ? `<h4>Read it with these questions</h4><ol>${READ_QS[c.id].map(q => `<li>${esc(q)}</li>`).join('')}</ol>` : ''}
           <h4>When it comes up</h4><p class="ctx">${esc(c.source.context)}</p><p class="from">Source: ${esc(c.source.from)}</p>
-          <button class="readbtn ${read ? 'done' : ''}" data-act="mark-read" data-id="${c.id}" ${read ? 'disabled' : ''}>${read ? '✓ Read. Now quiz it below.' : `✓ I read it (+${READ_XP} XP)`}</button></div>` : ''}
+          <button class="readbtn ${read ? 'done' : ''}" data-act="mark-read" data-id="${c.id}" ${read ? 'disabled' : ''}>${read ? 'Case file reviewed' : `Mark as reviewed · +${READ_XP} XP`}</button></div>` : ''}
         ${c.diff ? `<div class="sec-h"><span>How to tell them apart</span></div><div class="diffbox">${['a', 'b'].map(k => `<div class="dcol ${k}"><b>${esc(c.diff[k].name)}</b><i>“${esc(c.diff[k].hook)}”</i><ul>${c.diff[k].points.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>`).join('<div class="dvs">VS</div>')}</div>` : ''}
         ${c.mnemonic ? `<div class="sec-h"><span>How to remember it</span></div><div class="mnbox"><p class="mnsent">“${esc(c.mnemonic.sentence)}”</p>
           <ol class="mnlist">${c.mnemonic.letters.map((L, i) => `<li><b>${L}</b>${esc(c.mnemonic.words[i])} → <strong>${esc(c.mnemonic.means[i])}</strong></li>`).join('')}</ol>
@@ -2325,7 +2337,7 @@ function paintStudy(anim){
         ${ans.ok ? '' : `<p><b>Correct answer:</b> ${esc(q.a)}</p>`}
         ${q.raw ? q.w : `<p>${esc(q.w)}</p>`}
         ${c.source ? `<p class="cite">Source: ${esc(c.source.cite)}</p>` : ''}
-        ${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">📖 Open the case file</button>` : ''}
+        ${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}
         <p class="tapnext">Tap here to continue ▸</p>
       </div>` : ''}`;
   // dots + xp chip
@@ -2524,7 +2536,7 @@ function renderResults(){
       <div class="stack">
         <button class="btn-big" data-act="study" data-id="${c.id}">&#9654;&#xFE0E; ONE MORE ROUND</button>
         <button class="btn-big gold" data-act="pack-open">🎁 OPEN YOUR PACK</button>
-        ${c.source && correct < SESSION_LEN ? `<button class="btn-big alt" data-act="read-rule" data-id="${c.id}">📖 READ THE CASE FILE</button>` : ''}
+        ${c.source && correct < SESSION_LEN ? `<button class="btn-big alt" data-act="read-rule" data-id="${c.id}">REVIEW THE RULE</button>` : ''}
         <button class="btn-big alt" data-act="session-close">Done</button>
       </div>
     </div>`;
@@ -2716,7 +2728,7 @@ document.addEventListener('click', e => {
     case 'read-rule': if (app.hidden) openCaseFile(id); else { afterSessionClose = () => openCaseFile(id); goBack(); } break;
     case 'mark-read': {
       S.read = S.read || {};
-      if (!S.read[id]) { S.read[id] = Date.now(); S.stats.xp += READ_XP; save(); toast(`📖 Case file read · +${READ_XP} XP`); }
+      if (!S.read[id]) { S.read[id] = Date.now(); S.stats.xp += READ_XP; save(); toast(`Case file reviewed · +${READ_XP} XP`); }
       refresh(); break;
     }
     case 'pack-open': closeSheet(true); openPack(); break;
