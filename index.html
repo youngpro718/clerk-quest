@@ -1978,8 +1978,8 @@ const SCREENS = {
   },
 
   study(p){
-    const tab = p.tab === 'read' ? 'read' : 'practice';
-    let body = seg('tab', tab, [['practice', 'Practice'], ['read', 'Read']]);
+    const tab = ['read', 'notebook'].includes(p.tab) ? p.tab : 'practice';
+    let body = seg('tab', tab, [['practice', 'Practice'], ['read', 'Read'], ['notebook', 'Notebook']]);
     if (tab === 'practice') {
       const mine = CARDS.filter(owned);
       const cold = mine.filter(c => isCold(S.cards[c.id]));
@@ -1990,8 +1990,10 @@ const SCREENS = {
         ${almost.length ? `<div class="sec-h"><span>⚡ Almost Leveled Up</span></div><div class="carousel">${almost.map(c => miniCard(c)).join('')}</div>` : ''}
         <div class="sec-h"><span>Up Next</span></div><div class="list">${upNext.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('') || '<p class="empty">Every card you own is mastered or cold. 🎉</p>'}</div>
         <div class="sec-h"><span>By Subject</span></div><div class="list">${subjects().map(s => groupRow(s.g, s.label, '📚', 'studyset')).join('')}</div>`;
-    } else {
+    } else if (tab === 'read') {
       body += readTabHTML(p);
+    } else {
+      body += notebookTabHTML(p);
     }
     return { title:'Study', body };
   },
@@ -2347,7 +2349,7 @@ function paintStudy(anim){
       <div class="explain" data-act="next" style="${PB(58,1218,966,1688)}">
         <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +${ans.gain} XP` : 'Overruled. Not quite.'}</h3>
         ${ans.reopened ? `<p class="reopen"><img src="art/stamp_reopened.webp" alt="Case reopened"><span>Includes a +${COLD_BONUS} XP cold-case bonus.</span></p>` : ''}
-        ${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}
+        <div class="ex-acts">${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}${saveQButtonHTML()}</div>
         ${ans.ok ? '' : `<p><b>Correct answer:</b> ${esc(q.a)}</p>`}
         ${q.raw ? q.w : `<p>${esc(q.w)}</p>`}
         ${c.source ? `<p class="cite">Source: ${esc(c.source.cite)}</p>` : ''}
@@ -2806,9 +2808,9 @@ document.addEventListener('click', e => {
     case 'sort': nav.sort = t.dataset.v; refresh(); sortSheet(); break;
     case 'toggle-missing': nav.showMissing = nav.showMissing === false; refresh(); sortSheet(); break;
     case 'resetall':
-      iosAlert({title:'Reset all progress?', msg:'Every card, level, and pack on this device will be erased. This can\'t be undone.',
+      iosAlert({title:'Reset all progress?', msg:'Every card, level, and pack on this device will be erased. Your notebook is kept. This can\'t be undone.',
         buttons:[{label:'Cancel', value:false, style:'bold'}, {label:'Reset', value:true, style:'destructive'}]})
-        .then(ok => { if (!ok) return; S = normalize(null); save(); TABS.forEach(([tid]) => nav.stacks[tid] = [{s:tid, p:{}}]); nav.tab = 'home'; showScreen('none'); });
+        .then(ok => { if (!ok) return; const keepNotes = S.notebook; S = normalize(null); if (keepNotes) S.notebook = keepNotes; save(); TABS.forEach(([tid]) => nav.stacks[tid] = [{s:tid, p:{}}]); nav.tab = 'home'; showScreen('none'); });
       break;
   }
 });
