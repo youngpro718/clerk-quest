@@ -38,6 +38,9 @@
 @supports (height:100dvh){ :root{ --cw:min(calc(100vw - 32px), 470px, calc((100dvh - 150px) / 1.5)); } }
 *{box-sizing:border-box}
 html,body{margin:0;overflow-x:hidden}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
+html.noscroll,html.noscroll body{overflow:hidden}
+.pk,.lu,.zoom{overscroll-behavior:contain}
 @supports (overflow:clip){html,body{overflow-x:clip}}
 body{
   min-height:100vh; color:var(--paper); font-family:"Patrick Hand",system-ui,sans-serif; font-size:18px;
@@ -208,6 +211,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .ra-col span{font-family:"Patrick Hand";font-size:2.7cqw;line-height:1.05}
 .ra-col.yes{background:#dff0d4;color:#1f5a26} .ra-col.no{background:#f7d6cf;color:#7a1f14}
 .ra-diff.neutral .ra-col.yes{background:#ffe7c2;color:#6b3c00} .ra-diff.neutral .ra-col.no{background:#d6e6ff;color:#12386b}
+.series-badge{z-index:6;object-fit:contain;transform:rotate(8deg);filter:drop-shadow(0 .5cqw .5cqw rgba(0,0,0,.45));pointer-events:none}
 .series{z-index:6;display:flex;align-items:center;justify-content:center;font-family:"Bangers";letter-spacing:.1em;font-size:3.8cqw;color:#fff5dc;
   background:linear-gradient(135deg,#d7263d,#8e1024);border:.35cqw solid var(--ink);border-radius:1.2cqw;transform:rotate(5deg);box-shadow:.4cqw .6cqw 0 rgba(0,0,0,.35);pointer-events:none}
 .rulebox{background:#fbf6e8;border:2px solid var(--ink);border-radius:12px;padding:12px 14px}
@@ -215,6 +219,8 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .rulebox blockquote{margin:8px 0;padding:8px 12px;border-left:4px solid #7b4bb5;background:#f1e9ff;font-size:17px;line-height:1.3}
 .rulebox .ctx,.rulebox .from{font-size:15px;opacity:.8;margin:4px 0 0}
 .rulebox .hook{margin:10px 0 0;font-size:18px}
+.explain{cursor:pointer}
+.explain .tapnext{margin:1.6cqw 0 0;text-align:right;font-family:"Bangers";letter-spacing:.06em;font-size:3.4cqw;opacity:.55}
 .explain .cite{font-family:"Courier Prime";font-size:3.2cqw;opacity:.75;margin-top:1cqw}
 .mnbox{background:#fbf6e8;border:2px dashed rgba(0,0,0,.35);border-radius:12px;padding:12px 14px}
 .mnsent{font-size:22px;margin:0 0 8px;font-style:italic}
@@ -265,6 +271,11 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .pk-badge{position:absolute;left:50%;top:-12px;translate:-50% 0;z-index:9;font-family:"Bangers";letter-spacing:.06em;font-size:clamp(13px,3.4vw,18px);padding:3px 10px;border:2px solid var(--ink);border-radius:999px;white-space:nowrap;opacity:0;transition:opacity .3s .45s;color:var(--ink)}
 .pk-card.flipped .pk-badge{opacity:1}
 .pk-badge.new{background:#ffe27a} .pk-badge.dup{background:#bfe0b5} .pk-badge.trick{background:#d6c2ff}
+.zoom{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;
+  background:rgba(0,0,0,.82);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:fadein .2s both;cursor:pointer}
+.zoom-card{width:min(88vw,420px,calc((100dvh - 90px) / 1.5));animation:zoomin .32s cubic-bezier(.2,1.3,.4,1) both}
+.zoom p{margin:0;color:var(--paper);opacity:.75}
+@keyframes zoomin{from{transform:scale(.6);opacity:0}}
 .pk-hint{margin:0;font-size:20px;color:var(--paper);z-index:3;text-align:center;min-height:26px}
 .pk-done{max-width:340px;z-index:3;opacity:0;pointer-events:none;transition:opacity .3s}
 .pk.all .pk-done{opacity:1;pointer-events:auto}
@@ -281,7 +292,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
   background:linear-gradient(160deg,rgba(190,225,255,.3),rgba(120,170,220,.15) 60%,rgba(220,240,255,.35))}
 
 .mn-badge.low{top:auto;bottom:17%;left:1%;width:21%}
-.goingcold{position:absolute;z-index:7;width:34%;right:3%;top:32%;pointer-events:none;filter:drop-shadow(0 .6cqw .6cqw rgba(0,0,0,.4));animation:wobble 2.2s ease-in-out infinite}
+.goingcold{position:absolute;z-index:7;width:34%;right:3%;top:38%;pointer-events:none;filter:drop-shadow(0 .6cqw .6cqw rgba(0,0,0,.4));animation:wobble 2.2s ease-in-out infinite}
 @keyframes wobble{0%,100%{transform:rotate(8deg)}50%{transform:rotate(-2deg) scale(1.06)}}
 .stampimg.coldcase{width:70%;left:15%;top:38%;--rot:-12deg;z-index:7}
 .stampimg.mastered{width:52%;right:2%;top:57%;--rot:-10deg}
@@ -300,7 +311,8 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .qtext{font-family:"Patrick Hand";justify-content:flex-start;text-align:left;padding:0 2cqw;line-height:1.12;color:var(--ink)}
 .ans{z-index:3;border:0;padding:0;background:url(art/answer_button.webp) center/100% 100% no-repeat;display:flex;align-items:center;
   transition:transform .12s, filter .2s;touch-action:manipulation}
-.ans:hover:not([disabled]){transform:translateX(.8cqw)}
+.ans::before{content:"";position:absolute;left:0;right:0;top:-.7cqw;bottom:-.7cqw}
+@media (hover:hover){.ans:hover:not([disabled]){transform:translateX(.8cqw)}}
 .ans:active:not([disabled]){transform:scale(.97)}
 .ans .L{width:17.4%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:"Luckiest Guy";font-size:6cqw;-webkit-text-stroke:.3cqw var(--ink);paint-order:stroke fill}
 .ans .A{flex:1;text-align:left;padding-left:3cqw;padding-right:1.5cqw;font-family:"Patrick Hand";font-size:5cqw;color:var(--ink);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -409,6 +421,10 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .nudge{display:flex;align-items:center;gap:12px;background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:16px;padding:12px 16px;margin-bottom:14px;
   transform:rotate(-.6deg);box-shadow:0 5px 0 rgba(0,0,0,.4);font-size:20px;line-height:1.15}
 .nudge .z{font-size:30px}
+.a2hs{display:flex;align-items:center;gap:10px;background:rgba(143,179,209,.16);border:2px solid rgba(143,179,209,.45);border-radius:14px;padding:10px 12px;margin:-8px 0 16px;font-size:17px;line-height:1.2}
+.a2hs > span{font-size:24px}
+.a2hs .shareico{display:inline-block;border:1.5px solid currentColor;border-radius:4px;padding:0 3px;font-size:13px}
+.a2hs button{margin-left:auto;background:none;border:0;color:var(--paper);font-size:18px;min-width:44px;min-height:44px}
 .nudge .nz{width:40px;height:auto}
 .coldnudge{background:#e3f1ff;border-color:#1d3f5f}
 .btn-big.coldbtn{background:#3d7fb8}
@@ -419,6 +435,11 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .sec{display:flex;align-items:baseline;justify-content:space-between;margin:8px 0 12px}
 .sec h2{font-family:"Luckiest Guy";font-weight:400;font-size:27px;margin:0;letter-spacing:.05em}
 .sec small{font-size:17px;opacity:.75}
+.filters{display:flex;gap:8px;overflow-x:auto;margin:0 -16px 14px;padding:2px 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.filters::-webkit-scrollbar{display:none}
+.filters button{flex:none;min-height:40px;padding:6px 14px;border-radius:999px;border:2px solid rgba(241,229,201,.3);background:rgba(255,255,255,.05);color:var(--paper);font-family:"Bangers";letter-spacing:.06em;font-size:17px}
+.filters button i{font-style:normal;opacity:.6;margin-left:4px}
+.filters button.on{background:var(--mustard);border-color:var(--ink);color:var(--ink)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
 @media (min-width:700px){.grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:24px}}
 .tile{background:none;border:0;padding:0;text-align:left;transition:transform .15s}
@@ -435,6 +456,10 @@ footer button{background:none;border:0;text-decoration:underline;opacity:.9;min-
 .detail{display:grid;gap:22px;justify-items:center}
 .detail .dcard{width:var(--cw)}
 .panel{width:100%;max-width:520px;background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:18px;padding:18px;box-shadow:0 6px 0 rgba(0,0,0,.45)}
+.cta-bar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:18px 16px calc(12px + env(safe-area-inset-bottom));
+  background:linear-gradient(rgba(20,17,13,0),rgba(20,17,13,.92) 38%);pointer-events:none}
+.cta-bar > div{max-width:520px;margin:0 auto;pointer-events:auto}
+.detail{padding-bottom:96px}
 .panel h1{font-family:"Luckiest Guy";font-weight:400;font-size:30px;margin:0;line-height:1.05;letter-spacing:.04em;text-transform:uppercase}
 .panel .meta{margin:6px 0 14px;font-size:18px;opacity:.8}
 .coldnote img{height:28px;vertical-align:middle}
@@ -1311,7 +1336,7 @@ function frontHTML(c, st, opt={}){
     <div class="t set" style="${P(334,1294,706,1446)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl" style="${P(728,1290,944,1448)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${sparks}
-    ${c.series ? `<div class="series" style="${P(720,400,940,456)}">SERIES ${c.series}</div>` : ''}
+    ${c.series ? `<img class="series-badge" src="art/series${c.series}_badge.webp" alt="Series ${c.series}" style="${P(806,392,952,538)}">` : ''}
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
 }
 /* Glow tiers: neon ring on the levels just below the top, gold ring + gloss at the top. */
@@ -1492,6 +1517,18 @@ function nearestGoal(){
     if (!best || answers < best.answers || (answers === best.answers && left < best.left)) best = {c, st, left, answers}; });
   return best;
 }
+function showInstallTip(){
+  const ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const standalone = navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+  let dismissed = false; try { dismissed = localStorage.getItem('cq-a2hs') === '1'; } catch(e){}
+  return ios && !standalone && !dismissed;
+}
+const FILTERS = [
+  {id:'all', label:'All', test:() => true},
+  {id:'s1', label:'Series 1', test:c => !c.series},
+  {id:'s2', label:'Series 2', test:c => c.series === 2},
+  {id:'tricks', label:'Memory Tricks', test:c => !!c.trickType},
+];
 function renderHome(){
   const g = nearestGoal();
   const cold = CARDS.filter(c => isCold(S.cards[c.id])).sort((a,b) => S.cards[a.id].last - S.cards[b.id].last);
@@ -1504,13 +1541,14 @@ function renderHome(){
     <div class="home-top">
       <div class="logo">CLERK <span>QUEST</span></div>
       <p class="tagline">Study it. Collect it. Master it.</p>
+      ${showInstallTip() ? `<div class="a2hs"><span>📲</span><div><b>Play it like an app.</b> Tap <b>Share</b> <span class="shareico">⬆︎</span>, then <b>Add to Home Screen</b>.</div><button data-act="a2hs-close" aria-label="Dismiss">✕</button></div>` : ''}
       ${cold.length ? `<div class="nudge coldnudge"><span class="z">🧊</span><div><b>${cold.length === 1 ? esc(cold[0].name) + ' has' : cold.length + ' cards have'} gone cold.</b><br><small>${cold.length > 1 ? esc(cold.map(c=>c.name).join(', ')) + '. ' : ''}One correct answer reopens a case: +${COLD_BONUS} XP bonus.</small></div></div>`
       : warm.length ? `<div class="nudge coldnudge"><img class="nz" src="art/icon_thermo.webp" alt=""><div><b>${esc(warm.map(c=>c.name).join(', '))} ${warm.length>1?'are':'is'} going cold.</b><br><small>Study it today to keep it warm.</small></div></div>`
       : g ? `<div class="nudge"><span class="z">⚡</span><div><b>${esc(g.c.name)}</b> is <b>${g.left} XP</b> from ${g.st.level===maxL(g.c)?'<b>MASTERED</b>':`Level ${g.st.level+1}`}.<br><small>About ${g.answers} correct answer${g.answers>1?'s':''}.</small></div></div>`
            : `<div class="nudge"><span class="z">👑</span><div><b>Every card mastered.</b> The court is in awe.</div></div>`}
-      <button class="btn-big ${cold.length ? 'coldbtn' : ''}" data-act="study" data-id="${target ? target.id : CARDS[0].id}">${cold.length ? '🧊 REOPEN' : '▶ STUDY'} ${target ? esc(target.name.toUpperCase()) : ''}</button>
+      <button class="btn-big ${cold.length ? 'coldbtn' : ''}" data-act="study" data-id="${target ? target.id : CARDS[0].id}">${cold.length ? '🧊 REOPEN' : '&#9654;&#xFE0E; STUDY'} ${target ? esc(target.name.toUpperCase()) : ''}</button>
       ${S.packs > 0
-        ? `<button class="packbtn" data-act="pack-open"><img src="art/pack.webp" alt=""><span><b>OPEN A CARD PACK</b><small>You have ${S.packs} pack${S.packs>1?'s':''} waiting</small></span></button>`
+        ? `<button class="packbtn" data-act="pack-open"><img src="${[].concat(S.guarantee || []).some(id => (byId(id)||{}).series === 2) ? 'art/pack_s2.webp' : 'art/pack.webp'}" alt=""><span><b>OPEN A CARD PACK</b><small>You have ${S.packs} pack${S.packs>1?'s':''} waiting</small></span></button>`
         : `<div class="packnote">🎁 Finish a study session to earn a card pack.</div>`}
       <div class="stats">
         <div class="stat"><b>${plv}</b><small>Player Lv</small></div>
@@ -1520,10 +1558,11 @@ function renderHome(){
       </div>
     </div>
     <div class="sec"><h2>My Cards</h2><small>${CARDS.filter(c=>S.cards[c.id].owned).length} / ${CARDS.length} collected</small></div>
+    <div class="filters" role="tablist">${FILTERS.map(f => { const n = CARDS.filter(f.test).length; return `<button role="tab" class="${f.id === homeFilter ? 'on' : ''}" data-act="filter" data-f="${f.id}">${f.label} <i>${n}</i></button>`; }).join('')}</div>
     <div class="grid">
-      ${CARDS.filter(c => S.cards[c.id].owned).map(c => { const st = S.cards[c.id]; return `<button class="tile" data-act="open" data-id="${c.id}" aria-label="${esc(c.name)}, level ${st.level}">
+      ${CARDS.filter(c => S.cards[c.id].owned && FILTERS.find(f => f.id === homeFilter).test(c)).map(c => { const st = S.cards[c.id]; return `<button class="tile" data-act="open" data-id="${c.id}" aria-label="${esc(c.name)}, level ${st.level}">
         ${cardEl(c, st)}<div class="cap"><span>${esc(c.name)}</span><span>Lv ${st.level}</span></div></button>`; }).join('')}
-      ${CARDS.filter(c => !S.cards[c.id].owned).map(c => `<div class="tile" aria-label="Card not found yet">${lockedCardHTML(c)}<div class="cap"><span>${c.trickType ? 'Memory Trick' : esc(c.name)}</span><span>🎁</span></div></div>`).join('')}
+      ${CARDS.filter(c => !S.cards[c.id].owned && FILTERS.find(f => f.id === homeFilter).test(c)).map(c => `<div class="tile" aria-label="Card not found yet">${lockedCardHTML(c)}<div class="cap"><span>${c.trickType ? 'Memory Trick' : esc(c.name)}</span><span>🎁</span></div></div>`).join('')}
     </div>
     <footer>Prototype · sample questions, fact-check before real use.<br>
       Art: add <code>art/&lt;card&gt;_&lt;level&gt;.webp</code> to upgrade a stage.<br>
@@ -1545,7 +1584,6 @@ function renderDetail(){
         <div class="prow"><span>Level ${st.level}${st.mastered?' · MASTERED':''}</span><span>${st.mastered?'Max':`${st.xp} / ${need} XP`}</span></div>
         ${isCold(st) ? `<div class="coldnote"><img src="art/icon_thermo_snow.webp" alt=""> <b>Cold case.</b> Last studied ${agoText(st.last)}. One correct answer reopens it (+${COLD_BONUS} XP).</div>`
           : st.last ? `<div class="warmnote">Last studied ${agoText(st.last)}. Goes cold if not studied for ${Math.round(coldAfter(st)/DAY)} days.</div>` : ''}
-        <button class="btn-big" data-act="study" data-id="${c.id}">▶ STUDY THIS CARD</button>
         ${c.trickType ? `<div class="ttype"><img src="art/icon_memory.webp" alt=""><img src="art/icon_${c.trickType}.webp" alt=""><div><b>${TRICK_TYPES[c.trickType].label}</b><span>${TRICK_TYPES[c.trickType].blurb}</span></div></div>` : ''}
         ${c.source ? `<h3>THE OFFICIAL RULE</h3><div class="rulebox"><div class="cite">${esc(c.source.cite)}</div>
           <blockquote>“${esc(c.source.quote)}”</blockquote><p class="ctx">${esc(c.source.context)}</p>
@@ -1566,12 +1604,14 @@ function renderDetail(){
           </div>
         </details>
       </div>
-    </div>`;
+    </div>
+    <div class="cta-bar"><div><button class="btn-big" data-act="study" data-id="${c.id}">&#9654;&#xFE0E; STUDY THIS CARD</button></div></div>`;
 }
 
 /* ---- study session ---- */
 function startSession(id){
   const c = byId(id);
+  leaveHome(); history.pushState({v:{name:'study', id}}, '');
   sess = { id, i:0, results:[], xp:0, used:new Set(), startLevel:S.cards[id].level, startXP:S.cards[id].xp, wasCold:isCold(S.cards[id]), reopened:false };
   sess.q = nextQuestion(c, S.cards[id].level, sess.used);
   sess.hint = false; sess.answered = null;
@@ -1646,12 +1686,13 @@ function paintStudy(anim){
       <span>${disp.mastered ? 'XP maxed' : `${disp.xp} / ${need} XP`}</span></div>
     <div class="t nxr" style="${P(606,1190,950,1414)}">${lock}</div>
     ${ans ? `<img class="stampimg big" src="art/stamp_${ans.ok?'sustained':'overruled'}.webp" alt="${ans.ok?'Sustained':'Overruled'}">
-      <div class="explain" style="${P(58,962,966,1432)}">
+      <div class="explain" data-act="next" style="${P(58,962,966,1432)}">
         <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +${ans.gain} XP` : 'Overruled. Not quite.'}</h3>
         ${ans.reopened ? `<p class="reopen"><img src="art/stamp_reopened.webp" alt="Case reopened"><span>Includes a +${COLD_BONUS} XP cold-case bonus.</span></p>` : ''}
         ${ans.ok ? '' : `<p><b>Correct answer:</b> ${esc(q.a)}</p>`}
         ${q.raw ? q.w : `<p>${esc(q.w)}</p>`}
         ${c.source ? `<p class="cite">Source: ${esc(c.source.cite)}</p>` : ''}
+        <p class="tapnext">Tap here to continue ▸</p>
       </div>` : ''}`;
   // dots + xp chip
   document.getElementById('dots').innerHTML = Array.from({length:SESSION_LEN},(_,i)=>{
@@ -1697,6 +1738,8 @@ function answer(v){
   save();
   sess.answered = { choice:v, ok, gain, reopened: !!sess.justReopened }; sess.justReopened = false;
   paintStudy();
+  // make sure the Next button is on screen (short iPhones)
+  const nb = document.querySelector('#below .btn-big'); if (nb) { const r = nb.getBoundingClientRect(); if (r.bottom > innerHeight - 8) nb.scrollIntoView({block:'end', behavior:'smooth'}); }
 }
 function next(){
   if (sess.pendingLevel) { const pl = sess.pendingLevel; sess.pendingLevel = null; showLevelUp(sess.id, pl, () => { sess.display = null; advance(); }); return; }
@@ -1719,7 +1762,7 @@ function showLevelUp(id, pl, done){
   const c = byId(id), st = S.cards[id];
   const before = {level:pl.from, xp:NEED[pl.from-1], mastered:false};
   const ov = document.createElement('div');
-  ov.className = 'lu';
+  ov.className = 'lu'; lockScroll();
   ov.innerHTML = `<div class="rays2"></div><div class="lucard" id="lucard">${cardEl(c, before)}</div>
     <h2>${pl.mastered ? 'MASTERED!' : 'LEVEL UP!'}</h2>
     <p>${pl.mastered ? `${esc(c.name)} is fully mastered.` : `${esc(c.name)} is now <b>Level ${pl.to}</b>. New art, harder questions.`}</p>
@@ -1733,7 +1776,7 @@ function showLevelUp(id, pl, done){
     lc.innerHTML = cardEl(c, st, {newStar: pl.mastered ? 0 : pl.to});
     lc.classList.add('pop'); ov.classList.add('done'); confetti(ov);
   }, 1150);
-  ov._done = () => { ov.remove(); done && done(); };
+  ov._done = () => { ov.remove(); unlockScroll(); done && done(); };
 }
 function confetti(host){
   const colors = ['#e3b23c','#cf3b2a','#8fb3d1','#9bb68a','#f1e5c9','#c8b6ff'];
@@ -1780,13 +1823,15 @@ function openPack(){
   if (S.packs <= 0) return;
   S.packs--; const first = S.packsOpened === 0; S.packsOpened++;
   const pulls = drawPack(); save();
+  const packImg = pulls.some(p => p.c.series === 2) ? 'art/pack_s2.webp' : 'art/pack.webp';
+  lockScroll(); history.pushState({v:{name:'pack'}}, '');
   const ov = document.createElement('div'); ov.className = 'pk';
   const topClip = `polygon(0% 0%, 100% 0%, ${zig(12).reverse().join(',')})`, bodyClip = `polygon(${zig(12).join(',')}, 100% 100%, 0% 100%)`;
   ov.innerHTML = `<div class="pk-rays"></div>
     <div class="pk-stage">
       <button class="pk-pack" data-act="pk-tear" aria-label="Open the pack">
-        <img class="pk-body" src="art/pack.webp" alt="" style="clip-path:${bodyClip}">
-        <img class="pk-top" src="art/pack.webp" alt="" style="clip-path:${topClip}">
+        <img class="pk-body" src="${packImg}" alt="" style="clip-path:${bodyClip}">
+        <img class="pk-top" src="${packImg}" alt="" style="clip-path:${topClip}">
       </button>
       <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
         <div class="pk-inner"><div class="pk-face pk-back"><img class="cbackimg" src="art/cardback.webp" alt="Card back"></div>
@@ -1794,7 +1839,7 @@ function openPack(){
         <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? '🧠 MEMORY TRICK!' : 'NEW!') : `+${DUP_XP} XP${p.up ? ' · LEVEL UP!' : ''}`}</span>
       </button>`).join('')}</div>
     </div>
-    <p class="pk-hint">${first ? 'Your first pack! Tap it to tear it open.' : 'Tap the pack to tear it open.'}</p>
+    <p class="pk-hint">${first ? 'Your first pack! Tap it to tear it open.' : packImg.includes('s2') ? 'A Series 2 pack! Tap it to tear it open.' : 'Tap the pack to tear it open.'}</p>
     <button class="btn-big gold pk-done" data-act="pk-done">COLLECT →</button>`;
   document.body.appendChild(ov);
 }
@@ -1807,12 +1852,17 @@ function tearPack(btn){
     ov.classList.add('out'); ov.querySelector('.pk-hint').textContent = 'Tap each card to flip it.';
   }, 900);
 }
+function zoomCard(html){
+  const z = document.createElement('div'); z.className = 'zoom'; z.dataset.act = 'zoom-close';
+  z.innerHTML = `<div class="zoom-card">${html}</div><p>Tap anywhere to close</p>`;
+  document.body.appendChild(z); lockScroll();
+}
 function flipPackCard(card){
-  if (card.classList.contains('flipped')) return;
+  if (card.classList.contains('flipped')) { if (card.closest('.pk.all, .pk.out')) zoomCard(card.querySelector('.pk-front').innerHTML); return; }
   card.classList.add('flipped');
   const ov = card.closest('.pk');
   if (card.querySelector('.pk-badge.new, .pk-badge.trick')) confetti(ov);
-  if (!ov.querySelector('.pk-card:not(.flipped)')) { ov.classList.add('all'); ov.querySelector('.pk-hint').textContent = 'Nice pull! New cards are in your collection.'; }
+  if (!ov.querySelector('.pk-card:not(.flipped)')) { ov.classList.add('all'); ov.querySelector('.pk-hint').textContent = 'Nice pull! Tap a card to see it up close.'; }
 }
 
 /* ---- results ---- */
@@ -1824,6 +1874,7 @@ function renderResults(){
   const answers = Math.ceil(left / REWARD[st.level-1]);
   const leveled = st.level > sess.startLevel;
   view = { name:'results' };
+  history.replaceState({v:{name:'results'}}, '');
   app.innerHTML = `
     <div class="results">
       <h1>SESSION ADJOURNED</h1>
@@ -1838,7 +1889,7 @@ function renderResults(){
         ${st.mastered ? '' : `<div class="almost">${answers <= 2 ? `Almost ${st.level<maxL(c)?`Level ${st.level+1}`:'MASTERED'}! Just ${answers} more correct.` : `About ${answers} correct answers to ${st.level<maxL(c)?`Level ${st.level+1}`:'MASTERED'}.`}</div>`}
       </div>
       <div class="stack">
-        <button class="btn-big" data-act="study" data-id="${c.id}">▶ ONE MORE ROUND</button>
+        <button class="btn-big" data-act="study" data-id="${c.id}">&#9654;&#xFE0E; ONE MORE ROUND</button>
         <button class="btn-big gold" data-act="pack-open">🎁 OPEN YOUR PACK</button>
         <button class="btn-big alt" data-act="home">Back to collection</button>
       </div>
@@ -1847,7 +1898,34 @@ function renderResults(){
 }
 
 /* ================= ROUTER / EVENTS ================= */
+let homeFilter = 'all', homeScroll = 0;
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+function leaveHome(){ if (view.name === 'home') homeScroll = scrollY; }
+function backToHome(){ sess = null; view = {name:'home'}; render(); window.scrollTo(0, homeScroll); }
+function lockScroll(){ document.documentElement.classList.add('noscroll'); }
+function unlockScroll(){ if (!document.querySelector('.pk,.lu,.zoom')) document.documentElement.classList.remove('noscroll'); }
+function goHome(){
+  // Use the history stack when we pushed an entry, so iPhone swipe-back and our buttons agree.
+  if (history.state && history.state.v && history.state.v.name !== 'home') history.back();
+  else backToHome();
+}
+window.addEventListener('popstate', e => {
+  const v = (e.state && e.state.v) || {name:'home'};
+  document.querySelectorAll('.zoom').forEach(z => z.remove());
+  const pk = document.querySelector('.pk');
+  if (pk) {                                   // closing a pack overlay returns to the screen underneath
+    pk.remove(); unlockScroll();
+    if (v.name === 'results') return;
+    if (v.name === 'detail') { view = {name:'detail', id:v.id}; render(); return; }
+    backToHome(); return;
+  }
+  document.querySelectorAll('.lu').forEach(x => x.remove()); unlockScroll();
+  sess = null;
+  if (v.name === 'detail') { view = {name:'detail', id:v.id}; render(); }
+  else backToHome();
+});
 function render(){
+  document.body.classList.toggle('on-detail', view.name === 'detail');
   if (view.name === 'home') renderHome();
   else if (view.name === 'detail') renderDetail();
   window.scrollTo({top:0});
@@ -1855,8 +1933,8 @@ function render(){
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if (!t || t.disabled) return;
   const act = t.dataset.act;
-  if (act === 'home') { sess = null; view = {name:'home'}; render(); }
-  else if (act === 'open') { view = {name:'detail', id:t.dataset.id}; render(); }
+  if (act === 'home') goHome();
+  else if (act === 'open') { leaveHome(); view = {name:'detail', id:t.dataset.id}; history.pushState({v:view}, ''); render(); }
   else if (act === 'study') startSession(t.dataset.id);
   else if (act === 'answer') answer(t.dataset.v);
   else if (act === 'hint') { if (!sess.answered) { sess.hint = true; paintStudy(); } }
@@ -1874,10 +1952,13 @@ document.addEventListener('click', e => {
   }
   else if (act === 't-reset') { Object.assign(S.cards[view.id], {level:1,xp:0,mastered:false}); save(); view.preview = null; renderDetail(); }
   else if (act === 't-cold') { const st = S.cards[view.id]; st.last = Date.now() - coldAfter(st) - DAY; save(); view.preview = null; renderDetail(); }
+  else if (act === 'filter') { homeFilter = t.dataset.f; const y = scrollY; renderHome(); window.scrollTo(0, y); }
+  else if (act === 'a2hs-close') { try { localStorage.setItem('cq-a2hs','1'); } catch(e){} t.closest('.a2hs').remove(); }
   else if (act === 'pack-open') openPack();
   else if (act === 'pk-tear') tearPack(t);
   else if (act === 'pk-flip') flipPackCard(t);
-  else if (act === 'pk-done') { t.closest('.pk').remove(); sess = null; view = {name:'home'}; render(); }
+  else if (act === 'pk-done') history.back();
+  else if (act === 'zoom-close') { t.closest('.zoom').remove(); unlockScroll(); }
   else if (act === 't-pack') { S.packs++; save(); render(); }
   else if (act === 'resetall') { if (confirm('Reset all Clerk Quest progress?')) { S = normalize(null); save(); render(); } }
 });
@@ -1889,6 +1970,7 @@ probeArt().then(() => {
     app.innerHTML = `<div class="logo" style="font-size:40px">GLOW TIERS</div><div class="grid" style="margin-top:18px">${row(2,0,'Level 2')}${row(3,0,'Level 3 · cyan')}${row(4,0,'Level 4 · magenta')}${row(4,250,'Level 4 · charged')}${row(5,0,'Level 5 · gold + gloss')}</div>`;
     return;
   }
+  history.replaceState({v:{name:'home'}}, '');
   render();
 });
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.
