@@ -130,6 +130,10 @@ function storeHTML(){
     </div>
     <div class="sec-h"><span>Card Backs</span></div><p class="st-note">One back for your whole collection. See it in packs, or tap a card on its page to flip it.</p>
     ${backStyleHTML()}
+    <div class="sec-h"><span>Binder Covers</span></div><p class="st-note">Dress up your binders. Put a cover on from a binder's ••• menu. Extra pages are added inside each binder.</p>
+    <div class="st-grid backs">${COVERS.filter(cv => cv.price).map(cv => { const have = ownedCovers().includes(cv.id);
+      return `<button class="st-item" data-act="st-cover" data-set="${cv.id}">${coverHTML({ id:'_store', name:cv.name, cover:cv.id, slots:[] })}<span class="st-name">${esc(cv.name)}</span>
+        ${have ? `<span class="st-price owned">${ICO('check')} Yours</span>` : priceTag(cv.price, (S.coins || 0) >= cv.price)}</button>`; }).join('')}</div>
     <div class="sec-h"><span>Study Boosts</span></div><p class="st-note">They speed up studying. They never level up a card for you.</p>
     <div class="list">${boostRows}</div>`;
 }
@@ -208,6 +212,11 @@ document.addEventListener('click', e => {
       buySheet({ title:b.name + ' Card Back', art:`<span class="st-art back"><img src="${artSrc('back_' + b.id)}" alt=""></span>`, price:b.price, act:'sty-buyback', set:b.id, note:'For every card in your collection.' }); break; }
     case 'sty-buyback': { const b = BACKS.find(x => x.id === set);
       if (b && spendCoins(b.price, `${b.name} card back`)) { styles().backs.push(b.id); styles().back = b.id; save(); closeSheet(true); refresh(); toast(`${b.name} card back in use`, 'cards'); } break; }
+    case 'st-cover': { const cv = COVERS.find(x => x.id === set); if (!cv) break;
+      if (ownedCovers().includes(cv.id)) { toast('Yours already. Put it on from a binder\'s ••• menu.', 'check'); break; }
+      buySheet({ title:cv.name + ' Cover', art:`<span class="st-art back">${coverHTML({ id:'_store', name:cv.name, cover:cv.id, slots:[] })}</span>`, price:cv.price, act:'st-buy-cover', set:cv.id, note:'Put it on any of your binders.' }); break; }
+    case 'st-buy-cover': { const cv = COVERS.find(x => x.id === set);
+      if (cv && spendCoins(cv.price, `${cv.name} binder cover`)) { ownedCovers().push(cv.id); save(); closeSheet(true); refresh(); toast(`${cv.name} cover is yours`, 'sparkle'); } break; }
     case 'cd-flip': { const w = t.closest('.cd-card'); if (w) w.classList.toggle('flipped'); break; }
   }
 });

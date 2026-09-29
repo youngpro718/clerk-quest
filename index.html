@@ -408,7 +408,9 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 auto 12px;max-width:640px}
 .btn-ghost{background:rgba(255,255,255,.06);border:2px solid rgba(241,229,201,.25);border-radius:999px;padding:8px 14px;min-height:44px;color:var(--paper)}
 .btn-ghost:hover{background:rgba(255,255,255,.12)}
-.dots{display:flex;gap:6px}
+.dots{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;min-width:0}
+.dots.many{gap:4px} .dots.many i{width:9px;height:9px;border-width:1.5px}
+#sxp{white-space:nowrap;flex:none}
 .dots i{width:12px;height:12px;border-radius:50%;border:2px solid var(--paper);opacity:.5}
 .dots i.ok{background:var(--good);border-color:var(--good);opacity:1}
 .dots i.no{background:var(--bad);border-color:var(--bad);opacity:1}
@@ -843,12 +845,14 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="study.js"></script>
 <script src="economy.js"></script>
 <script src="store.js"></script>
+<script src="binder.js"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "appeal30": {"1": "art/appeal30_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightback": {"1": "art/eightback_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "freeze": {"1": "art/freeze_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "reargue": {"1": "art/reargue_1.webp"}, "renew": {"1": "art/renew_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "sj120": {"1": "art/sj120_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "undodefault": {"1": "art/undodefault_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
 const REWARD = [25, 35, 50, 75, 100];     // XP per correct answer at each level
 const NEED   = [100, 140, 200, 300, 300]; // XP needed to finish each level (level 5 -> MASTERED)
 const SESSION_LEN = 5;
+const sessLen = () => sess && sess.lesson ? sess.lesson.queue.length : SESSION_LEN;   // a lesson round is longer
 
 const ICON = {
   court:`<svg viewBox="0 0 64 64" fill="none" stroke="#1d1b17" stroke-width="4" stroke-linejoin="round"><path d="M6 24 32 8l26 16z" fill="#fff"/><path d="M12 28v20M22 28v20M32 28v20M42 28v20M52 28v20"/><path d="M6 54h52M9 50h46" /></svg>`,
@@ -2126,19 +2130,20 @@ const SCREENS = {
       ${missing ? `<p class="foot">${missing} more ${missing > 1 ? 'cards' : 'card'} to find in packs.</p>` : ''}` };
   },
 
-  collection(){
+  collection(p){
     const ownedN = CARDS.filter(owned).length, mastered = CARDS.filter(c => S.cards[c.id].mastered).length;
+    const tab = p && p.tab === 'binders' ? 'binders' : 'cards';
     return {
       title:'Collection',
       right:`<button class="nb-btn" data-act="push" data-s="packs" aria-label="Packs">${ICO('pack')}${S.packs ? `<i class="dot-badge sm">${S.packs}</i>` : ''}</button>`,
-      body:`
+      body: seg('tab', tab, [['cards', 'Cards'], ['binders', 'Binders']]) + (tab === 'binders' ? bindersTabHTML() : `
         <div class="summary">${ring(ownedN / CARDS.length, Math.round(ownedN / CARDS.length * 100) + '%', 72)}
           <span><b>${ownedN} of ${CARDS.length} collected</b><small>${mastered} mastered</small></span>
           <button class="pill" data-act="push" data-s="stats">Statistics ${chev}</button></div>
         <div class="sec-h"><span>Series</span></div>
         <div class="list">${SERIES.map(s => groupRow(s.g, s.label, s.icon)).join('')}</div>
         <div class="sec-h"><span>Subjects</span></div>
-        <div class="list">${subjects().map(s => groupRow(s.g, s.label, 'subject')).join('')}</div>`,
+        <div class="list">${subjects().map(s => groupRow(s.g, s.label, 'subject')).join('')}</div>`),
     };
   },
 
@@ -2341,7 +2346,7 @@ function renderTabbar(){
 const nav = { tab:'home', stacks:{} };
 TABS.forEach(([id]) => nav.stacks[id] = [{s:id, p:{}}]);
 const topEntry = () => { const st = nav.stacks[nav.tab]; return st[st.length - 1]; };
-Object.assign(SCREENS, STUDY_SCREENS, STORE_SCREENS);
+Object.assign(SCREENS, STUDY_SCREENS, STORE_SCREENS, BINDER_SCREENS);
 function currentScreenEl(){ return document.querySelector('#screens .screen.current'); }
 function saveScroll(){ const el = currentScreenEl(); if (el && el._entry) el._entry.scroll = el.querySelector('.scr').scrollTop; }
 function buildScreen(entry, depth = nav.stacks[nav.tab].length - 1){
@@ -2399,10 +2404,10 @@ function switchTab(id){
 function refresh(){ saveScroll(); showScreen('none'); }   // re-render the current screen in place (keeps scroll)
 
 /* ---- study session ---- */
-function startSession(id){
+function startSession(id, lesson){
   const c = byId(id);
   openSessionLayer();
-  sess = { id, i:0, results:[], xp:0, used:new Set(), startLevel:S.cards[id].level, startXP:S.cards[id].xp, wasCold:isCold(S.cards[id]), reopened:false };
+  sess = { id, i:0, results:[], xp:0, used:new Set(), startLevel:S.cards[id].level, startXP:S.cards[id].xp, wasCold:isCold(S.cards[id]), reopened:false, lesson:lesson || null };
   sess.q = nextQuestion(c, S.cards[id].level, sess.used);
   sess.hint = false; sess.freeHint = false; sess.answered = null;
   view = { name:'study' };
@@ -2470,7 +2475,7 @@ function paintStudy(anim){
     <div class="t bcat" style="${PB(794,60,968,168)}">${esc(c.category)}</div>
     <div class="t icon" style="${PB(836,168,950,270)}">${ICON[c.icon]}</div>
     <div class="t lvtag" style="${PB(66,284,328,392)}">LEVEL ${lv}</div>
-    <div class="t counter" style="${PB(610,316,912,372)}">QUESTION ${sess.i+1} OF ${SESSION_LEN}</div>
+    <div class="t counter" style="${PB(610,316,912,372)}${sessLen() > 9 ? ';font-size:3.3cqw;letter-spacing:.02em' : ''}">QUESTION ${sess.i+1} OF ${sessLen()}</div>
     ${mid}
     <button class="t hint ${sess.hint?'used':''}" style="${PB(68,1230,642,1408)}" data-act="hint" ${sess.hint||ans?'disabled':''}>
       <span class="bulb">${ICO('hint')}</span><span><b>${sess.hint ? 'HINT:' : 'SIDEBAR?'}</b>${esc(sess.hint ? q.h : boosts().freeHints ? `Tap for a free hint (${boosts().freeHints} left).` : 'Tap for a hint. Costs half the points.')}</span></button>
@@ -2512,7 +2517,8 @@ function paintStudy(anim){
     if (!ans) b.dataset.act = 'ans-sheet';
   });
   // dots + xp chip
-  document.getElementById('dots').innerHTML = Array.from({length:SESSION_LEN},(_,i)=>{
+  document.getElementById('dots').classList.toggle('many', sessLen() > 8);
+  document.getElementById('dots').innerHTML = Array.from({length:sessLen()},(_,i)=>{
     const r = sess.results[i]; return `<i class="${r===true?'ok':r===false?'no':''} ${i===sess.i?'cur':''}"></i>`; }).join('');
   document.getElementById('sxp').textContent = `+${sess.xp} XP`;
   // below the card
@@ -2525,7 +2531,7 @@ function paintStudy(anim){
   }
   if ((anyCut || qCut) && !ans) bh += `<button class="btn-big alt" data-act="ans-sheet">${anyCut ? 'READ FULL ANSWERS' : 'READ FULL QUESTION'}</button>`;
   if (ans) {
-    const last = sess.i + 1 >= SESSION_LEN;
+    const last = sess.i + 1 >= sessLen();
     const label = sess.pendingLevel ? (sess.pendingLevel.mastered ? ICO('mastered') + ' CLAIM MASTERY' : ICO('star') + ' LEVEL UP!') : last ? 'SEE RESULTS →' : 'NEXT QUESTION →';
     bh += `<button class="btn-big ${sess.pendingLevel?'gold':''}" data-act="next">${label}</button>`;
   }
@@ -2569,12 +2575,13 @@ function next(){
 }
 function advance(){
   sess.i++;
-  if (sess.i >= SESSION_LEN) {
+  if (sess.i >= sessLen()) {
     S.stats.sessions++; daily().sessions++; S.packs++;
-    logCoins(sess.answerCoins || 0, `Study round: ${byId(sess.id).name}`);
+    logCoins(sess.answerCoins || 0, sess.lesson ? `Lesson: ${sess.lesson.name}` : `Study round: ${byId(sess.id).name}`);
     sess.streakCoins = payStreak(); sess.coins = (sess.coins || 0) + sess.streakCoins;
-    save(); return renderResults();
+    save(); return sess.lesson ? lessonResults() : renderResults();
   }
+  if (sess.lesson) { sess.id = sess.lesson.queue[sess.i]; sess.wasCold = isCold(S.cards[sess.id]); sess.reopened = false; }   // each lesson question can be a different card
   const c = byId(sess.id);
   sess.q = nextQuestion(c, S.cards[sess.id].level, sess.used);
   sess.hint = false; sess.freeHint = false; sess.answered = null; sess.display = null;
