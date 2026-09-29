@@ -846,6 +846,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="economy.js"></script>
 <script src="store.js"></script>
 <script src="binder.js"></script>
+<script src="onboarding.js"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "appeal30": {"1": "art/appeal30_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightback": {"1": "art/eightback_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "freeze": {"1": "art/freeze_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "reargue": {"1": "art/reargue_1.webp"}, "renew": {"1": "art/renew_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "sj120": {"1": "art/sj120_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "undodefault": {"1": "art/undodefault_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
@@ -1608,9 +1609,9 @@ new MutationObserver(muts => {
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { document.querySelectorAll('.title span[data-fit]').forEach(sp => { sp.style.fontSize = sp.dataset.max + 'cqw'; }); fitTitles(document); });
 
 /* ================= SAVE STATE ================= */
-const KEY = 'clerkquest-proto-v1';
+const KEY = 'clerkquest-v2';   // new slot at launch: everyone starts fresh (old key left alone)
 const STARTERS = ['gavel','paperjam','missingfile','summons'];
-function freshState(){ return { cards:{}, stats:{answered:0,correct:0,xp:0,sessions:0}, packs:1, packsOpened:0 }; }
+function freshState(){ return { cards:{}, stats:{answered:0,correct:0,xp:0,sessions:0,hints:0}, packs:1, packsOpened:0 }; }
 function normalize(s){
   s = s && s.cards ? s : freshState();
   CARDS.forEach(c => { s.cards[c.id] = Object.assign({level:1,xp:0,mastered:false,owned:STARTERS.includes(c.id)}, s.cards[c.id]||{}); });
@@ -1621,7 +1622,7 @@ function normalize(s){
   if (!s.seenOfficial) { s.seenOfficial = true; if (s.packsOpened > 0) { s.packs += 1; s.guarantee = [].concat(s.guarantee || [], ['whosigns','clock6090','ypsi']); } }
   if (!s.seenSvs) { s.seenSvs = true; if (s.packsOpened > 0 && !(s.cards.svs && s.cards.svs.owned)) { s.packs += 1; s.guarantee = [].concat(s.guarantee || [], ['svs']); } }
   CARDS.forEach(c => { const st = s.cards[c.id]; if (st.owned && st.last == null && (st.xp > 0 || st.level > 1)) st.last = Date.now(); });
-  s.stats = Object.assign({answered:0,correct:0,xp:0,sessions:0}, s.stats||{});
+  s.stats = Object.assign({answered:0,correct:0,xp:0,sessions:0,hints:0}, s.stats||{});
   return s;
 }
 let S;
@@ -1997,7 +1998,10 @@ function groupLabel(g){
 }
 /* Hand-drawn UI icons (art/icon_*.webp). The build rewrites these paths to .webp. */
 const ICO = (name, cls = '') => `<img class="ico ${cls}" src="art/icon_${name}.webp" alt="">`;
-const artSrc = name => `art/${name}.webp`;   // for art picked by name at run time (the build rewrites it to .webp)
+const artSrc = name => `art/${name}.webp`;
+/* Pack art follows the newest series inside: Series 3, then Series 2, then the original pack */
+const packArtFor = cards => cards.some(c => c && c.series === 3) ? 'art/pack_s3.webp' : cards.some(c => c && c.series === 2) ? 'art/pack_s2.webp' : 'art/pack.webp';
+const nextPackArt = () => packArtFor([].concat(S.guarantee || []).map(byId));   // for art picked by name at run time (the build rewrites it to .webp)
 const hintCosts = () => !!(sess && sess.hint && !sess.freeHint);   // a free-hint boost makes the hint cost nothing
 const backSrc = () => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : 'art/cardback.webp';   // the card back in use
 /* A card's equipped style: a bought frame (Series 1/2 only) and holo foil. */
@@ -2056,7 +2060,7 @@ function questRow(q, kind){
 function claimQuest(kind, id){
   const q = (kind === 'daily' ? DAILY_QUESTS : MILESTONES).find(x => x.id === id); if (!q) return;
   const x = questState(q, kind); if (!x.done || x.claimed) return;
-  if (kind === 'daily') daily().claimed[id] = true; else { S.milestones = S.milestones || {}; S.milestones[id] = true; }
+  if (kind === 'daily') { daily().claimed[id] = true; onbFlag('claimed'); } else { S.milestones = S.milestones || {}; S.milestones[id] = true; }
   const coins = kind === 'daily' ? earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`) : 0;
   S.packs++; save(); refresh();
   openSheet(`<div class="reward"><img src="art/pack.webp" alt="" class="bob"><h3>Quest complete!</h3><p>${esc(q.label)}</p><b>+1 card pack${coins ? ` · +${coins} ${COIN}` : ''}</b></div>
@@ -2079,12 +2083,12 @@ const SCREENS = {
     const ownedN = CARDS.filter(owned).length;
     const recent = CARDS.filter(c => owned(c) && S.cards[c.id].last).sort((a, b) => S.cards[b.id].last - S.cards[a.id].last).slice(0, 8);
     const car = recent.length ? recent : CARDS.filter(owned).slice(-8).reverse();
-    const nextPackS2 = [].concat(S.guarantee || []).some(id => (byId(id) || {}).series === 2);
     return {
       title:'Clerk Quest', hideLarge:true, titleOnScroll:true,
       right:`<button class="nb-avatar" data-act="tab" data-tab="profile" aria-label="Profile, level ${playerLevel()}">${ring((S.stats.xp % 250) / 250, 'L' + playerLevel(), 40)}</button>`,
       body:`
         <div class="home-logo">CLERK <span>QUEST</span></div>
+        ${checklistHTML()}
         ${showInstallTip() ? `<button class="a2hs-mini" data-act="a2hs-show">${ICO('install')} Add Clerk Quest to your Home Screen ${chev}</button>` : ''}
         ${target ? `<button class="hero ${isCold(tst) ? 'cold' : ''}" data-act="study" data-id="${target.id}">
           <span class="hero-card">${cardEl(target, tst)}</span>
@@ -2093,7 +2097,7 @@ const SCREENS = {
             <span class="hero-cta">${PLAY_ICON} ${isCold(tst) ? 'Reopen' : 'Study'}</span></span></button>` : ''}
         <div class="tiles">
           <button class="tile2" data-act="tab" data-tab="quests">${ring(DAILY_QUESTS.filter(q => questState(q, 'daily').done).length / 3, DAILY_QUESTS.filter(q => questState(q, 'daily').done).length + '/3', 52, '#5fd47a')}<span><b>Daily Quests</b><small>${claimableCount() ? claimableCount() + ' reward' + (claimableCount() > 1 ? 's' : '') + ' ready' : 'Earn free packs'}</small></span>${claimableCount() ? `<i class="dot-badge">${claimableCount()}</i>` : ''}</button>
-          <button class="tile2" data-act="push" data-s="packs"><img class="t-pack" src="${nextPackS2 ? 'art/pack_s2.webp' : 'art/pack.webp'}" alt=""><span><b>Packs</b><small>${S.packs ? S.packs + ' ready to open' : 'Study to earn more'}</small></span>${S.packs ? `<i class="dot-badge">${S.packs}</i>` : ''}</button>
+          <button class="tile2" data-act="push" data-s="packs"><img class="t-pack" src="${nextPackArt()}" alt=""><span><b>Packs</b><small>${S.packs ? S.packs + ' ready to open' : 'Study to earn more'}</small></span>${S.packs ? `<i class="dot-badge">${S.packs}</i>` : ''}</button>
           <button class="tile2" data-act="tab" data-tab="collection">${ring(ownedN / CARDS.length, ownedN + '', 52)}<span><b>Collection</b><small>${ownedN} of ${CARDS.length} cards</small></span></button>
           <button class="tile2 ${cold.length ? 'icy' : ''}" data-act="tab" data-tab="study"><span class="t-ico">${cold.length ? ICO('thermo_snow') : ICO('streak')}</span><span><b>${cold.length ? 'Cold Cases' : 'All Warm'}</b><small>${cold.length ? cold.length + ' to reopen' : 'Nothing going cold'}</small></span></button>
         </div>
@@ -2165,6 +2169,7 @@ const SCREENS = {
 
   card(p){
     const c = byId(p.id), st = S.cards[c.id];
+    if (c.category === 'MEMORY TRICK' && st.owned) tipOnce('trick');
     const pv = p.preview || st.level;
     const shown = pv === st.level ? st : {level:pv, xp:0, mastered:false, owned:true};
     const hasRule = c.source || c.diff || c.mnemonic;
@@ -2209,11 +2214,11 @@ const SCREENS = {
   },
 
   packs(){
-    const s2 = [].concat(S.guarantee || []).some(id => (byId(id) || {}).series === 2);
+    const nextSeries = Math.max(0, ...[].concat(S.guarantee || []).map(id => (byId(id) || {}).series || 0));
     return { title:'Packs', body:`
-      <div class="packs-hero"><img src="${s2 ? 'art/pack_s2.webp' : 'art/pack.webp'}" alt="Clerk Quest card pack" class="${S.packs ? 'bob' : 'dim'}">
+      <div class="packs-hero"><img src="${nextPackArt()}" alt="Clerk Quest card pack" class="${S.packs ? 'bob' : 'dim'}">
         <b>${S.packs ? S.packs + ' pack' + (S.packs > 1 ? 's' : '') + ' ready' : 'No packs right now'}</b>
-        <small>${S.packs ? (s2 ? 'Your next pack has Series 2 cards!' : 'Each pack has 3 cards.') : 'Finish a study round or a quest to earn one.'}</small></div>
+        <small>${S.packs ? (nextSeries >= 2 ? `Your next pack has Series ${nextSeries} cards!` : 'Each pack has 3 cards.') : 'Finish a study round or a quest to earn one.'}</small></div>
       <button class="btn-big gold" data-act="pack-open" ${S.packs ? '' : 'disabled'}>${ICO('pack')} OPEN A PACK</button>
       <div class="list" style="margin-top:18px">
         <div class="row"><span class="k">Packs opened</span><span class="v">${S.packsOpened}</span></div>
@@ -2250,6 +2255,7 @@ const SCREENS = {
         <div><b>${acc}</b><small>Accuracy</small></div><div><b>${S.stats.sessions}</b><small>Rounds</small></div>
         <div><b>${CARDS.filter(owned).length}</b><small>Cards</small></div><div><b>${mastered}</b><small>Mastered</small></div></div>
       <div class="list">
+        ${profileOnbRow()}
         <button class="row" data-act="push" data-s="stats"><span class="th emo gi">${ICO('stats')}</span><span class="row-main"><b>Statistics</b></span>${chev}</button>
         <button class="row" data-act="push" data-s="packs"><span class="th emo gi">${ICO('pack')}</span><span class="row-main"><b>Packs</b></span>${S.packs ? `<i class="dot-badge in">${S.packs}</i>` : ''}${chev}</button>
         <button class="row" data-act="push" data-s="help"><span class="th emo gi">${ICO('help')}</span><span class="row-main"><b>How to Play</b></span>${chev}</button>
@@ -2408,6 +2414,7 @@ function startSession(id, lesson){
   const c = byId(id);
   openSessionLayer();
   sess = { id, i:0, results:[], xp:0, used:new Set(), startLevel:S.cards[id].level, startXP:S.cards[id].xp, wasCold:isCold(S.cards[id]), reopened:false, lesson:lesson || null };
+  if (sess.wasCold) tipOnce('cold');
   sess.q = nextQuestion(c, S.cards[id].level, sess.used);
   sess.hint = false; sess.freeHint = false; sess.answered = null;
   view = { name:'study' };
@@ -2530,6 +2537,7 @@ function paintStudy(anim){
       return `<button class="${cls}" data-act="answer" data-v="${o}" ${ans?'disabled':''}>${o}</button>`; }).join('')}</div>`;
   }
   if ((anyCut || qCut) && !ans) bh += `<button class="btn-big alt" data-act="ans-sheet">${anyCut ? 'READ FULL ANSWERS' : 'READ FULL QUESTION'}</button>`;
+  if (anyCut && !ans) tipOnce('more');
   if (ans) {
     const last = sess.i + 1 >= sessLen();
     const label = sess.pendingLevel ? (sess.pendingLevel.mastered ? ICO('mastered') + ' CLAIM MASTERY' : ICO('star') + ' LEVEL UP!') : last ? 'SEE RESULTS →' : 'NEXT QUESTION →';
@@ -2652,7 +2660,7 @@ function openPack(opts = {}){
   if (!opts.pulls) S.packs--;
   const first = S.packsOpened === 0; S.packsOpened++;
   const pulls = opts.pulls || drawPack(); save();
-  const packImg = opts.img || (pulls.some(p => p.c.series === 2) ? 'art/pack_s2.webp' : 'art/pack.webp');
+  const packImg = opts.img || packArtFor(pulls.map(p => p.c));
   const label = opts.label ? `<span class="pk-label">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(opts.label)}</b></span>` : '';
   lockScroll(); history.pushState({cq:'pack'}, '');
   const ov = document.createElement('div'); ov.className = 'pk';
@@ -2669,7 +2677,7 @@ function openPack(opts = {}){
         <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? ICO('memory') + ' MEMORY TRICK!' : 'NEW!') : `DUPLICATE · +${p.coins} ${COIN}`}</span>
       </button>`).join('')}</div>
     </div>
-    <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Tap it to tear it open.' : packImg.includes('s2') ? 'A Series 2 pack! Tap it to tear it open.' : 'Tap the pack to tear it open.'}</p>
+    <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Tap it to tear it open.' : packImg.includes('s3') ? 'A Series 3 pack! Tap it to tear it open.' : packImg.includes('s2') ? 'A Series 2 pack! Tap it to tear it open.' : 'Tap the pack to tear it open.'}</p>
     <button class="btn-big gold pk-done" data-act="pk-done">COLLECT →</button>`;
   document.body.appendChild(ov);
 }
@@ -2919,7 +2927,7 @@ document.addEventListener('click', e => {
     case 'quick': closeSheet(true); quickRound(); break;
     case 'answer': closeSheet(true); answer(t.dataset.v); break;
     case 'ans-sheet': answerSheet(t.dataset.v); break;
-    case 'hint': if (sess && !sess.answered && !sess.hint) { sess.hint = true; if (boosts().freeHints > 0) { boosts().freeHints--; sess.freeHint = true; save(); } paintStudy(); } break;
+    case 'hint': if (sess && !sess.answered && !sess.hint) { sess.hint = true; S.stats.hints = (S.stats.hints || 0) + 1; if (boosts().freeHints > 0) { boosts().freeHints--; sess.freeHint = true; } save(); paintStudy(); } break;
     case 'next': next(); break;
     case 'lu-close': { const ov = t.closest('.lu'); ov && ov._done(); break; }
     case 'session-close': goBack(); break;
@@ -2965,7 +2973,7 @@ document.addEventListener('click', e => {
     case 't-reset': { closeSheet(true); Object.assign(S.cards[id], {level:1, xp:0, mastered:false}); save(); const en = topEntry(); if (en.p) delete en.p.preview; refresh(); toast('↺ Card reset to Level 1'); break; }
     case 't-pack': S.packs++; save(); refresh(); toast('Test pack added', 'pack'); break;
     case 'claim': claimQuest(t.dataset.kind, t.dataset.q); break;
-    case 'claim-all': { const list = readyList(); list.forEach(([k, q]) => { if (k === 'daily') { daily().claimed[q.id] = true; earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`); } else { S.milestones = S.milestones || {}; S.milestones[q.id] = true; } });
+    case 'claim-all': { const list = readyList(); list.forEach(([k, q]) => { if (k === 'daily') { daily().claimed[q.id] = true; onbFlag('claimed'); earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`); } else { S.milestones = S.milestones || {}; S.milestones[q.id] = true; } });
       S.packs += list.length; save(); refresh(); toast(`+${list.length} pack${list.length > 1 ? 's' : ''} claimed`, 'pack'); break; }
     case 'sort-sheet': sortSheet(); break;
     case 'sort': nav.sort = t.dataset.v; refresh(); sortSheet(); break;
@@ -2985,6 +2993,7 @@ probeArt().then(async () => {
   if (/[?&]demo=glows/.test(location.search)) { nav.tab = 'profile'; nav.stacks.profile = [{s:'profile', p:{}}, {s:'glows', p:{}}]; }
   history.replaceState({}, '');
   showScreen('none');
+  maybeWelcome();   // first run only
 });
 window.addEventListener('cq-cloud', e => {
   if (e.detail.status === 'error') toast('Cloud sync paused. Progress is saved on this device.');

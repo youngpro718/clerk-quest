@@ -14,14 +14,33 @@ const COVERS = [
   { id:'stickers', name:'Sticker Bomb', price:150, label:[25.1, 30.2, 53.0, 18.1] },
   { id:'gold', name:'Gold Prestige', price:200, label:[23.9, 26.7, 59.3, 22.4] },
 ];
+/* Built-in lessons: fixed cards, made by the app. Cards you don't own show as empty pockets with Get it,
+   which sells the missing ones as a lesson deck. Reading is always open; the quiz needs every card. */
+const LESSONS = [
+  { id:'L_terms', name:'Court Terms 101', cover:'default', blurb:'The big picture of a civil case, and the words for each part.',
+    cards:['caseorder', 'summons', 'svs', 'motion', 'affidavit', 'adjournment', 'judgment'] },
+  { id:'L_motions', name:'Motion Practice', cover:'navy', blurb:'How motions are served, answered, and brought back. CPLR.',
+    cards:['eightback', 'reargue', 'renew', 'sj120', 'amendonce', 'quash', 'newtrial'] },
+  { id:'L_after', name:'After the Judgment', cover:'gold', blurb:'What happens once a judgment is entered. CPLR.',
+    cards:['undodefault', 'freeze', 'interest', 'appeal30'] },
+  { id:'L_crim', name:'Criminal Procedure', cover:'redtape', blurb:'Bail, dismissals, sealing, and sentencing. CPL.',
+    cards:['bail', 'acd', 'jurywaiver', 'sealed', 'ypsi', 'schoolnotice'] },
+  { id:'L_family', name:'Family Court', cover:'marble', blurb:'Petitions, service, and who speaks for the child.',
+    cards:['whosigns', 'eightdays', 'followpetitioner', 'custodyornot', 'childvoice'] },
+  { id:'L_desk', name:"The Clerk's Desk", cover:'stickers', blurb:'Filing, checking, and scheduling at the counter.',
+    cards:['gavel', 'paperjam', 'missingfile', 'lfm', 'calendarcall', 'clock6090', 'military'] },
+].map(L => ({ ...L, builtin:true, slots:[...L.cards, ...Array((4 - L.cards.length % 4) % 4).fill(null)] }));
 const POCKETS = [[10.5, 5.6, 40.7, 41.7], [54.1, 5.9, 42.0, 41.5], [11.0, 48.8, 40.4, 42.8], [54.1, 49.1, 42.2, 42.3]];
 
 /* ---------- data ---------- */
 const binders = () => (S.binders = Array.isArray(S.binders) ? S.binders : []);
-const binderById = id => binders().find(b => b.id === id);
+const binderById = id => binders().find(b => b.id === id) || LESSONS.find(L => L.id === id);
 const ownedCovers = () => (S.binderCovers = Array.isArray(S.binderCovers) ? S.binderCovers : ['default']);
 const lessonRec = id => ((S.lessons = S.lessons || {})[id] = S.lessons[id] || { best:0, passes:0, passedAt:0 });
 const binderCards = b => b.slots.filter(Boolean).map(byId).filter(Boolean);
+const lessonMissing = b => b.builtin ? binderCards(b).filter(c => !owned(c)) : [];
+const lessonReady = b => binderCards(b).length >= BINDER.minCards && !lessonMissing(b).length;
+const lessonDeckPrice = b => lessonMissing(b).length * PRICE.deckPerCard;
 const coverOf = b => COVERS.find(c => c.id === b.cover) || COVERS[0];
 function newBinder(name){
   const b = { id:'b' + Date.now().toString(36), name:name.trim().slice(0, 40) || 'My Binder', cover:'default', slots:Array(BINDER.startPages * 4).fill(null) };
@@ -41,6 +60,8 @@ function pageHTML(b, p, edit, sel){
   return `<div class="bd-page"><img class="bd-page-bg" src="${artSrc('binder_page')}" alt="">${POCKETS.map((pk, k) => {
     const i = p * 4 + k, id = b.slots[i], c = id && byId(id);
     const pos = `left:${pk[0]}%;top:${pk[1]}%;width:${pk[2]}%;height:${pk[3]}%`;
+    if (c && b.builtin && !owned(c)) return `<button class="bd-slot empty get" style="${pos}" data-act="ls-get" data-id="${b.id}"><small>${esc(c.name)}</small><em>Get it</em></button>`;
+    if (!id && b.builtin) return `<span class="bd-slot none" style="${pos}"></span>`;
     if (c) return `<button class="bd-slot full ${sel === i ? 'sel' : ''}" style="${pos}" data-act="${edit ? 'bd-pick' : 'push'}" data-s="card" data-id="${c.id}" data-i="${i}">${cardEl(c, S.cards[c.id])}
       ${edit ? `<span class="bd-x" data-act="bd-remove" data-i="${i}" aria-label="Remove">✕</span>` : ''}</button>`;
     return `<button class="bd-slot empty" style="${pos}" data-act="${edit && sel != null ? 'bd-pick' : 'bd-add'}" data-i="${i}" aria-label="Add a card"><span>+</span><small>Add a card</small></button>`;
@@ -54,7 +75,12 @@ function bindersTabHTML(){
     return `<button class="bd-tile" data-act="push" data-s="binder" data-id="${b.id}">${coverHTML(b)}
       <span class="st-name">${esc(b.name)}</span><span class="st-sub">${n} card${n === 1 ? '' : 's'}${r.best ? ` · best ${r.best}%` : ''}</span></button>`; }).join('');
   const room = list.length < BINDER.free;
-  return `<p class="st-note">Put your cards in a binder, then take it as a lesson: read each rule, then a quiz. Score ${BINDER.passPct}% to pass.</p>
+  const lessons = LESSONS.map(L => { const r = (S.lessons || {})[L.id] || {}, miss = lessonMissing(L).length;
+    return `<button class="bd-tile" data-act="push" data-s="binder" data-id="${L.id}">${coverHTML(L)}
+      <span class="st-name">${esc(L.name)}</span><span class="st-sub">${L.cards.length} cards · ${miss ? miss + ' to get' : r.best ? `best ${r.best}%` : 'ready'}</span></button>`; }).join('');
+  return `<p class="st-note">Take a binder as a lesson: read each rule, then a quiz. Score ${BINDER.passPct}% to pass.</p>
+    <div class="sec-h"><span>Lessons</span></div>
+    <div class="bd-shelf">${lessons}</div>
     <div class="sec-h"><span>My Binders</span></div>
     <div class="bd-shelf">${tiles}${room ? `<button class="bd-tile new" data-act="bd-new"><span class="bd-cover blank"><span>+</span></span><span class="st-name">New binder</span><span class="st-sub">${BINDER.free - list.length} of ${BINDER.free} left</span></button>` : ''}</div>
     ${room ? '' : `<p class="foot">You have ${BINDER.free} binders, the most for now. Delete one to start another.</p>`}`;
@@ -65,19 +91,23 @@ const BINDER_SCREENS = {
   binder(p){
     const b = binderById(p.id); if (!b) return { title:'Binder', body:'<p class="empty">This binder was deleted.</p>' };
     const pages = b.slots.length / 4, n = binderCards(b).length, r = lessonRec(b.id), edit = !!p.edit;
-    const ready = n >= BINDER.minCards;
+    const miss = lessonMissing(b), ready = lessonReady(b), fixed = !!b.builtin;
+    const note = fixed ? (miss.length ? `Get ${miss.length} more card${miss.length === 1 ? '' : 's'} to take the quiz. You can read every rule now.` : `About ${lessonMinutes(b)} min · ${lessonQuestions(b)} questions`)
+      : ready ? `About ${lessonMinutes(b)} min · ${lessonQuestions(b)} questions` : `Add ${BINDER.minCards - n} more card${BINDER.minCards - n === 1 ? '' : 's'} to take the lesson`;
     return {
       title:b.name, cta:!edit,
-      right:`<button class="nb-btn txt" data-act="bd-edit">${edit ? 'Done' : 'Edit'}</button><button class="nb-btn" data-act="bd-menu" data-id="${b.id}" aria-label="More">•••</button>`,
+      right:fixed ? '' : `<button class="nb-btn txt" data-act="bd-edit">${edit ? 'Done' : 'Edit'}</button><button class="nb-btn" data-act="bd-menu" data-id="${b.id}" aria-label="More">•••</button>`,
       body:`<div class="bd-head">${coverHTML(b, 'sm')}<span class="bd-stats"><b>${n} card${n === 1 ? '' : 's'}</b>
-          <small>${ready ? `About ${lessonMinutes(b)} min · ${lessonQuestions(b)} questions` : `Add ${BINDER.minCards - n} more card${BINDER.minCards - n === 1 ? '' : 's'} to take the lesson`}</small>
+          <small>${note}</small>
           ${r.best ? `<small>Best score ${r.best}%${r.passes ? ` · passed ${r.passes}×` : ''}</small>` : ''}</span></div>
+        ${fixed ? `<p class="st-note">${esc(b.blurb)}</p>` : ''}
         ${edit ? `<p class="st-note c">Tap a card, then tap another pocket to move it. Tap ✕ to take it out.</p>` : ''}
         <div class="bd-pages" id="bd-pages">${Array.from({length:pages}, (_, pg) => pageHTML(b, pg, edit, p.sel)).join('')}</div>
         <div class="bd-dots">${Array.from({length:pages}, (_, i) => `<i class="${i === 0 ? 'on' : ''}"></i>`).join('')}</div>
-        ${pages < BINDER.maxPages ? `<button class="row bd-addpage" data-act="bd-addpage" data-id="${b.id}"><span class="st-bimg"><img src="${artSrc('binder_page')}" alt=""></span>
+        ${fixed && miss.length ? lessonDeckRow(b) : ''}
+        ${!fixed && pages < BINDER.maxPages ? `<button class="row bd-addpage" data-act="bd-addpage" data-id="${b.id}"><span class="st-bimg"><img src="${artSrc('binder_page')}" alt=""></span>
           <span class="row-main"><b>Add a page</b><small>4 more pockets</small></span>${priceTag(BINDER.pagePrice, (S.coins || 0) >= BINDER.pagePrice)}</button>` : ''}`,
-      after: edit ? '' : `<div class="cta-bar"><div><button class="btn-big" data-act="bd-read" data-id="${b.id}" ${ready ? '' : 'disabled'}>${ICO('read')} START LESSON</button>
+      after: edit ? '' : `<div class="cta-bar"><div><button class="btn-big" data-act="bd-read" data-id="${b.id}" ${ready || (fixed && n) ? '' : 'disabled'}>${ICO('read')} START LESSON</button>
         ${ready ? `<button class="bd-skip" data-act="bd-quiz" data-id="${b.id}">Skip to the quiz ›</button>` : ''}</div></div>`,
     };
   },
@@ -90,7 +120,8 @@ const BINDER_SCREENS = {
     return {
       title:`Rule ${i + 1} of ${list.length}`, cta:true,
       body:`<div class="bd-progress"><b style="width:${(i + 1) / list.length * 100}%"></b></div><p class="rule-sub">${esc(c.name)} · ${esc(b.name)}</p>${body}`,
-      after:`<div class="cta-bar"><div>${last ? `<button class="btn-big gold" data-act="bd-quiz" data-id="${b.id}">TAKE THE QUIZ →</button>`
+      after:`<div class="cta-bar"><div>${last ? (lessonReady(b) ? `<button class="btn-big gold" data-act="bd-quiz" data-id="${b.id}">TAKE THE QUIZ →</button>`
+          : `<button class="btn-big gold" data-act="ls-get" data-id="${b.id}">GET ${lessonMissing(b).length} CARD${lessonMissing(b).length === 1 ? '' : 'S'} FOR THE QUIZ</button>`)
         : `<button class="btn-big" data-act="bd-next" data-id="${b.id}">NEXT RULE →</button>`}</div></div>`,
     };
   },
@@ -99,7 +130,7 @@ const BINDER_SCREENS = {
 /* ---------- lesson quiz: a mixed round, two questions per card ---------- */
 function startLesson(bid){
   const b = binderById(bid); if (!b) return;
-  const cards = binderCards(b); if (cards.length < BINDER.minCards) return;
+  const cards = binderCards(b); if (!lessonReady(b)) return;
   const total = lessonQuestions(b), queue = [];
   for (let r = 0; queue.length < total && r < 10; r++) shuffle(cards.slice()).forEach(c => { if (queue.length < total) queue.push(c.id); });
   startSession(queue[0], { bid, name:b.name, queue:shuffle(queue) });
@@ -134,6 +165,30 @@ function lessonResults(){
   if (b) refresh();
 }
 
+/* ---------- lesson decks: the cards a built-in lesson still needs ---------- */
+const lessonDeckArt = L => `<span class="st-art ls-deck">${coverHTML(L)}</span>`;
+function lessonDeckRow(L){
+  const m = lessonMissing(L).length, price = lessonDeckPrice(L);
+  return `<button class="row bd-addpage" data-act="ls-get" data-id="${L.id}"><span class="st-bimg">${ICO('cards')}</span>
+    <span class="row-main"><b>Get the lesson deck</b><small>${m} card${m === 1 ? '' : 's'} you don't have yet</small></span>${priceTag(price, (S.coins || 0) >= price)}</button>`;
+}
+function lessonDeckSheet(L){
+  if (!L || !lessonMissing(L).length) { toast('You already own every card in this lesson', 'check'); return; }
+  const list = `<div class="list st-cards">${binderCards(L).map(c => `<div class="row"><span class="st-dot ${owned(c) ? 'have' : ''}">${owned(c) ? ICO('check') : ICO('star')}</span>
+    <span class="row-main"><b>${esc(c.name)}</b><small>${owned(c) ? 'Already yours · free' : 'New · ' + PRICE.deckPerCard + ' coins'}</small></span></div>`).join('')}</div>`;
+  buySheet({ title:L.name + ' Lesson Deck', art:lessonDeckArt(L), list, price:lessonDeckPrice(L), act:'ls-buy', set:L.id,
+    note:"Every card in this lesson. You only pay for the ones you don't have." });
+}
+function buyLessonDeck(id){
+  const L = LESSONS.find(x => x.id === id), miss = L && lessonMissing(L); if (!miss || !miss.length) return;
+  if (!spendCoins(lessonDeckPrice(L), `${L.name} Lesson Deck`)) return;
+  miss.forEach(c => { S.cards[c.id].owned = true; });
+  save(); closeSheet(true); refresh();
+  openSheet(`<div class="reward"><h3>${esc(L.name)} Deck added!</h3><p>${miss.length} new card${miss.length > 1 ? 's' : ''}. The quiz is open.</p></div>
+    <div class="st-new">${miss.map(c => miniCard(c)).join('')}</div>
+    <button class="btn-big gold" data-act="sheet-close">NICE</button>`);
+}
+
 /* ---------- sheets: new, rename, cover, add card ---------- */
 function nameSheet(title, value, act, id = ''){
   openSheet(`<h3>${esc(title)}</h3><input class="bd-name" id="bd-name" maxlength="40" value="${esc(value)}" placeholder="Binder name" aria-label="Binder name">
@@ -158,7 +213,7 @@ function addCardSheet(b, slot){
 /* ---------- taps ---------- */
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if (!t || t.disabled) return;
-  const en = topEntry && topEntry(), b = en && en.p && binderById(en.p.id);
+  const en = topEntry && topEntry(), b0 = en && en.p && binderById(en.p.id), b = b0 && !b0.builtin ? b0 : null;   // built-in lessons can't be edited
   switch (t.dataset.act) {
     case 'bd-new': nameSheet('New binder', `My Binder ${binders().length + 1}`, 'bd-create'); break;
     case 'bd-create': { const v = document.getElementById('bd-name').value; closeSheet(true); const nb = newBinder(v); push('binder', { id:nb.id }); break; }
@@ -187,6 +242,8 @@ document.addEventListener('click', e => {
     case 'bd-delete': { const x = binderById(t.dataset.id);
       iosAlert({ title:'Delete this binder?', msg:'Your cards stay in your collection. Only the binder goes away.', buttons:[{label:'Cancel', value:false, style:'bold'}, {label:'Delete', value:true, style:'destructive'}] })
         .then(ok => { if (!ok) return; S.binders = binders().filter(y => y.id !== x.id); save(); closeSheet(true); goBack(); }); break; }
+    case 'ls-get': lessonDeckSheet(binderById(t.dataset.id)); break;
+    case 'ls-buy': buyLessonDeck(t.dataset.set); break;
     case 'bd-read': push('lessonread', { id:t.dataset.id, i:0 }); break;
     case 'bd-next': { const e2 = topEntry(); e2.p = { ...e2.p, i:(e2.p.i || 0) + 1 }; refresh(); currentScreenEl().querySelector('.scr').scrollTop = 0; break; }
     case 'bd-quiz': { const id = t.dataset.id;
@@ -221,6 +278,9 @@ const BINDER_CSS = `
 .bd-slot.full .card{width:100%}
 .bd-slot.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#8a7f6c;border:2px dashed rgba(90,80,64,.35);border-radius:8px;background:rgba(255,255,255,.25)}
 .bd-slot.empty span{font:400 34px "Bangers";line-height:1} .bd-slot.empty small{font:12px var(--ui)}
+.bd-slot.get{border-style:solid;padding:6px;text-align:center} .bd-slot.get small{font:600 12px/1.2 var(--ui);color:#5a5040}
+.bd-slot.get em{font:400 16px "Bangers";letter-spacing:.04em;font-style:normal;padding:4px 12px;border:2px solid var(--ink);border-radius:9px;background:#f3d27a;color:var(--ink)}
+.st-art.ls-deck{display:flex;justify-content:center;align-items:center} .st-art.ls-deck .bd-cover{width:62%}
 .bd-slot.sel{outline:4px solid var(--mustard);outline-offset:2px;border-radius:8px}
 .bd-x{position:absolute;top:-8px;right:-8px;z-index:20;width:28px;height:28px;border-radius:14px;background:var(--brick);color:#fff;font:700 15px/28px var(--ui);text-align:center;border:2px solid var(--ink)}
 .bd-dots{display:flex;justify-content:center;gap:6px;margin:10px 0 4px} .bd-dots i{width:7px;height:7px;border-radius:4px;background:var(--line)} .bd-dots i.on{background:var(--mustard)}

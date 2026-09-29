@@ -26,6 +26,7 @@ function earnCoins(n, why, opts = {}){
 function spendCoins(n, why){
   n = Math.round(n); if (n <= 0 || (S.coins || 0) < n) return false;
   S.coins -= n; S.coinLog = [{ n:-n, why, at:Date.now() }].concat(S.coinLog || []).slice(0, 25);
+  if (typeof onbFlag === 'function') onbFlag('spent');   // Getting Started: "Buy something in the store"
   save(); return true;
 }
 function logCoins(n, why){ if (n > 0) S.coinLog = [{ n, why, at:Date.now() }].concat(S.coinLog || []).slice(0, 25); }

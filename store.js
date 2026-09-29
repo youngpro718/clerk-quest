@@ -121,6 +121,11 @@ function storeHTML(){
     <button class="st-balance" data-act="coins-info"><img src="${artSrc('coin_big')}" alt=""><span><b>${coins.toLocaleString()}</b><small>coins · how to earn more</small></span>${chev}</button>
     <div class="sec-h"><span>Decks</span></div><p class="st-note">Every card in the subject. You only pay for cards you don't have yet.</p>
     <div class="st-grid">${decks}</div>
+    <div class="sec-h"><span>Lesson Decks</span></div><p class="st-note">Every card in a built-in lesson, so you can take its quiz. You only pay for cards you don't have yet.</p>
+    <div class="st-grid">${LESSONS.map(L => { const m = lessonMissing(L).length;
+      return `<button class="st-item" data-act="ls-get" data-id="${L.id}">${lessonDeckArt(L)}<span class="st-name">${esc(L.name)}</span>
+        <span class="st-sub">${L.cards.length} cards · ${m ? m + ' new' : 'all owned'}</span>
+        ${m ? priceTag(lessonDeckPrice(L), coins >= lessonDeckPrice(L)) : `<span class="st-price owned">${ICO('check')} Owned</span>`}</button>`; }).join('')}</div>
     <div class="sec-h"><span>Subject Packs</span></div><p class="st-note">3 random cards from one subject. Duplicates turn into coins.</p>
     <div class="st-grid">${packs}</div>
     <div class="sec-h"><span>Card Styles</span></div><p class="st-note">Frames and foil go on one card. Or open any card and tap ••• → Card Style.</p>

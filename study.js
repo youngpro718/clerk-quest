@@ -59,6 +59,7 @@ document.addEventListener('click', e => {
 
 /* The Case File block: the rule on lined paper. Shared by the card's Case File tab and the Read rule page. */
 function caseFileHTML(c){
+  if (!onb().read) onbFlag('read');   // Getting Started: "Read a rule"
   const read = !!(S.read || {})[c.id];
   return `<div class="casefile"><h4>The source rule</h4><div class="cite">${esc(c.source.cite)}</div>
     <p class="cf-quote">“${phrasesHTML(c)}”</p><p class="hl-tip">Tap a phrase to highlight it. Tap again to clear it.</p>

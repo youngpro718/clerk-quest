@@ -3,7 +3,7 @@
   'use strict';
   const URL = 'https://yfryuuqaznhjcqrotkjt.supabase.co';
   const KEY = 'sb_publishable_wyJS_rqCmfm2Fulzt6aG6g_0Yj9zbct';
-  const SAVE = 'clerkquest-proto-v1';
+  const SAVE = 'clerkquest-v2';
   const OWNER = 'clerkquest-cloud-owner';
   const MODIFIED = 'clerkquest-cloud-updated-at';
   const TABLE = 'clerk_quest_player_saves';
