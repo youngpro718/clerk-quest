@@ -30,14 +30,16 @@ function showWelcome(i){
   if (!el) { el = document.createElement('div'); el.id = 'wl-root'; document.body.appendChild(el); }
   el.innerHTML = welcomeHTML(i);
 }
-function endWelcome(){ onbFlag('welcomed'); const el = document.getElementById('wl-root'); if (el) el.remove(); refresh(); }
+let wlPreview = false;   // the admin view replays the welcome without touching the save
+function previewWelcome(){ wlPreview = true; showWelcome(0); }
+function endWelcome(){ if (wlPreview) { wlPreview = false; document.getElementById('wl-root')?.remove(); return; } onbFlag('welcomed'); const el = document.getElementById('wl-root'); if (el) el.remove(); refresh(); }
 function maybeWelcome(){ if (!onb().welcomed) showWelcome(0); }
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if (!t) return;
   switch (t.dataset.act) {
     case 'wl-next': showWelcome(+t.dataset.i); break;
     case 'wl-skip': endWelcome(); break;
-    case 'wl-pack': endWelcome(); if (S.packs) openPack(); break;
+    case 'wl-pack': { const pv = wlPreview; endWelcome(); if (!pv && S.packs) openPack(); break; }
   }
 });
 
@@ -58,6 +60,10 @@ const STEPS = [
   { id:'lesson', label:'Pass a lesson', test:() => Object.values(S.lessons || {}).some(r => r.passes), go:toBinders, spot:'.bd-shelf .bd-tile', caption:'Open a lesson, read it, then pass the quiz.' },
 ];
 const stepsDone = () => STEPS.filter(s => s.test()).length;
+/* preview: the admin view shows it with only a Close button */
+const finishSheetHTML = (preview = false) => `<div class="reward"><h3>You're all set!</h3><p>You finished Getting Started.</p>
+  <b>+${ONB.doneCoins} coins · +${ONB.donePacks} card packs</b></div>${preview ? `<button class="btn-big gold" data-act="sheet-close">CLOSE PREVIEW</button>`
+  : `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN A PACK</button><button class="sheet-cancel" data-act="sheet-close">Later</button>`}`;
 function payOnboarding(){
   const o = onb(); if (o.finished) return;
   const fresh = STEPS.filter(s => !o.paid[s.id] && s.test());
@@ -66,9 +72,7 @@ function payOnboarding(){
   if (fresh.length && !all) setTimeout(() => toast(`${fresh.length > 1 ? fresh.length + ' steps' : 'Step'} done · +${ONB.stepCoins * fresh.length} coins`, 'check'), 400);
   if (all) {
     o.finished = Date.now(); S.packs += ONB.donePacks; earnCoins(ONB.doneCoins, 'Getting Started complete');
-    setTimeout(() => openSheet(`<div class="reward"><h3>You're all set!</h3><p>You finished Getting Started.</p>
-      <b>+${ONB.doneCoins} coins · +${ONB.donePacks} card packs</b></div><button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN A PACK</button>
-      <button class="sheet-cancel" data-act="sheet-close">Later</button>`), 300);
+    setTimeout(() => openSheet(finishSheetHTML()), 300);
   }
   if (fresh.length || all) save();
 }
@@ -103,11 +107,12 @@ const TIPS = {
   trick:{ icon:'memory', h:'A Memory Trick card', p:'These teach a trick for remembering a rule: an order, a deadline, or who does what.' },
   more:{ icon:'read', h:'Some answers are long', p:'An answer marked "more" is cut off. Tap READ FULL ANSWERS to see every word before you pick.' },
 };
+const tipSheetHTML = id => { const t = TIPS[id]; return `<div class="reward tip">${ICO(t.icon)}<h3>${esc(t.h)}</h3><p>${esc(t.p)}</p></div>
+  <button class="btn-big gold" data-act="sheet-close">GOT IT</button>`; };
 function tipOnce(id){
   const o = onb(), t = TIPS[id]; if (!t || o.tips[id]) return;
   o.tips[id] = Date.now(); save();
-  setTimeout(() => openSheet(`<div class="reward tip">${ICO(t.icon)}<h3>${esc(t.h)}</h3><p>${esc(t.p)}</p></div>
-    <button class="btn-big gold" data-act="sheet-close">GOT IT</button>`), 450);
+  setTimeout(() => openSheet(tipSheetHTML(id)), 450);
 }
 
 /* ---------- spotlight: dim everything but one target, with a caption; the next tap anywhere clears it.

@@ -241,6 +241,7 @@
   window.CQCloud = {
     init, signIn, signOut, pushNow, queuePush, markLocalUpdated,
     signUp, signInPassword, resetPassword, updatePassword, deleteAccount, friendlyError,
+    rpc: async (name, args) => { need(); const { data, error } = await client.rpc(name, args); if (error) throw error; return data; },   // admin view reads
     getUser: () => session?.user || null,
     getStatus: () => !client ? 'unavailable' : session?.user ? 'signed-in' : 'signed-out'
   };
