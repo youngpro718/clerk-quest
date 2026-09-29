@@ -637,6 +637,8 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .xrow .xt{display:flex;align-items:center;gap:10px}
 .xrow .xt .ico{width:28px;height:28px}
 .row.q .q-reward .ico{width:22px;height:22px;vertical-align:-6px}
+.chip.dbl{background:#bfe0b5}
+.chip.dbl::before{content:'2× · '}
 .chip .ico{width:1.25em;height:1.25em;vertical-align:-.3em}
 .th.emo.trick{background:linear-gradient(135deg,#6a3aa8,#b8862a)}
 .th.gi{background:rgba(255,255,255,.07);border-color:transparent;font-size:22px;color:var(--paper);font-family:var(--ui)}
@@ -1928,6 +1930,7 @@ function groupLabel(g){
 /* Hand-drawn UI icons (art/icon_*.webp). The build rewrites these paths to .webp. */
 const ICO = (name, cls = '') => `<img class="ico ${cls}" src="art/icon_${name}.webp" alt="">`;
 const artSrc = name => `art/${name}.webp`;   // for art picked by name at run time (the build rewrites it to .webp)
+const hintCosts = () => !!(sess && sess.hint && !sess.freeHint);   // a free-hint boost makes the hint cost nothing
 const COIN = `<img class="ico coin" src="art/icon_coin.webp" alt="coins">`;
 const titleCase = s => s.toLowerCase().replace(/(^|[\s:&(])([a-z])/g, (m, a, b) => a + b.toUpperCase()).replace(/\bCplr\b/, 'CPLR').replace(/\bAct\b/, 'Act');
 function subjects(){ return [...new Set(CARDS.map(c => c.set))].map(set => ({g:'set:' + set, label:titleCase(set)})); }
@@ -2333,11 +2336,11 @@ function startSession(id){
   openSessionLayer();
   sess = { id, i:0, results:[], xp:0, used:new Set(), startLevel:S.cards[id].level, startXP:S.cards[id].xp, wasCold:isCold(S.cards[id]), reopened:false };
   sess.q = nextQuestion(c, S.cards[id].level, sess.used);
-  sess.hint = false; sess.answered = null;
+  sess.hint = false; sess.freeHint = false; sess.answered = null;
   view = { name:'study' };
   const st = S.cards[id];
   app.innerHTML = `
-    <div class="topbar"><button class="x" data-act="session-close" aria-label="Close">✕</button><div class="dots" id="dots"></div><span class="chip" id="sxp">+0 XP</span></div>
+    <div class="topbar"><button class="x" data-act="session-close" aria-label="Close">✕</button><div class="dots" id="dots"></div><span class="chip ${doubleXPOn() ? 'dbl' : ''}" id="sxp">+0 XP</span></div>
     <div class="stage" id="stage"><div class="lifter"><div class="flip" id="flip">
       <div class="face front">${cardEl(c, st)}</div>
       <div class="face back"><div class="card" id="back"></div></div>
@@ -2361,7 +2364,7 @@ function paintStudy(anim){
   const c = byId(sess.id), st = S.cards[sess.id];
   const disp = sess.display || st; // frozen display state while a level-up is pending
   const lv = disp.level, q = sess.q, ans = sess.answered;
-  const reward = Math.round(REWARD[lv-1] * (sess.hint ? .5 : 1));
+  const reward = Math.round(REWARD[lv-1] * (hintCosts() ? .5 : 1)) * (doubleXPOn() ? 2 : 1);
   const need = NEED[lv-1];
   const pct = disp.mastered ? 100 : Math.min(100, disp.xp/need*100);
   const letters = 'ABCD';
@@ -2402,8 +2405,8 @@ function paintStudy(anim){
     <div class="t counter" style="${PB(610,316,912,372)}">QUESTION ${sess.i+1} OF ${SESSION_LEN}</div>
     ${mid}
     <button class="t hint ${sess.hint?'used':''}" style="${PB(68,1230,642,1408)}" data-act="hint" ${sess.hint||ans?'disabled':''}>
-      <span class="bulb">${ICO('hint')}</span><span><b>${sess.hint ? 'HINT:' : 'SIDEBAR?'}</b>${esc(sess.hint ? q.h : 'Tap for a hint. Costs half the points.')}</span></button>
-    <div class="t pts" style="${PB(664,1240,956,1408)}"><span>POINT VALUE</span><span class="v ${sess.hint?'half':''}">${ICO('star')} +${reward}${sess.hint?` <s>+${REWARD[lv-1]}</s>`:''}</span></div>
+      <span class="bulb">${ICO('hint')}</span><span><b>${sess.hint ? 'HINT:' : 'SIDEBAR?'}</b>${esc(sess.hint ? q.h : boosts().freeHints ? `Tap for a free hint (${boosts().freeHints} left).` : 'Tap for a hint. Costs half the points.')}</span></button>
+    <div class="t pts" style="${PB(664,1240,956,1408)}"><span>POINT VALUE</span><span class="v ${hintCosts()?'half':''}">${ICO('star')} +${reward}${hintCosts()?` <s>+${REWARD[lv-1] * (doubleXPOn() ? 2 : 1)}</s>`:''}</span></div>
     <div class="t nxtab" style="${PB(70,1436,358,1508)}">NEXT LEVEL</div>
     <div class="t nxl" style="${PB(86,1520,596,1670)}">
       <span>${disp.mastered ? 'Card MASTERED!' : sess.display ? '<b>LEVEL UP READY!</b>' : `${need - disp.xp} XP to ${lv<maxL(c)?`Level ${lv+1}`:'MASTERED'}`}</span>
@@ -2471,11 +2474,11 @@ function answer(v){
   S.stats.answered++; sess.results[sess.i] = ok;
   if (ok) {
     S.stats.correct++; daily().correct++; if (c.trickType) daily().trick++;
-    gain = Math.round(REWARD[st.level-1] * (sess.hint ? .5 : 1));
+    gain = Math.round(REWARD[st.level-1] * (hintCosts() ? .5 : 1)) * (doubleXPOn() ? 2 : 1);   // boosts: free hint, double XP
     if (sess.wasCold && !sess.reopened) { sess.reopened = true; sess.justReopened = true; gain += COLD_BONUS; S.stats.reopened = (S.stats.reopened || 0) + 1; }
     st.last = Date.now();
     S.stats.xp += gain; sess.xp += gain;
-    coins = earnCoins(coinsForAnswer(sess.hint), 'Right answer', {quiet:true}); sess.answerCoins = (sess.answerCoins || 0) + coins;
+    coins = earnCoins(coinsForAnswer(hintCosts()), 'Right answer', {quiet:true}); sess.answerCoins = (sess.answerCoins || 0) + coins;
     if (!st.mastered) {
       st.xp += gain;
       if (st.xp >= NEED[st.level-1]) {
@@ -2506,7 +2509,7 @@ function advance(){
   }
   const c = byId(sess.id);
   sess.q = nextQuestion(c, S.cards[sess.id].level, sess.used);
-  sess.hint = false; sess.answered = null; sess.display = null;
+  sess.hint = false; sess.freeHint = false; sess.answered = null; sess.display = null;
   // refresh the front face too (hidden, but keeps level in sync)
   document.querySelector('.face.front').innerHTML = cardEl(c, S.cards[sess.id]);
   paintStudy(true);
@@ -2840,7 +2843,7 @@ document.addEventListener('click', e => {
     case 'quick': closeSheet(true); quickRound(); break;
     case 'answer': closeSheet(true); answer(t.dataset.v); break;
     case 'ans-sheet': answerSheet(t.dataset.v); break;
-    case 'hint': if (sess && !sess.answered) { sess.hint = true; paintStudy(); } break;
+    case 'hint': if (sess && !sess.answered && !sess.hint) { sess.hint = true; if (boosts().freeHints > 0) { boosts().freeHints--; sess.freeHint = true; save(); } paintStudy(); } break;
     case 'next': next(); break;
     case 'lu-close': { const ov = t.closest('.lu'); ov && ov._done(); break; }
     case 'session-close': goBack(); break;
