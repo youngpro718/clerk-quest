@@ -35,6 +35,53 @@ function buyBoost(id){
   if (id === 'double') toast(`Double XP on for ${doubleMinsLeft()} min`, 'almost');
   if (id === 'hints') toast(`${bs.freeHints} free hints ready`, 'hint');
 }
+/* Card styles: frames and foil are bought per card; card backs are bought once for the whole collection. */
+const FRAMES = [
+  { id:'marble', name:'Courthouse Marble', price:200 },
+  { id:'night', name:'Night Court', price:200 },
+  { id:'vintage', name:'Old Parchment', price:200 },
+];
+const FOIL_PRICE = 100;
+const BACKS = [
+  { id:'navy', name:'Gavel & Quill', price:150 },
+  { id:'redtape', name:'Red Tape', price:150 },
+  { id:'marble', name:'Marble Nameplate', price:150 },
+  { id:'night', name:'Night Skyline', price:150 },
+];
+const styles = () => (S.styles = S.styles || { cards:{}, backs:[], back:'' });
+const cardStyle = id => (styles().cards[id] = styles().cards[id] || { frames:[], foil:false, eq:{ frame:'', foil:false } });
+const framesAllowed = c => c.series !== 3;   // the three frames are shaped for the Series 1/2 layout
+function styleSheet(id){
+  const c = byId(id); if (!c || !owned(c)) return;
+  const cs = cardStyle(id), coins = S.coins || 0;
+  const btn = (act, label, extra = '', can = true) => `<button class="sty-btn ${extra}" data-act="${act}" data-id="${id}" ${can ? '' : 'disabled'}>${label}</button>`;
+  const frameRow = f => {
+    const have = cs.frames.includes(f.id), on = cs.eq.frame === f.id;
+    return `<div class="sty-row"><img class="sty-prev" src="${artSrc('frame_' + f.id)}" alt=""><span class="row-main"><b>${esc(f.name)}</b><small>${have ? 'Yours' : f.price + ' coins'}</small></span>
+      ${on ? btn('sty-frame', `${ICO('check')} In use`, 'on" data-v="' + f.id) : have ? btn('sty-frame', 'Use', '" data-v="' + f.id) : btn('sty-buyframe', `${COIN}${f.price}`, 'buy" data-v="' + f.id, coins >= f.price)}</div>`;
+  };
+  openSheet(`<h3>Card Style</h3><div class="sty-card">${cardEl(c, S.cards[id])}</div><p class="st-note c">${esc(c.name)}</p>
+    <div class="sec-h"><span>Frame</span></div>
+    ${framesAllowed(c) ? `<div class="list sty-list">
+      <div class="sty-row"><img class="sty-prev" src="${c.trickType ? artSrc('frame_trick') : artSrc('frame_base')}" alt=""><span class="row-main"><b>Standard</b><small>Changes as the card levels up</small></span>
+        ${cs.eq.frame ? btn('sty-frame', 'Use', '" data-v="') : btn('sty-frame', `${ICO('check')} In use`, 'on" data-v="')}</div>
+      ${FRAMES.map(frameRow).join('')}</div>`
+      : `<p class="st-note">Series 3 cards keep their film-strip frame.</p>`}
+    <div class="sec-h"><span>Foil</span></div>
+    <div class="list sty-list"><div class="sty-row"><img class="sty-prev" src="${artSrc('foil_texture')}" alt=""><span class="row-main"><b>Holo Foil</b><small>${cs.foil ? (cs.eq.foil ? 'On' : 'Off') : FOIL_PRICE + ' coins'}</small></span>
+      ${cs.foil ? btn('sty-foil', cs.eq.foil ? 'Turn off' : 'Turn on') : btn('sty-buyfoil', `${COIN}${FOIL_PRICE}`, 'buy', coins >= FOIL_PRICE)}</div></div>
+    <p class="st-note c">You have ${COIN}${coins.toLocaleString()}</p>
+    <button class="sheet-cancel" data-act="sheet-close">Done</button>`);
+}
+function cardPicker(kind){
+  const list = CARDS.filter(owned).filter(c => kind !== 'frame' || framesAllowed(c));
+  openSheet(`<h3>${kind === 'frame' ? 'Frame' : 'Foil'}: pick a card</h3><div class="list">${list.map(c => `<button class="row" data-act="sty-open" data-id="${c.id}">${thumb(c)}<span class="row-main"><b>${esc(c.name)}</b><small>${esc(c.num)}</small></span>${chev}</button>`).join('')}</div>
+    <button class="sheet-cancel" data-act="sheet-close">Cancel</button>`);
+}
+const backStyleHTML = () => `<div class="st-grid backs">${[{ id:'', name:'Classic', price:0 }].concat(BACKS).map(b => {
+    const have = !b.id || styles().backs.includes(b.id), on = styles().back === b.id;
+    return `<button class="st-item" data-act="sty-back" data-set="${b.id}"><span class="st-art back"><img src="${artSrc(b.id ? 'back_' + b.id : 'cardback')}" alt=""></span>
+      <span class="st-name">${esc(b.name)}</span>${on ? `<span class="st-price owned">${ICO('check')} In use</span>` : have ? `<span class="st-price owned">Use</span>` : priceTag(b.price, (S.coins || 0) >= b.price)}</button>`; }).join('')}</div>`;
 const EMBLEM = {
   'FAMILY COURT ACT':'fca', 'CPLR':'cplr', 'CRIMINAL PROCEDURE':'crimpro', 'UNIFORM RULES':'uniform',
   'DOMESTIC RELATIONS LAW':'drl', 'COURT TERMS':'courtterms', 'COURT PROCEDURES':'courtproc',
@@ -76,6 +123,13 @@ function storeHTML(){
     <div class="st-grid">${decks}</div>
     <div class="sec-h"><span>Subject Packs</span></div><p class="st-note">3 random cards from one subject. Duplicates turn into coins.</p>
     <div class="st-grid">${packs}</div>
+    <div class="sec-h"><span>Card Styles</span></div><p class="st-note">Frames and foil go on one card. Or open any card and tap ••• → Card Style.</p>
+    <div class="list">
+      <button class="row" data-act="sty-pick" data-set="frame"><span class="st-bimg"><img src="${artSrc('frame_marble')}" alt=""></span><span class="row-main"><b>Frames</b><small>Marble, Night Court, Old Parchment · 200 each</small></span>${chev}</button>
+      <button class="row" data-act="sty-pick" data-set="foil"><span class="st-bimg"><img src="${artSrc('foil_texture')}" alt=""></span><span class="row-main"><b>Holo Foil</b><small>A shimmer over the art · 100</small></span>${chev}</button>
+    </div>
+    <div class="sec-h"><span>Card Backs</span></div><p class="st-note">One back for your whole collection. See it in packs, or tap a card on its page to flip it.</p>
+    ${backStyleHTML()}
     <div class="sec-h"><span>Study Boosts</span></div><p class="st-note">They speed up studying. They never level up a card for you.</p>
     <div class="list">${boostRows}</div>`;
 }
@@ -141,6 +195,20 @@ document.addEventListener('click', e => {
       buySheet({ title:b.name, art:`<span class="st-art boost"><img src="${artSrc(b.art)}" alt=""></span>`, price:b.price, act:'st-buy-boost', set:b.id,
         note:esc(b.blurb) + (b.id === 'double' && doubleXPOn() ? ` Adds an hour to the ${doubleMinsLeft()} min you have left.` : '') }); break; }
     case 'st-buy-boost': buyBoost(set); break;
+    case 'sty-pick': cardPicker(set); break;
+    case 'sty-open': case 'card-style': closeSheet(true); styleSheet(t.dataset.id); break;
+    case 'sty-frame': { const cs = cardStyle(t.dataset.id); cs.eq.frame = t.dataset.v || ''; save(); refresh(); styleSheet(t.dataset.id); break; }
+    case 'sty-buyframe': { const f = FRAMES.find(x => x.id === t.dataset.v), c = byId(t.dataset.id);
+      if (f && spendCoins(f.price, `${f.name} frame: ${c.name}`)) { const cs = cardStyle(c.id); cs.frames.push(f.id); cs.eq.frame = f.id; save(); refresh(); styleSheet(c.id); toast(`${f.name} frame on ${c.name}`, 'sparkle'); } break; }
+    case 'sty-foil': { const cs = cardStyle(t.dataset.id); cs.eq.foil = !cs.eq.foil; save(); refresh(); styleSheet(t.dataset.id); break; }
+    case 'sty-buyfoil': { const c = byId(t.dataset.id);
+      if (spendCoins(FOIL_PRICE, `Holo foil: ${c.name}`)) { const cs = cardStyle(c.id); cs.foil = true; cs.eq.foil = true; save(); refresh(); styleSheet(c.id); toast(`Holo foil on ${c.name}`, 'sparkle'); } break; }
+    case 'sty-back': { const b = BACKS.find(x => x.id === set), st = styles();
+      if (!set || st.backs.includes(set)) { st.back = set || ''; save(); refresh(); toast(`${set ? b.name : 'Classic'} card back in use`, 'cards'); break; }
+      buySheet({ title:b.name + ' Card Back', art:`<span class="st-art back"><img src="${artSrc('back_' + b.id)}" alt=""></span>`, price:b.price, act:'sty-buyback', set:b.id, note:'For every card in your collection.' }); break; }
+    case 'sty-buyback': { const b = BACKS.find(x => x.id === set);
+      if (b && spendCoins(b.price, `${b.name} card back`)) { styles().backs.push(b.id); styles().back = b.id; save(); closeSheet(true); refresh(); toast(`${b.name} card back in use`, 'cards'); } break; }
+    case 'cd-flip': { const w = t.closest('.cd-card'); if (w) w.classList.toggle('flipped'); break; }
   }
 });
 
@@ -179,10 +247,25 @@ const STORE_CSS = `
 .st-after{display:flex;justify-content:space-between;padding:4px 6px;font:15px var(--ui);color:var(--sub)}
 .st-after b{color:var(--paper);font-weight:600} .st-after .ico{width:18px;height:18px}
 .st-after.total{border-top:.5px solid var(--line);margin-bottom:10px;padding-top:8px} .st-after.total b{color:var(--mustard)}
-.st-boost .st-bimg{flex:none;width:52px;height:52px;display:flex;align-items:center;justify-content:center}
-.st-boost .st-bimg img{width:100%;height:100%;object-fit:contain}
+.st-bimg{flex:none;width:52px;height:52px;display:flex;align-items:center;justify-content:center}
+.st-bimg img{width:100%;height:100%;object-fit:contain}
 .st-boost .st-price{margin-top:0} .st-boost.off{opacity:.55}
 .st-art.boost{width:62%;margin:0 auto}
+.st-art.back{width:62%} .st-art.back img{border-radius:6%/4%;box-shadow:0 4px 10px rgba(0,0,0,.4)}
+.st-grid.backs{grid-template-columns:1fr 1fr 1fr} .st-grid.backs .st-name{font-size:14px}
+.sty-card{width:42%;margin:0 auto 4px}
+.sty-list .sty-row{display:flex;align-items:center;gap:12px;padding:8px 12px;border-bottom:.5px solid var(--line)} .sty-list .sty-row:last-child{border-bottom:0}
+.sty-prev{width:38px;height:56px;object-fit:cover;border-radius:5px;background:#3a342c}
+.sty-btn{flex:none;min-height:34px;padding:0 14px;border-radius:17px;border:0;background:rgba(255,255,255,.1);color:var(--paper);font:600 14px var(--ui)}
+.sty-btn.buy{background:var(--mustard);color:var(--ink)} .sty-btn.on{background:rgba(111,168,110,.25);color:#bfe0b5}
+.sty-btn .ico{width:16px;height:16px;vertical-align:-3px} .sty-btn[disabled]{opacity:.45}
+.holo{position:absolute;inset:0;z-index:2;pointer-events:none;background-size:160% 160%;mix-blend-mode:color-dodge;opacity:.26;animation:holo 6s ease-in-out infinite alternate}
+@keyframes holo{from{background-position:0% 0%}to{background-position:100% 100%}}
+.cd-card{position:relative;perspective:1200px;cursor:pointer}
+.cd-card .card,.cd-card .cd-back{transition:transform .6s cubic-bezier(.3,.8,.3,1);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.cd-card .cd-back{position:absolute;inset:0;transform:rotateY(180deg);border-radius:6%/4%;overflow:hidden}
+.cd-card .cd-back img{width:100%;height:100%;object-fit:cover}
+.cd-card.flipped .card{transform:rotateY(-180deg)} .cd-card.flipped .cd-back{transform:rotateY(0)}
 .st-new{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 14px}
 .st-new .mini{width:auto;min-width:0}
 .pk-label{position:absolute;left:18%;top:28%;width:66%;height:34%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4%;z-index:1;color:var(--ink);container-type:inline-size;pointer-events:none}

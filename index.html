@@ -1708,7 +1708,7 @@ function frontS3HTML(c, st, opt={}){
   const lv = st.level, need = NEED[lv-1];
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
   return `
-    <div class="art-win s3win" style="${P(0,0,1024,1536)}">${s3ArtHTML(c, lv)}${isCold(st) ? '<div class="s3-frost"></div>' : ''}</div>
+    <div class="art-win s3win" style="${P(0,0,1024,1536)}">${s3ArtHTML(c, lv)}${holoHTML(c)}${isCold(st) ? '<div class="s3-frost"></div>' : ''}</div>
     <img class="frame" src="art/frame_s3.webp" alt="">
     <div class="t num s3" style="${P(60,40,215,110)}">${c.num}</div>
     <div class="t xpstrip s3" style="${P(240,32,672,118)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
@@ -1730,8 +1730,8 @@ function frontHTML(c, st, opt={}){
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
   const sparks = lv >= 4 ? [[2,1],[92,2],[1,62],[93,58],[48,0],[40,93]].map((p,i)=>`<div class="spark" style="left:${p[0]}%;top:${p[1]}%;animation-delay:${i*.3}s">✦</div>`).join('') : '';
   return `
-    <div class="art-win" style="${P(66,383,958,1207)}">${artHTML(c, lv)}</div>
-    <img class="frame" src="${isCold(st) ? 'art/frame_frost.webp' : frameFor(c, lv)}" alt="">
+    <div class="art-win" style="${P(66,383,958,1207)}">${artHTML(c, lv)}${holoHTML(c)}</div>
+    <img class="frame" src="${isCold(st) ? 'art/frame_frost.webp' : styleFrame(c) || frameFor(c, lv)}" alt="">
     <div class="t num" style="${P(58,64,230,160)}">${c.num}</div>
     <div class="t xpstrip" style="${P(236,62,496,146)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
     <div class="t cat" style="${P(502,62,856,144)}">${esc(c.category)}</div>
@@ -1995,6 +1995,10 @@ function groupLabel(g){
 const ICO = (name, cls = '') => `<img class="ico ${cls}" src="art/icon_${name}.webp" alt="">`;
 const artSrc = name => `art/${name}.webp`;   // for art picked by name at run time (the build rewrites it to .webp)
 const hintCosts = () => !!(sess && sess.hint && !sess.freeHint);   // a free-hint boost makes the hint cost nothing
+const backSrc = () => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : 'art/cardback.webp';   // the card back in use
+/* A card's equipped style: a bought frame (Series 1/2 only) and holo foil. */
+const styleFrame = c => { const e = S.styles && S.styles.cards[c.id] && S.styles.cards[c.id].eq; return e && e.frame && c.series !== 3 ? artSrc('frame_' + e.frame) : ''; };
+const holoHTML = c => { const e = S.styles && S.styles.cards[c.id] && S.styles.cards[c.id].eq; return e && e.foil ? `<div class="holo" style="background-image:url(${artSrc('foil_texture')})"></div><div class="foil"></div>` : ''; };
 const COIN = `<img class="ico coin" src="art/icon_coin.webp" alt="coins">`;
 const titleCase = s => s.toLowerCase().replace(/(^|[\s:&(])([a-z])/g, (m, a, b) => a + b.toUpperCase()).replace(/\bCplr\b/, 'CPLR').replace(/\bAct\b/, 'Act');
 function subjects(){ return [...new Set(CARDS.map(c => c.set))].map(set => ({g:'set:' + set, label:titleCase(set)})); }
@@ -2187,7 +2191,7 @@ const SCREENS = {
       title:c.name, hideLarge:true, cta:true,
       right:`<button class="nb-btn" data-act="card-menu" data-id="${c.id}" aria-label="More">•••</button>`,
       body:`
-        <div class="cd-top"><div class="cd-card">${cardEl(c, shown)}</div>
+        <div class="cd-top"><div class="cd-card" data-act="cd-flip" aria-label="Tap to flip the card">${cardEl(c, shown)}<div class="cd-back"><img src="${backSrc()}" alt="Card back"></div></div>
           <div class="stage-dots">${Array.from({length:maxL(c)}, (_, i) => i + 1).map(l => `<button data-act="stage" data-l="${l}" class="${l === pv ? 'cur' : ''} ${l > st.level ? 'lk' : ''}" ${l > st.level ? 'disabled aria-label="Locked"' : `aria-label="Level ${l} art"`}>${l > st.level ? ICO('lock') : l}</button>`).join('')}</div>
           ${pv !== st.level ? `<p class="preview-note">Previewing Level ${pv} art</p>` : ''}
         </div>
@@ -2653,7 +2657,7 @@ function openPack(opts = {}){
         <img class="pk-top" src="${packImg}" alt="" style="clip-path:${topClip}">${label}
       </button>
       <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
-        <div class="pk-inner"><div class="pk-face pk-back"><img class="cbackimg" src="art/cardback.webp" alt="Card back"></div>
+        <div class="pk-inner"><div class="pk-face pk-back"><img class="cbackimg" src="${backSrc()}" alt="Card back"></div>
         <div class="pk-face pk-front">${cardEl(p.c, p.st)}</div></div>
         <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? ICO('memory') + ' MEMORY TRICK!' : 'NEW!') : `DUPLICATE · +${p.coins} ${COIN}`}</span>
       </button>`).join('')}</div>
@@ -2763,6 +2767,7 @@ function cardMenu(id){
   openSheet(`<div class="sh-head">${thumb(c)}<span><b>${esc(c.name)}</b><small>${statusLine(c)}</small></span></div>
     <div class="acts">
       <button data-act="study" data-id="${id}">${PLAY_ICON} ${isCold(st) ? 'Reopen this case' : 'Study this card'}</button>
+      <button data-act="card-style" data-id="${id}">${ICO('sparkle')} Card Style</button>
       <div class="acts-sep">Tester tools</div>
       <button data-act="t-level" data-id="${id}" ${st.mastered ? 'disabled' : ''}>${ICO('almost')} Level up now</button>
       <button data-act="t-cold" data-id="${id}">${ICO('thermo_snow')} Make it go cold</button>
