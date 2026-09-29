@@ -50,3 +50,26 @@ Audit of the 29 cards defined in `../index.html` on 2026-09-28. “Questions” 
 - Court Officer-Trainee sample questions illustrate a different exam's format only. Paid prep courses and shared flashcards can suggest topics, but verify every fact against official material before making a card.
 
 Current local official references: `../Court_Clerk_Exam_Subject_Matter.pdf` and `../Court_Clerk_Exam_Questions.pdf`.
+
+## Rules going forward
+
+- **Series = art batch.** `series` on a card means which art style/batch it came from, not its subject.
+- **Set = subject** (CPLR, Family Court Act, Criminal Procedure...).
+- **Series 1 filter = the basic term cards only** (#001–#009). Memory Trick / rule cards (★) live under the
+  **Memory Tricks** filter and their subject sets, whatever series their art is from.
+- **Naming:** basic cards use a plain term (*Summons*). Rule cards are named after the rule in a short phrase
+  (*8 Days Before*, *Quash It Where It Returns*).
+- **Every rule card cites its source** (statute + where the rule text came from) and is checked against the statute.
+
+## Findings
+
+1. **Fixed:** ★03–★12 are rule cards with no `series` tag, so the Series 1 filter showed them next to the
+   basic term cards. The Series 1 filter now shows only the basic cards; these cards still appear under
+   Memory Tricks and their subject sets.
+2. **Needs checking — unsourced questions.** The question banks on #001 and #004–#009 and on ★03 are marked
+   "SAMPLE CONTENT — fact-check before real use" in the code. Check each against the study guide / statutes.
+3. **Official sample questions are nearly used up.** Rule cards already use sample Q2–Q18. Series 3 needs new
+   material — the subject list in the official study guide (see `README.md`) is the next source.
+4. **Series 3 code prep (only when Series 3 is built).** Some code only knows about Series 2:
+   the pack art (`series === 2 ? pack_s2 : pack`), the "next pack" checks, and the Series filter list.
+   Each needs a small edit, plus `art/series3_badge.webp` and a pack image.

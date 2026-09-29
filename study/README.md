@@ -24,3 +24,16 @@ The NY Courts guide index links to the following PDFs, but its PDF server return
 | `Senior_Court_Clerk_Exam_Subject_Matter.pdf` | Senior Court Clerk (JG-22) | [Subject matter](https://www.nycourts.gov/LegacyPDFS/CAREERS/exams/Senior_Court_Clerk_Exam_Subject_Matter.pdf) |
 | `Senior_Court_Clerk_Exam_Questions.pdf` | Senior Court Clerk (JG-22) | [Sample questions](https://www.nycourts.gov/LegacyPDFS/CAREERS/exams/Senior_Court_Clerk_Exam_Questions.pdf) |
 | `NYSCOT_SampleQuestions.pdf` | Court Officer-Trainee (JG-16) | [Orientation guide with sample questions](https://www.nycourts.gov/LegacyPDFS/CAREERS/exams/NYSCOT_SampleQuestions.pdf) — format example only. |
+
+## Where to get them
+
+- **NYS Courts — Exam Study Guides:** https://www.nycourts.gov/careers/exams/exam-study-guides
+  (study guides for Court Clerk JG-20, Senior Court Clerk JG-22 and others: subject matter, study materials,
+  sample questions)
+- **Exam Study Guides & Resources:** https://www.nycourts.gov/careers/exams/exam-study-guides-resources
+- **Court Clerk exam page:** https://ww2.nycourts.gov/exams/court-clerk-jg18
+- **Statutes (free):** https://www.nysenate.gov/legislation — CPL, CPLR, Family Court Act, Domestic Relations Law
+- **Uniform Rules (22 NYCRR):** the "Rules" section of nycourts.gov
+
+Commercial prep books and courses are fine for practice, but check anything that becomes a card
+against the official guide or the statute.

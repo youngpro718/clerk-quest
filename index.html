@@ -92,7 +92,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* front texts */
-.num{font-size:7.2cqw;letter-spacing:.04em}
+.num{font-size:6.5cqw;letter-spacing:.02em}
 .xpstrip{flex-direction:column;gap:1cqw;color:#f6ecd4;font-family:"Bangers";font-size:3.4cqw;letter-spacing:.06em}
 .xpstrip i{display:block;width:80%;height:1.6cqw;border-radius:1cqw;background:rgba(0,0,0,.35);overflow:hidden;border:.25cqw solid rgba(0,0,0,.4)}
 .xpstrip b{display:block;height:100%;background:linear-gradient(90deg,#f7d56a,#e3a42c)}
@@ -152,7 +152,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
   background:radial-gradient(120% 55% at 18% 0%,rgba(255,255,255,.22),transparent 50%),
     linear-gradient(120deg,transparent 38%,rgba(255,255,255,.5) 46%,rgba(255,255,255,.08) 51%,transparent 58%);
   background-size:100% 100%,300% 300%;animation:glosssweep 4.2s ease-in-out infinite}
-.gloss::after{content:"";position:absolute;inset:0;opacity:.22;
+.gloss::after{content:"";position:absolute;inset:0;opacity:.12;
   background:linear-gradient(115deg,#ff4fa0,#ffd34f,#4fffc1,#7a6bff,#ff4fa0);background-size:400% 100%;animation:holo 7s linear infinite}
 @keyframes glosssweep{0%,15%{background-position:0 0,120% 0}60%,100%{background-position:0 0,-40% 0}}
 @keyframes holo{to{background-position:400% 0}}
@@ -221,9 +221,23 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .rulebox blockquote{margin:8px 0;padding:8px 12px;border-left:4px solid #7b4bb5;background:#f1e9ff;font-size:17px;line-height:1.3}
 .rulebox .ctx,.rulebox .from{font-size:15px;opacity:.8;margin:4px 0 0}
 .rulebox .hook{margin:10px 0 0;font-size:18px}
+/* Case File: the rule on lined notebook paper, with reading questions */
+.casefile{--line:28px;color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:calc(var(--line) - 4px) 14px 14px 46px;
+  background:linear-gradient(90deg,transparent 33px,#dc7a6e 33px,#dc7a6e 35px,transparent 35px),
+    repeating-linear-gradient(#f6ecd6 0 calc(var(--line) - 1px),#a9bfd6 calc(var(--line) - 1px) var(--line));
+  background-position:0 6px;font-family:"Patrick Hand";font-size:19px;line-height:var(--line)}
+.casefile h4{margin:0;font-family:"Bangers";font-weight:400;letter-spacing:.06em;font-size:16px;line-height:var(--line);color:#a8321f}
+.casefile .cite{font-family:"Courier Prime";font-weight:700;font-size:17px;line-height:var(--line)}
+.casefile .cf-quote{margin:0 0 var(--line)}
+.casefile ol{margin:0 0 var(--line);padding-left:22px}
+.casefile .ctx,.casefile .from{margin:0;font-size:17px;opacity:.8}
+.casefile .from{margin-bottom:var(--line)}
+.casefile .readbtn{display:block;width:100%;min-height:48px;border:2px solid var(--ink);border-radius:12px;background:#f3d27a;font:inherit;color:var(--ink);cursor:pointer}
+.casefile .readbtn.done{background:#cfe6c8}
+.explain .rlink{margin:0 0 1.4cqw;padding:1.2cqw 2.8cqw;border:.4cqw solid var(--ink);border-radius:1.6cqw;background:#f3d27a;font:inherit;font-size:3.4cqw;color:var(--ink);cursor:pointer}
 .explain{cursor:pointer}
-.explain .tapnext{margin:1.6cqw 0 0;text-align:right;font-family:"Bangers";letter-spacing:.06em;font-size:3.4cqw;opacity:.55}
-.explain .cite{font-family:"Courier Prime";font-size:3.2cqw;opacity:.75;margin-top:1cqw}
+.explain .tapnext{margin:1.6cqw 0 0;text-align:right;font-family:"Bangers";letter-spacing:.06em;font-size:.83em;opacity:.55}
+.explain .cite{font-family:"Courier Prime";font-size:.78em;opacity:.75;margin-top:1cqw}
 .mnbox{background:#fbf6e8;border:2px dashed rgba(0,0,0,.35);border-radius:12px;padding:12px 14px}
 .mnsent{font-size:22px;margin:0 0 8px;font-style:italic}
 .mnlist{margin:0 0 8px;padding-left:0;list-style:none;display:grid;gap:4px;font-size:18px}
@@ -293,6 +307,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .card.cold .art-win::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
   background:linear-gradient(160deg,rgba(190,225,255,.3),rgba(120,170,220,.15) 60%,rgba(220,240,255,.35))}
 
+.mn-badge.corner{top:auto;bottom:1%;left:auto;right:0;width:17%}
 .mn-badge.low{top:auto;bottom:17%;left:1%;width:21%}
 .goingcold{position:absolute;z-index:7;width:34%;right:3%;top:38%;pointer-events:none;filter:drop-shadow(0 .6cqw .6cqw rgba(0,0,0,.4));animation:wobble 2.2s ease-in-out infinite}
 @keyframes wobble{0%,100%{transform:rotate(8deg)}50%{transform:rotate(-2deg) scale(1.06)}}
@@ -324,6 +339,11 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .ans.wrong{opacity:.6}
 .ans.wrong .A{text-decoration:line-through;text-decoration-color:var(--bad);text-decoration-thickness:.5cqw}
 .ans[disabled]{cursor:default}
+.ans.cut .A,.ans.cut .A.wrap{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;padding-right:9cqw}
+.qtext.cut{cursor:pointer}
+.qtext.cut .qt{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;padding-right:9cqw}
+.ans .more,.qtext .more{position:absolute;right:1.4cqw;bottom:1.2cqw;padding:.3cqw 1.2cqw;border-radius:1.2cqw;background:var(--ink);color:#f6e7c8;font-family:"Bangers";letter-spacing:.06em;font-size:2.8cqw;line-height:1.2}
+.qtext .more{bottom:.4cqw}
 .mascot{z-index:3;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .mascot img{width:100%;height:100%;object-fit:contain;-webkit-mask-image:radial-gradient(ellipse 60% 58% at 50% 50%, #000 70%, transparent 100%);mask-image:radial-gradient(ellipse 60% 58% at 50% 50%, #000 70%, transparent 100%)}
 .mascot img.cutm{-webkit-mask-image:none;mask-image:none;filter:drop-shadow(0 1cqw 0 rgba(0,0,0,.2));animation:bob 3s ease-in-out infinite}
@@ -345,17 +365,21 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .nxr{flex-direction:column;align-items:flex-start;justify-content:center;gap:.8cqw;font-family:"Patrick Hand";font-size:3.9cqw;text-align:left;padding-left:3cqw;border-left:.35cqw solid rgba(0,0,0,.6)}
 .nxr b{font-family:"Luckiest Guy";font-size:4cqw;letter-spacing:.04em;display:flex;gap:1.5cqw;align-items:center;margin-bottom:.6cqw}
 /* explanation note */
-.explain{z-index:7;background:#fbf4e2;border:.5cqw solid var(--ink);border-radius:2cqw;padding:3cqw 4cqw;color:var(--ink);overflow:auto;
+.explain.more::after{content:'▾ scroll';position:sticky;display:block;bottom:0;text-align:center;font:700 2.8cqw var(--ui);color:rgba(0,0,0,.45);background:linear-gradient(rgba(251,244,226,0),#fbf4e2 55%);padding-top:3cqw;margin-top:-3cqw}
+.explain{font-size:4.1cqw;z-index:7;background:#fbf4e2;border:.5cqw solid var(--ink);border-radius:2cqw;padding:3cqw 4cqw;color:var(--ink);overflow:auto;
   box-shadow:0 1.2cqw 0 rgba(0,0,0,.35);transform:rotate(-.6deg);animation:slideup .35s cubic-bezier(.2,1.3,.4,1) both;font-size:4.1cqw;line-height:1.15}
 .explain::before{content:"";position:absolute;top:-2cqw;left:42%;width:16cqw;height:4.5cqw;background:rgba(222,196,130,.85);transform:rotate(-4deg);border:.2cqw solid rgba(0,0,0,.15)}
-.explain h3{margin:0 0 1.4cqw;font-family:"Luckiest Guy";font-weight:400;font-size:5.4cqw;letter-spacing:.05em;text-transform:uppercase}
+.explain h3{margin:0 0 1.4cqw;font-family:"Luckiest Guy";font-weight:400;font-size:1.32em;letter-spacing:.05em;text-transform:uppercase}
 .explain h3.ok{color:var(--good)} .explain h3.no{color:var(--bad)}
 .explain p{margin:0 0 1.4cqw}
+.explain .cols{display:grid;grid-auto-flow:column;grid-template-rows:repeat(var(--rows,2),auto);grid-template-columns:1fr 1fr;gap:.4cqw 3cqw;margin:0 0 1.4cqw;line-height:1.1}
+.explain .cols.one{grid-template-columns:1fr;grid-auto-flow:row;grid-template-rows:none}
+.explain .cols span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .explain .reopen img{display:block;width:62%;margin:0 auto .6cqw;transform:rotate(-3deg);animation:slamimg .35s cubic-bezier(.2,1.6,.4,1) both;--rot:-3deg}
 .explain .reopen span{display:block;text-align:center}
 .explain .reopen{background:#dff0ff;border:.3cqw solid #3d7fb8;border-radius:1.4cqw;padding:1cqw 2cqw;color:#1d4f7a}
 .explain mark{background:#ffd76a;color:inherit;border-radius:.6cqw;padding:0 .3cqw}
-.explain .mono{font-family:"Courier Prime";font-size:3.5cqw}
+.explain .mono{font-family:"Courier Prime";font-size:.85em}
 @keyframes slideup{from{transform:translateY(20%) rotate(-.6deg);opacity:0}}
 /* record-compare panel */
 .rec{z-index:3;flex-direction:column;align-items:stretch;justify-content:flex-start;background:#fbf6e8;border:.45cqw solid var(--ink);border-radius:2.4cqw;padding:3cqw 3cqw 2cqw;gap:1.6cqw;
@@ -550,6 +574,7 @@ body{overflow:hidden;background:var(--bg)}
 .nb-back{display:flex;align-items:center;gap:4px;background:none;border:0;color:var(--mustard);font:17px var(--ui);min-height:44px;padding:0 8px 0 4px;max-width:40vw}
 .nb-back svg{width:12px;height:20px;flex:none}
 .nb-back span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen.scrolled .navbar.tight .nb-back span,.screen.nolarge .navbar.tight .nb-back span{display:none}
 .nb-btn{position:relative;min-width:38px;height:38px;padding:0 10px;border-radius:19px;border:0;background:rgba(255,255,255,.09);color:var(--paper);font:600 16px var(--ui)}
 .nb-avatar{background:none;border:0;padding:0;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
 .scr{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:0 16px 28px}
@@ -723,6 +748,13 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .acts-sep{padding:10px 16px 6px;font:600 12px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--sub);background:rgba(0,0,0,.18)}
 .sheet-cancel{display:block;width:100%;min-height:52px;margin-top:10px;border:0;border-radius:14px;background:var(--bg2);color:var(--mustard);font:600 17px var(--ui)}
 .sheet .btn-big{margin-top:6px}
+.as-q{margin:0 4px 14px;font:17px/1.4 var(--ui);color:var(--paper)}
+.as-list{display:flex;flex-direction:column;gap:10px}
+.as-list button{display:flex;align-items:stretch;width:100%;min-height:56px;padding:0;border:3px solid var(--ink);border-radius:14px;overflow:hidden;background:#f6e7c8;color:var(--ink);text-align:left;box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.as-list button b{flex:none;width:46px;display:flex;align-items:center;justify-content:center;background:#5d7d8c;border-right:3px solid var(--ink);color:#fff;font:400 26px "Luckiest Guy";-webkit-text-stroke:1px var(--ink)}
+.as-list button span{padding:10px 12px;font:20px/1.25 "Patrick Hand"}
+.as-list button.hl{outline:3px solid var(--mustard);outline-offset:2px}
+.as-list button:active{transform:translateY(2px)}
 .sh-missing{display:flex;flex-direction:column;align-items:center;text-align:center}
 .sh-mcard{width:120px;margin-bottom:6px}
 .sh-missing p{font:15px/1.4 var(--ui);color:var(--sub);margin:0 8px 14px}
@@ -749,6 +781,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .row.q .q-claim:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
 .row.q .q-reward{flex:none;font:600 13px var(--ui);color:var(--sub)}
 .row.q .q-done{flex:none;width:28px;height:28px;border-radius:14px;background:#3f8f4a;color:#fff;font:700 15px/28px var(--ui);text-align:center}
+.row.q .row-main b{white-space:normal;line-height:1.1}
 .row.q.ready{background:linear-gradient(90deg,rgba(227,178,60,.14),transparent)}
 .row.q.claimed .row-main b{opacity:.6}
 .pill.gold{background:var(--mustard);color:var(--ink);border:2px solid var(--ink);font-weight:700}
@@ -780,6 +813,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js"></script>
+<script src="study.js"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
@@ -972,7 +1006,7 @@ CARDS.push(
 /* Difference Trick: two look-alike terms, taught side by side. Found in packs. */
 const PAIR = ['Summons','Subpoena'];
 CARDS.push({
-  id:'svs', art:'summonsvssubpoena', num:'★03', l1:'SUMMONS', l2:'VS SUBPOENA', name:'Summons vs. Subpoena', emoji:'⚖️',
+  id:'svs', art:'summonsvssubpoena', num:'★03', l1:'SUMMONS VS', l2:'SUBPOENA', name:'Summons vs. Subpoena', emoji:'⚖️',
   category:'MEMORY TRICK', set:'LOOK-ALIKES', rarity:'rare', trickType:'difference', icon:'court', maxLevel:5,
   mascot:'art/summonsvssubpoena_1.webp',
   quote:"You're IN vs.\nYou're NEEDED.",
@@ -1007,7 +1041,7 @@ CARDS.push({
 const OFFICIAL = 'NYS UCS Court Clerk Sample Questions (rev. 08/06/2026)';
 CARDS.push(
   {
-    id:'whosigns', art:'whosigns', num:'★04', l1:'WHO SIGNS', l2:'THE SUMMONS?', name:'Who Signs the Summons?', emoji:'✍️',
+    id:'whosigns', art:'whosigns', num:'★04', l1:'WHO SIGNS THE', l2:'SUMMONS?', name:'Who Signs the Summons?', emoji:'✍️',
     category:'MEMORY TRICK', set:'FAMILY COURT ACT', rarity:'uncommon', trickType:'who', icon:'court', maxLevel:3,
     quote:'Judge or Clerk.\nThe Court signs.',
     source:{ cite:'FCA § 312.1', quote:'The summons shall be signed by a judge or by the clerk of the court.', from:OFFICIAL + ', Q4',
@@ -1101,7 +1135,7 @@ CARDS.push(
     ],
   },
   {
-    id:'sealed', art:'sealed', num:'★08', l1:'SEALED', l2:'IN YOUR FAVOR', name:'Sealed in Your Favor', emoji:'🔏',
+    id:'sealed', art:'sealed', num:'★08', l1:'SEALED IN', l2:'YOUR FAVOR', name:'Sealed in Your Favor', emoji:'🔏',
     category:'MEMORY TRICK', set:'CRIMINAL PROCEDURE', rarity:'uncommon', trickType:'trigger', icon:'court', maxLevel:3,
     quote:'Case ends in your\nfavor? Seal it.',
     source:{ cite:'CPL § 160.50(1)', quote:'Upon the termination of a criminal action or proceeding against a person in favor of such person, as defined in subdivision three of this section, unless the district attorney upon motion with not less than five days notice to such person or his or her attorney demonstrates to the satisfaction of the court that the interests of justice require otherwise, or the court on its own motion with not less than five days notice to such person or his or her attorney determines that the interests of justice require otherwise and states the reasons for such determination on the record, the record of such action or proceeding shall be sealed and the clerk of the court wherein such criminal action or proceeding was terminated shall immediately notify the commissioner of the division of criminal justice services and the heads of all appropriate police departments and other law enforcement agencies that the action has been terminated in favor of the accused, and unless the court has directed otherwise, that the record of such action or proceeding shall be sealed.', from:OFFICIAL + ', Q10',
@@ -1167,7 +1201,7 @@ CARDS.push(
     ],
   },
   {
-    id:'childvoice', art:'childvoice', num:'★11', l1:'WHO SPEAKS', l2:'FOR THE CHILD?', name:'Who Speaks for the Child?', emoji:'🧒',
+    id:'childvoice', art:'childvoice', num:'★11', l1:'WHO SPEAKS FOR', l2:'THE CHILD?', name:'Who Speaks for the Child?', emoji:'🧒',
     category:'MEMORY TRICK', set:'CPLR', rarity:'uncommon', trickType:'chain', icon:'court', maxLevel:3, gen:'sequence',
     quote:'Good Parents\nObey.',
     source:{ cite:'CPLR § 1201', quote:'Unless the court appoints a guardian ad litem, an infant shall appear by the guardian of his property or, if there is no such guardian, by a parent having legal custody, or, if there is no such parent, by another person or agency having legal custody, or, if the infant is married, by an adult spouse residing with the infant…', from:OFFICIAL + ', Q15',
@@ -1265,7 +1299,7 @@ CARDS.push(
     ],
   }),
   Object.assign({}, S2, {
-    id:'quash', art:'quash', num:'★15', l1:'QUASH IT', l2:'WHERE IT RETURNS', name:'Quash It Where It Returns', emoji:'🚪',
+    id:'quash', art:'quash', num:'★15', l1:'QUASH IT WHERE', l2:'IT RETURNS', name:'Quash It Where It Returns', emoji:'🚪',
     set:'CPLR', trickType:'who', quote:'Fight the subpoena\nwhere it returns.',
     source:{ cite:'CPLR § 2304', quote:'A motion to quash, fix conditions or modify a subpoena shall be made promptly in the court in which the subpoena is returnable.', from:OFFICIAL + ', Q16',
       context:'Challenging a subpoena.' },
@@ -1473,6 +1507,27 @@ const daysAgo = t => Math.floor((Date.now() - t) / DAY);
 const agoText = t => { const d = daysAgo(t); return d === 0 ? 'today' : d === 1 ? 'yesterday' : `${d} days ago`; };
 const TRICK_TYPES = { chain:{label:'Chain Trick', blurb:'Teaches the order of steps.'}, who:{label:'Who Trick', blurb:'Teaches who does what.'},
   clock:{label:'Clock Trick', blurb:'Teaches deadlines.'}, difference:{label:'Difference Trick', blurb:'Teaches look-alike terms apart.'}, trigger:{label:'Trigger Trick', blurb:'Teaches what happens next.'} };
+/* Case File reading questions, written per card. Each one is answered by the card's source rule text. */
+const READ_QS = {
+  whosigns:['Who may sign the summons? (There are two answers.)', 'Which court issues it?', 'What filing leads to it?'],
+  clock6090:['How many days to start the hearing, and counted from what date?', 'How many days to finish it, counted from when?', 'Who holds the hearing?'],
+  ypsi:['What event sets this rule off?', 'What must the court order first?', 'When does the court decide youthful offender status?'],
+  eightdays:['How many days before the appearance must papers be served?', 'What are the two ways to serve them?', 'What must the proof of service state?'],
+  sealed:['What ends the case and triggers sealing?', 'Who can stop the sealing, and how much notice is required?', 'Whom does the clerk notify?'],
+  followpetitioner:['Who files the copy of the order?', 'Where is it filed when the petitioner lives in a county?', 'Where is it filed when the petitioner lives in a city?'],
+  amendonce:['How many times can a party amend without leave of court?', 'What are the three time windows?', 'What does "without leave of court" mean?'],
+  childvoice:['What court action overrides the whole list?', 'Who appears for the infant first?', 'Who is next if there is no such guardian?'],
+  custodyornot:['What issue makes a case a child custody proceeding?', 'Name three proceedings that count.', 'Which proceedings do not count?'],
+  jurywaiver:['What form must the waiver take?', 'Who signs it, and where?', 'Whose approval is needed?'],
+  interest:['When does interest start on a money judgment?', 'When does it start on an order to pay money?', 'Which two dates are easy to mix up?'],
+  quash:['What three things can the motion ask for?', 'In which court must it be made?', 'How soon must it be made?'],
+  newtrial:['When can the court order this?', 'Who makes the motion?', 'What two things can the court order?'],
+  schoolnotice:['Which students does this rule cover?', 'What event triggers the notice?', 'Who sends the notice, and to whom?'],
+  bail:['What are the three forms of bail?', 'Which form is the easiest to forget?', 'Where is "bail" defined?'],
+  acd:['What must the court set when it orders an ACD?', 'What can the court change before dismissal?', 'What is the longest total adjournment?'],
+  military:['Who may set up special calendars?', 'Who must be in military service?', 'What must be true about a deposition?'],
+};
+const READ_XP = 10;   // player XP for reading a card's case file the first time
 function frameFor(c, lv){
   if (c.trickType) return 'art/frame_trick.webp';
   const max = maxL(c);
@@ -1481,7 +1536,24 @@ function frameFor(c, lv){
   return 'art/frame_base.webp';
 }
 const bgFor = (c, lv) => { if (!c.bgs) return null; let b = null; for (let l=1; l<=lv; l++) if (c.bgs[l]) b = c.bgs[l]; return b; };
+// First guess at a title's size; fitTitles() below then measures the real text on screen and shrinks it to fit.
 const fitTitle = (txt, max, width) => Math.min(max, width / (txt.length * 0.86)).toFixed(2);
+/* Every title line carries data-fit (the % of card width it may use). Line 2 must stay between the banner's squiggles. */
+function fitTitles(root){
+  (root.querySelectorAll ? root : document).querySelectorAll('.title span[data-fit]').forEach(sp => {
+    const card = sp.closest('.card'); if (!card) return;
+    const cw = card.clientWidth; if (!cw) return;
+    const target = cw * (+sp.dataset.fit) / 100, w = sp.scrollWidth;
+    if (!w) return;
+    const cur = parseFloat(sp.style.fontSize);
+    if (w > target) sp.style.fontSize = (cur * target / w * 0.98).toFixed(2) + 'cqw';
+    sp.dataset.fitted = '1';
+  });
+}
+new MutationObserver(muts => {
+  for (const m of muts) for (const n of m.addedNodes) if (n.nodeType === 1 && (n.matches('.title span[data-fit]') || n.querySelector('.title span[data-fit]'))) { requestAnimationFrame(() => fitTitles(n)); }
+}).observe(document.documentElement, {childList:true, subtree:true});
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { document.querySelectorAll('.title span[data-fit]').forEach(sp => { sp.style.fontSize = sp.dataset.max + 'cqw'; }); fitTitles(document); });
 
 /* ================= SAVE STATE ================= */
 const KEY = 'clerkquest-proto-v1';
@@ -1550,13 +1622,14 @@ function mnemonicArt(c){
   const m = c.mnemonic, n = m.letters.length;
   const colors = ['#ffe27a','#ff9fb6','#a9d4f5','#bfe3a8','#ffc48a','#d6c2ff','#ffe27a','#a9d4f5'];
   const tw = Math.min(19, 80/n - 1.2);
-  return `<div class="mn"><img class="mn-bg" src="art/bg_trick.webp" alt=""><img class="mn-badge" src="art/icon_memory.webp" alt="Memory Trick">
+  return `<div class="mn"><img class="mn-bg" src="art/bg_trick.webp" alt=""><img class="mn-badge corner" src="art/icon_memory.webp" alt="Memory Trick">
     <div class="mn-paper"><div class="mn-row">${m.letters.map((L,i)=>`<div class="mn-tile" style="width:${tw}cqw;background:${colors[i%8]};--r:${i%2?3:-3}deg"><b style="font-size:${(tw*.6).toFixed(1)}cqw">${L}</b>${n<=4?`<small style="font-size:3.4cqw">${esc(m.words[i])}</small>`:''}</div>`).join('')}</div>
     <div class="mn-means" style="grid-template-columns:${n>4?'1fr 1fr':'1fr'};font-size:${n>4?3.3:4.6}cqw">${m.means.map((w,i)=>`<span><b>${m.letters[i]}</b>${esc(w)}</span>`).join('')}</div></div></div>`;
 }
 function artHTML(c, lv){
-  if (c.mnemonic) return mnemonicArt(c) + (lv >= 3 ? `<div class="foil"></div>` : '');
-  if (c.panel && !(ART[c.id] && ART[c.id][1])) return ruleArt(c) + (lv >= 3 ? `<div class="foil"></div>` : '');
+  const foil = lv >= 3 && lv < maxL(c) ? `<div class="foil"></div>` : '';
+  if (c.mnemonic) return mnemonicArt(c) + foil;
+  if (c.panel && !(ART[c.id] && ART[c.id][1])) return ruleArt(c) + foil;
   let base = 0;
   for (let l=lv; l>=1; l--) if (ART[c.id] && ART[c.id][l]) { base = l; break; }
   const cut = c.cutout && !(c.scene && c.scene[base]);  // some levels are full scenes even on cut-out cards
@@ -1565,7 +1638,7 @@ function artHTML(c, lv){
     ? (cut ? (bgFor(c, lv) ? `<img class="art-bgimg" src="${bgFor(c, lv)}" alt=""><div class="art-vig"></div>` : `<div class="art-back"></div>`) : '') + `<img class="art-img ${cut?'cut':''}" src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`
     : `<div class="art-ph"><span class="ph-tag">ART COMING SOON</span><div class="ph-emoji">${c.emoji}</div></div>`;
   for (let l = Math.max(base+1, 2); l <= lv; l++) (c.stickers[l]||[]).forEach(s => h += stickerHTML(s));
-  if (lv >= 3) h += `<div class="foil"></div>`;
+  h += foil;
   return h;
 }
 function starsHTML(lv, newStar, max=5){
@@ -1585,8 +1658,8 @@ function frontHTML(c, st, opt={}){
     <div class="t cat" style="${P(502,62,856,144)}">${esc(c.category)}</div>
     <div class="t icon" style="${P(862,62,958,156)}">${c.trickType ? `<img src="art/icon_${c.trickType}.webp" alt="${TRICK_TYPES[c.trickType].label}">` : ICON[c.icon]}</div>
     <div class="t title" style="${P(104,176,922,434)}">
-      <span class="t1" style="font-size:${fitTitle(c.l1,12,74)}cqw">${esc(c.l1)}</span>
-      <span class="t2" style="font-size:${fitTitle(c.l2,12.5,74)}cqw">${esc(c.l2)}</span>
+      <span class="t1" data-fit="74" data-max="${fitTitle(c.l1,12,74)}" style="font-size:${fitTitle(c.l1,12,74)}cqw">${esc(c.l1)}</span>
+      <span class="t2" data-fit="52" data-max="${fitTitle(c.l2,12.5,60)}" style="font-size:${fitTitle(c.l2,12.5,60)}cqw">${esc(c.l2)}</span>
     </div>
     <div class="t quote" style="${P(246,1092,782,1262)}">“${esc(c.quote)}”</div>
     <div class="t rar" style="${P(82,1290,312,1448)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:${c.rarity.length > 6 ? 3.3 : 4.2}cqw">${c.rarity.toUpperCase()}</span></div>
@@ -1676,7 +1749,8 @@ function genCompare(lv){
     rows.push([a, same.has(i) ? a : mutate(a, lv)]);
   }
   const diffs = rows.map((r,i)=>({i, r})).filter(x => x.r[0] !== x.r[1]);
-  const why = (diffs.length ? diffs.map(d => { const [ma, mb] = markDiff(d.r[0], d.r[1]); return `<p class="mono"><b>Pair ${d.i+1}:</b> ${ma}<br>&nbsp;&nbsp;vs&nbsp;&nbsp;${mb}</p>`; }).join('') : '')
+  // the table above highlights each difference once answered, so the explanation just points to it
+  const why = (diffs.length ? `<p>Different: <b>pair${diffs.length>1?'s':''} ${diffs.map(d=>d.i+1).join(', ')}</b> (highlighted in yellow above).</p>` : '')
     + `<p>${alike === 0 ? 'None of the pairs were exactly alike.' : `${alike} pair${alike>1?'s were':' was'} exactly alike.`} Tip: check numbers two digits at a time.</p>`;
   return { type:'table', q:'How many of these pairs are EXACTLY alike?', rows, opts, a:String(alike),
     h:'Read each pair letter by letter and digit by digit. Errors love to hide in the middle.', w:why, raw:true };
@@ -1721,16 +1795,16 @@ function genAlpha(lv){
   const prefixCase = sorted.some((x,i)=> sorted.some((y,j)=> i!==j && y.last.toLowerCase().startsWith(x.last.toLowerCase()) && y.last.length > x.last.length));
   const sameLast = new Set(sorted.map(x=>x.last)).size < sorted.length;
   let rule = 'File by LAST name, letter by letter.';
-  if (prefixCase) rule = 'Nothing comes before something: a shorter name that matches the start of a longer one is filed first (Smith before Smithson).';
-  if (sameLast) rule += ' When last names match, go to the first name, then the middle initial. No middle initial comes first.';
-  const why = `<p><b>Filing order:</b></p><p>${sorted.map((x,i)=>`${i+1}. ${i===ord[1]?'<mark>':''}${esc(fmt(x))}${i===ord[1]?'</mark>':''}`).join('<br>')}</p><p>${esc(rule)}</p>`;
+  if (prefixCase) rule = 'Nothing comes before something: Smith is filed before Smithson.';
+  if (sameLast) rule += ' Same last name? Go by first name, then middle initial (no initial comes first).';
+  const why = `<p><b>Filing order:</b></p><div class="cols" style="--rows:${Math.ceil(sorted.length/2)}">${sorted.map((x,i)=>`<span>${i+1}. ${i===ord[1]?'<mark>':''}${esc(fmt(x))}${i===ord[1]?'</mark>':''}</span>`).join('')}</div><p>${esc(rule)}</p>`;
   return { type:'mc', q:`Alphabetical filing: which name should be filed ${ord[0]}?`, opts:shuffle(names.map(fmt)), a:answer,
     h:'Last name first, letter by letter. If last names match, use the first name, then the middle initial.', w:why, raw:true };
 }
 function genSequence(c, lv){
   const m = c.mnemonic, n = m.means.length, pool = m.means.concat(m.extra||[]);
   const others = (skip) => shuffle(pool.filter(x => !skip.includes(x))).slice(0,3);
-  const table = (hi) => `<p>${m.letters.map((L,j)=>`${hi.includes(j)?'<mark>':''}<b>${L}</b> = ${esc(m.means[j])}${hi.includes(j)?'</mark>':''}`).join('<br>')}</p>`;
+  const table = (hi) => `<div class="cols ${m.letters.length <= 4 ? 'one' : ''}" style="--rows:${Math.ceil(m.letters.length/2)}">${m.letters.map((L,j)=>`<span>${hi.includes(j)?'<mark>':''}<b>${L}</b> = ${esc(m.means[j])}${hi.includes(j)?'</mark>':''}</span>`).join('')}</div>`;
   if (lv === 1) {
     const i = rnd(n), a = m.means[i];
     return { type:'mc', q:`Memory trick: "${m.sentence}". What does "${m.words[i]}" (${m.letters[i]}) stand for?`, opts:shuffle([a, ...others([a])]), a,
@@ -1831,7 +1905,7 @@ const SERIES = [
 ];
 function groupTest(g){
   if (g.startsWith('set:')) { const n = g.slice(4); return c => c.set === n; }
-  return ({all:() => true, s1:c => !c.series, s2:c => c.series === 2, tricks:c => !!c.trickType})[g] || (() => true);
+  return ({all:() => true, s1:c => !c.series && !c.trickType, s2:c => c.series === 2, tricks:c => !!c.trickType})[g] || (() => true);
 }
 function groupLabel(g){
   if (g.startsWith('set:')) return titleCase(g.slice(4));
@@ -1934,9 +2008,9 @@ const SCREENS = {
   },
 
   study(p){
-    const tab = p.tab || 'foryou';
-    let body = seg('tab', tab, [['foryou', 'For You'], ['subjects', 'By Subject']]);
-    if (tab === 'foryou') {
+    const tab = ['read', 'notebook'].includes(p.tab) ? p.tab : 'practice';
+    let body = seg('tab', tab, [['practice', 'Practice'], ['read', 'Read'], ['notebook', 'Notebook']]);
+    if (tab === 'practice') {
       const mine = CARDS.filter(owned);
       const cold = mine.filter(c => isCold(S.cards[c.id]));
       const almost = mine.filter(c => { const st = S.cards[c.id]; return !st.mastered && Math.ceil((NEED[st.level-1] - st.xp) / REWARD[st.level-1]) <= 2; });
@@ -1944,9 +2018,12 @@ const SCREENS = {
       body += `<button class="quick" data-act="quick">${PLAY_ICON} Quick Round<small>A random card from your collection</small></button>
         ${cold.length ? `<div class="sec-h"><span>🧊 Cold Cases</span></div><div class="list">${cold.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('')}</div>` : ''}
         ${almost.length ? `<div class="sec-h"><span>⚡ Almost Leveled Up</span></div><div class="carousel">${almost.map(c => miniCard(c)).join('')}</div>` : ''}
-        <div class="sec-h"><span>Up Next</span></div><div class="list">${upNext.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('') || '<p class="empty">Every card you own is mastered or cold. 🎉</p>'}</div>`;
+        <div class="sec-h"><span>Up Next</span></div><div class="list">${upNext.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('') || '<p class="empty">Every card you own is mastered or cold. 🎉</p>'}</div>
+        <div class="sec-h"><span>By Subject</span></div><div class="list">${subjects().map(s => groupRow(s.g, s.label, '📚', 'studyset')).join('')}</div>`;
+    } else if (tab === 'read') {
+      body += readTabHTML(p);
     } else {
-      body += `<div class="list">${subjects().map(s => groupRow(s.g, s.label, '📚', 'studyset')).join('')}</div>`;
+      body += notebookTabHTML(p);
     }
     return { title:'Study', body };
   },
@@ -1996,7 +2073,7 @@ const SCREENS = {
     const shown = pv === st.level ? st : {level:pv, xp:0, mastered:false, owned:true};
     const hasRule = c.source || c.diff || c.mnemonic;
     const tab = p.tab || 'overview';
-    const tabs = [['overview', 'Overview']].concat(hasRule ? [['rule', c.source ? 'Rule' : 'Trick']] : []).concat([['lore', 'Lore']]);
+    const tabs = [['overview', 'Overview']].concat(hasRule ? [['rule', c.source ? 'Case File' : 'Trick']] : []).concat([['lore', 'Lore']]);
     let panel = '';
     if (tab === 'overview') {
       panel = `<div class="list info">
@@ -2011,8 +2088,7 @@ const SCREENS = {
           : st.last ? `<p class="foot">Goes cold if not studied for ${Math.round(coldAfter(st) / DAY)} days.</p>` : ''}
         ${c.hook ? `<div class="hookbox">🧠 ${esc(c.hook)}</div>` : ''}`;
     } else if (tab === 'rule') {
-      panel = `${c.source ? `<div class="rulebox"><div class="cite">${esc(c.source.cite)}</div>
-          <blockquote>“${esc(c.source.quote)}”</blockquote><p class="ctx">${esc(c.source.context)}</p><p class="from">Source: ${esc(c.source.from)}</p></div>` : ''}
+      panel = `${c.source ? caseFileHTML(c) : ''}
         ${c.diff ? `<div class="sec-h"><span>How to tell them apart</span></div><div class="diffbox">${['a', 'b'].map(k => `<div class="dcol ${k}"><b>${esc(c.diff[k].name)}</b><i>“${esc(c.diff[k].hook)}”</i><ul>${c.diff[k].points.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>`).join('<div class="dvs">VS</div>')}</div>` : ''}
         ${c.mnemonic ? `<div class="sec-h"><span>How to remember it</span></div><div class="mnbox"><p class="mnsent">“${esc(c.mnemonic.sentence)}”</p>
           <ol class="mnlist">${c.mnemonic.letters.map((L, i) => `<li><b>${L}</b>${esc(c.mnemonic.words[i])} → <strong>${esc(c.mnemonic.means[i])}</strong></li>`).join('')}</ol>
@@ -2032,7 +2108,7 @@ const SCREENS = {
         <div class="cd-level"><span>${st.mastered ? '🏅 Mastered' : 'Level ' + st.level}</span><span>${st.mastered ? 'Max' : st.xp + ' / ' + NEED[st.level-1] + ' XP'}</span></div>${pbar(cardProgress(c))}
         ${seg('tab', tab, tabs)}
         <div class="cd-panel">${panel}</div>`,
-      after:`<div class="cta-bar"><div><button class="btn-big ${isCold(st) ? 'coldbtn' : ''}" data-act="study" data-id="${c.id}">${PLAY_ICON} ${isCold(st) ? 'REOPEN THIS CASE' : 'STUDY THIS CARD'}</button></div></div>`,
+      after:`<div class="cta-bar"><div><button class="btn-big ${isCold(st) ? 'coldbtn' : ''}" data-act="study" data-id="${c.id}">${PLAY_ICON} ${isCold(st) ? 'REOPEN THIS CASE' : tab === 'rule' && c.source ? 'QUIZ THIS CARD' : 'STUDY THIS CARD'}</button></div></div>`,
     };
   },
 
@@ -2174,6 +2250,7 @@ function renderTabbar(){
 const nav = { tab:'home', stacks:{} };
 TABS.forEach(([id]) => nav.stacks[id] = [{s:id, p:{}}]);
 const topEntry = () => { const st = nav.stacks[nav.tab]; return st[st.length - 1]; };
+Object.assign(SCREENS, STUDY_SCREENS);
 function currentScreenEl(){ return document.querySelector('#screens .screen.current'); }
 function saveScroll(){ const el = currentScreenEl(); if (el && el._entry) el._entry.scroll = el.querySelector('.scr').scrollTop; }
 function buildScreen(entry, depth = nav.stacks[nav.tab].length - 1){
@@ -2200,6 +2277,8 @@ function showScreen(dir = 'none'){
   const el = buildScreen(topEntry());
   box.appendChild(el); el.classList.add('current');
   const scr = el.querySelector('.scr'); scr.scrollTop = topEntry().scroll || 0; el.classList.toggle('scrolled', scr.scrollTop > 28);
+  const nbBack = el.querySelector('.nb-back'), nbTitle = el.querySelector('.nb-title');
+  if (nbBack && nbBack.getBoundingClientRect().right > nbTitle.getBoundingClientRect().left) el.querySelector('.navbar').classList.add('tight');
   if (old) old.classList.remove('current');
   const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (old && dir !== 'none' && !reduce && el.animate) {
@@ -2252,6 +2331,12 @@ function startSession(id){
     setTimeout(() => stage.classList.remove('flipping'), 760);
   }, 650);
 }
+/* Shrink a box's text (in cqw) until it fits, but never below a readable minimum. */
+function shrinkToFit(el, minCqw){
+  if (!el || !el.clientHeight) return;
+  let fs = parseFloat(el.style.fontSize) || parseFloat(getComputedStyle(el).fontSize) / (el.closest('.card').clientWidth / 100);
+  for (let i = 0; i < 24 && el.scrollHeight > el.clientHeight + 2 && fs > minCqw; i++) { fs = Math.max(minCqw, fs - .2); el.style.fontSize = fs.toFixed(2) + 'cqw'; }
+}
 function paintStudy(anim){
   const c = byId(sess.id), st = S.cards[sess.id];
   const disp = sess.display || st; // frozen display state while a level-up is pending
@@ -2269,12 +2354,12 @@ function paintStudy(anim){
     </div>`;
   } else {
     const len = q.q.length;
-    const fs = len > 200 ? 3.4 : len > 150 ? 3.8 : len > 100 ? 4.4 : 5;
+    const fs = len > 100 ? 4.4 : 5;   // never smaller; longer text opens the full-text sheet
     const ys = [596,758,920,1082];   // tall, well-spaced answers
-    mid = `<div class="t qtext" style="${PB(96,386,934,566)};font-size:${fs}cqw">${esc(q.q)}</div>
+    mid = `<div class="t qtext" style="${PB(96,386,934,566)};font-size:${fs}cqw"><span class="qt">${esc(q.q)}</span></div>
       ${q.opts.map((o,i)=>{ let cls=''; if (ans){ if (o===q.a) cls='right'; else if (o===ans.choice) cls='wrong'; }
-        const afs = o.length > 26 ? 3.3 : o.length > 22 ? 3.6 : o.length > 16 ? 4.3 : 5;
-        const wrap = o.length > 26 ? 'wrap' : '';
+        const afs = o.length > 22 ? 4 : o.length > 16 ? 4.3 : 5;   // never smaller; longer text opens the full-text sheet
+        const wrap = o.length > 22 ? 'wrap' : '';
         return `<button class="ans ${cls}" style="${PB(86,ys[i],632,ys[i]+126)}" data-act="answer" data-v="${esc(o)}" ${ans?'disabled':''} aria-label="${letters[i]}: ${esc(o)}">
           <span class="L">${letters[i]}</span><span class="A ${wrap}" style="font-size:${afs}cqw">${esc(o)}</span></button>`; }).join('')}
       <div class="mascot" style="${PB(640,572,958,1218)}">${(c.mascot || (c.cutout && ART[c.id][1])) ? `<img src="${c.mascot || ART[c.id][1]}" alt="" class="${c.mascot?'':'cutm'}">` : `<span class="me">${c.emoji}</span><span class="bub">?</span>`}</div>`;
@@ -2289,8 +2374,8 @@ function paintStudy(anim){
     <div class="t bnum" style="${PB(62,62,228,152)}">${c.num}</div>
     <div class="t brar" style="${PB(72,158,228,220)}">${c.rarity.toUpperCase()}</div>
     <div class="t title" style="${PB(262,72,772,262)}">
-      <span class="t1" style="font-size:${fitTitle(c.l1,8.2,45)}cqw">${esc(c.l1)}</span>
-      <span class="t2" style="font-size:${fitTitle(c.l2,8.6,45)}cqw">${esc(c.l2)}</span></div>
+      <span class="t1" data-fit="46" data-max="${fitTitle(c.l1,8.2,46)}" style="font-size:${fitTitle(c.l1,8.2,46)}cqw">${esc(c.l1)}</span>
+      <span class="t2" data-fit="33" data-max="${fitTitle(c.l2,8.6,38)}" style="font-size:${fitTitle(c.l2,8.6,38)}cqw">${esc(c.l2)}</span></div>
     <div class="t bcat" style="${PB(794,60,968,168)}">${esc(c.category)}</div>
     <div class="t icon" style="${PB(836,168,950,270)}">${ICON[c.icon]}</div>
     <div class="t lvtag" style="${PB(66,284,328,392)}">LEVEL ${lv}</div>
@@ -2309,11 +2394,32 @@ function paintStudy(anim){
       <div class="explain" data-act="next" style="${PB(58,1218,966,1688)}">
         <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +${ans.gain} XP` : 'Overruled. Not quite.'}</h3>
         ${ans.reopened ? `<p class="reopen"><img src="art/stamp_reopened.webp" alt="Case reopened"><span>Includes a +${COLD_BONUS} XP cold-case bonus.</span></p>` : ''}
+        <div class="ex-acts">${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}${saveQButtonHTML()}</div>
         ${ans.ok ? '' : `<p><b>Correct answer:</b> ${esc(q.a)}</p>`}
         ${q.raw ? q.w : `<p>${esc(q.w)}</p>`}
         ${c.source ? `<p class="cite">Source: ${esc(c.source.cite)}</p>` : ''}
         <p class="tapnext">Tap here to continue ▸</p>
       </div>` : ''}`;
+  // Answers keep a readable size. One that doesn't fit is clipped with a "more" tag and opens the full-answer sheet.
+  let anyCut = false, qCut = false;
+  const qbox = back.querySelector('.qtext');
+  if (qbox && q.type !== 'table') {
+    const qs = qbox.querySelector('.qt');
+    if (qs.scrollHeight > qbox.clientHeight + 2) {
+      qCut = true;
+      qs.style.webkitLineClamp = Math.max(1, Math.floor(qbox.clientHeight / parseFloat(getComputedStyle(qs).lineHeight)));
+      qbox.classList.add('cut'); qbox.insertAdjacentHTML('beforeend', '<span class="more">more</span>');
+      if (!ans) qbox.dataset.act = 'ans-sheet';
+    }
+  }
+  back.querySelectorAll('.ans').forEach(b => {
+    const a = b.querySelector('.A');
+    if (a.scrollHeight <= b.clientHeight - 2) return;
+    anyCut = true;
+    a.style.webkitLineClamp = Math.max(1, Math.floor((b.clientHeight - 4) / parseFloat(getComputedStyle(a).lineHeight)));
+    b.classList.add('cut'); a.insertAdjacentHTML('afterend', '<span class="more">more</span>');
+    if (!ans) b.dataset.act = 'ans-sheet';
+  });
   // dots + xp chip
   document.getElementById('dots').innerHTML = Array.from({length:SESSION_LEN},(_,i)=>{
     const r = sess.results[i]; return `<i class="${r===true?'ok':r===false?'no':''} ${i===sess.i?'cur':''}"></i>`; }).join('');
@@ -2326,12 +2432,15 @@ function paintStudy(anim){
       let cls=''; if (ans){ if (o===q.a) cls='right'; else if (o===ans.choice) cls='wrong'; }
       return `<button class="${cls}" data-act="answer" data-v="${o}" ${ans?'disabled':''}>${o}</button>`; }).join('')}</div>`;
   }
+  if ((anyCut || qCut) && !ans) bh += `<button class="btn-big alt" data-act="ans-sheet">${anyCut ? 'READ FULL ANSWERS' : 'READ FULL QUESTION'}</button>`;
   if (ans) {
     const last = sess.i + 1 >= SESSION_LEN;
     const label = sess.pendingLevel ? (sess.pendingLevel.mastered ? '🏅 CLAIM MASTERY' : '★ LEVEL UP!') : last ? 'SEE RESULTS →' : 'NEXT QUESTION →';
     bh += `<button class="btn-big ${sess.pendingLevel?'gold':''}" data-act="next">${label}</button>`;
   }
   below.innerHTML = bh;
+  const ex = back.querySelector('.explain');
+  if (ex) { shrinkToFit(ex, 3.8); ex.classList.toggle('more', ex.scrollHeight > ex.clientHeight + 2); }
 }
 function answer(v){
   if (!sess || sess.answered) return;
@@ -2510,6 +2619,7 @@ function renderResults(){
       <div class="stack">
         <button class="btn-big" data-act="study" data-id="${c.id}">&#9654;&#xFE0E; ONE MORE ROUND</button>
         <button class="btn-big gold" data-act="pack-open">🎁 OPEN YOUR PACK</button>
+        ${c.source && correct < SESSION_LEN ? `<button class="btn-big alt" data-act="read-rule" data-id="${c.id}">REVIEW THE RULE</button>` : ''}
         <button class="btn-big alt" data-act="session-close">Done</button>
       </div>
     </div>`;
@@ -2529,6 +2639,13 @@ function openSheet(html){
   sh.addEventListener('touchmove', e => { if (y0 == null) return; dy = Math.max(0, e.touches[0].clientY - y0); sh.style.transform = `translateY(${dy}px)`; }, {passive:true});
   sh.addEventListener('touchend', () => { if (y0 == null) return; sh.style.transition = ''; if (dy > 90) closeSheet(); else sh.style.transform = ''; y0 = null; });
   return w;
+}
+function answerSheet(focus){
+  const q = sess.q;
+  const w = openSheet(`<h3>Read the answers</h3><p class="as-q">${esc(q.q)}</p>
+    <div class="as-list">${q.opts.map((o, i) => `<button class="${o === focus ? 'hl' : ''}" data-act="answer" data-v="${esc(o)}"><b>${'ABCD'[i]}</b><span>${esc(o)}</span></button>`).join('')}</div>
+    <button class="sheet-cancel" data-act="sheet-close">Back to the card</button>`);
+  const hl = w.querySelector('.as-list .hl'); if (hl) hl.scrollIntoView({block:'nearest'});
 }
 function closeSheet(instant){
   const w = document.querySelector('.sheet-wrap'); if (!w) return false;
@@ -2619,9 +2736,21 @@ window.addEventListener('popstate', () => {
   document.querySelectorAll('.zoom,.alert-wrap').forEach(x => x.remove()); closeSheet(true);
   const pk = document.querySelector('.pk');
   if (pk) { pk.remove(); unlockScroll(); if (app.hidden) refresh(); return; }
-  if (closeSessionLayer()) return;
+  if (closeSessionLayer()) { if (afterSessionClose) { const f = afterSessionClose; afterSessionClose = null; f(); } return; }
   pop();
 });
+/* Open a card's Case File tab: switch tabs if its card page is on top, otherwise push it. */
+let afterSessionClose = null;
+function openCaseFile(id){
+  const en = topEntry();
+  if (en && en.s === 'card' && en.p.id === id) { en.p = Object.assign({}, en.p, {tab:'rule'}); refresh(); }
+  else push('card', {id, tab:'rule'});
+  // Scroll to the tabs; again once the card art loads, since the page is too short to scroll until then.
+  const scr = currentScreenEl().querySelector('.scr'), tabs = scr.querySelector('.seg');
+  if (!tabs) return;
+  const jump = () => { scr.scrollTop += tabs.getBoundingClientRect().top - scr.getBoundingClientRect().top - 8; };
+  jump(); scr.querySelectorAll('img').forEach(i => { if (!i.complete) i.addEventListener('load', jump, {once:true}); });
+}
 /* Edge swipe-back that follows your finger (works in Safari and in the Home Screen app). */
 (function edgeSwipe(){
   let sx = null, sy = 0, dx = 0, active = false, cur = null, under = null;
@@ -2686,11 +2815,18 @@ document.addEventListener('click', e => {
     case 'stage': { const en = topEntry(); en.p = Object.assign({}, en.p, {preview:+t.dataset.l}); refresh(); break; }
     case 'study': closeSheet(true); startSession(id); break;
     case 'quick': closeSheet(true); quickRound(); break;
-    case 'answer': answer(t.dataset.v); break;
+    case 'answer': closeSheet(true); answer(t.dataset.v); break;
+    case 'ans-sheet': answerSheet(t.dataset.v); break;
     case 'hint': if (sess && !sess.answered) { sess.hint = true; paintStudy(); } break;
     case 'next': next(); break;
     case 'lu-close': { const ov = t.closest('.lu'); ov && ov._done(); break; }
     case 'session-close': goBack(); break;
+    case 'read-rule': if (app.hidden) openCaseFile(id); else { afterSessionClose = () => openCaseFile(id); goBack(); } break;
+    case 'mark-read': {
+      S.read = S.read || {};
+      if (!S.read[id]) { S.read[id] = Date.now(); S.stats.xp += READ_XP; save(); toast(`Case file reviewed · +${READ_XP} XP`); }
+      refresh(); break;
+    }
     case 'pack-open': closeSheet(true); openPack(); break;
     case 'pk-tear': tearPack(t); break;
     case 'pk-flip': flipPackCard(t); break;
@@ -2733,9 +2869,9 @@ document.addEventListener('click', e => {
     case 'sort': nav.sort = t.dataset.v; refresh(); sortSheet(); break;
     case 'toggle-missing': nav.showMissing = nav.showMissing === false; refresh(); sortSheet(); break;
     case 'resetall':
-      iosAlert({title:'Reset all progress?', msg:'Every card, level, and pack on this device will be erased. This can\'t be undone.',
+      iosAlert({title:'Reset all progress?', msg:'Every card, level, and pack on this device will be erased. Your notebook is kept. This can\'t be undone.',
         buttons:[{label:'Cancel', value:false, style:'bold'}, {label:'Reset', value:true, style:'destructive'}]})
-        .then(ok => { if (!ok) return; S = normalize(null); save(); TABS.forEach(([tid]) => nav.stacks[tid] = [{s:tid, p:{}}]); nav.tab = 'home'; showScreen('none'); });
+        .then(ok => { if (!ok) return; const keepNotes = S.notebook; S = normalize(null); if (keepNotes) S.notebook = keepNotes; save(); TABS.forEach(([tid]) => nav.stacks[tid] = [{s:tid, p:{}}]); nav.tab = 'home'; showScreen('none'); });
       break;
   }
 });
