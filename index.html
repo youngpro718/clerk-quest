@@ -827,6 +827,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="cloud-sync.js"></script>
 <script src="study.js"></script>
 <script src="economy.js"></script>
+<script src="store.js"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
@@ -1926,6 +1927,7 @@ function groupLabel(g){
 }
 /* Hand-drawn UI icons (art/icon_*.webp). The build rewrites these paths to .webp. */
 const ICO = (name, cls = '') => `<img class="ico ${cls}" src="art/icon_${name}.webp" alt="">`;
+const artSrc = name => `art/${name}.webp`;   // for art picked by name at run time (the build rewrites it to .webp)
 const COIN = `<img class="ico coin" src="art/icon_coin.webp" alt="coins">`;
 const titleCase = s => s.toLowerCase().replace(/(^|[\s:&(])([a-z])/g, (m, a, b) => a + b.toUpperCase()).replace(/\bCplr\b/, 'CPLR').replace(/\bAct\b/, 'Act');
 function subjects(){ return [...new Set(CARDS.map(c => c.set))].map(set => ({g:'set:' + set, label:titleCase(set)})); }
@@ -2268,7 +2270,7 @@ function renderTabbar(){
 const nav = { tab:'home', stacks:{} };
 TABS.forEach(([id]) => nav.stacks[id] = [{s:id, p:{}}]);
 const topEntry = () => { const st = nav.stacks[nav.tab]; return st[st.length - 1]; };
-Object.assign(SCREENS, STUDY_SCREENS);
+Object.assign(SCREENS, STUDY_SCREENS, STORE_SCREENS);
 function currentScreenEl(){ return document.querySelector('#screens .screen.current'); }
 function saveScroll(){ const el = currentScreenEl(); if (el && el._entry) el._entry.scroll = el.querySelector('.scr').scrollTop; }
 function buildScreen(entry, depth = nav.stacks[nav.tab].length - 1){
@@ -2556,6 +2558,10 @@ function drawPack(){
   take(newRegular[0]);                                                  // at least one new card while any remain
   let guard = 0;
   while (picks.length < 3 && guard++ < 60) take(newRegular.length > 1 && Math.random() < .5 ? pick(newRegular) : pick(regular));
+  return resolvePulls(picks);
+}
+/* Picked cards → new cards join the collection, duplicates pay coins */
+function resolvePulls(picks){
   return shuffle(picks).map(c => {
     const st = S.cards[c.id], isNew = !st.owned; let coins = 0;
     if (isNew) st.owned = true; else coins = earnCoins(coinsForDup(c), `Duplicate: ${c.name}`);
@@ -2563,11 +2569,13 @@ function drawPack(){
   });
 }
 function zig(y){ const pts = []; for (let i=0;i<=16;i++) pts.push(`${(i/16*100).toFixed(1)}% ${(y + (i%2 ? 1.4 : -1.4)).toFixed(1)}%`); return pts; }
-function openPack(){
-  if (S.packs <= 0) return;
-  S.packs--; const first = S.packsOpened === 0; S.packsOpened++;
-  const pulls = drawPack(); save();
-  const packImg = pulls.some(p => p.c.series === 2) ? 'art/pack_s2.webp' : 'art/pack.webp';
+function openPack(opts = {}){
+  if (!opts.pulls && S.packs <= 0) return;
+  if (!opts.pulls) S.packs--;
+  const first = S.packsOpened === 0; S.packsOpened++;
+  const pulls = opts.pulls || drawPack(); save();
+  const packImg = opts.img || (pulls.some(p => p.c.series === 2) ? 'art/pack_s2.webp' : 'art/pack.webp');
+  const label = opts.label ? `<span class="pk-label">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(opts.label)}</b></span>` : '';
   lockScroll(); history.pushState({cq:'pack'}, '');
   const ov = document.createElement('div'); ov.className = 'pk';
   const topClip = `polygon(0% 0%, 100% 0%, ${zig(12).reverse().join(',')})`, bodyClip = `polygon(${zig(12).join(',')}, 100% 100%, 0% 100%)`;
@@ -2575,7 +2583,7 @@ function openPack(){
     <div class="pk-stage">
       <button class="pk-pack" data-act="pk-tear" aria-label="Open the pack">
         <img class="pk-body" src="${packImg}" alt="" style="clip-path:${bodyClip}">
-        <img class="pk-top" src="${packImg}" alt="" style="clip-path:${topClip}">
+        <img class="pk-top" src="${packImg}" alt="" style="clip-path:${topClip}">${label}
       </button>
       <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
         <div class="pk-inner"><div class="pk-face pk-back"><img class="cbackimg" src="art/cardback.webp" alt="Card back"></div>
@@ -2583,7 +2591,7 @@ function openPack(){
         <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? ICO('memory') + ' MEMORY TRICK!' : 'NEW!') : `DUPLICATE · +${p.coins} ${COIN}`}</span>
       </button>`).join('')}</div>
     </div>
-    <p class="pk-hint">${first ? 'Your first pack! Tap it to tear it open.' : packImg.includes('s2') ? 'A Series 2 pack! Tap it to tear it open.' : 'Tap the pack to tear it open.'}</p>
+    <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Tap it to tear it open.' : packImg.includes('s2') ? 'A Series 2 pack! Tap it to tear it open.' : 'Tap the pack to tear it open.'}</p>
     <button class="btn-big gold pk-done" data-act="pk-done">COLLECT →</button>`;
   document.body.appendChild(ov);
 }

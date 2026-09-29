@@ -22,6 +22,12 @@ function earnCoins(n, why, opts = {}){
   if (opts.save) save();
   return n;
 }
+/* Spend coins; returns false (and changes nothing) if the player can't afford it. */
+function spendCoins(n, why){
+  n = Math.round(n); if (n <= 0 || (S.coins || 0) < n) return false;
+  S.coins -= n; S.coinLog = [{ n:-n, why, at:Date.now() }].concat(S.coinLog || []).slice(0, 25);
+  save(); return true;
+}
 function logCoins(n, why){ if (n > 0) S.coinLog = [{ n, why, at:Date.now() }].concat(S.coinLog || []).slice(0, 25); }
 const coinsForAnswer = hinted => hinted ? Math.ceil(COINS.answer / 2) : COINS.answer;
 const coinsForDup = c => c.rarity === 'rare' ? COINS.dupRare : COINS.dupCommon;
@@ -47,7 +53,7 @@ function coinSheet(){
   const when = t => { const m = Math.round((Date.now() - t) / 60000); return m < 1 ? 'just now' : m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' h ago' : new Date(t).toLocaleDateString(undefined, {month:'short', day:'numeric'}); };
   const streak = S.streak && S.streak.days ? `<p class="coin-streak">${ICO('streak')} ${S.streak.days}-day streak${S.streak.last === todayKey() ? '' : ' · study today to keep it'}</p>` : '';
   openSheet(`<div class="coin-head"><span class="coin-big">${COIN}</span><b>${(S.coins || 0).toLocaleString()}</b><small>coins</small></div>${streak}
-    <p class="coin-soon">The store opens soon. Save up for decks, card finishes, binder covers, and more.</p>
+    
     <div class="sec-h"><span>How to earn</span></div>
     <div class="list info">
       ${[['Right answer', `+${COINS.answer} (${coinsForAnswer(true)} with a hint)`], ['Card levels up', `+${COINS.levelUp}`], ['Card mastered', `+${COINS.mastered}`],
@@ -55,10 +61,10 @@ function coinSheet(){
         .map(([k, v]) => `<div class="row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('')}
     </div>
     ${log.length ? `<div class="sec-h"><span>Recent</span></div><div class="list info">${log.slice(0, 8).map(e =>
-      `<div class="row"><span class="k">${esc(e.why)}<small class="coin-when">${when(e.at)}</small></span><span class="v coin-plus">+${e.n}</span></div>`).join('')}</div>` : ''}
+      `<div class="row"><span class="k">${esc(e.why)}<small class="coin-when">${when(e.at)}</small></span><span class="v ${e.n > 0 ? 'coin-plus' : 'coin-minus'}">${e.n > 0 ? '+' + e.n : '−' + Math.abs(e.n)}</span></div>`).join('')}</div>` : ''}
     <button class="sheet-cancel" data-act="sheet-close">Done</button>`);
 }
-document.addEventListener('click', e => { if (e.target.closest('[data-act="coins"]')) coinSheet(); });
+document.addEventListener('click', e => { if (e.target.closest('[data-act="coins"]')) push('store'); });   // the coin chip opens the store
 
 const ECON_CSS = `
 .coin-chip{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 12px 0 8px;border-radius:17px;border:0;background:rgba(227,178,60,.16);color:var(--mustard);font:700 16px var(--ui);font-variant-numeric:tabular-nums}
@@ -72,7 +78,7 @@ const ECON_CSS = `
 .coin-streak{text-align:center;margin:0 0 8px;font:600 15px var(--ui);color:#ffb35c}
 .coin-soon{text-align:center;margin:0 8px 6px;font:14px/1.4 var(--ui);color:var(--sub)}
 .coin-when{display:block;font-size:12px;color:var(--sub);opacity:.8}
-.coin-plus{color:var(--mustard)!important}
+.coin-plus{color:var(--mustard)!important} .coin-minus{color:var(--sub)!important}
 .chip.coin{background:#f3d27a}
 `;
 document.head.insertAdjacentHTML('beforeend', `<style>${ECON_CSS}</style>`);
