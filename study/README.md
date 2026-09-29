@@ -14,6 +14,8 @@ The Court Clerk PDFs are copied here from the project root. `Court_Clerk_Exam_Qu
 |---|---|---|---|---|
 | `Court_Clerk_Exam_Subject_Matter.pdf` | Court Clerk (JG-20) | [NY Courts study guides](https://www.nycourts.gov/exams/exam-study-guides-resources) / [PDF](https://www.nycourts.gov/LegacyPDFS/CAREERS/exams/Court_Clerk_Exam_Subject_Matter.pdf) | 2026-09-28 | Official subject list; copied from project root. |
 | `Court_Clerk_Exam_Questions.pdf` | Court Clerk (JG-20) | [NY Courts study guides](https://www.nycourts.gov/exams/exam-study-guides-resources) / [PDF](https://www.nycourts.gov/LegacyPDFS/CAREERS/exams/Court_Clerk_Exam_Questions.pdf) | 2026-09-28 | Official sample questions; copied from project root. |
+| `CPLR-quick-reference.md` | Court Clerk (55-858) / Senior Court Clerk (55-859) | Owner's study guide notes (not official) | 2026-09-28 | 131 CPLR entries across 23 articles. **Leads, not a card source:** verify each entry against the official statute at nysenate.gov before making a card. Entries tagged *Sample Q* cite official sample questions; the Senior and Associate Court Clerk sample PDFs aren't in this folder yet. |
+| `CPL-quick-reference.md` | Court Clerk (55-858) / Senior Court Clerk (55-859) | Owner's study guide notes (not official) | 2026-09-28 | 45 Criminal Procedure Law entries across 24 articles. **Leads, not a card source:** verify each entry against the official statute before making a card. |
 
 ## PDFs still to collect
 
