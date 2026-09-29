@@ -12,7 +12,6 @@ const COINS = {
   dupCommon: 15,      // a duplicate card from a pack
   dupRare: 30,        // a duplicate rare card
 };
-const COIN = '🪙';
 
 /* Add coins and keep a short history for the coin sheet. Callers save afterward (or pass save:true).
    quiet:true skips the history line (right answers are logged once per round instead). */
@@ -46,7 +45,7 @@ function coinChip(){
 function coinSheet(){
   const log = S.coinLog || [];
   const when = t => { const m = Math.round((Date.now() - t) / 60000); return m < 1 ? 'just now' : m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' h ago' : new Date(t).toLocaleDateString(undefined, {month:'short', day:'numeric'}); };
-  const streak = S.streak && S.streak.days ? `<p class="coin-streak">🔥 ${S.streak.days}-day streak${S.streak.last === todayKey() ? '' : ' · study today to keep it'}</p>` : '';
+  const streak = S.streak && S.streak.days ? `<p class="coin-streak">${ICO('streak')} ${S.streak.days}-day streak${S.streak.last === todayKey() ? '' : ' · study today to keep it'}</p>` : '';
   openSheet(`<div class="coin-head"><span class="coin-big">${COIN}</span><b>${(S.coins || 0).toLocaleString()}</b><small>coins</small></div>${streak}
     <p class="coin-soon">The store opens soon. Save up for decks, card finishes, binder covers, and more.</p>
     <div class="sec-h"><span>How to earn</span></div>
@@ -63,11 +62,11 @@ document.addEventListener('click', e => { if (e.target.closest('[data-act="coins
 
 const ECON_CSS = `
 .coin-chip{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 12px 0 8px;border-radius:17px;border:0;background:rgba(227,178,60,.16);color:var(--mustard);font:700 16px var(--ui);font-variant-numeric:tabular-nums}
-.coin-chip .ci{font-size:17px;line-height:1}
+.coin-chip .ci .ico{width:20px;height:20px;vertical-align:-4px}
 .coin-chip.bump{animation:coinbump .5s cubic-bezier(.2,1.6,.4,1)}
 @keyframes coinbump{40%{transform:scale(1.18)}}
 .coin-head{display:flex;flex-direction:column;align-items:center;gap:2px;margin:4px 0 8px}
-.coin-head .coin-big{font-size:44px;line-height:1}
+.coin-head .coin-big .ico{width:64px;height:64px}
 .coin-head b{font:400 40px "Bangers";letter-spacing:.04em;color:var(--mustard)}
 .coin-head small{font:14px var(--ui);color:var(--sub);margin-top:-4px}
 .coin-streak{text-align:center;margin:0 0 8px;font:600 15px var(--ui);color:#ffb35c}

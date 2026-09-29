@@ -626,6 +626,18 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .th.cut{background:radial-gradient(circle at 50% 40%,#f6ead0,#c9ae7e)}
 .th.cut img{object-fit:contain;padding:3px}
 .th.emo{font-size:24px}
+.ico{display:inline-block;width:1.2em;height:1.2em;object-fit:contain;vertical-align:-.25em}
+.th .ico{width:32px;height:32px;padding:0;object-fit:contain}
+.btn-big .ico{width:1.35em;height:1.35em;vertical-align:-.3em;margin-right:4px}
+.hint .bulb .ico{width:10cqw;height:10cqw;vertical-align:middle}
+.pts .v .ico{width:1em;height:1em}
+.stage-dots .ico{width:16px;height:16px;vertical-align:-3px}
+.t-ico .ico{width:34px;height:34px}
+.toast .ico{margin-right:6px}
+.xrow .xt{display:flex;align-items:center;gap:10px}
+.xrow .xt .ico{width:28px;height:28px}
+.row.q .q-reward .ico{width:22px;height:22px;vertical-align:-6px}
+.chip .ico{width:1.25em;height:1.25em;vertical-align:-.3em}
 .th.emo.trick{background:linear-gradient(135deg,#6a3aa8,#b8862a)}
 .th.gi{background:rgba(255,255,255,.07);border-color:transparent;font-size:22px;color:var(--paper);font-family:var(--ui)}
 .th-missing{font-family:"Luckiest Guy";font-size:22px;color:var(--mustard);background:#141210}
@@ -1871,7 +1883,7 @@ function thumb(c){
   if (!st.owned) return `<span class="th th-missing">?</span>`;
   let src = null; for (let l = st.level; l >= 1; l--) if (ART[c.id] && ART[c.id][l]) { src = ART[c.id][l]; break; }
   if (src) return `<span class="th ${c.cutout ? 'cut' : ''}"><img src="${src}" alt="" loading="lazy"></span>`;
-  return `<span class="th emo ${c.trickType ? 'trick' : ''}">${c.emoji || '🃏'}</span>`;
+  return `<span class="th emo ${c.trickType ? 'trick' : ''}">${c.trickType ? ICO('memory') : ICO('cards')}</span>`;
 }
 const pbar = pct => `<span class="mbar"><b style="width:${Math.round(Math.max(0, Math.min(1, pct)) * 100)}%"></b></span>`;
 const chev = `<svg class="chev" viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -1879,8 +1891,8 @@ function cardProgress(c){ const st = S.cards[c.id]; return st.mastered ? 1 : st.
 function statusLine(c){
   const st = S.cards[c.id];
   if (!st.owned) return 'Find it in packs';
-  if (isCold(st)) return '🧊 Cold case · reopen for +' + COLD_BONUS + ' XP';
-  if (st.mastered) return '🏅 Mastered';
+  if (isCold(st)) return ICO('thermo_snow') + ' Cold case · reopen for +' + COLD_BONUS + ' XP';
+  if (st.mastered) return ICO('mastered') + ' Mastered';
   return `Level ${st.level} · ${NEED[st.level-1] - st.xp} XP to ${st.level < maxL(c) ? 'Level ' + (st.level + 1) : 'Mastered'}`;
 }
 function cardRow(c, act){
@@ -1899,10 +1911,10 @@ function seg(key, value, options){
 
 /* ---------- groups: series and subjects ---------- */
 const SERIES = [
-  {g:'all', label:'All Cards', icon:'🃏'},
-  {g:'s1', label:'Series 1', icon:'①'},
-  {g:'s2', label:'Series 2', icon:'②'},
-  {g:'tricks', label:'Memory Tricks', icon:'🧠'},
+  {g:'all', label:'All Cards', icon:'cards'},
+  {g:'s1', label:'Series 1', icon:'series1'},
+  {g:'s2', label:'Series 2', icon:'series2'},
+  {g:'tricks', label:'Memory Tricks', icon:'memory'},
 ];
 function groupTest(g){
   if (g.startsWith('set:')) { const n = g.slice(4); return c => c.set === n; }
@@ -1912,12 +1924,15 @@ function groupLabel(g){
   if (g.startsWith('set:')) return titleCase(g.slice(4));
   return (SERIES.find(x => x.g === g) || {}).label || 'Cards';
 }
+/* Hand-drawn UI icons (art/icon_*.webp). The build rewrites these paths to .webp. */
+const ICO = (name, cls = '') => `<img class="ico ${cls}" src="art/icon_${name}.webp" alt="">`;
+const COIN = `<img class="ico coin" src="art/icon_coin.webp" alt="coins">`;
 const titleCase = s => s.toLowerCase().replace(/(^|[\s:&(])([a-z])/g, (m, a, b) => a + b.toUpperCase()).replace(/\bCplr\b/, 'CPLR').replace(/\bAct\b/, 'Act');
 function subjects(){ return [...new Set(CARDS.map(c => c.set))].map(set => ({g:'set:' + set, label:titleCase(set)})); }
 function groupRow(g, label, icon, act = 'cards'){
   const list = CARDS.filter(groupTest(g)), have = list.filter(owned).length;
   return `<button class="row" data-act="push" data-s="${act}" data-g="${esc(g)}">
-    <span class="th emo gi">${icon}</span><span class="row-main"><b>${esc(label)}</b><small>${have} of ${list.length} collected</small>${pbar(have / Math.max(1, list.length))}</span>${chev}</button>`;
+    <span class="th emo gi">${ICO(icon)}</span><span class="row-main"><b>${esc(label)}</b><small>${have} of ${list.length} collected</small>${pbar(have / Math.max(1, list.length))}</span>${chev}</button>`;
 }
 
 /* ---------- daily quests + milestones (every reward is a card pack) ---------- */
@@ -1927,22 +1942,22 @@ function daily(){
   return S.daily;
 }
 const DAILY_QUESTS = [
-  {id:'round', icon:'▶', label:'Finish a study round', need:1, get:d => d.sessions},
-  {id:'correct', icon:'✔', label:'Get 10 answers right', need:10, get:d => d.correct},
-  {id:'trick', icon:'🧠', label:'Get 3 Memory Trick answers right', need:3, get:d => d.trick},
+  {id:'round', icon:'play', label:'Finish a study round', need:1, get:d => d.sessions},
+  {id:'correct', icon:'check', label:'Get 10 answers right', need:10, get:d => d.correct},
+  {id:'trick', icon:'memory', label:'Get 3 Memory Trick answers right', need:3, get:d => d.trick},
 ];
 const ownedCount = () => CARDS.filter(owned).length, masteredCount = () => CARDS.filter(c => S.cards[c.id].mastered).length;
 const MILESTONES = [
-  {id:'col5', icon:'🃏', label:'Collect 5 cards', need:5, get:ownedCount},
-  {id:'col15', icon:'🃏', label:'Collect 15 cards', need:15, get:ownedCount},
-  {id:'col25', icon:'🃏', label:'Collect 25 cards', need:25, get:ownedCount},
-  {id:'colall', icon:'👑', label:'Collect every card', need:() => CARDS.length, get:ownedCount},
-  {id:'master1', icon:'🏅', label:'Master a card', need:1, get:masteredCount},
-  {id:'master5', icon:'🏅', label:'Master 5 cards', need:5, get:masteredCount},
-  {id:'rounds5', icon:'▶', label:'Finish 5 study rounds', need:5, get:() => S.stats.sessions},
-  {id:'rounds25', icon:'▶', label:'Finish 25 study rounds', need:25, get:() => S.stats.sessions},
-  {id:'reopen', icon:'🧊', label:'Reopen a cold case', need:1, get:() => S.stats.reopened || 0},
-  {id:'packs10', icon:'🎁', label:'Open 10 packs', need:10, get:() => S.packsOpened},
+  {id:'col5', icon:'cards', label:'Collect 5 cards', need:5, get:ownedCount},
+  {id:'col15', icon:'cards', label:'Collect 15 cards', need:15, get:ownedCount},
+  {id:'col25', icon:'cards', label:'Collect 25 cards', need:25, get:ownedCount},
+  {id:'colall', icon:'crown', label:'Collect every card', need:() => CARDS.length, get:ownedCount},
+  {id:'master1', icon:'mastered', label:'Master a card', need:1, get:masteredCount},
+  {id:'master5', icon:'mastered', label:'Master 5 cards', need:5, get:masteredCount},
+  {id:'rounds5', icon:'play', label:'Finish 5 study rounds', need:5, get:() => S.stats.sessions},
+  {id:'rounds25', icon:'play', label:'Finish 25 study rounds', need:25, get:() => S.stats.sessions},
+  {id:'reopen', icon:'thermo_snow', label:'Reopen a cold case', need:1, get:() => S.stats.reopened || 0},
+  {id:'packs10', icon:'pack', label:'Open 10 packs', need:10, get:() => S.packsOpened},
 ];
 const qNeed = q => typeof q.need === 'function' ? q.need() : q.need;
 function questState(q, kind){
@@ -1957,8 +1972,8 @@ function questRow(q, kind){
   const x = questState(q, kind);
   const btn = x.claimed ? `<span class="q-done">✓</span>`
     : x.done ? `<button class="q-claim" data-act="claim" data-kind="${kind}" data-q="${q.id}">Claim</button>`
-    : `<span class="q-reward">🎁 +1</span>`;
-  return `<div class="row q ${x.claimed ? 'claimed' : ''} ${x.done && !x.claimed ? 'ready' : ''}"><span class="th emo gi">${q.icon}</span>
+    : `<span class="q-reward">${ICO('pack')} +1</span>`;
+  return `<div class="row q ${x.claimed ? 'claimed' : ''} ${x.done && !x.claimed ? 'ready' : ''}"><span class="th emo gi">${ICO(q.icon)}</span>
     <span class="row-main"><b>${esc(q.label)}</b><small>${x.claimed ? 'Claimed' : x.val + ' / ' + x.need}</small>${x.claimed ? '' : pbar(x.val / x.need)}</span>${btn}</div>`;
 }
 function claimQuest(kind, id){
@@ -1968,11 +1983,12 @@ function claimQuest(kind, id){
   const coins = kind === 'daily' ? earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`) : 0;
   S.packs++; save(); refresh();
   openSheet(`<div class="reward"><img src="art/pack.webp" alt="" class="bob"><h3>Quest complete!</h3><p>${esc(q.label)}</p><b>+1 card pack${coins ? ` · +${coins} ${COIN}` : ''}</b></div>
-    <button class="btn-big gold" data-act="pack-open">🎁 OPEN IT NOW</button><button class="sheet-cancel" data-act="sheet-close">Later</button>`);
+    <button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN IT NOW</button><button class="sheet-cancel" data-act="sheet-close">Later</button>`);
 }
-function toast(msg){
+function toast(msg, icon){
   document.querySelectorAll('.toast').forEach(t => t.remove());
   const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg;
+  if (icon) t.insertAdjacentHTML('afterbegin', ICO(icon));
   document.body.appendChild(t); setTimeout(() => t.classList.add('out'), 1600); setTimeout(() => t.remove(), 2000);
 }
 
@@ -1992,17 +2008,17 @@ const SCREENS = {
       right:`<button class="nb-avatar" data-act="tab" data-tab="profile" aria-label="Profile, level ${playerLevel()}">${ring((S.stats.xp % 250) / 250, 'L' + playerLevel(), 40)}</button>`,
       body:`
         <div class="home-logo">CLERK <span>QUEST</span></div>
-        ${showInstallTip() ? `<button class="a2hs-mini" data-act="a2hs-show"><span>📲</span> Add Clerk Quest to your Home Screen ${chev}</button>` : ''}
+        ${showInstallTip() ? `<button class="a2hs-mini" data-act="a2hs-show">${ICO('install')} Add Clerk Quest to your Home Screen ${chev}</button>` : ''}
         ${target ? `<button class="hero ${isCold(tst) ? 'cold' : ''}" data-act="study" data-id="${target.id}">
           <span class="hero-card">${cardEl(target, tst)}</span>
-          <span class="hero-info"><small>${isCold(tst) ? '🧊 COLD CASE' : 'CONTINUE'}</small><b>${esc(target.name)}</b>
+          <span class="hero-info"><small>${isCold(tst) ? ICO('thermo_snow') + ' COLD CASE' : 'CONTINUE'}</small><b>${esc(target.name)}</b>
             <span class="hero-sub">${statusLine(target)}</span>${pbar(cardProgress(target))}
             <span class="hero-cta">${PLAY_ICON} ${isCold(tst) ? 'Reopen' : 'Study'}</span></span></button>` : ''}
         <div class="tiles">
           <button class="tile2" data-act="tab" data-tab="quests">${ring(DAILY_QUESTS.filter(q => questState(q, 'daily').done).length / 3, DAILY_QUESTS.filter(q => questState(q, 'daily').done).length + '/3', 52, '#5fd47a')}<span><b>Daily Quests</b><small>${claimableCount() ? claimableCount() + ' reward' + (claimableCount() > 1 ? 's' : '') + ' ready' : 'Earn free packs'}</small></span>${claimableCount() ? `<i class="dot-badge">${claimableCount()}</i>` : ''}</button>
           <button class="tile2" data-act="push" data-s="packs"><img class="t-pack" src="${nextPackS2 ? 'art/pack_s2.webp' : 'art/pack.webp'}" alt=""><span><b>Packs</b><small>${S.packs ? S.packs + ' ready to open' : 'Study to earn more'}</small></span>${S.packs ? `<i class="dot-badge">${S.packs}</i>` : ''}</button>
           <button class="tile2" data-act="tab" data-tab="collection">${ring(ownedN / CARDS.length, ownedN + '', 52)}<span><b>Collection</b><small>${ownedN} of ${CARDS.length} cards</small></span></button>
-          <button class="tile2 ${cold.length ? 'icy' : ''}" data-act="tab" data-tab="study"><span class="t-ico">${cold.length ? '🧊' : '🔥'}</span><span><b>${cold.length ? 'Cold Cases' : 'All Warm'}</b><small>${cold.length ? cold.length + ' to reopen' : 'Nothing going cold'}</small></span></button>
+          <button class="tile2 ${cold.length ? 'icy' : ''}" data-act="tab" data-tab="study"><span class="t-ico">${cold.length ? ICO('thermo_snow') : ICO('streak')}</span><span><b>${cold.length ? 'Cold Cases' : 'All Warm'}</b><small>${cold.length ? cold.length + ' to reopen' : 'Nothing going cold'}</small></span></button>
         </div>
         <div class="sec-h"><span>${recent.length ? 'Recently Studied' : 'Your Cards'}</span><button data-act="tab" data-tab="collection">See All</button></div>
         <div class="carousel">${car.map(c => miniCard(c)).join('')}</div>`,
@@ -2018,10 +2034,10 @@ const SCREENS = {
       const almost = mine.filter(c => { const st = S.cards[c.id]; return !st.mastered && Math.ceil((NEED[st.level-1] - st.xp) / REWARD[st.level-1]) <= 2; });
       const upNext = mine.filter(c => !S.cards[c.id].mastered && !isCold(S.cards[c.id])).sort((a, b) => cardProgress(b) - cardProgress(a)).slice(0, 5);
       body += `<button class="quick" data-act="quick">${PLAY_ICON} Quick Round<small>A random card from your collection</small></button>
-        ${cold.length ? `<div class="sec-h"><span>🧊 Cold Cases</span></div><div class="list">${cold.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('')}</div>` : ''}
-        ${almost.length ? `<div class="sec-h"><span>⚡ Almost Leveled Up</span></div><div class="carousel">${almost.map(c => miniCard(c)).join('')}</div>` : ''}
-        <div class="sec-h"><span>Up Next</span></div><div class="list">${upNext.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('') || '<p class="empty">Every card you own is mastered or cold. 🎉</p>'}</div>
-        <div class="sec-h"><span>By Subject</span></div><div class="list">${subjects().map(s => groupRow(s.g, s.label, '📚', 'studyset')).join('')}</div>`;
+        ${cold.length ? `<div class="sec-h"><span>${ICO('thermo_snow')} Cold Cases</span></div><div class="list">${cold.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('')}</div>` : ''}
+        ${almost.length ? `<div class="sec-h"><span>${ICO('almost')} Almost Leveled Up</span></div><div class="carousel">${almost.map(c => miniCard(c)).join('')}</div>` : ''}
+        <div class="sec-h"><span>Up Next</span></div><div class="list">${upNext.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('') || `<p class="empty">Every card you own is mastered or cold. ${ICO('celebrate')}</p>`}</div>
+        <div class="sec-h"><span>By Subject</span></div><div class="list">${subjects().map(s => groupRow(s.g, s.label, 'subject', 'studyset')).join('')}</div>`;
     } else if (tab === 'read') {
       body += readTabHTML(p);
     } else {
@@ -2041,7 +2057,7 @@ const SCREENS = {
     const ownedN = CARDS.filter(owned).length, mastered = CARDS.filter(c => S.cards[c.id].mastered).length;
     return {
       title:'Collection',
-      right:`<button class="nb-btn" data-act="push" data-s="packs" aria-label="Packs">🎁${S.packs ? `<i class="dot-badge sm">${S.packs}</i>` : ''}</button>`,
+      right:`<button class="nb-btn" data-act="push" data-s="packs" aria-label="Packs">${ICO('pack')}${S.packs ? `<i class="dot-badge sm">${S.packs}</i>` : ''}</button>`,
       body:`
         <div class="summary">${ring(ownedN / CARDS.length, Math.round(ownedN / CARDS.length * 100) + '%', 72)}
           <span><b>${ownedN} of ${CARDS.length} collected</b><small>${mastered} mastered</small></span>
@@ -2049,7 +2065,7 @@ const SCREENS = {
         <div class="sec-h"><span>Series</span></div>
         <div class="list">${SERIES.map(s => groupRow(s.g, s.label, s.icon)).join('')}</div>
         <div class="sec-h"><span>Subjects</span></div>
-        <div class="list">${subjects().map(s => groupRow(s.g, s.label, '📚')).join('')}</div>`,
+        <div class="list">${subjects().map(s => groupRow(s.g, s.label, 'subject')).join('')}</div>`,
     };
   },
 
@@ -2088,7 +2104,7 @@ const SCREENS = {
         </div>
         ${isCold(st) ? `<div class="coldnote"><img src="art/icon_thermo_snow.webp" alt=""> <b>Cold case.</b> One correct answer reopens it (+${COLD_BONUS} XP).</div>`
           : st.last ? `<p class="foot">Goes cold if not studied for ${Math.round(coldAfter(st) / DAY)} days.</p>` : ''}
-        ${c.hook ? `<div class="hookbox">🧠 ${esc(c.hook)}</div>` : ''}`;
+        ${c.hook ? `<div class="hookbox">${ICO('memory')} ${esc(c.hook)}</div>` : ''}`;
     } else if (tab === 'rule') {
       panel = `${c.source ? caseFileHTML(c) : ''}
         ${c.diff ? `<div class="sec-h"><span>How to tell them apart</span></div><div class="diffbox">${['a', 'b'].map(k => `<div class="dcol ${k}"><b>${esc(c.diff[k].name)}</b><i>“${esc(c.diff[k].hook)}”</i><ul>${c.diff[k].points.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>`).join('<div class="dvs">VS</div>')}</div>` : ''}
@@ -2103,11 +2119,11 @@ const SCREENS = {
       right:`<button class="nb-btn" data-act="card-menu" data-id="${c.id}" aria-label="More">•••</button>`,
       body:`
         <div class="cd-top"><div class="cd-card">${cardEl(c, shown)}</div>
-          <div class="stage-dots">${Array.from({length:maxL(c)}, (_, i) => i + 1).map(l => `<button data-act="stage" data-l="${l}" class="${l === pv ? 'cur' : ''} ${l > st.level ? 'lk' : ''}" ${l > st.level ? 'disabled aria-label="Locked"' : `aria-label="Level ${l} art"`}>${l > st.level ? '🔒' : l}</button>`).join('')}</div>
+          <div class="stage-dots">${Array.from({length:maxL(c)}, (_, i) => i + 1).map(l => `<button data-act="stage" data-l="${l}" class="${l === pv ? 'cur' : ''} ${l > st.level ? 'lk' : ''}" ${l > st.level ? 'disabled aria-label="Locked"' : `aria-label="Level ${l} art"`}>${l > st.level ? ICO('lock') : l}</button>`).join('')}</div>
           ${pv !== st.level ? `<p class="preview-note">Previewing Level ${pv} art</p>` : ''}
         </div>
         <h2 class="cd-name">${esc(c.name)}</h2>
-        <div class="cd-level"><span>${st.mastered ? '🏅 Mastered' : 'Level ' + st.level}</span><span>${st.mastered ? 'Max' : st.xp + ' / ' + NEED[st.level-1] + ' XP'}</span></div>${pbar(cardProgress(c))}
+        <div class="cd-level"><span>${st.mastered ? ICO('mastered') + ' Mastered' : 'Level ' + st.level}</span><span>${st.mastered ? 'Max' : st.xp + ' / ' + NEED[st.level-1] + ' XP'}</span></div>${pbar(cardProgress(c))}
         ${seg('tab', tab, tabs)}
         <div class="cd-panel">${panel}</div>`,
       after:`<div class="cta-bar"><div><button class="btn-big ${isCold(st) ? 'coldbtn' : ''}" data-act="study" data-id="${c.id}">${PLAY_ICON} ${isCold(st) ? 'REOPEN THIS CASE' : tab === 'rule' && c.source ? 'QUIZ THIS CARD' : 'STUDY THIS CARD'}</button></div></div>`,
@@ -2120,7 +2136,7 @@ const SCREENS = {
       <div class="packs-hero"><img src="${s2 ? 'art/pack_s2.webp' : 'art/pack.webp'}" alt="Clerk Quest card pack" class="${S.packs ? 'bob' : 'dim'}">
         <b>${S.packs ? S.packs + ' pack' + (S.packs > 1 ? 's' : '') + ' ready' : 'No packs right now'}</b>
         <small>${S.packs ? (s2 ? 'Your next pack has Series 2 cards!' : 'Each pack has 3 cards.') : 'Finish a study round or a quest to earn one.'}</small></div>
-      <button class="btn-big gold" data-act="pack-open" ${S.packs ? '' : 'disabled'}>🎁 OPEN A PACK</button>
+      <button class="btn-big gold" data-act="pack-open" ${S.packs ? '' : 'disabled'}>${ICO('pack')} OPEN A PACK</button>
       <div class="list" style="margin-top:18px">
         <div class="row"><span class="k">Packs opened</span><span class="v">${S.packsOpened}</span></div>
         <div class="row"><span class="k">How to earn</span><span class="v">Study rounds · Quests</span></div>
@@ -2140,7 +2156,7 @@ const SCREENS = {
     if (tab === 'daily') body += `<div class="list">${DAILY_QUESTS.map(q => questRow(q, 'daily')).join('')}</div><p class="foot">Every reward is a card pack.</p>`;
     else {
       const open = MILESTONES.filter(q => !questState(q, 'mile').claimed), done = MILESTONES.filter(q => questState(q, 'mile').claimed);
-      body += `<div class="list">${open.map(q => questRow(q, 'mile')).join('') || '<p class="empty">Every milestone claimed! 👑</p>'}</div>
+      body += `<div class="list">${open.map(q => questRow(q, 'mile')).join('') || `<p class="empty">Every milestone claimed! ${ICO('crown')}</p>`}</div>
         ${done.length ? `<div class="sec-h"><span>Completed</span></div><div class="list">${done.map(q => questRow(q, 'mile')).join('')}</div>` : ''}`;
     }
     return { title:'Quests', body };
@@ -2156,10 +2172,10 @@ const SCREENS = {
         <div><b>${acc}</b><small>Accuracy</small></div><div><b>${S.stats.sessions}</b><small>Rounds</small></div>
         <div><b>${CARDS.filter(owned).length}</b><small>Cards</small></div><div><b>${mastered}</b><small>Mastered</small></div></div>
       <div class="list">
-        <button class="row" data-act="push" data-s="stats"><span class="th emo gi">📊</span><span class="row-main"><b>Statistics</b></span>${chev}</button>
-        <button class="row" data-act="push" data-s="packs"><span class="th emo gi">🎁</span><span class="row-main"><b>Packs</b></span>${S.packs ? `<i class="dot-badge in">${S.packs}</i>` : ''}${chev}</button>
-        <button class="row" data-act="push" data-s="help"><span class="th emo gi">❓</span><span class="row-main"><b>How to Play</b></span>${chev}</button>
-        <button class="row" data-act="push" data-s="settings"><span class="th emo gi">⚙️</span><span class="row-main"><b>Settings</b></span>${chev}</button>
+        <button class="row" data-act="push" data-s="stats"><span class="th emo gi">${ICO('stats')}</span><span class="row-main"><b>Statistics</b></span>${chev}</button>
+        <button class="row" data-act="push" data-s="packs"><span class="th emo gi">${ICO('pack')}</span><span class="row-main"><b>Packs</b></span>${S.packs ? `<i class="dot-badge in">${S.packs}</i>` : ''}${chev}</button>
+        <button class="row" data-act="push" data-s="help"><span class="th emo gi">${ICO('help')}</span><span class="row-main"><b>How to Play</b></span>${chev}</button>
+        <button class="row" data-act="push" data-s="settings"><span class="th emo gi">${ICO('settings')}</span><span class="row-main"><b>Settings</b></span>${chev}</button>
       </div>` };
   },
 
@@ -2187,16 +2203,16 @@ const SCREENS = {
   },
 
   help(){
-    const item = (t, b) => `<details class="xrow"><summary>${t}${chev}</summary><div>${b}</div></details>`;
+    const item = (t, b) => `<details class="xrow"><summary><span class="xt">${t}</span>${chev}</summary><div>${b}</div></details>`;
     return { title:'How to Play', body:`<div class="list">
-      ${item('▶ Studying', 'Each round is 5 questions from one card. Correct answers earn XP. A hint (Sidebar) costs half the points. Wrong answers show the right answer and why.')}
-      ${item('★ Levels & glows', 'Cards level up as you earn XP. Questions get harder and the art upgrades. Near the top level a neon ring races around the card; at the top it turns gold with a gloss.')}
-      ${item('🏆 Quests', 'Three daily quests reset every midnight, and milestones reward long-term progress. Every reward is a card pack.')}
-      ${item('🎁 Packs', 'Every finished study round and every quest gives a pack of 3 cards. New cards join your collection; duplicates turn into coins.')}
-      ${item('🧊 Cold cases', 'Cards you haven\'t studied in a while go cold (2 days at Level 1, up to 21 days when mastered). One correct answer reopens the case for a +' + COLD_BONUS + ' XP bonus.')}
-      ${item('🧠 Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).')}
-      ${item('② Series', 'Series 2 cards use a new art style and have their own pack wrapper.')}
-      ${item('⚖️ Official sources', 'Rule cards are built only from the rule text quoted in the NYS Unified Court System Court Clerk sample questions and cite their source. Other questions are sample content. Fact-check before relying on them.')}
+      ${item(ICO('play') + ' Studying', 'Each round is 5 questions from one card. Correct answers earn XP. A hint (Sidebar) costs half the points. Wrong answers show the right answer and why.')}
+      ${item(ICO('star') + ' Levels & glows', 'Cards level up as you earn XP. Questions get harder and the art upgrades. Near the top level a neon ring races around the card; at the top it turns gold with a gloss.')}
+      ${item(ICO('trophy') + ' Quests', 'Three daily quests reset every midnight, and milestones reward long-term progress. Every reward is a card pack.')}
+      ${item(ICO('pack') + ' Packs', 'Every finished study round and every quest gives a pack of 3 cards. New cards join your collection; duplicates turn into coins.')}
+      ${item(ICO('thermo_snow') + ' Cold cases', 'Cards you haven\'t studied in a while go cold (2 days at Level 1, up to 21 days when mastered). One correct answer reopens the case for a +' + COLD_BONUS + ' XP bonus.')}
+      ${item(ICO('memory') + ' Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).')}
+      ${item(ICO('series2') + ' Series', 'Series 2 cards use a new art style and have their own pack wrapper.')}
+      ${item(ICO('subject') + ' Official sources', 'Rule cards are built only from the rule text quoted in the NYS Unified Court System Court Clerk sample questions and cite their source. Other questions are sample content. Fact-check before relying on them.')}
       </div>` };
   },
 
@@ -2206,19 +2222,19 @@ const SCREENS = {
       <div class="sec-h"><span>Account & cloud save</span></div>
       <div class="list">
         ${cloudUser
-          ? `<div class="row"><span class="th emo gi">☁️</span><span class="row-main"><b>Cloud save on</b><small>${esc(cloudUser.email || 'Signed in')}</small></span></div>
-             <button class="row" data-act="cloud-sync"><span class="th emo gi">🔄</span><span class="row-main"><b>Sync now</b></span></button>
-             <button class="row" data-act="cloud-signout"><span class="th emo gi">↪️</span><span class="row-main"><b>Sign out</b></span></button>`
-          : `<button class="row" data-act="cloud-signin"><span class="th emo gi">☁️</span><span class="row-main"><b>Sign in to save progress</b><small>Keep your cards across devices</small></span>${chev}</button>`}
+          ? `<div class="row"><span class="th emo gi">${ICO('cloud')}</span><span class="row-main"><b>Cloud save on</b><small>${esc(cloudUser.email || 'Signed in')}</small></span></div>
+             <button class="row" data-act="cloud-sync"><span class="th emo gi">${ICO('sync')}</span><span class="row-main"><b>Sync now</b></span></button>
+             <button class="row" data-act="cloud-signout"><span class="th emo gi">${ICO('signout')}</span><span class="row-main"><b>Sign out</b></span></button>`
+          : `<button class="row" data-act="cloud-signin"><span class="th emo gi">${ICO('cloud')}</span><span class="row-main"><b>Sign in to save progress</b><small>Keep your cards across devices</small></span>${chev}</button>`}
       </div>
       <div class="list">
-        <button class="row" data-act="a2hs-show"><span class="th emo gi">📲</span><span class="row-main"><b>Add to Home Screen</b><small>${isStandalone() ? 'Already installed' : 'Play full screen like an app'}</small></span>${chev}</button>
-        <button class="row" data-act="push" data-s="glows"><span class="th emo gi">✨</span><span class="row-main"><b>Glow tiers preview</b></span>${chev}</button>
+        <button class="row" data-act="a2hs-show"><span class="th emo gi">${ICO('install')}</span><span class="row-main"><b>Add to Home Screen</b><small>${isStandalone() ? 'Already installed' : 'Play full screen like an app'}</small></span>${chev}</button>
+        <button class="row" data-act="push" data-s="glows"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Glow tiers preview</b></span>${chev}</button>
       </div>
       <div class="sec-h"><span>Tester tools</span></div>
       <div class="list">
-        <button class="row" data-act="t-pack"><span class="th emo gi">🎁</span><span class="row-main"><b>Add a test pack</b></span></button>
-        <button class="row danger" data-act="resetall"><span class="th emo gi">⚠️</span><span class="row-main"><b>Reset all progress</b></span></button>
+        <button class="row" data-act="t-pack"><span class="th emo gi">${ICO('pack')}</span><span class="row-main"><b>Add a test pack</b></span></button>
+        <button class="row danger" data-act="resetall"><span class="th emo gi">${ICO('warning')}</span><span class="row-main"><b>Reset all progress</b></span></button>
       </div>
       <p class="foot">Clerk Quest prototype. Sample questions; fact-check before real use.</p>` };
   },
@@ -2367,8 +2383,8 @@ function paintStudy(anim){
       <div class="mascot" style="${PB(640,572,958,1218)}">${(c.mascot || (c.cutout && ART[c.id][1])) ? `<img src="${c.mascot || ART[c.id][1]}" alt="" class="${c.mascot?'':'cutm'}">` : `<span class="me">${c.emoji}</span><span class="bub">?</span>`}</div>`;
   }
   const lock = lv < maxL(c)
-    ? `<b>🔒 LEVEL ${lv+1} UNLOCKS:</b><span>• Harder questions</span><span>• +${REWARD[lv]} XP per answer</span><span>• New card art</span>`
-    : `<b>🏅 MASTERY:</b><span>• Gold MASTERED stamp</span><span>• Bragging rights</span><span>• Final lore line</span>`;
+    ? `<b>${ICO('lock')} LEVEL ${lv+1} UNLOCKS:</b><span>• Harder questions</span><span>• +${REWARD[lv]} XP per answer</span><span>• New card art</span>`
+    : `<b>${ICO('mastered')} MASTERY:</b><span>• Gold MASTERED stamp</span><span>• Bragging rights</span><span>• Final lore line</span>`;
   const back = document.getElementById('back');
   back.className = 'card' + (anim ? ' fade-swap' : '');
   back.innerHTML = `
@@ -2384,8 +2400,8 @@ function paintStudy(anim){
     <div class="t counter" style="${PB(610,316,912,372)}">QUESTION ${sess.i+1} OF ${SESSION_LEN}</div>
     ${mid}
     <button class="t hint ${sess.hint?'used':''}" style="${PB(68,1230,642,1408)}" data-act="hint" ${sess.hint||ans?'disabled':''}>
-      <span class="bulb">💡</span><span><b>${sess.hint ? 'HINT:' : 'SIDEBAR?'}</b>${esc(sess.hint ? q.h : 'Tap for a hint. Costs half the points.')}</span></button>
-    <div class="t pts" style="${PB(664,1240,956,1408)}"><span>POINT VALUE</span><span class="v ${sess.hint?'half':''}">⭐ +${reward}${sess.hint?` <s>+${REWARD[lv-1]}</s>`:''}</span></div>
+      <span class="bulb">${ICO('hint')}</span><span><b>${sess.hint ? 'HINT:' : 'SIDEBAR?'}</b>${esc(sess.hint ? q.h : 'Tap for a hint. Costs half the points.')}</span></button>
+    <div class="t pts" style="${PB(664,1240,956,1408)}"><span>POINT VALUE</span><span class="v ${sess.hint?'half':''}">${ICO('star')} +${reward}${sess.hint?` <s>+${REWARD[lv-1]}</s>`:''}</span></div>
     <div class="t nxtab" style="${PB(70,1436,358,1508)}">NEXT LEVEL</div>
     <div class="t nxl" style="${PB(86,1520,596,1670)}">
       <span>${disp.mastered ? 'Card MASTERED!' : sess.display ? '<b>LEVEL UP READY!</b>' : `${need - disp.xp} XP to ${lv<maxL(c)?`Level ${lv+1}`:'MASTERED'}`}</span>
@@ -2437,7 +2453,7 @@ function paintStudy(anim){
   if ((anyCut || qCut) && !ans) bh += `<button class="btn-big alt" data-act="ans-sheet">${anyCut ? 'READ FULL ANSWERS' : 'READ FULL QUESTION'}</button>`;
   if (ans) {
     const last = sess.i + 1 >= SESSION_LEN;
-    const label = sess.pendingLevel ? (sess.pendingLevel.mastered ? '🏅 CLAIM MASTERY' : '★ LEVEL UP!') : last ? 'SEE RESULTS →' : 'NEXT QUESTION →';
+    const label = sess.pendingLevel ? (sess.pendingLevel.mastered ? ICO('mastered') + ' CLAIM MASTERY' : ICO('star') + ' LEVEL UP!') : last ? 'SEE RESULTS →' : 'NEXT QUESTION →';
     bh += `<button class="btn-big ${sess.pendingLevel?'gold':''}" data-act="next">${label}</button>`;
   }
   below.innerHTML = bh;
@@ -2564,7 +2580,7 @@ function openPack(){
       <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
         <div class="pk-inner"><div class="pk-face pk-back"><img class="cbackimg" src="art/cardback.webp" alt="Card back"></div>
         <div class="pk-face pk-front">${cardEl(p.c, p.st)}</div></div>
-        <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? '🧠 MEMORY TRICK!' : 'NEW!') : `DUPLICATE · +${p.coins} ${COIN}`}</span>
+        <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? ICO('memory') + ' MEMORY TRICK!' : 'NEW!') : `DUPLICATE · +${p.coins} ${COIN}`}</span>
       </button>`).join('')}</div>
     </div>
     <p class="pk-hint">${first ? 'Your first pack! Tap it to tear it open.' : packImg.includes('s2') ? 'A Series 2 pack! Tap it to tear it open.' : 'Tap the pack to tear it open.'}</p>
@@ -2607,17 +2623,17 @@ function renderResults(){
       <h1>SESSION ADJOURNED</h1>
       <div class="score">${correct} / ${SESSION_LEN}</div>
       <div class="sub">correct answers</div>
-      <div class="rchips"><span class="chip">+${sess.xp} XP</span>${sess.coins ? `<span class="chip coin">+${sess.coins} ${COIN}</span>` : ''}${sess.streakCoins ? `<span class="chip" style="background:#ffd9a8">🔥 ${S.streak.days}-DAY STREAK</span>` : ''}${claimableCount() ? `<span class="chip" style="background:#bfe8c4">🏆 QUEST REWARD READY</span>` : ''}${sess.reopened ? `<span class="chip" style="background:#bfe0ff">🔥 CASE REOPENED</span>` : ''}${leveled ? `<span class="chip">★ LEVEL ${sess.startLevel} → ${st.level}</span>` : ''}<span class="chip">🎁 +1 CARD PACK</span></div>
+      <div class="rchips"><span class="chip">+${sess.xp} XP</span>${sess.coins ? `<span class="chip coin">+${sess.coins} ${COIN}</span>` : ''}${sess.streakCoins ? `<span class="chip" style="background:#ffd9a8">${ICO('streak')} ${S.streak.days}-DAY STREAK</span>` : ''}${claimableCount() ? `<span class="chip" style="background:#bfe8c4">${ICO('trophy')} QUEST REWARD READY</span>` : ''}${sess.reopened ? `<span class="chip" style="background:#bfe0ff">${ICO('streak')} CASE REOPENED</span>` : ''}${leveled ? `<span class="chip">${ICO('star')} LEVEL ${sess.startLevel} → ${st.level}</span>` : ''}<span class="chip">${ICO('pack')} +1 CARD PACK</span></div>
       <div class="rcard">${cardEl(c, st)}</div>
       <div class="panel">
         <b>${esc(c.name)}</b> · Level ${st.level}
         <div class="pbar" style="margin-top:10px"><b style="width:${st.mastered?100:Math.round(st.xp/need*100)}%"></b></div>
-        <div class="prow"><span>${st.mastered ? 'MASTERED' : `${st.xp} / ${need} XP`}</span><span>${st.mastered ? '🏅' : `${left} XP to go`}</span></div>
+        <div class="prow"><span>${st.mastered ? 'MASTERED' : `${st.xp} / ${need} XP`}</span><span>${st.mastered ? ICO('mastered') : `${left} XP to go`}</span></div>
         ${st.mastered ? '' : `<div class="almost">${answers <= 2 ? `Almost ${st.level<maxL(c)?`Level ${st.level+1}`:'MASTERED'}! Just ${answers} more correct.` : `About ${answers} correct answers to ${st.level<maxL(c)?`Level ${st.level+1}`:'MASTERED'}.`}</div>`}
       </div>
       <div class="stack">
         <button class="btn-big" data-act="study" data-id="${c.id}">&#9654;&#xFE0E; ONE MORE ROUND</button>
-        <button class="btn-big gold" data-act="pack-open">🎁 OPEN YOUR PACK</button>
+        <button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN YOUR PACK</button>
         ${c.source && correct < SESSION_LEN ? `<button class="btn-big alt" data-act="read-rule" data-id="${c.id}">REVIEW THE RULE</button>` : ''}
         <button class="btn-big alt" data-act="session-close">Done</button>
       </div>
@@ -2673,8 +2689,8 @@ function cardMenu(id){
     <div class="acts">
       <button data-act="study" data-id="${id}">${PLAY_ICON} ${isCold(st) ? 'Reopen this case' : 'Study this card'}</button>
       <div class="acts-sep">Tester tools</div>
-      <button data-act="t-level" data-id="${id}" ${st.mastered ? 'disabled' : ''}>⚡ Level up now</button>
-      <button data-act="t-cold" data-id="${id}">🧊 Make it go cold</button>
+      <button data-act="t-level" data-id="${id}" ${st.mastered ? 'disabled' : ''}>${ICO('almost')} Level up now</button>
+      <button data-act="t-cold" data-id="${id}">${ICO('thermo_snow')} Make it go cold</button>
       <button data-act="t-reset" data-id="${id}" class="danger">↺ Reset this card</button>
     </div><button class="sheet-cancel" data-act="sheet-close">Cancel</button>`);
 }
@@ -2682,7 +2698,7 @@ function missingSheet(id){
   const c = byId(id);
   openSheet(`<div class="sh-missing"><div class="sh-mcard">${lockedCardHTML(c)}</div>
       <h3>Not found yet</h3><p>This ${c.trickType ? 'Memory Trick' : 'card'} is waiting in a pack. ${S.packs ? `You have ${S.packs} pack${S.packs > 1 ? 's' : ''} to open.` : 'Finish a study round to earn a pack.'}</p></div>
-    ${S.packs ? `<button class="btn-big gold" data-act="pack-open">🎁 OPEN A PACK</button>` : `<button class="btn-big" data-act="quick">${PLAY_ICON} QUICK ROUND</button>`}
+    ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN A PACK</button>` : `<button class="btn-big" data-act="quick">${PLAY_ICON} QUICK ROUND</button>`}
     <button class="sheet-cancel" data-act="sheet-close">Not now</button>`);
 }
 function a2hsSheet(){
@@ -2846,7 +2862,7 @@ document.addEventListener('click', e => {
     case 'cloud-signout':
       CQCloud.signOut().catch(err => toast(err.message || 'Could not sign out')); break;
     case 'cloud-sync':
-      CQCloud.pushNow().then(() => toast('☁️ Progress synced'))
+      CQCloud.pushNow().then(() => toast('Progress synced', 'cloud'))
         .catch(err => toast(err.message || 'Sync failed. Progress is saved on this device.'));
       break;
     case 'a2hs-close': try { localStorage.setItem('cq-a2hs', '1'); } catch(err){} closeSheet(); refresh(); break;
@@ -2858,12 +2874,12 @@ document.addEventListener('click', e => {
       save(); const en = topEntry(); if (en.p) delete en.p.preview;
       showLevelUp(id, pl, () => refresh()); break;
     }
-    case 't-cold': { closeSheet(true); const st = S.cards[id]; st.last = Date.now() - coldAfter(st) - DAY; save(); refresh(); toast('🧊 Card went cold'); break; }
+    case 't-cold': { closeSheet(true); const st = S.cards[id]; st.last = Date.now() - coldAfter(st) - DAY; save(); refresh(); toast('Card went cold', 'thermo_snow'); break; }
     case 't-reset': { closeSheet(true); Object.assign(S.cards[id], {level:1, xp:0, mastered:false}); save(); const en = topEntry(); if (en.p) delete en.p.preview; refresh(); toast('↺ Card reset to Level 1'); break; }
-    case 't-pack': S.packs++; save(); refresh(); toast('🎁 Test pack added'); break;
+    case 't-pack': S.packs++; save(); refresh(); toast('Test pack added', 'pack'); break;
     case 'claim': claimQuest(t.dataset.kind, t.dataset.q); break;
     case 'claim-all': { const list = readyList(); list.forEach(([k, q]) => { if (k === 'daily') { daily().claimed[q.id] = true; earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`); } else { S.milestones = S.milestones || {}; S.milestones[q.id] = true; } });
-      S.packs += list.length; save(); refresh(); toast(`🎁 +${list.length} pack${list.length > 1 ? 's' : ''} claimed`); break; }
+      S.packs += list.length; save(); refresh(); toast(`+${list.length} pack${list.length > 1 ? 's' : ''} claimed`, 'pack'); break; }
     case 'sort-sheet': sortSheet(); break;
     case 'sort': nav.sort = t.dataset.v; refresh(); sortSheet(); break;
     case 'toggle-missing': nav.showMissing = nav.showMissing === false; refresh(); sortSheet(); break;
