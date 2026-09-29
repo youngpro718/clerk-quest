@@ -8,7 +8,7 @@
   const MODIFIED = 'clerkquest-cloud-updated-at';
   const TABLE = 'clerk_quest_player_saves';
   let client, session = null, timer = null, pending = null, initialized = false;
-  let applying = false, activeUser = null;
+  let applying = false, activeUser = null, deleting = false;
 
   const read = key => { try { return localStorage.getItem(key); } catch (_) { return null; } };
   const write = (key, value) => { try { localStorage.setItem(key, value); } catch (_) {} };
@@ -30,7 +30,7 @@
 
   async function pushNow() {
     clearTimeout(timer);
-    if (!client || !session?.user || applying) return { skipped: true };
+    if (!client || !session?.user || applying || deleting) return { skipped: true };
     if (pending) { await pending; if (!read(MODIFIED)) return { ok: true }; }
     const userId = session.user.id;
     const state = local();
@@ -107,7 +107,7 @@
     // Existing account on this device: use its newest copy. A guest cache
     // with real progress asks before replacing either copy.
     if (!owner && JSON.stringify(device) !== JSON.stringify(cloud)) {
-      const useDevice = window.confirm('This device and your account both have Clerk Quest progress. Keep this device\'s progress? Cancel loads the account save.');
+      const useDevice = window.confirm('This device and your account both have progress. Keep this device\'s progress? (Cancel loads your account\'s progress.)');
       if (!useDevice) return applyCloud(cloud, data.device_updated_at || data.updated_at, userId);
       write(OWNER, userId);
       markLocalUpdated();
@@ -118,7 +118,7 @@
     const cloudTime = Date.parse(data.device_updated_at || data.updated_at || '') || 0;
     const deviceTime = Date.parse(read(MODIFIED) || '') || 0;
     if (cloudTime > deviceTime && JSON.stringify(device) !== JSON.stringify(cloud)) {
-      const useCloud = window.confirm('Your account has newer Clerk Quest progress. Load it here? Cancel keeps and uploads this device\'s progress.');
+      const useCloud = window.confirm('Your account has newer progress from another device. Load it here? (Cancel keeps this device\'s progress.)');
       if (useCloud) return applyCloud(cloud, data.device_updated_at || data.updated_at, userId);
       markLocalUpdated();
       await pushNow();
@@ -157,6 +157,7 @@
     });
     initialized = true;
     client.auth.onAuthStateChange((event, next) => {
+      if (event === 'PASSWORD_RECOVERY') setTimeout(() => emit('recovery'), 0);   // opened from a reset-password email
       if (event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED') return;
       // Supabase auth callbacks must not await another Supabase request.
       setTimeout(() => handleSession(next), 0);
@@ -188,8 +189,58 @@
     if (error) throw error;
   }
 
+  /* ---------- email + password accounts ---------- */
+  const redirect = () => location.origin + location.pathname;
+  function friendlyError(error) {
+    const code = String(error?.code || ''), msg = String(error?.message || '');
+    if (/failed to fetch|network/i.test(msg) || !navigator.onLine) return "You're offline. Try again when you're connected.";
+    if (code === 'user_already_exists' || /already registered/i.test(msg)) return 'That email already has an account. Sign in instead.';
+    if (code === 'invalid_credentials' || /invalid login/i.test(msg)) return 'Wrong email or password.';
+    if (code === 'weak_password' || (/password/i.test(msg) && /characters|short|weak/i.test(msg))) return 'Password needs at least 8 characters.';
+    if (code === 'email_not_confirmed') return 'Check your email to confirm your account, then sign in.';
+    if (code === 'same_password') return 'That is already your password. Pick a new one.';
+    if (code.startsWith('over_') || /rate limit|too many/i.test(msg)) return 'Too many tries. Wait a minute and try again.';
+    return msg || 'Something went wrong. Please try again.';
+  }
+  const need = () => { if (!client) throw new Error('Cloud save is unavailable. Please reload and try again.'); };
+  async function signUp(email, password) {
+    need();
+    const { data, error } = await client.auth.signUp({ email, password, options: { emailRedirectTo: redirect() } });
+    if (error) throw error;
+    // With email confirmation on, an existing email comes back as a user with no identities
+    if (data.user && Array.isArray(data.user.identities) && !data.user.identities.length) throw { code: 'user_already_exists' };
+    return { needsConfirm: !data.session };
+  }
+  async function signInPassword(email, password) {
+    need();
+    const { error } = await client.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+  }
+  async function resetPassword(email) {
+    need();
+    const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo: redirect() });
+    if (error) throw error;
+  }
+  /* Delete the account and its cloud save (Apple requires this in-app), then clear this device */
+  async function deleteAccount() {
+    need();
+    deleting = true; clearTimeout(timer);
+    const { error } = await client.rpc('clerk_quest_delete_my_account');
+    if (error) { deleting = false; throw error; }
+    remove(SAVE); remove(OWNER); remove(MODIFIED);
+    activeUser = null;
+    try { await client.auth.signOut({ scope: 'local' }); } catch (_) {}
+    location.reload();
+  }
+  async function updatePassword(password) {
+    need();
+    const { error } = await client.auth.updateUser({ password });
+    if (error) throw error;
+  }
+
   window.CQCloud = {
     init, signIn, signOut, pushNow, queuePush, markLocalUpdated,
+    signUp, signInPassword, resetPassword, updatePassword, deleteAccount, friendlyError,
     getUser: () => session?.user || null,
     getStatus: () => !client ? 'unavailable' : session?.user ? 'signed-in' : 'signed-out'
   };
