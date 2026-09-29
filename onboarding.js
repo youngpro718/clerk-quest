@@ -80,7 +80,7 @@ function checklistHTML(){
   payOnboarding();
   const o = onb(); if (o.finished || o.hidden) return '';
   const n = stepsDone(), next = STEPS.find(s => !s.test());
-  const shown = gsOpen ? STEPS : STEPS.filter(s => !s.test()).slice(0, 3);   // folded: just the next 3 steps
+  const shown = gsOpen ? STEPS : STEPS.filter(s => !s.test()).slice(0, 1);   // folded: just the next step
   return `<div class="gs"><div class="gs-h"><b>Getting Started</b><small>${n} of ${STEPS.length} done</small>
       <button class="gs-hide" data-act="gs-hide">Hide</button></div>
     <div class="gs-bar"><b style="width:${n / STEPS.length * 100}%"></b></div>
