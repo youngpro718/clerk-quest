@@ -152,18 +152,18 @@ document.addEventListener('click', e => {
 const ONB_CSS = `
 #wl-root{position:fixed;inset:0;z-index:900;background:var(--bg);display:flex;overflow-y:auto}
 .wl{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:calc(48px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom));text-align:center;color:var(--paper)}
-.wl-skip{position:absolute;top:calc(12px + env(safe-area-inset-top));right:16px;padding:8px;border:0;background:none;color:var(--sub);font:600 16px var(--ui)}
+.wl-skip{position:absolute;top:calc(12px + env(safe-area-inset-top));right:16px;padding:8px;border:0;background:none;color:var(--sub);font:19px "Patrick Hand"}
 .wl-art{width:min(78vw,360px);max-height:52vh;object-fit:contain;border-radius:18px}
 .wl h2{margin:6px 0 0;max-width:340px;font:400 30px/1.05 "Bangers";letter-spacing:.04em;text-wrap:balance}
-.wl p{margin:0;max-width:340px;font:16px/1.4 var(--ui);color:var(--sub)}
+.wl p{margin:0;max-width:340px;font:19px/1.3 "Patrick Hand";color:var(--sub)}
 .wl-dots{display:flex;gap:6px;margin:6px 0} .wl-dots i{width:8px;height:8px;border-radius:4px;background:var(--line)} .wl-dots i.on{background:var(--mustard)}
 .wl .btn-big{width:100%;max-width:360px}
 .gs{margin:0 0 14px;padding:14px;border-radius:16px;background:var(--bg2)}
 .gs-h{display:flex;align-items:baseline;gap:8px} .gs-h b{font:400 22px "Bangers";letter-spacing:.04em} .gs-h small{flex:1;font:13px var(--ui);color:var(--sub)}
-.gs-hide{border:0;background:none;color:var(--mustard);font:600 14px var(--ui)}
+.gs-hide{border:0;background:none;color:var(--mustard);font:18px "Patrick Hand"}
 .gs-bar{height:6px;margin:8px 0 10px;border-radius:3px;background:var(--line);overflow:hidden} .gs-bar b{display:block;height:100%;background:var(--mustard)}
 .gs-list{display:flex;flex-direction:column;gap:6px}
-.gs-step{display:flex;align-items:center;gap:10px;min-height:44px;padding:8px 10px;border:0;border-radius:12px;background:var(--bg);color:var(--paper);font:15px var(--ui);text-align:left}
+.gs-step{display:flex;align-items:center;gap:10px;min-height:44px;padding:8px 10px;border:0;border-radius:12px;background:var(--bg);color:var(--paper);font:19px/1.15 "Patrick Hand";text-align:left}
 .gs-step span:nth-child(2){flex:1} .gs-step small{color:var(--mustard);font-weight:600}
 .gs-step.next{outline:2px solid var(--mustard)} .gs-step.done{opacity:.55;text-decoration:line-through}
 .gs-tick{width:24px;height:24px;flex:none;border-radius:12px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center}
@@ -172,9 +172,9 @@ const ONB_CSS = `
 .gs-step small{display:flex;align-items:center;gap:3px} .gs-step small .ico,.gs-step small img{width:14px;height:14px}
 .spot{position:fixed;inset:0;z-index:800;pointer-events:none}
 .spot-hole{position:absolute;border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.6);outline:3px solid var(--mustard);animation:spotin .25s ease-out}
-.spot-cap{position:absolute;left:16px;right:16px;padding:10px 14px;border-radius:12px;background:#f3d27a;color:var(--ink);font:600 15px/1.3 var(--ui);text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.spot-cap{position:absolute;left:16px;right:16px;padding:10px 14px;border-radius:12px;background:#f3d27a;color:var(--ink);font:19px/1.25 "Patrick Hand";text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.4)}
 @keyframes spotin{from{opacity:0;transform:scale(1.15)}}
 .reward.tip .ico,.reward.tip>img{width:56px;height:56px;margin:0 auto 6px;display:block}
-.gs-more{display:block;margin:8px auto 0;border:0;background:none;color:var(--mustard);font:600 14px var(--ui)}
+.gs-more{display:block;margin:8px auto 0;border:0;background:none;color:var(--mustard);font:18px "Patrick Hand"}
 `;
 document.head.insertAdjacentHTML('beforeend', `<style>${ONB_CSS}</style>`);

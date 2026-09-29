@@ -24,9 +24,11 @@
 <meta property="og:image:alt" content="Clerk Quest logo with a spread of collectible cards">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://youngpro718.github.io/clerk-quest/share.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Courier+Prime:wght@400;700&family=Luckiest+Guy&family=Patrick+Hand&display=swap" rel="stylesheet">
+<!-- The game's fonts ship with the app, so they always load (no Google Fonts download) -->
+<link rel="preload" href="fonts/bangers-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/luckiest-guy-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/patrick-hand-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts/fonts.css">
 <style>
 :root{
   --ink:#1d1b17; --paper:#f1e5c9; --paper2:#e8d8b4; --brick:#cf3b2a; --navy:#2b3a55;
@@ -841,14 +843,14 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <div class="flash" id="flash"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
-<script src="cloud-sync.js"></script>
-<script src="study.js"></script>
-<script src="economy.js"></script>
-<script src="store.js"></script>
-<script src="binder.js"></script>
-<script src="onboarding.js"></script>
-<script src="account.js"></script>
-<script src="admin.js"></script>
+<script src="cloud-sync.js?v=cd5fc35d"></script>
+<script src="study.js?v=93a33e0e"></script>
+<script src="economy.js?v=a7261374"></script>
+<script src="store.js?v=3dc737c6"></script>
+<script src="binder.js?v=bbc6b28d"></script>
+<script src="onboarding.js?v=9076bc01"></script>
+<script src="account.js?v=eb869aeb"></script>
+<script src="admin.js?v=fb5df08d"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "appeal30": {"1": "art/appeal30_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightback": {"1": "art/eightback_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "freeze": {"1": "art/freeze_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "reargue": {"1": "art/reargue_1.webp"}, "renew": {"1": "art/renew_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "sj120": {"1": "art/sj120_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "undodefault": {"1": "art/undodefault_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
@@ -1630,6 +1632,7 @@ function normalize(s){
 let S;
 try { S = normalize(JSON.parse(localStorage.getItem(KEY))); } catch(e){ S = normalize(null); }
 function save(){
+  if (window.CQCloud && CQCloud.isReloading && CQCloud.isReloading()) return;   // the cloud just replaced this save; don't write the old one back
   try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){}
   if (window.CQCloud) { CQCloud.markLocalUpdated(); CQCloud.queuePush(); }
 }

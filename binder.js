@@ -277,24 +277,24 @@ const BINDER_CSS = `
 .bd-slot{position:absolute;padding:0;border:0;background:none}
 .bd-slot.full .card{width:100%}
 .bd-slot.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#8a7f6c;border:2px dashed rgba(90,80,64,.35);border-radius:8px;background:rgba(255,255,255,.25)}
-.bd-slot.empty span{font:400 34px "Bangers";line-height:1} .bd-slot.empty small{font:12px var(--ui)}
-.bd-slot.get{border-style:solid;padding:6px;text-align:center} .bd-slot.get small{font:600 12px/1.2 var(--ui);color:#5a5040}
+.bd-slot.empty span{font:400 34px "Bangers";line-height:1} .bd-slot.empty small{font:15px "Patrick Hand"}
+.bd-slot.get{border-style:solid;padding:6px;text-align:center} .bd-slot.get small{font:15px/1.15 "Patrick Hand";color:#5a5040}
 .bd-slot.get em{font:400 16px "Bangers";letter-spacing:.04em;font-style:normal;padding:4px 12px;border:2px solid var(--ink);border-radius:9px;background:#f3d27a;color:var(--ink)}
 .st-art.ls-deck{display:flex;justify-content:center;align-items:center} .st-art.ls-deck .bd-cover{width:62%}
 .bd-slot.sel{outline:4px solid var(--mustard);outline-offset:2px;border-radius:8px}
 .bd-x{position:absolute;top:-8px;right:-8px;z-index:20;width:28px;height:28px;border-radius:14px;background:var(--brick);color:#fff;font:700 15px/28px var(--ui);text-align:center;border:2px solid var(--ink)}
 .bd-dots{display:flex;justify-content:center;gap:6px;margin:10px 0 4px} .bd-dots i{width:7px;height:7px;border-radius:4px;background:var(--line)} .bd-dots i.on{background:var(--mustard)}
 .bd-addpage{margin-top:10px;background:var(--bg2);border-radius:16px}
-.bd-skip{display:block;margin:8px auto 0;border:0;background:none;color:var(--mustard);font:600 15px var(--ui)}
+.bd-skip{display:block;margin:8px auto 0;border:0;background:none;color:var(--mustard);font:19px "Patrick Hand"}
 .bd-progress{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin:0 0 10px} .bd-progress b{display:block;height:100%;background:var(--mustard)}
 .bd-readcard{width:60%;margin:0 auto 12px}
-.bd-name{display:block;width:100%;height:48px;margin:0 0 12px;padding:0 14px;border:0;border-radius:12px;background:var(--bg2);color:var(--paper);font:17px var(--ui)}
+.bd-name{display:block;width:100%;height:48px;margin:0 0 12px;padding:0 14px;border:0;border-radius:12px;background:var(--bg2);color:var(--paper);font:20px "Patrick Hand"}
 .bd-covers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:0 0 10px}
 .bd-ctile{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border:0;border-radius:14px;background:var(--bg2);color:var(--paper)}
 .bd-ctile .st-name{font-size:13px}
 .bd-mini{width:44px;flex:none} .bd-mini .bd-cover{width:100%}
 .results.lesson .bd-passed{width:70%;max-width:280px;margin:-4px auto 0;transform:rotate(-8deg);animation:slamimg .35s cubic-bezier(.2,1.6,.4,1) both;--rot:-8deg}
 .bd-missed{display:flex;flex-direction:column;gap:8px;text-align:left} .bd-mrow{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.bd-mrow .rlink{flex:none;padding:6px 12px;border:2px solid var(--ink);border-radius:10px;background:#f3d27a;color:var(--ink);font:600 13px var(--ui)}
+.bd-mrow .rlink{flex:none;padding:6px 12px;border:2px solid var(--ink);border-radius:10px;background:#f3d27a;color:var(--ink);font:16px "Patrick Hand"}
 `;
 document.head.insertAdjacentHTML('beforeend', `<style>${BINDER_CSS}</style>`);

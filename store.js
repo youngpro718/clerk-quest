@@ -237,7 +237,7 @@ const STORE_CSS = `
 .st-balance span{flex:1;display:flex;flex-direction:column}
 .st-balance b{font:400 28px "Bangers";letter-spacing:.04em;color:var(--mustard);line-height:1}
 .st-balance small{font:13px var(--ui);color:var(--sub)}
-.st-note{margin:-2px 2px 10px;font:14px/1.35 var(--ui);color:var(--sub)} .st-note.c{text-align:center;margin:0 8px 12px}
+.st-note{margin:-2px 2px 10px;font:18px/1.3 "Patrick Hand";color:var(--sub)} .st-note.c{text-align:center;margin:0 8px 12px}
 .st-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .st-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 8px 12px;border:0;border-radius:16px;background:var(--bg2);color:var(--paper);text-align:center}
 .st-item:active{transform:scale(.97)}
@@ -258,7 +258,7 @@ const STORE_CSS = `
 .st-sheet-art{width:46%;margin:0 auto 4px}
 .st-cards{margin:0 0 12px} .st-cards .row{min-height:48px}
 .st-dot .ico{width:24px;height:24px} .st-dot:not(.have){opacity:.9}
-.st-after{display:flex;justify-content:space-between;padding:4px 6px;font:15px var(--ui);color:var(--sub)}
+.st-after{display:flex;justify-content:space-between;padding:4px 6px;font:18px "Patrick Hand";color:var(--sub)}
 .st-after b{color:var(--paper);font-weight:600} .st-after .ico{width:18px;height:18px}
 .st-after.total{border-top:.5px solid var(--line);margin-bottom:10px;padding-top:8px} .st-after.total b{color:var(--mustard)}
 .st-bimg{flex:none;width:52px;height:52px;display:flex;align-items:center;justify-content:center}

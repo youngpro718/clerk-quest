@@ -205,18 +205,18 @@ document.addEventListener('click', e => {
 
 const ADMIN_CSS = `
 .adm-row .row-main small{white-space:normal;overflow:visible;text-overflow:clip} .adm-row .row-main small+small{margin-top:1px;opacity:.8}
-.adm-count{font:600 14px var(--ui);color:var(--sub)}
+.adm-count{font:18px "Patrick Hand";color:var(--sub)}
 .adm-lvs{display:flex;gap:6px;overflow-x:auto;margin:0 0 12px;scrollbar-width:none} .adm-lvs::-webkit-scrollbar{display:none}
-.adm-lvs button{flex:none;min-height:36px;padding:0 14px;border:0;border-radius:18px;background:var(--bg2);color:var(--sub);font:600 14px var(--ui)}
+.adm-lvs button{flex:none;min-height:36px;padding:0 14px;border:0;border-radius:18px;background:var(--bg2);color:var(--sub);font:18px "Patrick Hand"}
 .adm-lvs button.on{background:var(--mustard);color:var(--ink)}
 .adm-card{width:66%;margin:0 auto 8px}
 .adm-rule{margin:0 0 14px} .adm-trick{margin:0 0 14px;text-align:left} .adm-trick ul{margin:6px 0 10px;padding-left:20px}
 .adm-q{margin:0 0 10px;padding:12px 14px;border-radius:14px;background:var(--bg2)}
-.adm-qt{margin:0 0 8px;font:16px/1.4 var(--ui)}
+.adm-qt{margin:0 0 8px;font:19px/1.3 "Patrick Hand"}
 .adm-q ul{margin:0 0 8px;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
-.adm-q li{padding:6px 10px;border-radius:9px;background:rgba(255,255,255,.05);font:15px/1.35 var(--ui);color:var(--sub)}
+.adm-q li{padding:6px 10px;border-radius:9px;background:rgba(255,255,255,.05);font:18px/1.25 "Patrick Hand";color:var(--sub)}
 .adm-q li.ok{background:rgba(95,212,122,.16);color:#bfeec9;font-weight:600}
-.adm-meta{margin:4px 0 0;font:14px/1.4 var(--ui);color:var(--sub)} .adm-meta p{margin:2px 0}
+.adm-meta{margin:4px 0 0;font:17px/1.3 "Patrick Hand";color:var(--sub)} .adm-meta p{margin:2px 0}
 .adm-rows{display:flex;flex-direction:column;gap:3px;margin:0 0 8px} .adm-rows div{display:grid;grid-template-columns:18px 1fr 1fr;gap:6px;font:13px var(--ui)}
 .adm-rows code{padding:3px 6px;border-radius:6px;background:rgba(255,255,255,.06);font:13px "Courier Prime",monospace;color:var(--paper)}
 .adm-email{margin:0 0 4px;font:400 22px "Bangers";letter-spacing:.03em;word-break:break-all}

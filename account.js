@@ -136,25 +136,25 @@ const ACCOUNT_CSS = `
 #login-root{position:fixed;inset:0;z-index:950;background:var(--bg);overflow-y:auto;color:var(--paper)}
 .login{max-width:420px;margin:0 auto;padding:calc(40px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom))}
 .login .home-logo{text-align:center;margin:0 0 6px}
-.login-tag{margin:0 0 22px;text-align:center;font:15px var(--ui);color:var(--sub)}
-.acct-sub{margin:0 0 14px;font:15px/1.4 var(--ui);color:var(--sub)}
-.acct-foot{margin:6px 0 0;text-align:center;font:14px var(--ui);color:var(--sub)}
+.login-tag{margin:0 0 22px;text-align:center;font:19px "Patrick Hand";color:var(--sub)}
+.acct-sub{margin:0 0 14px;font:19px/1.3 "Patrick Hand";color:var(--sub)}
+.acct-foot{margin:6px 0 0;text-align:center;font:18px "Patrick Hand";color:var(--sub)}
 .acct-card{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 14px;padding:14px;border:2px solid var(--mustard);border-radius:16px;background:var(--bg2);color:var(--paper);text-align:left}
 .acct-card .ico{width:40px;height:40px;flex:none} .acct-card span{flex:1;display:flex;flex-direction:column;gap:2px}
 .acct-card b{font:400 20px "Bangers";letter-spacing:.04em} .acct-card small{font:14px var(--ui);color:var(--sub)}
 .acct-card.on{border-color:#5fd47a}
 .acct-form{display:flex;flex-direction:column;gap:12px;margin:0 0 12px}
-.acct-lab{display:flex;flex-direction:column;gap:6px;font:600 14px var(--ui);color:var(--sub)}
+.acct-lab{display:flex;flex-direction:column;gap:6px;font:18px "Patrick Hand";color:var(--sub)}
 .acct-in{position:relative;display:block}
-.acct-in input{display:block;width:100%;height:50px;padding:0 70px 0 14px;border:2px solid transparent;border-radius:12px;background:var(--bg2);color:var(--paper);font:17px var(--ui)}
+.acct-in input{display:block;width:100%;height:50px;padding:0 70px 0 14px;border:2px solid transparent;border-radius:12px;background:var(--bg2);color:var(--paper);font:20px "Patrick Hand"}
 .acct-in input:focus{outline:none;border-color:var(--mustard)}
-.acct-eye{position:absolute;right:6px;top:7px;height:36px;padding:0 12px;border:0;border-radius:9px;background:rgba(255,255,255,.08);color:var(--paper);font:600 14px var(--ui)}
-.acct-err,.acct-info{display:flex;align-items:flex-start;gap:8px;margin:0 0 12px;padding:10px 12px;border-radius:12px;font:15px/1.35 var(--ui)}
+.acct-eye{position:absolute;right:6px;top:7px;height:36px;padding:0 12px;border:0;border-radius:9px;background:rgba(255,255,255,.08);color:var(--paper);font:17px "Patrick Hand"}
+.acct-err,.acct-info{display:flex;align-items:flex-start;gap:8px;margin:0 0 12px;padding:10px 12px;border-radius:12px;font:18px/1.25 "Patrick Hand"}
 .acct-form .acct-err,.acct-form .acct-info{margin:0}
 .acct-err{background:rgba(200,70,50,.18);color:#ffb4a6} .acct-info{background:rgba(95,212,122,.14);color:#bfeec9}
 .acct-err .ico,.acct-info .ico{width:18px;height:18px;flex:none;margin-top:1px}
-.acct-link{display:block;margin:4px auto;padding:8px;border:0;background:none;color:var(--mustard);font:600 15px var(--ui)}
+.acct-link{display:block;margin:4px auto;padding:8px;border:0;background:none;color:var(--mustard);font:19px "Patrick Hand"}
 .acct-link.in{display:inline;margin:0;padding:0}
-.acct-delete{display:block;margin:24px auto 8px;padding:10px;border:0;background:none;color:#ff8a78;font:600 15px var(--ui)}
+.acct-delete{display:block;margin:24px auto 8px;padding:10px;border:0;background:none;color:#ff8a78;font:19px "Patrick Hand"}
 `;
 document.head.insertAdjacentHTML('beforeend', `<style>${ACCOUNT_CSS}</style>`);

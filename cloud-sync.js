@@ -8,7 +8,10 @@
   const MODIFIED = 'clerkquest-cloud-updated-at';
   const TABLE = 'clerk_quest_player_saves';
   let client, session = null, timer = null, pending = null, initialized = false;
-  let applying = false, activeUser = null, deleting = false;
+  let applying = false, activeUser = null, deleting = false, reloading = false;
+  // Reload after replacing or clearing the local save. Until the page is gone, the app must not save its
+  // old in-memory state back over it (its pagehide save would undo the change and loop forever).
+  const reload = () => { reloading = true; clearTimeout(timer); location.reload(); };
 
   const read = key => { try { return localStorage.getItem(key); } catch (_) { return null; } };
   const write = (key, value) => { try { localStorage.setItem(key, value); } catch (_) {} };
@@ -24,13 +27,13 @@
     window.dispatchEvent(new CustomEvent('cq-cloud', { detail: { status, user: session?.user || null, ...extra } }));
 
   function markLocalUpdated() {
-    if (applying) return;
+    if (applying || reloading) return;
     write(MODIFIED, new Date().toISOString());
   }
 
   async function pushNow() {
     clearTimeout(timer);
-    if (!client || !session?.user || applying || deleting) return { skipped: true };
+    if (!client || !session?.user || applying || deleting || reloading) return { skipped: true };
     if (pending) { await pending; if (!read(MODIFIED)) return { ok: true }; }
     const userId = session.user.id;
     const state = local();
@@ -66,7 +69,7 @@
       write(OWNER, userId);
       if (stamp) write(MODIFIED, stamp); else remove(MODIFIED);
     } finally { applying = false; }
-    location.reload();
+    reload();
   }
 
   async function pullAndResolve() {
@@ -139,7 +142,7 @@
         remove(SAVE); remove(OWNER); remove(MODIFIED);
         activeUser = null;
         emit('signed-out');
-        location.reload();
+        reload();
       } else emit('signed-out');
       return;
     }
@@ -230,7 +233,7 @@
     remove(SAVE); remove(OWNER); remove(MODIFIED);
     activeUser = null;
     try { await client.auth.signOut({ scope: 'local' }); } catch (_) {}
-    location.reload();
+    reload();
   }
   async function updatePassword(password) {
     need();
@@ -243,6 +246,7 @@
     signUp, signInPassword, resetPassword, updatePassword, deleteAccount, friendlyError,
     rpc: async (name, args) => { need(); const { data, error } = await client.rpc(name, args); if (error) throw error; return data; },   // admin view reads
     getUser: () => session?.user || null,
+    isReloading: () => reloading,
     getStatus: () => !client ? 'unavailable' : session?.user ? 'signed-in' : 'signed-out'
   };
 })();
