@@ -814,6 +814,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js"></script>
 <script src="study.js"></script>
+<script src="economy.js"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
@@ -1964,8 +1965,9 @@ function claimQuest(kind, id){
   const q = (kind === 'daily' ? DAILY_QUESTS : MILESTONES).find(x => x.id === id); if (!q) return;
   const x = questState(q, kind); if (!x.done || x.claimed) return;
   if (kind === 'daily') daily().claimed[id] = true; else { S.milestones = S.milestones || {}; S.milestones[id] = true; }
+  const coins = kind === 'daily' ? earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`) : 0;
   S.packs++; save(); refresh();
-  openSheet(`<div class="reward"><img src="art/pack.webp" alt="" class="bob"><h3>Quest complete!</h3><p>${esc(q.label)}</p><b>+1 card pack</b></div>
+  openSheet(`<div class="reward"><img src="art/pack.webp" alt="" class="bob"><h3>Quest complete!</h3><p>${esc(q.label)}</p><b>+1 card pack${coins ? ` · +${coins} ${COIN}` : ''}</b></div>
     <button class="btn-big gold" data-act="pack-open">🎁 OPEN IT NOW</button><button class="sheet-cancel" data-act="sheet-close">Later</button>`);
 }
 function toast(msg){
@@ -2190,7 +2192,7 @@ const SCREENS = {
       ${item('▶ Studying', 'Each round is 5 questions from one card. Correct answers earn XP. A hint (Sidebar) costs half the points. Wrong answers show the right answer and why.')}
       ${item('★ Levels & glows', 'Cards level up as you earn XP. Questions get harder and the art upgrades. Near the top level a neon ring races around the card; at the top it turns gold with a gloss.')}
       ${item('🏆 Quests', 'Three daily quests reset every midnight, and milestones reward long-term progress. Every reward is a card pack.')}
-      ${item('🎁 Packs', 'Every finished study round and every quest gives a pack of 3 cards. New cards join your collection; duplicates give XP to the card you already own.')}
+      ${item('🎁 Packs', 'Every finished study round and every quest gives a pack of 3 cards. New cards join your collection; duplicates turn into coins.')}
       ${item('🧊 Cold cases', 'Cards you haven\'t studied in a while go cold (2 days at Level 1, up to 21 days when mastered). One correct answer reopens the case for a +' + COLD_BONUS + ' XP bonus.')}
       ${item('🧠 Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).')}
       ${item('② Series', 'Series 2 cards use a new art style and have their own pack wrapper.')}
@@ -2258,7 +2260,7 @@ function buildScreen(entry, depth = nav.stacks[nav.tab].length - 1){
   const root = depth === 0;
   const el = document.createElement('section');
   el.className = 'screen' + (def.hideLarge && !def.titleOnScroll ? ' nolarge' : '') + (def.cta ? ' has-cta' : '');
-  el.innerHTML = `<header class="navbar"><div class="nb-left">${root ? '' : `<button class="nb-back" data-act="back">${'<svg viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'}<span>${esc(backLabel(depth))}</span></button>`}</div>
+  el.innerHTML = `<header class="navbar"><div class="nb-left">${root ? coinChip() : `<button class="nb-back" data-act="back">${'<svg viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'}<span>${esc(backLabel(depth))}</span></button>`}</div>
     <div class="nb-title">${esc(def.title)}</div><div class="nb-right">${def.right || ''}</div></header>
     <div class="scr">${def.hideLarge ? '' : `<h1 class="large-title">${esc(def.title)}</h1>`}${def.body}</div>${def.after || ''}`;
   el._entry = entry;
@@ -2392,7 +2394,7 @@ function paintStudy(anim){
     <div class="t nxr" style="${PB(606,1446,950,1670)}">${lock}</div>
     ${ans ? `<img class="stampimg big" src="art/stamp_${ans.ok?'sustained':'overruled'}.webp" alt="${ans.ok?'Sustained':'Overruled'}">
       <div class="explain" data-act="next" style="${PB(58,1218,966,1688)}">
-        <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +${ans.gain} XP` : 'Overruled. Not quite.'}</h3>
+        <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +${ans.gain} XP${ans.coins ? ` · +${ans.coins} ${COIN}` : ''}` : 'Overruled. Not quite.'}</h3>
         ${ans.reopened ? `<p class="reopen"><img src="art/stamp_reopened.webp" alt="Case reopened"><span>Includes a +${COLD_BONUS} XP cold-case bonus.</span></p>` : ''}
         <div class="ex-acts">${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}${saveQButtonHTML()}</div>
         ${ans.ok ? '' : `<p><b>Correct answer:</b> ${esc(q.a)}</p>`}
@@ -2447,7 +2449,7 @@ function answer(v){
   const c = byId(sess.id), st = S.cards[sess.id];
   const ok = v === sess.q.a;
   const lvBefore = st.level;
-  let gain = 0;
+  let gain = 0, coins = 0;
   S.stats.answered++; sess.results[sess.i] = ok;
   if (ok) {
     S.stats.correct++; daily().correct++; if (c.trickType) daily().trick++;
@@ -2455,17 +2457,19 @@ function answer(v){
     if (sess.wasCold && !sess.reopened) { sess.reopened = true; sess.justReopened = true; gain += COLD_BONUS; S.stats.reopened = (S.stats.reopened || 0) + 1; }
     st.last = Date.now();
     S.stats.xp += gain; sess.xp += gain;
+    coins = earnCoins(coinsForAnswer(sess.hint), 'Right answer', {quiet:true}); sess.answerCoins = (sess.answerCoins || 0) + coins;
     if (!st.mastered) {
       st.xp += gain;
       if (st.xp >= NEED[st.level-1]) {
         sess.display = {level:st.level, xp:NEED[st.level-1], mastered:false};
-        if (st.level < maxL(c)) { st.xp -= NEED[st.level-1]; st.level++; sess.pendingLevel = {from:lvBefore, to:st.level}; }
-        else { st.xp = NEED[st.level-1]; st.mastered = true; sess.pendingLevel = {from:st.level, to:st.level, mastered:true}; }
+        if (st.level < maxL(c)) { st.xp -= NEED[st.level-1]; st.level++; sess.pendingLevel = {from:lvBefore, to:st.level}; coins += earnCoins(COINS.levelUp, `${c.name} reached Level ${st.level}`); }
+        else { st.xp = NEED[st.level-1]; st.mastered = true; sess.pendingLevel = {from:st.level, to:st.level, mastered:true}; coins += earnCoins(COINS.mastered, `${c.name} mastered`); }
       }
     }
+    sess.coins = (sess.coins || 0) + coins;
   }
   save();
-  sess.answered = { choice:v, ok, gain, reopened: !!sess.justReopened }; sess.justReopened = false;
+  sess.answered = { choice:v, ok, gain, coins, reopened: !!sess.justReopened }; sess.justReopened = false;
   paintStudy();
   // make sure the Next button is on screen (short iPhones)
   const nb = document.querySelector('#below .btn-big'); if (nb) { const r = nb.getBoundingClientRect(); if (r.bottom > innerHeight - 8) nb.scrollIntoView({block:'end', behavior:'smooth'}); }
@@ -2476,7 +2480,12 @@ function next(){
 }
 function advance(){
   sess.i++;
-  if (sess.i >= SESSION_LEN) { S.stats.sessions++; daily().sessions++; S.packs++; save(); return renderResults(); }
+  if (sess.i >= SESSION_LEN) {
+    S.stats.sessions++; daily().sessions++; S.packs++;
+    logCoins(sess.answerCoins || 0, `Study round: ${byId(sess.id).name}`);
+    sess.streakCoins = payStreak(); sess.coins = (sess.coins || 0) + sess.streakCoins;
+    save(); return renderResults();
+  }
   const c = byId(sess.id);
   sess.q = nextQuestion(c, S.cards[sess.id].level, sess.used);
   sess.hint = false; sess.answered = null; sess.display = null;
@@ -2519,16 +2528,6 @@ function confetti(host){
 }
 
 /* ---- card packs ---- */
-const DUP_XP = 25;
-function addCardXP(id, amt){
-  const c = byId(id), st = S.cards[id]; if (st.mastered) return false;
-  st.xp += amt; let up = false;
-  while (st.xp >= NEED[st.level-1]) {
-    if (st.level < maxL(c)) { st.xp -= NEED[st.level-1]; st.level++; up = true; }
-    else { st.xp = NEED[st.level-1]; st.mastered = true; up = true; break; }
-  }
-  return up;
-}
 function drawPack(){
   const owned = c => S.cards[c.id].owned;
   const regular = CARDS.filter(c => !c.trickType), tricks = CARDS.filter(c => c.trickType);
@@ -2542,9 +2541,9 @@ function drawPack(){
   let guard = 0;
   while (picks.length < 3 && guard++ < 60) take(newRegular.length > 1 && Math.random() < .5 ? pick(newRegular) : pick(regular));
   return shuffle(picks).map(c => {
-    const st = S.cards[c.id], isNew = !st.owned; let up = false;
-    if (isNew) st.owned = true; else up = addCardXP(c.id, DUP_XP);
-    return { c, isNew, up, st:{...st} };
+    const st = S.cards[c.id], isNew = !st.owned; let coins = 0;
+    if (isNew) st.owned = true; else coins = earnCoins(coinsForDup(c), `Duplicate: ${c.name}`);
+    return { c, isNew, coins, st:{...st} };
   });
 }
 function zig(y){ const pts = []; for (let i=0;i<=16;i++) pts.push(`${(i/16*100).toFixed(1)}% ${(y + (i%2 ? 1.4 : -1.4)).toFixed(1)}%`); return pts; }
@@ -2565,7 +2564,7 @@ function openPack(){
       <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
         <div class="pk-inner"><div class="pk-face pk-back"><img class="cbackimg" src="art/cardback.webp" alt="Card back"></div>
         <div class="pk-face pk-front">${cardEl(p.c, p.st)}</div></div>
-        <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? '🧠 MEMORY TRICK!' : 'NEW!') : `+${DUP_XP} XP${p.up ? ' · LEVEL UP!' : ''}`}</span>
+        <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? '🧠 MEMORY TRICK!' : 'NEW!') : `DUPLICATE · +${p.coins} ${COIN}`}</span>
       </button>`).join('')}</div>
     </div>
     <p class="pk-hint">${first ? 'Your first pack! Tap it to tear it open.' : packImg.includes('s2') ? 'A Series 2 pack! Tap it to tear it open.' : 'Tap the pack to tear it open.'}</p>
@@ -2608,7 +2607,7 @@ function renderResults(){
       <h1>SESSION ADJOURNED</h1>
       <div class="score">${correct} / ${SESSION_LEN}</div>
       <div class="sub">correct answers</div>
-      <div class="rchips"><span class="chip">+${sess.xp} XP</span>${claimableCount() ? `<span class="chip" style="background:#bfe8c4">🏆 QUEST REWARD READY</span>` : ''}${sess.reopened ? `<span class="chip" style="background:#bfe0ff">🔥 CASE REOPENED</span>` : ''}${leveled ? `<span class="chip">★ LEVEL ${sess.startLevel} → ${st.level}</span>` : ''}<span class="chip">🎁 +1 CARD PACK</span></div>
+      <div class="rchips"><span class="chip">+${sess.xp} XP</span>${sess.coins ? `<span class="chip coin">+${sess.coins} ${COIN}</span>` : ''}${sess.streakCoins ? `<span class="chip" style="background:#ffd9a8">🔥 ${S.streak.days}-DAY STREAK</span>` : ''}${claimableCount() ? `<span class="chip" style="background:#bfe8c4">🏆 QUEST REWARD READY</span>` : ''}${sess.reopened ? `<span class="chip" style="background:#bfe0ff">🔥 CASE REOPENED</span>` : ''}${leveled ? `<span class="chip">★ LEVEL ${sess.startLevel} → ${st.level}</span>` : ''}<span class="chip">🎁 +1 CARD PACK</span></div>
       <div class="rcard">${cardEl(c, st)}</div>
       <div class="panel">
         <b>${esc(c.name)}</b> · Level ${st.level}
@@ -2863,7 +2862,7 @@ document.addEventListener('click', e => {
     case 't-reset': { closeSheet(true); Object.assign(S.cards[id], {level:1, xp:0, mastered:false}); save(); const en = topEntry(); if (en.p) delete en.p.preview; refresh(); toast('↺ Card reset to Level 1'); break; }
     case 't-pack': S.packs++; save(); refresh(); toast('🎁 Test pack added'); break;
     case 'claim': claimQuest(t.dataset.kind, t.dataset.q); break;
-    case 'claim-all': { const list = readyList(); list.forEach(([k, q]) => { if (k === 'daily') daily().claimed[q.id] = true; else { S.milestones = S.milestones || {}; S.milestones[q.id] = true; } });
+    case 'claim-all': { const list = readyList(); list.forEach(([k, q]) => { if (k === 'daily') { daily().claimed[q.id] = true; earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`); } else { S.milestones = S.milestones || {}; S.milestones[q.id] = true; } });
       S.packs += list.length; save(); refresh(); toast(`🎁 +${list.length} pack${list.length > 1 ? 's' : ''} claimed`); break; }
     case 'sort-sheet': sortSheet(); break;
     case 'sort': nav.sort = t.dataset.v; refresh(); sortSheet(); break;
