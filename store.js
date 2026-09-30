@@ -4,8 +4,11 @@
    titleCase, owned, miniCard, shuffle, pick, spendCoins). */
 
 const PRICE = {
-  deckPerCard: 40,     // a deck costs this for each card not yet owned (owned cards are free)
-  subjectPack: 60,     // 3 random cards from one subject
+  deckCommon: 120,     // a deck costs this for each common card not yet owned (owned cards are free)
+  deckUncommon: 200,   //   …and this for each uncommon card
+  deckRare: 300,       //   rares are only sold inside Lesson Decks (so a quiz is never blocked by luck); Store Decks skip them
+  subjectPack: 300,    // 3 random cards from one subject
+  packsPerWeek: 2,     // store packs a player can buy each week (the daily pack stays the main way to collect)
   packMinCards: 4,     // subjects smaller than this sell only as a deck
 };
 /* Study boosts: they speed studying up, but never level or master a card for you. */
@@ -90,11 +93,14 @@ const EMBLEM = {
 };
 const emblemSrc = set => artSrc('emblem_' + (EMBLEM[set] || 'courtterms'));
 
+const cardPrice = c => c.rarity === 'common' ? PRICE.deckCommon : c.rarity === 'uncommon' ? PRICE.deckUncommon : PRICE.deckRare;
+const weekKey = () => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };   // this week's Monday
+const storePacksLeft = () => { const w = S.storePacks; return !w || w.week !== weekKey() ? PRICE.packsPerWeek : Math.max(0, PRICE.packsPerWeek - w.n); };
 function storeSubjects(){
   return [...new Set(CARDS.map(c => c.set))].map(set => {
     const cards = CARDS.filter(c => c.set === set);
-    const missing = cards.filter(c => !owned(c));
-    return { set, label:titleCase(set), cards, missing, deckPrice:missing.length * PRICE.deckPerCard };
+    const missing = cards.filter(c => !owned(c)), buyable = missing.filter(c => c.rarity !== 'rare');   // rares only come from packs
+    return { set, label:titleCase(set), cards, missing, buyable, deckPrice:buyable.reduce((n, c) => n + cardPrice(c), 0) };
   }).sort((a, b) => b.cards.length - a.cards.length || a.label.localeCompare(b.label));
 }
 
@@ -107,13 +113,13 @@ const priceTag = (n, can) => `<span class="st-price ${can ? '' : 'short'}">${COI
 function storeHTML(){
   const coins = S.coins || 0, subs = storeSubjects();
   const decks = subs.map(s => {
-    const done = !s.missing.length;
+    const done = !s.buyable.length;
     return `<button class="st-item" data-act="st-deck" data-set="${esc(s.set)}">${deckArt(s)}
-      <span class="st-name">${esc(s.label)} Deck</span><span class="st-sub">${s.cards.length} card${s.cards.length > 1 ? 's' : ''} · ${done ? 'all owned' : s.missing.length + ' new'}</span>
-      ${done ? `<span class="st-price owned">${ICO('check')} Owned</span>` : priceTag(s.deckPrice, coins >= s.deckPrice)}</button>`;
+      <span class="st-name">${esc(s.label)} Deck</span><span class="st-sub">${s.cards.length} card${s.cards.length > 1 ? 's' : ''} · ${done ? (s.missing.length ? 'rares are in packs' : 'all owned') : s.buyable.length + ' new'}</span>
+      ${done ? `<span class="st-price owned">${s.missing.length ? 'In packs' : `${ICO('check')} Owned`}</span>` : priceTag(s.deckPrice, coins >= s.deckPrice)}</button>`;
   }).join('');
   const packs = subs.filter(s => s.cards.length >= PRICE.packMinCards).map(s => `<button class="st-item" data-act="st-pack" data-set="${esc(s.set)}">${packArt(s)}
-      <span class="st-name">${esc(s.label)} Pack</span><span class="st-sub">3 random cards</span>${priceTag(PRICE.subjectPack, coins >= PRICE.subjectPack)}</button>`).join('');
+      <span class="st-name">${esc(s.label)} Pack</span><span class="st-sub">3 random cards · ${storePacksLeft()} left this week</span>${priceTag(PRICE.subjectPack, coins >= PRICE.subjectPack)}</button>`).join('');
   const boostRows = BOOSTS.map(b => { const ok = boostUsable(b);
     return `<button class="row st-boost ${ok ? '' : 'off'}" data-act="st-boost" data-set="${b.id}"><span class="st-bimg"><img src="${artSrc(b.art)}" alt=""></span>
       <span class="row-main"><b>${esc(b.name)}</b><small>${esc(boostStatus(b))}</small></span>${ok ? priceTag(b.price, coins >= b.price) : ''}</button>`; }).join('');
@@ -144,48 +150,51 @@ function storeHTML(){
 }
 
 /* ---------- buying ---------- */
-function buySheet({title, art, list, price, act, set, note}){
-  const coins = S.coins || 0, can = coins >= price;
+function buySheet({title, art, list, price, act, set, note, locked}){
+  const coins = S.coins || 0, can = coins >= price && !locked;
   openSheet(`<div class="st-sheet-art">${art}</div><h3>${esc(title)}</h3>${note ? `<p class="st-note c">${note}</p>` : ''}
     ${list || ''}
     <div class="st-after"><span>Your coins</span><b>${COIN}${coins.toLocaleString()}</b></div>
     <div class="st-after"><span>Price</span><b>−${price.toLocaleString()}</b></div>
     <div class="st-after total"><span>After</span><b>${can ? COIN + (coins - price).toLocaleString() : '—'}</b></div>
-    <button class="btn-big gold" data-act="${act}" data-set="${esc(set)}" ${can ? '' : 'disabled'}>${can ? `BUY FOR ${price.toLocaleString()}` : `NEED ${(price - coins).toLocaleString()} MORE COINS`}</button>
+    <button class="btn-big gold" data-act="${act}" data-set="${esc(set)}" ${can ? '' : 'disabled'}>${locked ? 'NO MORE PACKS THIS WEEK' : can ? `BUY FOR ${price.toLocaleString()}` : `NEED ${(price - coins).toLocaleString()} MORE COINS`}</button>
     <button class="sheet-cancel" data-act="sheet-close">Not now</button>`);
 }
 function deckSheet(set){
   const s = storeSubjects().find(x => x.set === set); if (!s) return;
-  if (!s.missing.length) { toast('You already own every card in this deck', 'check'); return; }
+  if (!s.buyable.length) { toast(s.missing.length ? 'The cards you are missing are rares. Find them in packs.' : 'You already own every card in this deck', 'check'); return; }
   const list = `<div class="list st-cards">${s.cards.map(c => `<div class="row"><span class="st-dot ${owned(c) ? 'have' : ''}">${owned(c) ? ICO('check') : ICO('star')}</span>
-    <span class="row-main"><b>${esc(c.name)}</b><small>${owned(c) ? 'Already yours · free' : 'New · ' + PRICE.deckPerCard + ' coins'}</small></span></div>`).join('')}</div>`;
+    <span class="row-main"><b>${esc(c.name)}</b><small>${owned(c) ? 'Already yours · free' : c.rarity === 'rare' ? 'Rare · found in packs only' : 'New · ' + cardPrice(c) + ' coins'}</small></span></div>`).join('')}</div>`;
   buySheet({ title:s.label + ' Deck', art:deckArt(s), list, price:s.deckPrice, act:'st-buy-deck', set });
 }
 function packSheet(set){
   const s = storeSubjects().find(x => x.set === set); if (!s) return;
-  buySheet({ title:s.label + ' Pack', art:packArt(s), price:PRICE.subjectPack, act:'st-buy-pack', set,
-    note:`3 random cards from the ${s.cards.length} ${esc(s.label)} cards. ${s.missing.length ? `${s.missing.length} you don't have yet.` : 'You own them all, so every card turns into coins.'}` });
+  const left = storePacksLeft();
+  buySheet({ title:s.label + ' Pack', art:packArt(s), price:PRICE.subjectPack, act:'st-buy-pack', set, locked:!left,
+    note:`${left ? `${left} of ${PRICE.packsPerWeek} store packs left this week. ` : `You have bought this week's ${PRICE.packsPerWeek} store packs. Your daily pack is still free. `}3 random cards from the ${s.cards.length} ${esc(s.label)} cards. ${s.missing.length ? `${s.missing.length} you don't have yet.` : 'You own them all, so every card turns into coins.'}` });
 }
 function buyDeck(set){
-  const s = storeSubjects().find(x => x.set === set); if (!s || !s.missing.length) return;
+  const s = storeSubjects().find(x => x.set === set); if (!s || !s.buyable.length) return;
   if (!spendCoins(s.deckPrice, `${s.label} Deck`)) return;
-  s.missing.forEach(c => { S.cards[c.id].owned = true; });
+  s.buyable.forEach(c => { S.cards[c.id].owned = true; });
   save(); closeSheet(true); refresh();
-  openSheet(`<div class="reward"><h3>${esc(s.label)} Deck added!</h3><p>${s.missing.length} new card${s.missing.length > 1 ? 's' : ''} in your collection.</p></div>
-    <div class="st-new">${s.missing.map(c => miniCard(c)).join('')}</div>
+  openSheet(`<div class="reward"><h3>${esc(s.label)} Deck added!</h3><p>${s.buyable.length} new card${s.buyable.length > 1 ? 's' : ''} in your collection.</p></div>
+    <div class="st-new">${s.buyable.map(c => miniCard(c)).join('')}</div>
     <button class="btn-big gold" data-act="sheet-close">NICE</button>`);
 }
 function drawSubject(set){
   const cards = CARDS.filter(c => c.set === set), fresh = shuffle(cards.filter(c => !owned(c)));
   const picks = []; const take = c => { if (c && picks.length < 3 && !picks.includes(c)) picks.push(c); };
-  take(fresh[0]);                                               // at least one new card while any remain
+  if (S.packsOpened < GUARANTEE_PACKS) take(fresh[0]);        // a new card is only guaranteed in a player's first few packs
   let guard = 0;
-  while (picks.length < 3 && guard++ < 60) take(fresh.length > 1 && Math.random() < .5 ? pick(fresh) : pick(cards));
+  while (picks.length < 3 && guard++ < 60) take(pickByRarity(cards.filter(c => !picks.includes(c))));
   return picks;
 }
 function buyPack(set){
   const s = storeSubjects().find(x => x.set === set); if (!s) return;
+  if (!storePacksLeft()) { toast(`You have bought this week's ${PRICE.packsPerWeek} store packs`, 'pack'); return; }
   if (!spendCoins(PRICE.subjectPack, `${s.label} Pack`)) return;
+  S.storePacks = { week:weekKey(), n:PRICE.packsPerWeek - storePacksLeft() + 1 };
   closeSheet(true);
   openPack({ pulls:resolvePulls(drawSubject(set)), img:artSrc('pack_blank'), label:s.label, emblem:emblemSrc(set), hint:`A ${s.label} pack! Tap it to tear it open.` });
 }

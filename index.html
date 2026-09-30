@@ -873,9 +873,9 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="cloud-sync.js?v=cd5fc35d"></script>
 <script src="study.js?v=93a33e0e"></script>
 <script src="economy.js?v=a7261374"></script>
-<script src="store.js?v=3dc737c6"></script>
-<script src="binder.js?v=816f649f"></script>
-<script src="onboarding.js?v=78676544"></script>
+<script src="store.js?v=ee061c0a"></script>
+<script src="binder.js?v=68a84201"></script>
+<script src="onboarding.js?v=1147ed27"></script>
 <script src="account.js?v=eb869aeb"></script>
 <script src="admin.js?v=fb5df08d"></script>
 <script src="stickers.js?v=9a30b930"></script>
@@ -2254,7 +2254,7 @@ const SCREENS = {
     return { title:'Packs', body:`
       <div class="packs-hero"><img src="${nextPackArt()}" alt="Clerk Quest card pack" class="${S.packs ? 'bob' : 'dim'}">
         <b>${S.packs ? S.packs + ' pack' + (S.packs > 1 ? 's' : '') + ' ready' : 'No packs right now'}</b>
-        <small>${S.packs ? (nextSeries >= 2 ? `Your next pack has Series ${nextSeries} cards!` : 'Each pack has 3 cards.') : 'Finish a study round or a quest to earn one.'}</small></div>
+        <small>${S.packs ? (nextSeries >= 2 ? `Your next pack has Series ${nextSeries} cards!` : 'Each pack has 3 cards.') : 'Your first finished round each day earns a pack. Quests can earn more.'}</small></div>
       <button class="btn-big gold" data-act="pack-open" ${S.packs ? '' : 'disabled'}>${ICO('pack')} OPEN A PACK</button>
       <div class="list" style="margin-top:18px">
         <div class="row"><span class="k">Packs opened</span><span class="v">${S.packsOpened}</span></div>
@@ -2623,7 +2623,9 @@ function next(){
 function advance(){
   sess.i++;
   if (sess.i >= sessLen()) {
-    S.stats.sessions++; daily().sessions++; S.packs++;
+    S.stats.sessions++; daily().sessions++;
+    sess.packGiven = daily().sessions === 1;   // one pack a day: the first finished round; extra rounds earn coins and XP
+    if (sess.packGiven) S.packs++;
     logCoins(sess.answerCoins || 0, sess.lesson ? `Lesson: ${sess.lesson.name}` : `Study round: ${byId(sess.id).name}`);
     sess.streakCoins = payStreak(); sess.coins = (sess.coins || 0) + sess.streakCoins;
     save(); return sess.lesson ? lessonResults() : renderResults();
@@ -2700,18 +2702,29 @@ function openSticker(ov){
 }
 
 /* ---- card packs ---- */
+/* Pack odds (see docs/superpowers/specs/2026-09-30-economy-design.md): the first few packs always hold a new card,
+   after that it is chance, and rarer cards turn up less often. All numbers here are starting values to tune. */
+const GUARANTEE_PACKS = 5;
+const RARITY_WEIGHT = { common:1, uncommon:.5, rare:.15, epic:.08, legendary:.04 };
+const pickByRarity = pool => {   // one card from pool, rarer cards less likely
+  const w = pool.map(c => RARITY_WEIGHT[c.rarity] ?? .5);
+  let r = Math.random() * w.reduce((x, y) => x + y, 0), i = 0;
+  while (i < pool.length - 1 && (r -= w[i]) > 0) i++;
+  return pool[i];
+};
 function drawPack(){
   const owned = c => S.cards[c.id].owned;
-  const regular = CARDS.filter(c => !c.trickType), tricks = CARDS.filter(c => c.trickType);
-  const newRegular = shuffle(regular.filter(c => !owned(c))), newTricks = shuffle(tricks.filter(c => !owned(c)));
+  const tricks = CARDS.filter(c => c.trickType);
+  const newRegular = shuffle(CARDS.filter(c => !c.trickType && !owned(c))), newTricks = shuffle(tricks.filter(c => !owned(c)));
   const picks = []; const take = c => { if (c && picks.length < 3 && !picks.includes(c)) picks.push(c); };
   const promised = [].concat(S.guarantee || []).filter(id => newTricks.some(c => c.id === id));
   if (promised.length) { promised.slice(0,3).forEach(id => take(byId(id))); S.guarantee = promised.slice(3); if (!S.guarantee.length) S.guarantee = null; }
   else if (S.packsOpened === 0 && newTricks.length) take(newTricks[0]);      // first pack always shows a Memory Trick
-  else if (Math.random() < .34) take(newTricks[0] || pick(tricks));     // after that, about 1 in 3 packs
-  take(newRegular[0]);                                                  // at least one new card while any remain
+  if (S.packsOpened < GUARANTEE_PACKS) take(newRegular[0] || newTricks[0]);   // early packs always hold something new
   let guard = 0;
-  while (picks.length < 3 && guard++ < 60) take(newRegular.length > 1 && Math.random() < .5 ? pick(newRegular) : pick(regular));
+  while (picks.length < 3 && guard++ < 60) {                                  // fill the rest by rarity weight
+    take(pickByRarity(CARDS.filter(c => !picks.includes(c))));
+  }
   return resolvePulls(picks);
 }
 /* Picked cards → new cards join the collection, duplicates pay coins */
@@ -2850,9 +2863,10 @@ function renderResults(){
         <div class="prow"><span>${st.mastered ? 'MASTERED' : `${st.xp} / ${need} XP`}</span><span>${st.mastered ? ICO('mastered') : `${left} XP to go`}</span></div>
         ${st.mastered ? '' : `<div class="almost">${answers <= 2 ? `Almost ${st.level<maxL(c)?`Level ${st.level+1}`:'MASTERED'}! Just ${answers} more correct.` : `About ${answers} correct answers to ${st.level<maxL(c)?`Level ${st.level+1}`:'MASTERED'}.`}</div>`}
       </div>
+      ${sess.packGiven || S.packs ? '' : '<p class="foot">Your pack for today is already earned. Extra rounds still earn XP and coins.</p>'}
       <div class="stack">
         <button class="btn-big" data-act="study" data-id="${c.id}">&#9654;&#xFE0E; ONE MORE ROUND</button>
-        <button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN YOUR PACK</button>
+        ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} ${sess.packGiven ? 'OPEN YOUR DAILY PACK' : 'OPEN A PACK'}</button>` : ''}
         ${c.source && correct < SESSION_LEN ? `<button class="btn-big alt" data-act="read-rule" data-id="${c.id}">REVIEW THE RULE</button>` : ''}
         <button class="btn-big alt" data-act="session-close">Done</button>
       </div>

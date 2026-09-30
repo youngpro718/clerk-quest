@@ -40,7 +40,7 @@ const lessonRec = id => ((S.lessons = S.lessons || {})[id] = S.lessons[id] || { 
 const binderCards = b => b.slots.filter(Boolean).map(byId).filter(Boolean);
 const lessonMissing = b => b.builtin ? binderCards(b).filter(c => !owned(c)) : [];
 const lessonReady = b => binderCards(b).length >= BINDER.minCards && !lessonMissing(b).length;
-const lessonDeckPrice = b => lessonMissing(b).length * PRICE.deckPerCard;
+const lessonDeckPrice = b => lessonMissing(b).reduce((n, c) => n + cardPrice(c), 0);
 const coverOf = b => COVERS.find(c => c.id === b.cover) || COVERS[0];
 function newBinder(name){
   const b = { id:'b' + Date.now().toString(36), name:name.trim().slice(0, 40) || 'My Binder', cover:'default', slots:Array(BINDER.startPages * 4).fill(null) };
@@ -152,7 +152,7 @@ function lessonResults(){
       <div class="sub">${correct} of ${total} right · ${BINDER.passPct}% passes</div>
       <div class="rchips"><span class="chip">+${sess.xp} XP</span>${(sess.coins || 0) + coins ? `<span class="chip coin">+${(sess.coins || 0) + coins} ${COIN}</span>` : ''}
         ${pass ? `<span class="chip" style="background:#bfe8c4">${ICO('mastered')} ${first ? 'FIRST PASS +' + BINDER.firstPass : 'PASSED AGAIN +' + BINDER.repeatPass}</span>` : ''}
-        <span class="chip">${ICO('pack')} +1 CARD PACK</span></div>
+        ${sess.packGiven ? `<span class="chip">${ICO('pack')} +1 DAILY PACK</span>` : ''}</div>
       ${missed.length ? `<div class="panel bd-missed"><b>Review these</b>${missed.map(c => `<div class="bd-mrow"><span>${esc(c.name)}</span>
           ${c.source ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}</div>`).join('')}</div>` : ''}
       <div class="stack">
@@ -175,7 +175,7 @@ function lessonDeckRow(L){
 function lessonDeckSheet(L){
   if (!L || !lessonMissing(L).length) { toast('You already own every card in this lesson', 'check'); return; }
   const list = `<div class="list st-cards">${binderCards(L).map(c => `<div class="row"><span class="st-dot ${owned(c) ? 'have' : ''}">${owned(c) ? ICO('check') : ICO('star')}</span>
-    <span class="row-main"><b>${esc(c.name)}</b><small>${owned(c) ? 'Already yours · free' : 'New · ' + PRICE.deckPerCard + ' coins'}</small></span></div>`).join('')}</div>`;
+    <span class="row-main"><b>${esc(c.name)}</b><small>${owned(c) ? 'Already yours · free' : 'New · ' + cardPrice(c) + ' coins'}</small></span></div>`).join('')}</div>`;
   buySheet({ title:L.name + ' Lesson Deck', art:lessonDeckArt(L), list, price:lessonDeckPrice(L), act:'ls-buy', set:L.id,
     note:"Every card in this lesson. You only pay for the ones you don't have." });
 }
