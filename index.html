@@ -285,6 +285,14 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .pk-pack.shake{animation:shake .45s linear 2}
 .pk-pack.torn{animation:none;pointer-events:none}
 .pk-pack.torn .pk-top{transition:transform .7s cubic-bezier(.3,.8,.4,1),opacity .6s .25s;transform:translate(35%,-130%) rotate(30deg);opacity:0}
+.pk-pack.torn.from-r .pk-top{transform:translate(-35%,-130%) rotate(-30deg)}
+/* swipe to rip: a dotted tear line with a moving arrow until the rip starts */
+.pk-pack{touch-action:none}
+.pk-pack.ripping{animation:none}
+.pk-cut{position:absolute;left:5%;right:5%;height:0;z-index:2;border-top:3px dashed rgba(255,248,220,.95);filter:drop-shadow(0 1px 2px rgba(0,0,0,.8));pointer-events:none;transition:opacity .2s}
+.pk-cut i{position:absolute;top:-17px;left:0;font:700 22px/1 var(--ui);font-style:normal;color:#fff8dc;text-shadow:0 1px 3px rgba(0,0,0,.9);animation:swipehint 1.5s ease-in-out infinite}
+@keyframes swipehint{0%{left:0;opacity:0}15%{opacity:1}80%{opacity:1}100%{left:88%;opacity:0}}
+.pk-pack.ripping .pk-cut,.pk-pack.torn .pk-cut,.pk-pack.shake .pk-cut{opacity:0}
 .pk-pack.torn .pk-body{transition:transform .8s .5s ease-in,opacity .5s .85s;transform:translateY(80%);opacity:0}
 .pk-cards{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:clamp(8px,2.4vw,18px);z-index:2;pointer-events:none}
 .pk-card{position:relative;width:min(29vw,170px,22vh);aspect-ratio:1024/1536;border:0;background:none;padding:0;perspective:1000px;opacity:0;transform:translateY(45%) scale(.45);
@@ -443,8 +451,8 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .face.front{display:flex;align-items:center}
 #back.card{aspect-ratio:1024/1792}
 /* the verdict stamp lands on the mascot (or the title, on copy-check cards), never on the question */
-#back .stampimg.big{width:46%;left:auto;right:0;top:41%;--rot:-8deg}
-#back .stampimg.big.top{width:50%;left:25%;right:auto;top:4%;--rot:-5deg}
+#back .stampimg.big{width:54%;left:auto;right:0;top:40%;--rot:-8deg}
+#back .stampimg.big.top{width:58%;left:21%;right:auto;top:3.5%;--rot:-5deg}
 /* the question side is drawn in 3 slices so its middle (plain paper) can stretch */
 .bgs{position:absolute;left:0;width:100%;z-index:0;background:url(art/back_card.webp) no-repeat;pointer-events:none}
 .bgs.t{top:0;height:33.4821%;background-size:100% 256.0%;background-position:top}
@@ -2671,7 +2679,57 @@ function resolvePulls(picks){
     return { c, isNew, coins, st:{...st} };
   });
 }
-function zig(y){ const pts = []; for (let i=0;i<=16;i++) pts.push(`${(i/16*100).toFixed(1)}% ${(y + (i%2 ? 1.4 : -1.4)).toFixed(1)}%`); return pts; }
+/* Swipe to rip: a ragged tear line across the top of the pack. The torn part of the flap peels up under your finger. */
+const TEAR_Y = 12;   // % down the pack, just under the crimp
+function tearLine(){ const pts = []; for (let i = 0; i <= 28; i++) pts.push([i / 28 * 100, TEAR_Y + (i % 2 ? .9 : -.9) + Math.random() * 1.6 - .8]); return pts; }
+function yAt(line, x){ const i = Math.min(line.length - 2, Math.floor(x / 100 * (line.length - 1))), [x0, y0] = line[i], [x1, y1] = line[i + 1]; return y0 + (y1 - y0) * (x - x0) / (x1 - x0); }
+const ptc = ([x, y]) => `${x.toFixed(2)}% ${y.toFixed(2)}%`;
+function flapClip(line, a, b){   // the wrapper above the tear line, from x = a to x = b (%)
+  if (b - a < .1) return 'polygon(0 0,0 0,0 0)';
+  const edge = [[a, yAt(line, a)], ...line.filter(([x]) => x > a && x < b), [b, yAt(line, b)]];
+  return `polygon(${ptc([a, 0])},${ptc([b, 0])},${edge.reverse().map(ptc).join(',')})`;
+}
+function setRip(btn, p){   // p: 0 (whole) to 1 (torn all the way across)
+  const line = btn._line, fromR = btn._dir < 0, P = p * 100, hinge = fromR ? 100 - P : P;
+  const flap = btn.querySelector('.pk-flap'), rest = btn.querySelector('.pk-rest');
+  flap.style.clipPath = fromR ? flapClip(line, hinge, 100) : flapClip(line, 0, hinge);
+  rest.style.clipPath = fromR ? flapClip(line, 0, hinge) : flapClip(line, hinge, 100);
+  flap.style.transformOrigin = `${hinge}% ${yAt(line, hinge)}%`;
+  flap.style.transform = `translateY(${(-p * 4).toFixed(2)}%) rotate(${((fromR ? -1 : 1) * p * 28).toFixed(2)}deg)`;
+}
+function finishRip(btn){   // past 70%: finish the tear, then open
+  if (btn._done) return; btn._done = true; btn._drag = null; btn.classList.add('ripping');
+  if (!btn._dir) btn._dir = 1;
+  const start = btn._p || 0, t0 = performance.now();
+  const step = now => { const k = Math.min(1, (now - t0) / 170); setRip(btn, start + (1 - start) * k); k < 1 ? requestAnimationFrame(step) : packTorn(btn); };
+  requestAnimationFrame(step);
+}
+function packTorn(btn){
+  const ov = btn.closest('.pk');
+  btn.querySelector('.pk-rest').style.visibility = 'hidden';
+  btn.querySelector('.pk-flap').style.transform = '';   // the .torn rule flings it away
+  btn.classList.toggle('from-r', btn._dir < 0); btn.classList.remove('shake'); btn.classList.add('torn');
+  const f = document.getElementById('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+  ov.classList.add('out'); ov.querySelector('.pk-hint').textContent = 'Tap each card to flip it.';
+}
+document.addEventListener('pointerdown', e => {
+  const btn = e.target.closest('.pk-pack'); if (!btn || btn._done) return;
+  btn._drag = { x:e.clientX, y:e.clientY, w:btn.getBoundingClientRect().width, id:e.pointerId, base:btn._p || 0, moved:false };
+  btn._swiped = false;
+  try { btn.setPointerCapture(e.pointerId); } catch (_) {}
+});
+document.addEventListener('pointermove', e => {
+  const btn = document.querySelector('.pk-pack'), d = btn && btn._drag; if (!d || e.pointerId !== d.id) return;
+  const dx = e.clientX - d.x, dy = e.clientY - d.y;
+  if (!d.moved) {
+    if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return;
+    d.moved = btn._swiped = true; if (!btn._dir) btn._dir = Math.sign(dx); btn.classList.add('ripping');
+  }
+  btn._p = Math.max(btn._p || 0, Math.min(1, d.base + dx * btn._dir / (d.w * .8)));
+  setRip(btn, btn._p);
+  if (btn._p >= .7) finishRip(btn);
+});
+['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, () => { const btn = document.querySelector('.pk-pack'); if (btn) btn._drag = null; }));
 function openPack(opts = {}){
   if (!opts.pulls && S.packs <= 0) return;
   if (!opts.pulls) S.packs--;
@@ -2681,12 +2739,14 @@ function openPack(opts = {}){
   const label = opts.label ? `<span class="pk-label">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(opts.label)}</b></span>` : '';
   lockScroll(); history.pushState({cq:'pack'}, '');
   const ov = document.createElement('div'); ov.className = 'pk';
-  const topClip = `polygon(0% 0%, 100% 0%, ${zig(12).reverse().join(',')})`, bodyClip = `polygon(${zig(12).join(',')}, 100% 100%, 0% 100%)`;
+  const line = tearLine();
   ov.innerHTML = `<div class="pk-rays"></div>
     <div class="pk-stage">
       <button class="pk-pack" data-act="pk-tear" aria-label="Open the pack">
-        <img class="pk-body" src="${packImg}" alt="" style="clip-path:${bodyClip}">
-        <img class="pk-top" src="${packImg}" alt="" style="clip-path:${topClip}">${label}
+        <img class="pk-body" src="${packImg}" alt="" style="clip-path:polygon(${line.map(ptc).join(',')},100% 100%,0% 100%)">
+        <img class="pk-top pk-rest" src="${packImg}" alt="" style="clip-path:${flapClip(line, 0, 100)}">
+        <img class="pk-top pk-flap" src="${packImg}" alt="" style="clip-path:${flapClip(line, 0, 0)}">
+        <span class="pk-cut" style="top:${TEAR_Y}%"><i>➜</i></span>${label}
       </button>
       <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
         <div class="pk-inner"><div class="pk-face pk-back"><img class="cbackimg" src="${backSrc()}" alt="Card back"></div>
@@ -2694,18 +2754,17 @@ function openPack(opts = {}){
         <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? ICO('memory') + ' MEMORY TRICK!' : 'NEW!') : `DUPLICATE · +${p.coins} ${COIN}`}</span>
       </button>`).join('')}</div>
     </div>
-    <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Tap it to tear it open.' : packImg.includes('s3') ? 'A Series 3 pack! Tap it to tear it open.' : packImg.includes('s2') ? 'A Series 2 pack! Tap it to tear it open.' : 'Tap the pack to tear it open.'}</p>
+    <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Swipe across the top to rip it open.' : packImg.includes('s3') ? 'A Series 3 pack! Swipe across the top to rip it open.' : packImg.includes('s2') ? 'A Series 2 pack! Swipe across the top to rip it open.' : 'Swipe across the top to rip it open.'}</p>
     <button class="btn-big gold pk-done" data-act="pk-done">COLLECT →</button>`;
   document.body.appendChild(ov);
+  ov.querySelector('.pk-pack')._line = line;
 }
-function tearPack(btn){
-  const ov = btn.closest('.pk'); if (ov.classList.contains('out')) return;
+function tearPack(btn){   // a tap: finishes a half-done rip, or opens the pack the old way (shake, then open)
+  if (btn._swiped || btn._done) return;
+  if (btn._p) return finishRip(btn);
+  btn._done = true; btn._dir = 1; setRip(btn, 1); btn.querySelector('.pk-flap').style.transform = '';
   btn.classList.add('shake');
-  setTimeout(() => {
-    btn.classList.remove('shake'); btn.classList.add('torn');
-    const f = document.getElementById('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
-    ov.classList.add('out'); ov.querySelector('.pk-hint').textContent = 'Tap each card to flip it.';
-  }, 900);
+  setTimeout(() => packTorn(btn), 900);
 }
 function zoomCard(html){
   const z = document.createElement('div'); z.className = 'zoom'; z.dataset.act = 'zoom-close';
