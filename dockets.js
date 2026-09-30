@@ -24,7 +24,7 @@ const FILE_CONDITIONS = { h:'File conditions', list:['Supreme Court, New York Co
 
 const HOT_DOCKETS = [{
   id:'CQ-D001', title:'The Record Is Not the Ruling', caseName:'Wharflight Records LLC v Stonebridge Imaging Inc.',
-  checked:'Rules checked September 2026', reward:'rbg',
+  checked:'Rules checked September 2026', reward:'rbg', opens:'2026-09-30', days:7,
   levels:[{
     name:'Open the order', chapter:'The costs order',
     learn:[
@@ -184,6 +184,38 @@ const DOCKET_REWARDS = {
     ] },
 };
 
+/* ---------- the weekly schedule ----------
+   Each docket is open for a window (opens + days, local time). While it's open, Home shows it with the days left.
+   After the window, a docket that isn't finished is "missed": locked until a Continuance reopens it (no deadline then,
+   and it earns the black-and-white card at most). Finished dockets stay in the folder as the player's record. */
+const DK_DAY = 864e5;
+const docketOpens = d => new Date(d.opens + 'T00:00:00').getTime();
+const docketCloses = d => docketOpens(d) + d.days * DK_DAY;
+function docketState(d){
+  const now = Date.now(), r = dockets().find(x => x.id === d.id), rr = r && docketRec(d.id);
+  if (rr && docketComplete(rr) && rr.reward) return 'done';
+  if (rr && rr.extended) return rr && docketComplete(rr) ? 'done' : 'open';   // reopened after missing: no deadline
+  if (now < docketOpens(d)) return 'soon';
+  if (now < docketCloses(d)) return rr && docketComplete(rr) ? 'done' : 'open';
+  return rr && docketComplete(rr) ? 'done' : 'missed';
+}
+const daysLeft = d => Math.max(1, Math.ceil((docketCloses(d) - Date.now()) / DK_DAY));
+const liveDocket = () => HOT_DOCKETS.find(d => docketState(d) === 'open' && !(dockets().find(x => x.id === d.id) || {}).extended);
+/* the Home tile: this week's docket, while it's open and not finished */
+function docketHomeHTML(){
+  const d = liveDocket(); if (!d) return '';
+  const r = dockets().find(x => x.id === d.id), rr = r && docketRec(d.id), n = daysLeft(d);
+  const sub = rr ? `Level ${rr.level} · ${doneCount(rr.lv[rr.level])} of 4 done` : 'New this week';
+  return `<button class="dk-home" data-act="push" data-s="docket" data-id="${d.id}"><img src="${artSrc('docket_folder')}" alt="">
+    <span><em>HOT DOCKET</em><b>${esc(d.title)}</b><small>${sub}</small></span><i class="${n <= 2 ? 'soon' : ''}">${n} day${n === 1 ? '' : 's'} left</i></button>`;
+}
+function reopenMissed(id){
+  const r = docketRec(id); if (continuances() < 1 || r.extended) return false;
+  S.continuances = continuances() - 1;
+  r.extended = true; r.retry = true; r.reopened = (r.reopened || 0) + 1;
+  save(); return true;
+}
+
 /* ---------- saved progress: one record per docket, with a part per level ---------- */
 const dockets = () => (S.dockets = Array.isArray(S.dockets) ? S.dockets : []);
 const docketDef = id => HOT_DOCKETS.find(d => d.id === id);
@@ -213,23 +245,27 @@ function reopenDocket(id){
   const r = docketRec(id); if (continuances() < 1 || r.reward || !docketComplete(r)) return false;
   S.continuances = continuances() - 1;
   for (let n = 1; n <= 3; n++) { r.lv[n].answers = []; r.lv[n].done.practice = false; delete r.lv[n].practiceAt; }
-  r.level = 1; r.retry = true; r.reopened = (r.reopened || 0) + 1; delete r.completedAt;
+  r.level = 1; r.retry = true; r.extended = true; r.reopened = (r.reopened || 0) + 1; delete r.completedAt;   // a reopened docket has no deadline
   save(); return true;
 }
 
 /* ---------- the Dockets tab (inside Collection) ---------- */
 function docketsTabHTML(){
-  const rows = HOT_DOCKETS.map(d => { const r = dockets().find(x => x.id === d.id), rr = r && docketRec(d.id);
-    const status = !rr ? 'not started' : docketComplete(rr) ? (rr.reward ? 'complete' : 'complete · no card yet') : `${rr.retry ? 'reopened · ' : ''}Level ${rr.level} · ${doneCount(rr.lv[rr.level])} of 4 done`;
+  const rows = HOT_DOCKETS.filter(d => docketState(d) !== 'soon').map(d => { const r = dockets().find(x => x.id === d.id), rr = r && docketRec(d.id);
+    const st = docketState(d);
+    const status = st === 'soon' ? 'opens soon' : st === 'missed' ? 'missed · reopen with a Continuance'
+      : !rr ? `not started · ${daysLeft(d)} day${daysLeft(d) === 1 ? '' : 's'} left`
+      : docketComplete(rr) ? (rr.reward ? 'complete' : 'complete · no card yet')
+      : `${rr.retry ? 'reopened · ' : ''}Level ${rr.level} · ${doneCount(rr.lv[rr.level])} of 4 done${rr.extended ? '' : ` · ${daysLeft(d)}d left`}`;
     return `<button class="row dk-row" data-act="push" data-s="docket" data-id="${d.id}"><span class="dk-thumb"><img src="${artSrc('dk_photo_learn')}" alt=""></span>
       <span class="row-main"><b>${esc(d.title)}</b><small>${esc(d.id)} · ${status}</small></span>${chev}</button>`; }).join('');
   const won = dockets().filter(r => r.reward && docketDef(r.id));
   return `<p class="st-note">Hot Dockets are court situations written as a docket. Read the file, then decide how to handle it. They test judgment, not just memory.</p>
     <div class="dk-folder"><img src="${artSrc('docket_folder')}" alt="Docket folder"></div>
-    <div class="sec-h"><span>Sample docket</span></div><div class="list">${rows}</div>
+    <div class="sec-h"><span>Your dockets</span></div><div class="list">${rows || '<p class="empty">Your first Hot Docket arrives soon.</p>'}</div>
     <div class="dk-coins"><img src="${artSrc('continuance_coin')}" alt=""><span><b>${continuances()} Continuance${continuances() === 1 ? '' : 's'}</b><small>${continuances() ? 'Spend one to retry a docket that ended without a reward card.' : 'Found in some packs. One lets you retry a docket that ended without a reward card.'}</small></span></div>
     ${won.length ? `<div class="sec-h"><span>Reward cards</span></div><div class="dk-rewards">${won.map(r => rewardThumb(r)).join('')}</div>` : ''}
-    <p class="foot">Soon a new Hot Docket will arrive on your Home screen about once a week. Finished ones stay in this folder as your record.</p>`;
+    <p class="foot">A new Hot Docket arrives on your Home screen about once a week and stays open for a week. Finished ones stay in this folder as your record.</p>`;
 }
 function rewardThumb(r){
   const d = docketDef(r.id), rw = DOCKET_REWARDS[d.reward];
@@ -430,6 +466,10 @@ const DOCKET_SCREENS = {
   docket(p){
     const d = docketDef(p.id); if (!d) return { title:'Hot Docket', body:'<p class="empty">This docket is not available.</p>' };
     const r = docketRec(p.id), n = r.level, x = lvRec(r, n);
+    if (docketState(d) === 'missed') return { title:'Hot Docket', body:`<div class="dk-missed"><img src="${artSrc('docket_folder')}" alt="">
+        <h3>This docket's week is over</h3><p>${esc(d.title)} closed before it was finished. A Continuance reopens it with no deadline; a pass earns the black-and-white card.</p>
+        ${continuances() ? `<button class="btn-big gold" data-act="dk-reopen-missed">Use a Continuance (you have ${continuances()})</button>`
+          : `<p class="st-note">You have no Continuances yet. They come in some packs.</p>`}</div>` };
     let tab = DOCKET_TABS.some(([k]) => k === p.tab) ? p.tab : (DOCKET_TABS.find(([k]) => !x.done[k]) || DOCKET_TABS[3])[0];
     if (!tabOpen(x, DOCKET_TABS.findIndex(([k]) => k === tab))) tab = 'learn';
     if (tab === 'practice' && p.q == null && !x.done.practice) p.q = Math.min(x.answers.filter(a => a != null).length, d.levels[n - 1].practice.length - 1);
@@ -486,6 +526,11 @@ document.addEventListener('click', e => {
       toast(doneCount(x) === 4 ? (n === 3 ? 'Docket complete!' : `Level ${n} complete!`) : `${DOCKET_TABS.find(([y]) => y === k)[1]} complete`, 'check');
       if (finished && r.reward) setTimeout(() => openReward(d.id, true), 700);
       break; }
+    case 'dk-reopen-missed':
+      iosAlert({ title:'Use a Continuance?', msg:`Spend 1 of your ${continuances()} to reopen ${d.title}. It stays open with no deadline, and a pass (80%) earns the black-and-white card.`,
+        buttons:[{ label:'Not now', value:false }, { label:'Reopen', value:true, style:'bold' }] })
+        .then(ok => { if (ok && reopenMissed(d.id)) { dkGo({}); toast('Case reopened', 'sync'); } });
+      break;
     case 'dk-continue':
       iosAlert({ title:'Use a Continuance?', msg:`Spend 1 of your ${continuances()} Continuance${continuances() === 1 ? '' : 's'} to reopen this docket. You'll answer all 15 practice questions again; your reading stays done. A pass (80%) earns the black-and-white card.`,
         buttons:[{ label:'Not now', value:false }, { label:'Reopen', value:true, style:'bold' }] })
@@ -599,6 +644,16 @@ const DOCKET_CSS = `
 .sf-banner span{flex:1}
 .sf-banner.reopen{background:rgba(70,110,170,.18);color:#a9c8f0}
 .sf-banner.reopen img{width:92px;flex:none;transform:rotate(-6deg)}
+.dk-home{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 12px;padding:10px 12px;border:2px solid rgba(207,59,42,.55);border-radius:16px;
+  background:linear-gradient(135deg,rgba(207,59,42,.18),rgba(227,178,60,.1));color:var(--paper);text-align:left}
+.dk-home img{width:54px;flex:none;filter:drop-shadow(0 3px 5px rgba(0,0,0,.4))}
+.dk-home span{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.dk-home em{font:400 15px/1 "Bangers";letter-spacing:.08em;font-style:normal;color:#ff8a6a}
+.dk-home b{font:400 18px/1.1 "Bangers";letter-spacing:.03em}
+.dk-home small{font:14px "Patrick Hand";color:var(--sub)}
+.dk-home i{flex:none;font:700 13px var(--ui);font-style:normal;padding:4px 9px;border-radius:12px;background:rgba(0,0,0,.35);color:var(--mustard)} .dk-home i.soon{color:#ff8a6a}
+.dk-missed{text-align:center;padding:20px 8px} .dk-missed img{width:140px;opacity:.7;filter:grayscale(.6)}
+.dk-missed h3{font:400 26px "Bangers";letter-spacing:.04em;margin:12px 0 6px} .dk-missed p{font:17px/1.4 "Patrick Hand";color:var(--sub);margin:0 0 14px}
 .dk-coins{display:flex;align-items:center;gap:12px;margin:12px 0 4px;padding:10px 14px;border-radius:14px;background:var(--bg2)}
 .dk-coins img{width:48px;height:48px;flex:none}
 .dk-coins b{display:block;font:400 20px/1.1 "Bangers";letter-spacing:.05em;color:var(--mustard)} .dk-coins small{font:14px "Patrick Hand";color:var(--sub)}
