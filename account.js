@@ -42,15 +42,20 @@ function showLogin(wall){
   let el = document.getElementById('login-root');
   if (!el) { el = document.createElement('div'); el.id = 'login-root'; document.body.appendChild(el); }
   if (wall) el.dataset.wall = '1';
+  const closable = !el.dataset.wall && !guestWallDue();
   el.innerHTML = `<div class="login">
     <div class="home-logo">CLERK <span>QUEST</span></div>
     ${el.dataset.wall ? `<p class="login-wall"><b>Nice work!</b> Create your account to keep your cards and keep playing.</p>`
       : `<p class="login-tag">Study the court rules. Collect the cards.</p>`}
+    ${closable ? `<button class="login-x" data-act="acct-close" aria-label="Close">Not now</button>` : ''}
     ${cloud() ? authFormHTML(acct.tab)
       : `<p class="acct-err">${ICO('warning')} Can't reach Clerk Quest right now. Check your connection, then try again.</p>
          <button class="btn-big gold" data-act="acct-retry">TRY AGAIN</button>`}</div>`;
 }
 function hideLogin(){ const el = document.getElementById('login-root'); if (!el) return; el.remove(); refresh(); maybeWelcome(); }
+/* Signing in on purpose (Settings, Home, or the welcome): the same screen, with a way to close it */
+function openSignIn(tab){ Object.assign(acct, { tab:tab || 'signin', err:'', info:'' }); showLogin(false); }
+document.addEventListener('click', e => { if (e.target.closest('[data-act="acct-close"]')) { document.getElementById('login-root')?.remove(); refresh(); } });
 /* The guest wall: once a guest has finished a study round, they sign up (or sign in) to keep playing. */
 const guestWallDue = () => !cloudUser() && !!(S.stats && S.stats.sessions >= 1);
 function guestWall(){ if (guestWallDue() && !document.getElementById('login-root')) { acct.tab = 'create'; showLogin(true); } }
@@ -60,7 +65,8 @@ function requireLogin(){ if (cloudUser()) maybeWelcome(); else if (guestWallDue(
 const ACCOUNT_SCREENS = {
   account(p){
     const user = cloudUser();
-    if (!user) return { title:'Account', body:'' };   // the login screen is showing
+    if (!user) return { title:'Account', body:`<p class="st-note">You're playing as a guest.</p><button class="btn-big gold" data-act="cloud-signin" data-tab="signin">SIGN IN</button>
+      <button class="btn-big alt" data-act="cloud-signin" data-tab="create">CREATE AN ACCOUNT</button>` };
     if (p.tab === 'newpw') return { title:'New Password', body:authFormHTML('newpw') };
     return { title:'Account', body:`
       <div class="acct-card on">${ICO('cloud')}<span><b>Signed in</b><small>${esc(user.email || '')}</small></span></div>
@@ -143,6 +149,10 @@ const ACCOUNT_CSS = `
 .login{max-width:420px;margin:0 auto;padding:calc(40px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom))}
 .login .home-logo{text-align:center;margin:0 0 6px}
 .login-tag{margin:0 0 22px;text-align:center;font:19px "Patrick Hand";color:var(--sub)}
+.login-x{position:absolute;top:calc(12px + env(safe-area-inset-top));right:14px;min-height:40px;padding:0 14px;border:0;border-radius:20px;background:var(--bg2);color:var(--mustard);font:18px "Patrick Hand"}
+.guest-bar{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:40px;margin:-4px 0 12px;border:0;border-radius:12px;background:rgba(143,179,209,.12);color:var(--sub);font:17px "Patrick Hand"}
+.guest-bar b{color:var(--mustard);font-weight:400;text-decoration:underline}
+.wl-signin{display:block;margin:12px auto 0;border:0;background:none;color:var(--mustard);font:18px "Patrick Hand";text-decoration:underline}
 .login-wall{margin:0 0 22px;text-align:center;font:20px/1.35 "Patrick Hand";color:var(--paper)}
 .login-wall b{display:block;font:400 30px/1.1 "Bangers";letter-spacing:.05em;color:var(--mustard)}
 .acct-sub{margin:0 0 14px;font:19px/1.3 "Patrick Hand";color:var(--sub)}

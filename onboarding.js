@@ -23,7 +23,8 @@ function welcomeHTML(i){
   return `<div class="wl"><button class="wl-skip" data-act="wl-skip">Skip</button>
     <img class="wl-art" src="${artSrc(w.art)}" alt=""><h2>${esc(w.h)}</h2><p>${esc(w.p)}</p>
     <div class="wl-dots">${WELCOME.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div>
-    <button class="btn-big gold" data-act="${last ? 'wl-pack' : 'wl-next'}" data-i="${i + 1}">${last ? `${ICO('pack')} OPEN MY FIRST PACK` : 'NEXT →'}</button></div>`;
+    <button class="btn-big gold" data-act="${last ? 'wl-pack' : 'wl-next'}" data-i="${i + 1}">${last ? `${ICO('pack')} OPEN MY FIRST PACK` : 'NEXT →'}</button>
+    ${!wlPreview && typeof cloudUser === 'function' && !cloudUser() ? `<button class="wl-signin" data-act="wl-signin">I already have an account · Sign in</button>` : ''}</div>`;
 }
 function showWelcome(i){
   let el = document.getElementById('wl-root');
@@ -39,6 +40,7 @@ document.addEventListener('click', e => {
   switch (t.dataset.act) {
     case 'wl-next': showWelcome(+t.dataset.i); break;
     case 'wl-skip': endWelcome(); break;
+    case 'wl-signin': endWelcome(); openSignIn('signin'); break;
     case 'wl-pack': { const pv = wlPreview; endWelcome(); if (!pv && S.packs) openPack(); break; }
   }
 });

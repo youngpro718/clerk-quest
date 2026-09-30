@@ -889,8 +889,8 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="economy.js?v=a7261374"></script>
 <script src="store.js?v=ee061c0a"></script>
 <script src="binder.js?v=41877c4c"></script>
-<script src="onboarding.js?v=52f619be"></script>
-<script src="account.js?v=303970d4"></script>
+<script src="onboarding.js?v=704068fc"></script>
+<script src="account.js?v=ad784f4b"></script>
 <script src="admin.js?v=fb5df08d"></script>
 <script src="stickers.js?v=9a30b930"></script>
 <script src="dockets.js?v=9eaca5ac"></script>
@@ -2254,6 +2254,7 @@ const SCREENS = {
       right:`<button class="nb-avatar" data-act="tab" data-tab="profile" aria-label="Profile, level ${playerLevel()}">${ring((S.stats.xp % 250) / 250, 'L' + playerLevel(), 40)}</button>`,
       body:`
         <div class="home-logo">CLERK <span>QUEST</span></div>
+        ${typeof cloudUser === 'function' && !cloudUser() ? `<button class="guest-bar" data-act="cloud-signin" data-tab="signin">Playing as a guest · <b>Sign in</b></button>` : ''}
         ${target ? `<button class="hero ${isCold(tst) ? 'cold' : ''}" data-act="study" data-id="${target.id}">
           <span class="hero-card">${cardEl(target, tst)}</span>
           <span class="hero-info"><small>${isCold(tst) ? ICO('thermo_snow') + ' COLD CASE' : 'CONTINUE'}</small><b>${esc(target.name)}</b>
@@ -3267,7 +3268,7 @@ document.addEventListener('click', e => {
     case 'missing': missingSheet(id); break;
     case 'sheet-close': closeSheet(); break;
     case 'a2hs-show': a2hsSheet(); break;
-    case 'cloud-signin': push('account'); break;
+    case 'cloud-signin': closeSheet(true); openSignIn(t.dataset.tab || 'signin'); break;
     case 'cloud-signout':
       CQCloud.signOut().catch(err => toast(err.message || 'Could not sign out')); break;
     case 'cloud-sync':
