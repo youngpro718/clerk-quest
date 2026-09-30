@@ -367,16 +367,17 @@ function studyFileHTML(d, r, n, tab, p){
   let bar;
   if (tab === 'practice') {
     const answered = x.answers[i] != null, last = i === sheets.length - 1;
-    bar = results ? `<button class="sf-btn" data-act="dk-review" data-q="0">Review questions</button><span class="sf-count">${levelScore(d, r, n)} of ${sheets.length} right</span><span class="sf-btn ghost"></span>`
+    bar = results ? `<button class="sf-btn" data-act="dk-review" data-q="0">Review questions</button><span class="sf-count">${levelScore(d, r, n)} of ${sheets.length} right</span>${missedQs(d, r).length ? `<button class="sf-btn go" data-act="dm-start" data-id="${d.id}">Practice misses</button>` : '<span class="sf-btn ghost"></span>'}`
       : `<button class="sf-btn" data-act="dk-q" data-q="${i - 1}" ${i ? '' : 'disabled'}>‹ Back</button><span class="sf-count">Question ${i + 1} of ${sheets.length}</span>
         ${!answered ? `<button class="sf-btn go" data-act="dk-check" ${p.sel == null ? 'disabled' : ''}>Check ✓</button>`
           : last ? (x.done.practice ? `<button class="sf-btn go" data-act="dk-review" data-q="">Results ›</button>` : `<button class="sf-btn go gold" data-act="dk-done" data-tab="practice">Finish ✓</button>`)
           : `<button class="sf-btn go" data-act="dk-q" data-q="${i + 1}">Next ›</button>`}`;
   } else {
     const last = i === sheets.length - 1, next = DOCKET_TABS[DOCKET_TABS.findIndex(([k]) => k === tab) + 1];
-    bar = `<button class="sf-btn" data-act="dk-sheet" data-d="-1" ${i ? '' : 'disabled'}>‹ Back</button><span class="sf-count">Sheet ${i + 1} of ${sheets.length}</span>
-      ${x.done[tab] && (last || i === 0) ? `<button class="sf-btn go" data-act="dk-tab" data-tab="${next[0]}">${next[1]} ›</button>`
-        : !last ? `<button class="sf-btn go" data-act="dk-sheet" data-d="1">Next ›</button>`
+    // Back and Next always turn the sheets, finished or not; "contents" jumps anywhere or on to the next section
+    bar = `<button class="sf-btn" data-act="dk-sheet" data-d="-1" ${i ? '' : 'disabled'}>‹ Back</button><button class="sf-count link" data-act="dk-toc">Sheet ${i + 1} of ${sheets.length} ▾</button>
+      ${!last ? `<button class="sf-btn go" data-act="dk-sheet" data-d="1">Next ›</button>`
+        : x.done[tab] ? `<button class="sf-btn go" data-act="dk-tab" data-tab="${next[0]}">${next[1]} ›</button>`
         : `<button class="sf-btn go gold" data-act="dk-done" data-tab="${tab}">Finish ✓</button>`}`;
   }
   return `${card}<div class="sf-bar">${bar}</div>`;
@@ -496,9 +497,32 @@ const DOCKET_SCREENS = {
           ${continuances() ? `Spend a Continuance to answer the 15 questions again (you have ${continuances()}).` : 'Continuance coins come in some packs. One lets you answer the 15 questions again.'}</span>
           ${continuances() ? `<button class="sf-btn go gold" data-act="dk-continue">Use a Continuance</button>` : ''}</div>`;
     else if (r.retry && !levelDone) banner = `<div class="sf-banner reopen"><img src="${artSrc('dk_stamp_reopened')}" alt="Case reopened"><span>Case reopened: answer the practice questions again. A pass (80%) earns the black-and-white card.</span></div>`;
+    const missed = missedQs(d, r);
+    if (missed.length && levelDone) banner += `<div class="sf-banner"><span>You missed ${missed.length} so far. Practice just those, free. It earns nothing and changes no score.</span><button class="sf-btn go" data-act="dm-start" data-id="${d.id}">Practice my misses</button></div>`;
     return { title:'Hot Docket', body:`${banner}${studyFileHTML(d, r, n, tab, p)}` };
   },
 };
+
+/* ---------- practice your misses: free, no reward, nothing saved ---------- */
+function missedQs(d, r){
+  const out = [];
+  for (let lv = 1; lv <= r.level; lv++) { const L = d.levels[lv - 1], x = lvRec(r, lv);
+    L.practice.forEach((q, k) => { if (x.answers[k] != null && x.answers[k] !== q.a) out.push({ lv, k, q }); }); }
+  return out;
+}
+let MISS = null;
+function missSheet(){
+  const m = MISS, it = m.list[m.i];
+  if (!it) { openSheet(`<h3>Nice work</h3><p class="as-q">You got ${m.right} of ${m.list.length} right this time. This was practice only: no reward, and your record is unchanged.</p>
+      <button class="btn-big gold" data-act="sheet-close">DONE</button>`); return; }
+  const q = it.q, done = m.picked != null, last = m.i === m.list.length - 1;
+  openSheet(`<h3>Practice your misses</h3><p class="dm-note">Free practice · ${m.i + 1} of ${m.list.length} · Level ${it.lv}, question ${it.k + 1}</p><p class="as-q">${esc(q.q)}</p>
+    <div class="as-list">${q.c.map((t, k) => `<button class="${done && k === q.a ? 'right' : ''} ${done && k === m.picked && k !== q.a ? 'wrong' : ''}" ${done ? 'aria-disabled="true"' : `data-act="dm-pick" data-k="${k}"`}><b>${'ABCD'[k]}</b><span>${esc(t)}</span></button>`).join('')}</div>
+    ${done ? `<div class="dm-why"><b>${m.picked === q.a ? 'Right' : 'Not quite'} · the answer is ${'ABCD'[q.a]}</b><p>${esc(q.why)}</p><p class="sf-cite">Source: ${esc(q.cite)}</p></div>
+      <button class="btn-big gold" data-act="dm-next">${last ? 'FINISH' : 'NEXT ›'}</button>` : ''}
+    <button class="sheet-cancel" data-act="sheet-close">Close</button>`);
+}
+const sheetTitle = (sh, k) => sh.cover ? 'Cover' : sh.card ? sh.card.h : sh.entries ? `Level ${sh.chapter} · ${sh.name}` : sh.ev ? sh.ev.h : sh.src ? `Question ${sh.k + 1} source` : `Sheet ${k + 1}`;
 
 /* ---------- taps and swipes ---------- */
 function dkGo(patch){
@@ -516,6 +540,10 @@ document.addEventListener('click', e => {
   // reward card and its quiz work from anywhere (the Docket folder or the docket)
   switch (t.dataset.act) {
     case 'dk-reward': closeSheet(true); openReward(t.dataset.id); return;
+    case 'dm-start': { const dd = docketDef(t.dataset.id), list = dd ? missedQs(dd, docketRec(dd.id)) : []; if (!list.length) return;
+      MISS = { list, i:0, right:0, picked:null }; missSheet(); return; }
+    case 'dm-pick': if (MISS && MISS.picked == null) { MISS.picked = +t.dataset.k; if (MISS.picked === MISS.list[MISS.i].q.a) MISS.right++; missSheet(); } return;
+    case 'dm-next': if (MISS) { MISS.i++; MISS.picked = null; missSheet(); } return;
     case 'rw-flip': t.classList.toggle('back'); return;
     case 'rw-quiz': e.stopPropagation(); rewardQuiz(t.dataset.id); return;
     case 'rw-close': { const ov = t.closest('.rw-ov'); ov.remove(); rwPreview = null; unlockScroll(); refresh(); return; }
@@ -531,7 +559,12 @@ document.addEventListener('click', e => {
   if (['dk-check', 'dk-done', 'dk-level'].includes(t.dataset.act) && docketState(d) === 'missed') {   // a page left open past the deadline
     toast("This docket's week just ended. Nothing new was saved.", 'lock'); refresh(); return; }
   switch (t.dataset.act) {
-    case 'dk-tab': { const i = DOCKET_TABS.findIndex(([k]) => k === t.dataset.tab);
+    case 'dk-toc': { const tab = currentScreenEl().querySelector('.sf2').dataset.tab, sheets = tabSheets(tab, d, n), cur = en.p.sheet || 0, ti = DOCKET_TABS.findIndex(([k]) => k === tab), nx = DOCKET_TABS[ti + 1];
+      openSheet(`<h3>Contents</h3><div class="list">${sheets.map((sh, k) => `<button class="row" data-act="dk-jump" data-i="${k}"><span class="row-main"><b>${esc(sheetTitle(sh, k))}</b>${k === cur ? '<small>You are here</small>' : ''}</span>${chev}</button>`).join('')}</div>
+        ${nx && tabOpen(x, ti + 1) ? `<button class="btn-big gold" data-act="dk-tab" data-tab="${nx[0]}">GO TO ${nx[1].toUpperCase()}</button>` : ''}
+        <button class="sheet-cancel" data-act="sheet-close">Close</button>`); break; }
+    case 'dk-jump': closeSheet(true); dkSheet(0, +t.dataset.i); break;
+    case 'dk-tab': { closeSheet(true); const i = DOCKET_TABS.findIndex(([k]) => k === t.dataset.tab);
       if (!tabOpen(x, i)) { toast(`Finish ${DOCKET_TABS.find(([k]) => !x.done[k])[1]} first`, 'lock'); break; }
       dkGo({ tab:t.dataset.tab, sheet:0, q:null, sel:null, memo:true }); break; }
     case 'dk-sheet': dkSheet(+t.dataset.d); break;
@@ -650,6 +683,12 @@ const DOCKET_CSS = `
 .sf-res.no b{background:#b3261e}
 .sf-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 4px;min-height:48px;position:sticky;bottom:0;z-index:20;padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));background:linear-gradient(to bottom,rgba(29,26,22,0),var(--bg,#1d1a16) 32%)}
 .sf-count{font:18px "Patrick Hand";color:var(--sub);text-align:center;flex:1}
+button.sf-count{background:none;border:0;padding:6px 4px;min-height:44px;text-decoration:underline;text-underline-offset:3px}
+.dm-note{margin:0 4px 6px;font:15px var(--ui);color:var(--sub)}
+.as-list button.right{background:#cfe8c9;border-color:#2f6b3a}.as-list button.wrong{background:#f3cfc9;border-color:#b3261e}
+.as-list button[aria-disabled="true"]{cursor:default}
+.dm-why{margin:12px 4px;padding:10px 12px;border-radius:12px;background:var(--bg2);color:var(--paper);font:17px/1.4 "Patrick Hand"}
+.dm-why b{display:block;margin-bottom:4px;color:var(--mustard)}.dm-why p{margin:4px 0}
 .sf-btn{flex:none;min-width:96px;min-height:46px;padding:0 14px;border:2px solid rgba(241,229,201,.35);border-radius:12px;background:var(--bg2);color:var(--paper);font:19px "Patrick Hand"}
 .sf-btn.go{background:#2b3a55;border-color:#2b3a55} .sf-btn.go.gold{background:var(--mustard);border-color:var(--mustard);color:var(--ink)}
 .sf-btn.ghost{visibility:hidden}
