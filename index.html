@@ -880,8 +880,20 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .toast.out{opacity:0;transition:opacity .35s}
 @keyframes toastin{from{transform:translate(-50%,20px);opacity:0}}
 </style>
+<style>
+#splash{position:fixed;inset:0;z-index:9999;background:#14110d;display:flex;align-items:center;justify-content:center;transition:opacity .55s ease}
+/* the picture has no bar painted on it: the bar and caption below are real and sit at fixed spots on the picture (941 x 1672) */
+.sp-frame{position:relative;width:min(100vw,calc(100vh * 941 / 1672));aspect-ratio:941 / 1672}
+#splash img{display:block;width:100%;height:100%}
+.sp-bar{position:absolute;left:14.7%;width:70.6%;top:88.3%;height:3.4%;border:2px solid rgba(241,229,201,.3);border-radius:999px;background:#2a2218;overflow:hidden}
+.sp-bar i{display:block;height:100%;width:8%;border-radius:999px;background:linear-gradient(#ffd84a,#e3b23c);transition:width .45s ease}
+.sp-cap{position:absolute;left:0;right:0;top:92.6%;margin:0;text-align:center;font:clamp(15px,4.2vw,22px) "Patrick Hand",system-ui,sans-serif;color:#f1e5c9}
+#splash.out{opacity:0;pointer-events:none}
+</style>
 </head>
 <body>
+<div id="splash" aria-hidden="true"><div class="sp-frame"><img src="art/loading_comic.webp" alt="">
+  <div class="sp-bar"><i></i></div><p class="sp-cap">Getting your deck ready…</p></div></div>
 <div id="shell"><div id="screens"></div><nav id="tabbar" aria-label="Main"></nav></div>
 <div id="app" hidden></div>
 <div class="flash" id="flash"></div>
@@ -890,7 +902,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="cloud-sync.js?v=cd5fc35d"></script>
 <script src="study.js?v=e01c771c"></script>
 <script src="economy.js?v=a7261374"></script>
-<script src="store.js?v=ee061c0a"></script>
+<script src="store.js?v=e62a784f"></script>
 <script src="binder.js?v=41877c4c"></script>
 <script src="onboarding.js?v=79c4a753"></script>
 <script src="account.js?v=ad784f4b"></script>
@@ -899,6 +911,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="dockets.js?v=6c007863"></script>
 <script src="pack3d.js?v=1cbdf0aa"></script>
 <script src="sticker3d.js?v=a56aea89"></script>
+<script src="questions.js?v=54933bd7"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "appeal30": {"1": "art/appeal30_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightback": {"1": "art/eightback_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "freeze": {"1": "art/freeze_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "reargue": {"1": "art/reargue_1.webp"}, "renew": {"1": "art/renew_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "sj120": {"1": "art/sj120_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "undodefault": {"1": "art/undodefault_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
@@ -2083,11 +2096,18 @@ function nextQuestion(c, lv, used){
   }
   if (c.gen === 'compare') return genCompare(lv);
   if (c.gen === 'alpha') return genAlpha(lv);
+  // A round is 5 questions but a level may hold only 3: never repeat inside a round. Use this level first,
+  // then stretch to a harder one, then look back at an easier one, and only repeat when the whole bank is used up.
   let pool = c.bank.filter(q => q.lv === lv && !used.has(q.q));
+  if (!pool.length) pool = c.bank.filter(q => q.lv > lv && !used.has(q.q));
+  if (!pool.length) pool = c.bank.filter(q => q.lv < lv && !used.has(q.q));
   if (!pool.length) pool = c.bank.filter(q => q.lv === lv);
   const q = pick(pool); used.add(q.q);
   return { type: q.type || 'mc', q:q.q, opts: q.type==='tf' ? q.c.slice() : shuffle(q.c), a:q.a, h:q.h, w:q.w };
 }
+
+/* Questions edited in the spreadsheet (tools/questions_tool.py) replace the built-in ones for the cards they list. */
+if (window.QBANK && typeof QBANK === 'object') CARDS.forEach(c => { const b = QBANK[c.id]; if (Array.isArray(b) && b.length) c.bank = b.map(q => ({ ...q })); });
 
 /* ================= APP SHELL: native-style screens, tabs, and navigation stacks ================= */
 const app = document.getElementById('app');          // full-screen layer for study rounds + results
@@ -2183,7 +2203,7 @@ const ICO = (name, cls = '') => `<img class="ico ${cls}" src="art/icon_${name}.w
 const artSrc = name => `art/${name}.webp`;
 /* Pack art follows the newest series inside: Series 3, then Series 2, then the original pack */
 const packArtFor = cards => cards.some(c => c && c.series === 3) ? 'art/pack_s3.webp' : cards.some(c => c && c.series === 2) ? 'art/pack_s2.webp' : 'art/pack.webp';
-const nextPackArt = () => packArtFor([].concat(S.guarantee || []).map(byId));   // for art picked by name at run time (the build rewrites it to .webp)
+const nextPackArt = () => nextPackArtSrc();   // the wrapper of the series the next free pack comes from
 const hintCosts = () => !!(sess && sess.hint && !sess.freeHint);   // a free-hint boost makes the hint cost nothing
 const backSrc = () => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : 'art/cardback.webp';   // the card back in use
 /* A card's equipped style: a bought frame (Series 1/2 only) and holo foil. */
@@ -2400,11 +2420,11 @@ const SCREENS = {
   },
 
   packs(){
-    const nextSeries = Math.max(0, ...[].concat(S.guarantee || []).map(id => (byId(id) || {}).series || 0));
+    const nextSeries = nextPackSeries();
     return { title:'Packs', body:`
       <div class="packs-hero"><img src="${nextPackArt()}" alt="Clerk Quest card pack" class="${S.packs ? 'bob' : 'dim'}">
         <b>${S.packs ? S.packs + ' pack' + (S.packs > 1 ? 's' : '') + ' ready' : 'No packs right now'}</b>
-        <small>${S.packs ? (nextSeries >= 2 ? `Your next pack has Series ${nextSeries} cards!` : 'Each pack has 3 cards.') : 'Your first finished round each day earns a pack. Quests can earn more.'}</small></div>
+        <small>${S.packs ? `Your next pack is a Series ${nextSeries} pack: 3 cards, and sometimes a trick card or a sticker.` : 'Your first finished round each day earns a pack. Quests can earn more.'}</small></div>
       <button class="btn-big gold" data-act="pack-open" ${S.packs ? '' : 'disabled'}>${ICO('pack')} OPEN A PACK</button>
       <div class="list" style="margin-top:18px">
         <div class="row"><span class="k">Packs opened</span><span class="v">${S.packsOpened}</span></div>
@@ -2865,20 +2885,27 @@ const pickByRarity = pool => {   // one card from pool, rarer cards less likely
   while (i < pool.length - 1 && (r -= w[i]) > 0) i++;
   return pool[i];
 };
-function drawPack(){
-  const owned = c => S.cards[c.id].owned;
-  const tricks = CARDS.filter(c => c.trickType);
-  const newRegular = shuffle(CARDS.filter(c => !c.trickType && !owned(c))), newTricks = shuffle(tricks.filter(c => !owned(c)));
+/* Which series the next free pack comes from: the earliest series you have not finished (Series 1 first). */
+function nextPackSeries(){
+  for (const d of SERIES_DEFS) if (CARDS.filter(d.test).some(c => !S.cards[c.id].owned)) return d.n;
+  return SERIES_DEFS[SERIES_DEFS.length - 1].n;
+}
+const nextPackArtSrc = () => seriesPackArt(nextPackSeries());
+/* A pack draws only from the series on its wrapper. The 12 trick cards that belong to no series are sprinkled into every pack. */
+function drawPack(n = nextPackSeries()){
+  const d = seriesDef(n), owned = c => S.cards[c.id].owned;
+  const pool = CARDS.filter(d.test), tricks = CARDS.filter(c => c.trickType && !c.series);
   const picks = []; const take = c => { if (c && picks.length < 3 && !picks.includes(c)) picks.push(c); };
-  const promised = [].concat(S.guarantee || []).filter(id => newTricks.some(c => c.id === id));
-  if (promised.length) { promised.slice(0,3).forEach(id => take(byId(id))); S.guarantee = promised.slice(3); if (!S.guarantee.length) S.guarantee = null; }
-  else if (S.packsOpened === 0 && newTricks.length) take(newTricks[0]);      // first pack always shows a Memory Trick
-  if (S.packsOpened < GUARANTEE_PACKS) take(newRegular[0] || newTricks[0]);   // early packs always hold something new
+  const fits = c => c && !owned(c) && (d.test(c) || (c.trickType && !c.series));   // promises from older saves count only if the card belongs in this pack
+  const promised = [].concat(S.guarantee || []).filter(id => fits(byId(id)));
+  if (promised.length) { promised.slice(0, 3).forEach(id => take(byId(id)));
+    const left = [].concat(S.guarantee || []).filter(id => !picks.some(c => c.id === id)); S.guarantee = left.length ? left : null; }
+  else if (S.packsOpened === 0 && tricks.some(c => !owned(c))) take(shuffle(tricks.filter(c => !owned(c)))[0]);   // the first pack shows a Memory Trick
+  else if (Math.random() < .34) take(shuffle(tricks.filter(c => !owned(c)))[0] || pickByRarity(tricks));          // about 1 pack in 3 carries a trick card
+  if (S.packsOpened < GUARANTEE_PACKS) take(shuffle(pool.filter(c => !owned(c) && !picks.includes(c)))[0] || shuffle(tricks.filter(c => !owned(c) && !picks.includes(c)))[0]);   // early packs hold something new
   let guard = 0;
-  while (picks.length < 3 && guard++ < 60) {                                  // fill the rest by rarity weight
-    take(pickByRarity(CARDS.filter(c => !picks.includes(c))));
-  }
-  return resolvePulls(picks);
+  while (picks.length < 3 && guard++ < 60) take(pickByRarity(pool.filter(c => !picks.includes(c))));
+  const out = resolvePulls(picks); out.series = d.n; return out;
 }
 /* Picked cards → new cards join the collection, duplicates pay coins */
 function resolvePulls(picks){
@@ -2951,7 +2978,7 @@ function openPack(opts = {}){
   const coin = !opts.pulls && !first && Math.random() < 1 / 5;   // a Continuance: about 1 in 5 packs (never the first); reopens a missed Hot Docket
   if (coin) S.continuances = (S.continuances || 0) + 1;
   save();
-  const packImg = opts.img || packArtFor(pulls.map(p => p.c));
+  const packImg = opts.img || (pulls.series ? seriesPackArt(pulls.series) : packArtFor(pulls.map(p => p.c)));
   const label = opts.label ? `<span class="pk-label">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(opts.label)}</b></span>` : '';
   lockScroll(); history.pushState({cq:'pack'}, '');
   const ov = document.createElement('div'); ov.className = 'pk';
@@ -3334,13 +3361,31 @@ document.addEventListener('click', e => {
 });
 
 /* ================= START ================= */
+const SPLASH_AT = Date.now();
+let splashPct = 8;
+function splashSet(p, text){   // move the loading bar forward (never back) and optionally change the caption
+  splashPct = Math.max(splashPct, p);
+  const i = document.querySelector('#splash .sp-bar i'), c = document.querySelector('#splash .sp-cap');
+  if (i) i.style.width = splashPct + '%'; if (c && text) c.textContent = text;
+}
+const splashCreep = setInterval(() => { if (splashPct < 88) splashSet(splashPct + (88 - splashPct) * .06); }, 200);   // keeps creeping so it never looks stuck
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => splashSet(35));
+function hideSplash(){
+  clearInterval(splashCreep); splashSet(100, 'Ready!');
+  const el = document.getElementById('splash'); if (!el) return;
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 700); }, Math.max(0, 1400 - (Date.now() - SPLASH_AT)));
+}
+setTimeout(hideSplash, 7000);   // safety net: never trap the player behind the loading screen
 probeArt().then(async () => {
+  splashSet(60, 'Shuffling the cards…');
   try { if (window.CQCloud) await CQCloud.init(); }
   catch (error) { console.warn('Cloud save unavailable:', error); }
   if (/[?&]demo=glows/.test(location.search)) { nav.tab = 'profile'; nav.stacks.profile = [{s:'profile', p:{}}, {s:'glows', p:{}}]; }
+  splashSet(85, 'Setting up your desk…');
   history.replaceState({}, '');
   showScreen('none');
   requireLogin();   // guests play until their first round ends, then sign up; the welcome shows on first run
+  hideSplash();
 });
 window.addEventListener('cq-cloud', e => {
   if (e.detail.status === 'error') toast('Cloud sync paused. Progress is saved on this device.');
