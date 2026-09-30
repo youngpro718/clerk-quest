@@ -1,20 +1,32 @@
 /* Clerk Quest Hot Dockets: situational cards written as a court docket (spec: docs/superpowers/specs/2026-09-29-hot-docket-design.md).
    A Hot Docket is one card that opens as a tall Study File with four tabs across the top: Learn, Example, Source,
-   Practice. The tabs open in order; finishing a page stamps it COMPLETE and unlocks the next. When all four are
-   stamped, the level is complete. Every sheet is the same fixed size (the template's shape); long parts are split
-   across sheets you flip, and the explanation after an answer comes out on a sticky note, so nothing ever grows.
-   Art: see the Study File section below, plus Docket Folder.png (art/docket_folder). Content: "Situational Card - The Record Is Not the Ruling.md", Revision 3.
+   Practice. The tabs open in order; finishing a page stamps it COMPLETED and unlocks the next. When all four are
+   stamped, that level is done and the next level opens. One fictional case develops across three levels, five
+   questions each. Finishing Level 3 earns the reward card, graded on all 15 answers: 90%+ the full-color rare card,
+   80%+ the black-and-white card, below that no card (a Continuance retry comes later).
+   Every sheet is the same fixed size; long parts are split across sheets you flip, and the explanation after an
+   answer comes out on a sticky note, so nothing ever grows.
+   Content: "Situational Card - The Record Is Not the Ruling.md", Revision 3. Reward: "RBG - Constitution Case Rep
+   Reward - Matte.png" and its back ("RBG - Constitution Reward - Card Back.png", facts in "RBG - Card Back Sources.md").
    Loaded before the main script; everything here runs at call time and uses the app's globals
-   (S, save, esc, artSrc, push, refresh, topEntry, toast, ICO, chev, currentScreenEl). */
+   (S, save, esc, artSrc, push, refresh, topEntry, toast, ICO, chev, currentScreenEl, openSheet, closeSheet, lockScroll, unlockScroll). */
 
 const DOCKET_TABS = [['learn', 'Learn'], ['example', 'Example'], ['source', 'Source'], ['practice', 'Practice']];
+const DK_REWARD = { rare:.9, pass:.8 };   // share of all 15 answers: full-color rare card / black-and-white card
 const RULE_202_5B = 'https://www.nycourts.gov/rules/rule/section-2025-b-electronic-filing-supreme-court-consensual-program';
+const RULE_202_5 = 'https://www.nycourts.gov/rules/rule/section-2025-papers-filed-court';
+const PART_202 = 'https://www.nycourts.gov/rules/part-202-uniform-civil-rules-supreme-court-and-county-court';
+const NYSCEF_MANUAL = 'https://iappscontent.courts.state.ny.us/NYSCEF/live/training/userManual.html';
+const CPLR = n => [`CPLR ${n}`, `https://www.nysenate.gov/legislation/laws/CVP/${n}`];
+const FILE_CONDITIONS = { h:'File conditions', list:['Supreme Court, New York County; existing mandatory e-filed civil case.', 'Both companies have attorneys participating in e-filing.',
+  'Listed defects are the only relevant defects for each question.', 'Applicable fees and proof of service are satisfied unless stated otherwise.',
+  'No separate order authorizes refusal or changes these rules.', '"Accept for filing" does not decide timeliness, appealability, or merits.'] };
 
 const HOT_DOCKETS = [{
   id:'CQ-D001', title:'The Record Is Not the Ruling', caseName:'Wharflight Records LLC v Stonebridge Imaging Inc.',
-  checked:'Rules checked September 2026',
+  checked:'Rules checked September 2026', reward:'rbg',
   levels:[{
-    name:'Open the order',
+    name:'Open the order', chapter:'The costs order',
     learn:[
       { h:'Your assignment', p:['You are reviewing a civil case file in the clerk\'s office. Identify which event, filing requirement, or processing category the published rule supports.',
         'In New York County, judgment entry and docketing are County Clerk functions. The Court Clerk and County Clerk are not interchangeable labels.'] },
@@ -23,27 +35,25 @@ const HOT_DOCKETS = [{
         'A party can request docketing of a payment order, including motion costs.'] },
       { h:'Which email?', p:['The entry stamp controls when an order is uploaded later. The court\'s entry email is not party service of notice of entry.',
         'A party can serve the order plus written notice through NYSCEF; uploading proof of earlier paper service adds no new service.'] },
-      { h:'File conditions', list:['Supreme Court, New York County; existing mandatory e-filed civil case.', 'Both companies have attorneys participating in e-filing.',
-        'Listed defects are the only relevant defects for each question.', 'Applicable fees and proof of service are satisfied unless stated otherwise.',
-        'No separate order authorizes refusal or changes these rules.', '"Accept for filing" does not decide timeliness, appealability, or merits.'] },
+      FILE_CONDITIONS,
     ],
     cover:['A dispute over digitized records produces an order directing $1,200 in motion costs. The order is entered, then docketed as a judgment.',
       'All parties, documents, dates, amounts, and conversations are fictional.'],
     entries:[['O1', 'Nov 2', '$1,200 costs order signed.'], ['E1', 'Nov 4', 'County Clerk entry stamp.'], ['E2', 'Nov 5', 'Order uploaded; court entry email sent.'],
       ['R1', 'Nov 6, 9:12 am', 'Party\'s complete docketing request received.'], ['J1', 'Nov 6, 9:40 am', 'Order actually docketed as judgment.'],
       ['S1', 'Nov 10', 'Order and written notice personally served on counsel.'], ['S2', 'Nov 12', 'Service proof uploaded; receipt email sent.']],
+    evidence:[],
     practice:[
       { q:'The worksheet starts J1\'s interest on Nov 4. Which date applies to O1 docketed as a judgment?',
         c:['Nov 2 — signing created the payment obligation.', 'Nov 4 — entry put the order into effect.', 'Nov 6 — the order was docketed as judgment.', 'Nov 10 — service notified counsel of the obligation.'],
         a:2, why:'The worksheet uses the ordinary money-judgment entry rule for an order docketed as a judgment.',
         cite:'CPLR 5003; sample Q17', est:'Interest distinction for a money judgment versus an order docketed as a judgment.',
-        links:[['CPLR 5003', 'https://www.nysenate.gov/legislation/laws/CVP/5003'], ['Official sample questions, Q17', 'https://www.nycourts.gov/LegacyPDFS/CAREERS/exams/Court_Clerk_Exam_Questions.pdf']] },
+        links:[CPLR(5003), ['Official sample questions, Q17', 'https://www.nycourts.gov/LegacyPDFS/CAREERS/exams/Court_Clerk_Exam_Questions.pdf']] },
       { q:'Complete R1 arrives before notice of entry is served. What does the docketing rule support?',
         c:['Docket on the party\'s request, without first requiring that service.', 'Await that service, then docket on the existing party request.',
           'Obtain a separately signed judgment, then docket that new document.', 'Obtain a further judicial direction, then docket the existing order.'],
         a:0, why:'The cited rule permits this payment order to be docketed on a party\'s request. B–D add prerequisites not stated there.',
-        cite:'CPLR 2222', est:'Party-request docketing of a money-payment order, including motion costs. Not a question about every enforcement requirement.',
-        links:[['CPLR 2222', 'https://www.nysenate.gov/legislation/laws/CVP/2222']] },
+        cite:'CPLR 2222', est:'Party-request docketing of a money-payment order, including motion costs. Not a question about every enforcement requirement.', links:[CPLR(2222)] },
       { q:'E1 is stamped Nov 4; E2 is uploaded Nov 5. Which event supplies O1\'s entry date?',
         c:['Nov 5 — the electronic recording of the order.', 'Nov 4 — the earlier County Clerk entry stamp.', 'Nov 6 — the order\'s docketing as a judgment.', 'Nov 5 — notification sent to participating counsel.'],
         a:1, why:'Later posting does not replace the earlier stamped entry date.',
@@ -59,46 +69,182 @@ const HOT_DOCKETS = [{
         a:0, why:'The route specifies the order plus written notice. Both attorneys participate in e-filing. General forwarding outside this specified route is not being adjudicated.',
         cite:'Rule 202.5-b(h)(2)', est:'The electronic route for party service of notice of entry.', links:[['Rule 202.5-b', RULE_202_5B]] },
     ],
+  }, {
+    name:'The order is challenged', chapter:'Counsel challenges O1',
+    learn:[
+      { h:'No signature image?', p:['A named attorney\'s own NYSCEF account can supply an electronic signature. Do not treat every missing handwriting image as an unsigned document.',
+        'Other execution requirements still matter.'] },
+      { h:'Filed versus notified', p:['For a fee-free document that is not an order or judgment, filing occurs when NYSCEF records transmission. Its receipt email can arrive later.'] },
+      { h:'The firm\'s connection fails', p:['A deadline today or the next business day, plus a qualifying equipment or connection failure, can permit emergency paper filing.',
+        'The required affirmation and hard-copy notice must accompany it. Follow-up e-filing is due within three business days after paper filing.'] },
+      { h:'Paper date survives', p:['A failure of the firm\'s connection is different from a NYSCEF-site failure. When an authorized paper filing is later e-filed, its filing date remains the paper date.'] },
+      FILE_CONDITIONS,
+    ],
+    cover:['Counsel challenges the result. A firm Internet-connection failure forces counsel\'s challenge to that same order onto paper.'],
+    entries:[['M1', 'Nov 18, 11:58 pm', 'Supporting affirmation transmitted and recorded.'], ['M2', 'Nov 19, 8:03 am', 'M1 receipt email arrives.'],
+      ['H1', 'Nov 19', 'Challenge to O1 filed and served on paper.'], ['H2', 'Nov 24', 'Same H1 packet e-filed.']],
+    evidence:[
+      { id:'M1', h:'M1 evidence sheet', p:['Fee-free; neither order nor judgment. Dana Vale is identified as signatory. Vale files through Vale\'s own User ID/password.',
+        'The PDF carries Vale\'s typed name, with no signature image. This is Vale\'s own supporting affirmation, not another witness\'s affidavit.'] },
+      { id:'H1', h:'H1 evidence sheet', p:['The complete challenge packet was filed with the County Clerk and served in hard copy on Nov 19.',
+        'Counsel\'s affirmation states a court-fixed filing/service deadline of Nov 20 and inability to file/serve electronically because the firm\'s connection failed. Required hard-copy notice attached.',
+        'NYSCEF itself was operational. No ruling on the challenge is shown.'] },
+      { id:'H2', h:'Calendar strip', p:['Nov 20, 23, and 24 are ordinary business days. No special order changes the follow-up period.',
+        'H2 reproduces H1; it is not an amended challenge or a new filing.'] },
+    ],
+    practice:[
+      { q:'M1 names Vale and uses Vale\'s own account, but has no signature image. Which signature assessment fits?',
+        c:['Require a scanned signature before treating this affirmation as signed.', 'Require a separate signature certification before treating it as signed.',
+          'Treat Vale\'s named, own-account filing as satisfying this signature route.', 'Require a "/s/" notation before treating the own-account filing as signed.'],
+        a:2, why:'The account-based route plus signatory name matters. This does not waive other execution requirements or govern someone else\'s affidavit.',
+        cite:'Rule 202.5-b(e)(1)(iii), (2)', est:'Own-account electronic signature plus signatory name; not a general waiver of other execution requirements.', links:[['Rule 202.5-b', RULE_202_5B]] },
+      { q:'M1\'s transmission is recorded Nov 18; M2 arrives Nov 19. M1 has no fee. Which event governs filing?',
+        c:['Nov 19 — the clerk\'s next-business-day review.', 'Nov 18 — the recorded electronic transmission.', 'Nov 19 — the receipt notification\'s delivery.', 'The date counsel opens the document link.'],
+        a:1, why:'M1 is neither an order nor judgment; no fee condition intervenes.',
+        cite:'Rule 202.5-b(d)(3)(i)–(ii)', est:'Recorded transmission versus later notification; stated no-fee/document exclusions.', links:[['Rule 202.5-b', RULE_202_5B]] },
+      { q:'H1 challenges O1 on paper while NYSCEF works. Its affirmation and notice are complete. Which route fits?',
+        c:['A judicial exemption, because only the firm\'s connection failed.', 'No emergency route, because the deadline expires tomorrow rather than today.',
+          'The site-failure route, because counsel cannot connect to NYSCEF.', 'The emergency route, because the qualifying failure precedes tomorrow\'s deadline.'],
+        a:3, why:'A firm connection failure and a deadline on the next business day fit the emergency-paper conditions. Site failure is a different provision.',
+        cite:'Rule 202.5-b(d)(1)(iii)–(iv); 202.5-bb(c)(3)', est:'Emergency hard-copy route and required notice in a mandatory case.', links:[['Rule 202.5-b', RULE_202_5B], ['Part 202 (202.5-bb)', PART_202]] },
+      { q:'H1 was filed and served on paper Nov 19. When does its follow-up e-filing period end?',
+        c:['Nov 24 — three business days after paper filing.', 'Three business days after the firm restores its connection.', 'Nov 20 — the original court-fixed filing/service deadline.', 'Nov 22 — three calendar days after paper filing.'],
+        a:0, why:'Count the three stated business days from paper filing. Do not substitute the separate site-restoration provision.',
+        cite:'Rule 202.5-b(d)(1)(iii); contrast (i)', est:'Three business days after paper filing versus the separate NYSCEF-site restoration provision.', links:[['Rule 202.5-b', RULE_202_5B]] },
+      { q:'H2 reproduces H1 on Nov 24. What filing date should NYSCEF record for that challenge?',
+        c:['Nov 24 — when the electronic version was recorded.', 'Nov 20 — when the court-fixed deadline expired.', 'Nov 19 — when the authorized paper filing occurred.', 'The repair date — when electronic filing became possible.'],
+        a:2, why:'Later e-filing preserves the authorized paper-filing date.',
+        cite:'Rule 202.5-b(d)(4)', est:'A later electronic record preserves the hard-copy filing date.', links:[['Rule 202.5-b', RULE_202_5B]] },
+    ],
+  }, {
+    name:'Resolve the disputed record', chapter:'The appeal disputes that history',
+    learn:[
+      { h:'Acceptance is not a ruling', p:['Refusal needs statutory, rule, or court-order authority. Counsel\'s lateness objection alone does not supply it.',
+        'Record objective events; do not turn acceptance into a decision about whether the appeal succeeds.'] },
+      { h:'Match the defect', p:['Missing index numbers and required signatures support refusal. The full-caption refusal ground names summonses, complaints, petitions, and judgments.',
+        'A wrong selected document type is a correction example. A paper refusal needs its date and reason on the paper.'] },
+      FILE_CONDITIONS,
+    ],
+    cover:['Later, an appeal arrives with a disputed history of the order and that challenge. The final task reconciles the whole file.'],
+    entries:[['N1', 'Dec 11', 'Otherwise filing-compliant notice of appeal from O1; opposing counsel demands refusal as late.'],
+      ['P1', 'Dec 11', 'Signed judgment tendered to County Clerk with "et al" caption.'], ['A1', 'Dec 11', 'Full-caption affidavit uploaded under the wrong document type.'],
+      ['X1', 'Dec 11', 'Authorized County Clerk paper submission lacks an index number.'], ['X2', 'Dec 11', 'Authorized County Clerk paper submission lacks its required signature.'],
+      ['D1', 'Dec 11', 'Counsel submits a disputed summary of O1 and H1.']],
+    evidence:[
+      { id:'P1', also:['A1', 'X1', 'X2'], h:'Packet sheet', p:['P1 is a separate signed judgment in this action tendered to the County Clerk for filing, with correct court, index number, and signature. It is not an unsigned proposed draft and does not change O1\'s costs award in this exercise.',
+        'A1 has correct court, index number, caption, and signature; only its selected document type is wrong.',
+        'X1 is complete except for the missing index number. X2 is complete except for a genuinely required signature; no signature exception applies. These are separate documents, not one packet with shifting defects.'] },
+      { id:'N1', h:'N1 evidence sheet', p:['No authorized refusal ground or refusal order exists. Counsel\'s claim of lateness is a claim, not a court determination.',
+        'The exercise does not ask you to calculate or rule on appeal timeliness.'] },
+      { id:'D1', h:'D1 evidence sheet', p:['Counsel\'s summary lists O1\'s entry as Nov 5, the interest start as Nov 4, and H1\'s filing as Nov 24. Counsel wants those dates adopted because they match electronic activity.',
+        'Compare against the original documents before recording a summary.'] },
+    ],
+    practice:[
+      { q:'Counsel demands refusal of N1 as late. No authorized refusal ground exists. Which response avoids a legal determination?',
+        c:['Accept, recording the clerk\'s conclusion that the appeal is untimely.', 'Accept, explaining that filing does not decide the timeliness dispute.',
+          'Accept, advising counsel that this appeal is likely to be dismissed.', 'Hold unfiled, seeking a judicial determination before accepting the appeal.'],
+        a:1, why:'A adopts a legal conclusion; C gives case-specific advice; D adds an unsupported hold. A neutral record of counsel\'s objection or general procedural explanation is not scored as improper.',
+        cite:'CPLR 2102(c); CourtHelp information/advice guidance', est:'No unsupported refusal or hold; legal conclusions distinguished from procedural information.',
+        links:[CPLR(2102), ['NY CourtHelp: The Clerk\'s Office', 'https://www.nycourts.gov/courthelp/GoingToCourt/courtclerks.shtml']] },
+      { q:'Which listed issue is a full-caption refusal ground, rather than the manual\'s document-type correction issue?',
+        c:['A1\'s wrong selected type; it prevents reliable classification of the affidavit.', 'P1\'s abbreviated caption; the provision names judgments submitted to County Clerk.',
+          'Both issues; each prevents the submission from matching the case record.', 'Neither issue; both can be corrected within the already existing action.'],
+        a:1, why:'P1 contains "et al"; A1 has a full, correct caption and only the wrong selected type. One distinction, one answer. This is classification under those sources, not a prescribed local screen sequence.',
+        cite:'Rule 202.5(d)(1)(ii); NYSCEF manual', est:'Judgment caption refusal versus affidavit document-type correction.', links:[['Rule 202.5', RULE_202_5], ['NYSCEF manual', NYSCEF_MANUAL]] },
+      { q:'X1\'s caption identifies the existing case, but its index number is missing. What does the stated rule support?',
+        c:['Accept it, because the caption lets staff identify the existing case.', 'Return it for correction only, because the missing number is recoverable.',
+          'Refuse it, because an identifiable case does not excuse the missing number.', 'Accept it provisionally, while counsel supplies the number to complete the record.'],
+        a:2, why:'This is an otherwise complete, authorized paper submission. Recognizing the case does not remove the specified refusal ground. No particular local correction workflow is assumed.',
+        cite:'Rule 202.5(d)(1)(i)', est:'Missing index number on an otherwise complete authorized paper submission.', links:[['Rule 202.5', RULE_202_5]] },
+      { q:'X2 is refused for its genuinely missing signature. Which refusal record meets the rule?',
+        c:['Date and reason in counsel\'s email; the paper carries no refusal notation.', 'Date stamped on the paper; the reason appears in the internal office log.',
+          'Date stamped on the paper; the reason also appears on that same paper.', 'Reason stamped on the paper; the date appears on the separate office receipt.'],
+        a:2, why:'The distractors split the required information between different places.',
+        cite:'Rule 202.5(d)(1)(iv), (2)', est:'Signature ground, and the date and reason for refusal on the paper itself.', links:[['Rule 202.5', RULE_202_5]] },
+      { q:'D1 mixes dates from the original order and its later challenge. Which summary follows the whole docket? Read as: O1 entry / O1 interest start / H1 filing.',
+        c:['Nov 5 / Nov 6 / Nov 24.', 'Nov 4 / Nov 6 / Nov 19.', 'Nov 4 / Nov 4 / Nov 19.', 'Nov 5 / Nov 4 / Nov 24.'],
+        a:1, why:'E1, not E2, establishes entry. J1 establishes this order\'s interest start. H1, not its H2 electronic copy, establishes the challenge\'s filing date. A selects electronic timestamps; C applies the ordinary money-judgment trigger; D adopts D1\'s electronic-activity theory.',
+        cite:'Rule 202.5-b(h)(1); CPLR 5003; Rule 202.5-b(d)(4)', est:'The cumulative entry, interest, and paper-filing dates.', links:[['Rule 202.5-b', RULE_202_5B], CPLR(5003)] },
+    ],
   }],
 }];
 
-/* ---------- saved progress ---------- */
+/* the reward cards: front and back art, and the short quiz behind the back's button */
+const DOCKET_REWARDS = {
+  rbg:{ name:'Ruth Bader Ginsburg', label:'Case Rep Reward', front:'reward_rbg', back:'reward_rbg_back', btn:[10.5, 80.8, 79, 8.8],
+    quiz:[
+      { q:'When did Ruth Bader Ginsburg take her seat on the U.S. Supreme Court?', c:['August 10, 1993', 'January 20, 1981', 'October 3, 2005', 'June 30, 1998'], a:0,
+        src:'Supreme Court of the United States', url:'https://www.supremecourt.gov/about/biographyginsburg.aspx' },
+      { q:'Ginsburg was which woman to serve on the U.S. Supreme Court?', c:['The first', 'The second', 'The third', 'The fourth'], a:1,
+        src:'Supreme Court of the United States', url:'https://www.supremecourt.gov/about/biographyginsburg.aspx' },
+      { q:'At Harvard Law School, how many women were in her class of more than 500?', c:['Nine', 'Nineteen', 'Ninety', 'Two'], a:0,
+        src:'Harvard Law School', url:'https://hls.harvard.edu/today/i-remain-optimistic-about-the-potential-of-the-united-states-ginsburg-tells-gender-and-the-law-conference/' },
+      { q:'What love did Ginsburg share with Justice Antonin Scalia, despite their different legal views?', c:['Baseball', 'Opera', 'Chess', 'Gardening'], a:1,
+        src:'Supreme Court press release', url:'https://www.supremecourt.gov/publicinfo/press/pressreleases/pr_02_14-16' },
+    ] },
+};
+
+/* ---------- saved progress: one record per docket, with a part per level ---------- */
 const dockets = () => (S.dockets = Array.isArray(S.dockets) ? S.dockets : []);
 const docketDef = id => HOT_DOCKETS.find(d => d.id === id);
 function docketRec(id){
   let r = dockets().find(x => x.id === id);
-  if (!r) { r = { id, level:1, done:{}, answers:[] }; dockets().push(r); }
-  r.done = r.done || {}; r.answers = r.answers || [];
+  if (!r) { r = { id, level:1, lv:{} }; dockets().push(r); }
+  if (!r.lv) { r.lv = { 1:{ done:r.done || {}, answers:r.answers || [] } }; delete r.done; delete r.answers; }   // saves from before levels
+  for (let n = 1; n <= 3; n++) { const x = r.lv[n] = r.lv[n] || {}; x.done = x.done || {}; x.answers = x.answers || []; }
+  r.level = Math.max(1, Math.min(3, r.level || 1));
   return r;
 }
-const tabOpen = (r, i) => DOCKET_TABS.slice(0, i).every(([k]) => r.done[k]);
-const doneCount = r => DOCKET_TABS.filter(([k]) => r.done[k]).length;
+const lvRec = (r, n) => r.lv[n];
+const tabOpen = (x, i) => DOCKET_TABS.slice(0, i).every(([k]) => x.done[k]);
+const doneCount = x => DOCKET_TABS.filter(([k]) => x.done[k]).length;
+const levelScore = (d, r, n) => d.levels[n - 1].practice.filter((q, k) => r.lv[n].answers[k] === q.a).length;
+const docketComplete = r => doneCount(r.lv[3]) === 4;
+function docketTotals(d, r){
+  const total = d.levels.reduce((t, L) => t + L.practice.length, 0);
+  const right = d.levels.reduce((t, L, n) => t + levelScore(d, r, n + 1), 0);
+  return { right, total, pct:right / total };
+}
+const rewardFor = pct => pct >= DK_REWARD.rare ? 'rare' : pct >= DK_REWARD.pass ? 'bw' : null;
 
 /* ---------- the Dockets tab (inside Collection) ---------- */
 function docketsTabHTML(){
-  const rows = HOT_DOCKETS.map(d => { const r = dockets().find(x => x.id === d.id), n = r ? doneCount(r) : 0;
+  const rows = HOT_DOCKETS.map(d => { const r = dockets().find(x => x.id === d.id), rr = r && docketRec(d.id);
+    const status = !rr ? 'not started' : docketComplete(rr) ? 'complete' : `Level ${rr.level} · ${doneCount(rr.lv[rr.level])} of 4 done`;
     return `<button class="row dk-row" data-act="push" data-s="docket" data-id="${d.id}"><span class="dk-thumb"><img src="${artSrc('dk_photo_learn')}" alt=""></span>
-      <span class="row-main"><b>${esc(d.title)}</b><small>${esc(d.id)} · Level 1 · ${n === 4 ? 'complete' : n ? `${n} of 4 done` : 'not started'}</small></span>${chev}</button>`; }).join('');
+      <span class="row-main"><b>${esc(d.title)}</b><small>${esc(d.id)} · ${status}</small></span>${chev}</button>`; }).join('');
+  const won = dockets().filter(r => r.reward && docketDef(r.id));
   return `<p class="st-note">Hot Dockets are court situations written as a docket. Read the file, then decide how to handle it. They test judgment, not just memory.</p>
     <div class="dk-folder"><img src="${artSrc('docket_folder')}" alt="Docket folder"></div>
     <div class="sec-h"><span>Sample docket</span></div><div class="list">${rows}</div>
+    ${won.length ? `<div class="sec-h"><span>Reward cards</span></div><div class="dk-rewards">${won.map(r => rewardThumb(r)).join('')}</div>` : ''}
     <p class="foot">Soon a new Hot Docket will arrive on your Home screen about once a week. Finished ones stay in this folder as your record.</p>`;
+}
+function rewardThumb(r){
+  const d = docketDef(r.id), rw = DOCKET_REWARDS[d.reward];
+  return `<button class="dk-rw ${r.reward}" data-act="dk-reward" data-id="${r.id}"><span class="rw-card ${r.reward}"><img src="${artSrc(rw.front)}" alt="${esc(rw.name)}"></span>
+    <small>${r.reward === 'rare' ? 'Rare · full color' : 'Black and white'}</small></button>`;
 }
 
 /* ---------- the Study File: fixed sheets ----------
    Built from the clip art in "Situational Card Clip Art/": the empty paper docket template (art/sf_template, from
-   "Docket - Empty Paper Template.png", with blank tabs), live tab names, the rubber stamps (art/dk_stamp_*), the polaroid frame (art/dk_polaroid) with
-   the charcoal photos behind it (art/dk_photo_*), and sticky notes (art/dk_note_*).
+   "Docket - Empty Paper Template.png", with blank tabs), live tab names, the rubber stamps (art/dk_stamp_*), the polaroid
+   frame (art/dk_polaroid) with the charcoal photos behind it (art/dk_photo_*), and sticky notes (art/dk_note_*).
    Positions are % of the whole card (853 x 1844); text sizes are in cqw, so every phone shows the same layout. */
 const TAB_X = [[7.6, 31], [31, 52], [52, 71.5], [71.5, 91]];
 const sfBox = (l, t, w, h) => `left:${l}%;top:${t}%;width:${w}%;height:${h}%`;
 const TAB_STAMP = { learn:'studyfile', example:'example', source:'source', practice:'practice' };
 
-/* the sheets in each tab: the first sheet is a cover with the photo; the rest are plain paper */
-function tabSheets(tab, d, L){
+/* the sheets in each tab for level n: the first is a cover with the photo; the rest are plain paper.
+   Example is cumulative: every chapter up to this level, each followed by its evidence sheets. */
+function tabSheets(tab, d, n){
+  const L = d.levels[n - 1];
   if (tab === 'learn') return [{ cover:true }, ...L.learn.map(c => ({ card:c }))];
   if (tab === 'example') { const out = [{ cover:true }];
-    for (let i = 0; i < L.entries.length; i += 7) out.push({ entries:L.entries.slice(i, i + 7), from:i });
+    d.levels.slice(0, n).forEach((C, ci) => {
+      for (let i = 0; i < C.entries.length; i += 7) out.push({ entries:C.entries.slice(i, i + 7), chapter:ci + 1, name:C.chapter, part:i });
+      C.evidence.forEach(ev => out.push({ ev, chapter:ci + 1 }));
+    });
     return out; }
   if (tab === 'source') return [{ cover:true }, ...L.practice.map((q, k) => ({ src:q, k }))];
   return L.practice.map((q, k) => ({ q, k }));
@@ -109,71 +255,81 @@ function polaroidHTML(tab){
 const stampImg = (name, cls = '') => `<img class="sf-stampimg ${cls}" src="${artSrc('dk_stamp_' + name)}" alt="${name === 'completed' ? 'Completed' : ''}">`;
 const noteHTML = (color, pos, inner, cls = '') => `<div class="sf-note ${cls}" style="${pos};background-image:url('${artSrc('dk_note_' + color)}')"><div class="sf-note-in sf-fit">${inner}</div></div>`;
 
-function sheetInner(tab, sh, d, r, L, p){
-  const done = r.done[tab], slam = p.justStamped === tab ? 'slam' : '';
+function sheetInner(tab, sh, d, r, n, p, sheets){
+  const L = d.levels[n - 1], x = lvRec(r, n), done = x.done[tab], slam = p.justStamped === tab ? 'slam' : '';
   if (sh.cover) {
-    const sub = { learn:`Level 1 · ${L.name}`, example:'The docket so far', source:'The rule behind each question' }[tab];
+    const sub = { learn:`Level ${n} · ${L.name}`, example:n > 1 ? `The docket through Level ${n}` : 'The docket so far', source:'The rule behind each question' }[tab];
     const side = `<div class="sf-side" style="${sfBox(9, 24, 45, 23)}">${stampImg(TAB_STAMP[tab], 'head')}<small>${esc(sub)}</small>${done ? stampImg('completed', 'done ' + slam) : ''}</div>`;
     if (tab === 'learn') return `${polaroidHTML(tab)}${side}
-      <div class="sf-area sf-fit" style="${sfBox(9, 48.5, 81, 6.5)}"><p>Read each card, then open Example. Every fact you need is here before you answer.</p></div>
-      ${noteHTML('yellow', sfBox(9, 56, 44, 23.6), `<b>In this file</b><ul class="sf-toc">${L.learn.map(c => `<li>${esc(c.h)}</li>`).join('')}</ul>`, 'tilt-l')}
-      <div class="sf-area" style="${sfBox(57, 60, 33, 16)}"><p class="sf-aside">${L.learn.length} short cards. Swipe or tap Next to turn each sheet.</p></div>`;
+      <div class="sf-area sf-fit" style="${sfBox(9, 48.5, 81, 6.5)}"><p>${n > 1 ? `New for Level ${n}. The earlier cards still apply.` : 'Read each card, then open Example. Every fact you need is here before you answer.'}</p></div>
+      ${noteHTML('yellow', sfBox(8.5, 55.5, 54, 25), `<b>In this file</b><ul class="sf-toc">${L.learn.map(c => `<li>${esc(c.h)}</li>`).join('')}</ul>`, 'tilt-l')}
+      <div class="sf-area" style="${sfBox(65, 60, 25, 18)}"><p class="sf-aside">${L.learn.length} short cards. Swipe or tap Next to turn each sheet.</p></div>`;
     if (tab === 'example') return `${polaroidHTML(tab)}${side}
-      <div class="sf-area sf-fit" style="${sfBox(9, 49, 81, 31.5)}"><div class="sf-case"><b>${esc(d.id)} — ${esc(d.caseName)}</b>${L.cover.map(t => `<p>${esc(t)}</p>`).join('')}</div></div>`;
+      <div class="sf-area sf-fit" style="${sfBox(9, 49, 81, 31.5)}"><div class="sf-case"><b>${esc(d.id)} — ${esc(d.caseName)}</b>${L.cover.map(t => `<p>${esc(t)}</p>`).join('')}</div>
+        ${n > 1 ? `<p class="sf-aside">Earlier entries stay in the file. New ones are marked "Added in Level ${n}". Tap an entry with a clip to read its evidence.</p>` : ''}</div>`;
     return `${polaroidHTML(tab)}${side}
       <div class="sf-area sf-fit" style="${sfBox(9, 49, 81, 9)}"><p>Each explanation is ours; the rule itself is at the link on its sheet.</p></div>
       ${noteHTML('blue', sfBox(9, 59, 42, 19.4), `<b>${esc(d.checked)}</b><p>As of September 29, 2026 · next review due December 29, 2026.</p>`, 'tilt-r')}`;
   }
   if (sh.card) return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 57)}"><h4>${esc(sh.card.h)}</h4>${(sh.card.p || []).map(t => `<p>${esc(t)}</p>`).join('')}${sh.card.list ? `<ul>${sh.card.list.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}</div>`;
-  if (sh.entries) return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 57)}"><h4>Level 1 · The costs order</h4>
-      <div class="sf-entries">${sh.entries.map(([id, when, what]) => `<div class="sf-entry"><b>${id}</b><span><em>${esc(when)}</em>${esc(what)}</span></div>`).join('')}</div></div>`;
+  if (sh.entries) {
+    const C = d.levels[sh.chapter - 1], evIdx = id => sheets.findIndex(s => s.ev && (s.ev.id === id || (s.ev.also || []).includes(id)));
+    return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 57)}"><h4>Level ${sh.chapter} · ${esc(sh.name)}${sh.chapter === n && n > 1 ? ' <span class="sf-new">Added in Level ' + n + '</span>' : ''}</h4>
+      <div class="sf-entries">${sh.entries.map(([id, when, what]) => { const ei = evIdx(id);
+        return `<div class="sf-entry ${ei > 0 ? 'has-ev' : ''}" ${ei > 0 ? `data-act="dk-ev" data-i="${ei}"` : ''}><b>${id}</b><span><em>${esc(when)}</em>${esc(what)}</span>${ei > 0 ? '<i class="ev">📎</i>' : ''}</div>`; }).join('')}</div></div>`;
+  }
+  if (sh.ev) return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 57)}"><h4>${esc(sh.ev.h)}${sh.chapter === n && n > 1 ? ' <span class="sf-new">Added in Level ' + n + '</span>' : ''}</h4>
+      <p class="sf-evfor">Evidence for ${[sh.ev.id, ...(sh.ev.also || [])].join(', ')}</p>${sh.ev.p.map(t => `<p>${esc(t)}</p>`).join('')}</div>`;
   if (sh.src) { const q = sh.src;
     return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 57)}"><h4>Question ${sh.k + 1}</h4><p class="sf-citeh">${esc(q.cite)}</p>
       <p><em class="lb">What it establishes</em>${esc(q.est)}</p><p class="sf-links">${q.links.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join('')}</p></div>`; }
   // a practice question: question and written choices on the paper, the A-D buttons along the bottom
-  const q = sh.q, i = sh.k, ans = r.answers[i], answered = ans != null, sel = answered ? ans : p.sel, bw = (81 - 3 * 1.6) / 4;
+  const q = sh.q, i = sh.k, ans = x.answers[i], answered = ans != null, sel = answered ? ans : p.sel, bw = (81 - 3 * 1.6) / 4;
   return `<div class="sf-area sf-fit" style="${sfBox(9, 23.4, 81, 50)}">
-      <div class="sf-qhead"><b>Question ${i + 1} of ${L.practice.length}</b><span>${L.practice.map((_, k) => `<i class="${r.answers[k] == null ? '' : r.answers[k] === L.practice[k].a ? 'ok' : 'no'} ${k === i ? 'cur' : ''}"></i>`).join('')}</span></div>
+      <div class="sf-qhead"><b>Question ${i + 1} of ${L.practice.length}</b><span>${L.practice.map((_, k) => `<i class="${x.answers[k] == null ? '' : x.answers[k] === L.practice[k].a ? 'ok' : 'no'} ${k === i ? 'cur' : ''}"></i>`).join('')}</span></div>
       <p class="sf-q">${esc(q.q)}</p>
       <div class="sf-choices">${q.c.map((t, k) => `<div class="sf-choice ${sel === k ? 'sel' : ''} ${answered && k === q.a ? 'right' : ''} ${answered && k === ans && ans !== q.a ? 'wrong' : ''}" ${answered ? '' : `data-act="dk-pick" data-k="${k}"`}><b>${'ABCD'[k]}</b><span>${esc(t)}</span></div>`).join('')}</div></div>
     ${[0, 1, 2, 3].map(k => `<button class="sf-ab ${sel === k ? 'sel' : ''} ${answered && k === q.a ? 'right' : ''}" style="${sfBox(9 + k * (bw + 1.6), 74.4, bw, 5.4)}" data-act="dk-pick" data-k="${k}" ${answered ? 'disabled' : ''} aria-label="Choose ${'ABCD'[k]}"><b>${'ABCD'[k]}</b></button>`).join('')}
-    ${answered && p.memo !== false ? `<div class="sf-memo ${p.memoIn ? 'in' : ''}" style="${sfBox(6.5, 44, 87, 25)};background-image:url('${artSrc('dk_note_ivory')}')">
+    ${answered && p.memo !== false ? `<div class="sf-memo ${p.memoIn ? 'in' : ''}" style="${sfBox(6.5, 40, 87, 31)};background-image:url('${artSrc('dk_note_ivory')}')">
         <div class="sf-note-in sf-fit"><h4 class="${ans === q.a ? 'ok' : 'no'}">${ans === q.a ? 'Correct' : 'Not quite'} · the answer is ${'ABCD'[q.a]}</h4><p>${esc(q.why)}</p><p class="sf-cite">Source: ${esc(q.cite)}</p></div>
         <button class="sf-memo-x" data-act="dk-memo">Hide note</button></div>` : ''}`;
 }
-function resultsInner(d, r, L, p){
-  const n = L.practice.length, right = r.answers.filter((a, k) => a === L.practice[k].a).length;
+function resultsInner(d, r, n, p){
+  const L = d.levels[n - 1], x = lvRec(r, n), len = L.practice.length, right = levelScore(d, r, n);
+  const final = n === 3 && docketComplete(r), t = docketTotals(d, r);
+  const note = final ? `<b class="big">${t.right} of ${t.total}</b><p>right on the whole docket (${Math.round(t.pct * 100)}%)</p>`
+    : `<b class="big">${right} of ${len}</b><p>right on Level ${n}</p>`;
   return `${polaroidHTML('practice')}
-    <div class="sf-side" style="${sfBox(9, 24, 45, 23)}">${stampImg('practice', 'head')}<small>Level 1 results</small>${stampImg('completed', 'done ' + (p.justStamped === 'practice' ? 'slam' : ''))}</div>
-    ${noteHTML('green', sfBox(9, 50, 38, 17.6), `<b class="big">${right} of ${n}</b><p>right on Level 1</p>`, 'tilt-l')}
-    <div class="sf-area sf-fit" style="${sfBox(50, 49.5, 40, 31)}">${L.practice.map((q, k) => `<div class="sf-res ${r.answers[k] === q.a ? 'ok' : 'no'}"><b>${k + 1}</b>
-      <span>${r.answers[k] === q.a ? `Right · ${'ABCD'[q.a]}` : `Chose ${'ABCD'[r.answers[k]]} · answer ${'ABCD'[q.a]}`}</span></div>`).join('')}</div>`;
+    <div class="sf-side" style="${sfBox(9, 24, 45, 23)}">${stampImg('practice', 'head')}<small>Level ${n} results</small>${stampImg('completed', 'done ' + (p.justStamped === 'practice' ? 'slam' : ''))}</div>
+    ${noteHTML('green', sfBox(9, 50, 38, 17.6), note, 'tilt-l')}
+    <div class="sf-area sf-fit" style="${sfBox(50, 49.5, 40, 31)}">${L.practice.map((q, k) => `<div class="sf-res ${x.answers[k] === q.a ? 'ok' : 'no'}"><b>${k + 1}</b>
+      <span>${x.answers[k] === q.a ? `Right · ${'ABCD'[q.a]}` : `Chose ${'ABCD'[x.answers[k]]} · answer ${'ABCD'[q.a]}`}</span></div>`).join('')}</div>`;
 }
 
-function studyFileHTML(d, r, tab, p){
-  const L = d.levels[0], sheets = tabSheets(tab, d, L), results = tab === 'practice' && r.done.practice && p.q == null;
+function studyFileHTML(d, r, n, tab, p){
+  const x = lvRec(r, n), sheets = tabSheets(tab, d, n), results = tab === 'practice' && x.done.practice && p.q == null;
   const i = tab === 'practice' ? Math.min(p.q || 0, sheets.length - 1) : Math.min(p.sheet || 0, sheets.length - 1);
-  const tabs = DOCKET_TABS.map(([k, label], ti) => { const open = tabOpen(r, ti), [x0, x1] = TAB_X[ti];
+  const tabs = DOCKET_TABS.map(([k, label], ti) => { const open = tabOpen(x, ti), [x0, x1] = TAB_X[ti];
     return `<button class="sf-tab ${k === tab ? 'on' : ''} ${open ? '' : 'locked'}" style="${sfBox(x0, 5.4, x1 - x0, 4.4)}" data-act="dk-tab" data-tab="${k}"
-      aria-label="${label}${r.done[k] ? ', complete' : open ? '' : ', locked'}"><span>${label}</span>${r.done[k] ? '<i>✓</i>' : open ? '' : `<i class="lk">${ICO('lock')}</i>`}</button>`; }).join('');
+      aria-label="${label}${x.done[k] ? ', complete' : open ? '' : ', locked'}"><span>${label}</span>${x.done[k] ? '<i>✓</i>' : open ? '' : `<i class="lk">${ICO('lock')}</i>`}</button>`; }).join('');
   const header = `<span class="sf-title" style="${sfBox(9, 16.9, 61, 5)}">${esc(d.title)}</span>
-    <span class="sf-cell" style="${sfBox(70, 16.9, 20, 5)}">${esc(d.id)}<br>LEVEL 1</span><span class="sf-rule" style="${sfBox(9, 22.4, 81, .2)}"></span>`;
-  const inner = results ? resultsInner(d, r, L, p) : sheetInner(tab, sheets[i], d, r, L, p);
+    <span class="sf-cell" style="${sfBox(70, 16.9, 20, 5)}">${esc(d.id)}<br>LEVEL ${n}</span><span class="sf-rule" style="${sfBox(9, 22.4, 81, .2)}"></span>`;
+  const inner = results ? resultsInner(d, r, n, p) : sheetInner(tab, sheets[i], d, r, n, p, sheets);
   const card = `<div class="sf2 ${p.flip ? 'flip-' + p.flip : ''}" data-tab="${tab}">
     <img class="sf-base" src="${artSrc('sf_template')}" alt="">${tabs}<div class="sf-page">${header}${inner}</div></div>`;
   // the control bar under the card: always the same place and size
   let bar;
   if (tab === 'practice') {
-    const answered = r.answers[i] != null, last = i === sheets.length - 1;
-    bar = results ? `<button class="sf-btn" data-act="dk-review" data-q="0">Review questions</button><span class="sf-count">${r.answers.filter((a, k) => a === L.practice[k].a).length} of ${sheets.length} right</span><span class="sf-btn ghost"></span>`
+    const answered = x.answers[i] != null, last = i === sheets.length - 1;
+    bar = results ? `<button class="sf-btn" data-act="dk-review" data-q="0">Review questions</button><span class="sf-count">${levelScore(d, r, n)} of ${sheets.length} right</span><span class="sf-btn ghost"></span>`
       : `<button class="sf-btn" data-act="dk-q" data-q="${i - 1}" ${i ? '' : 'disabled'}>‹ Back</button><span class="sf-count">Question ${i + 1} of ${sheets.length}</span>
         ${!answered ? `<button class="sf-btn go" data-act="dk-check" ${p.sel == null ? 'disabled' : ''}>Check ✓</button>`
-          : last ? (r.done.practice ? `<button class="sf-btn go" data-act="dk-review" data-q="">Results ›</button>` : `<button class="sf-btn go gold" data-act="dk-done" data-tab="practice">Finish ✓</button>`)
+          : last ? (x.done.practice ? `<button class="sf-btn go" data-act="dk-review" data-q="">Results ›</button>` : `<button class="sf-btn go gold" data-act="dk-done" data-tab="practice">Finish ✓</button>`)
           : `<button class="sf-btn go" data-act="dk-q" data-q="${i + 1}">Next ›</button>`}`;
   } else {
     const last = i === sheets.length - 1, next = DOCKET_TABS[DOCKET_TABS.findIndex(([k]) => k === tab) + 1];
     bar = `<button class="sf-btn" data-act="dk-sheet" data-d="-1" ${i ? '' : 'disabled'}>‹ Back</button><span class="sf-count">Sheet ${i + 1} of ${sheets.length}</span>
-      ${r.done[tab] && (last || i === 0) ? `<button class="sf-btn go" data-act="dk-tab" data-tab="${next[0]}">${next[1]} ›</button>`
+      ${x.done[tab] && (last || i === 0) ? `<button class="sf-btn go" data-act="dk-tab" data-tab="${next[0]}">${next[1]} ›</button>`
         : !last ? `<button class="sf-btn go" data-act="dk-sheet" data-d="1">Next ›</button>`
         : `<button class="sf-btn go gold" data-act="dk-done" data-tab="${tab}">Finish ✓</button>`}`;
   }
@@ -192,17 +348,87 @@ function fitSheets(root){
 new MutationObserver(ms => { if (ms.some(m => [...m.addedNodes].some(n => n.nodeType === 1 && (n.matches('.sf2') || n.querySelector && n.querySelector('.sf2'))))) requestAnimationFrame(() => fitSheets()); })
   .observe(document.documentElement, { childList:true, subtree:true });
 
+/* ---------- the reward card: reveal, flip to its back, and the short quiz ---------- */
+function rewardCardHTML(r, back){
+  const d = docketDef(r.id), rw = DOCKET_REWARDS[d.reward];
+  const [bl, bt, bw, bh] = rw.btn;
+  return `<div class="rw-flip ${back ? 'back' : ''}" data-act="rw-flip">
+    <div class="rw-face front"><span class="rw-card ${r.reward}"><img src="${artSrc(rw.front)}" alt="${esc(rw.name)}">${r.reward === 'rare' ? '<i class="rw-holo"></i>' : ''}</span>${r.reward === 'rare' ? '<em class="rw-tag">RARE</em>' : ''}</div>
+    <div class="rw-face backside"><span class="rw-card ${r.reward}"><img src="${artSrc(rw.back)}" alt="${esc(rw.name)}, card back">
+      <button class="rw-quizbtn" style="${sfBox(bl, bt, bw, bh)}" data-act="rw-quiz" data-id="${r.id}">${esc(quizButtonLabel(r))}</button></span></div></div>`;
+}
+function openReward(id, reveal){
+  const r = docketRec(id), d = docketDef(id); if (!r.reward) return;
+  const t = docketTotals(d, r), ov = document.createElement('div'); ov.className = 'rw-ov'; ov.dataset.id = id;
+  ov.innerHTML = `${reveal ? `<h2 class="rw-h">DOCKET COMPLETE</h2>` : ''}
+    <p class="rw-sub">${r.reward === 'rare' ? `Rare reward · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%)` : `Reward · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%) · 90% earns full color`}</p>
+    <div class="rw-stage ${reveal ? 'reveal' : ''}">${rewardCardHTML(r)}</div>
+    <p class="rw-hint">Tap the card to flip it.</p>
+    <button class="btn-big ${r.reward === 'rare' ? 'gold' : ''}" data-act="rw-close">${reveal ? 'ADD TO MY DOCKET FOLDER' : 'DONE'}</button>`;
+  document.body.appendChild(ov); lockScroll();
+}
+/* The quiz behind the card's back button: one question per sticky note (yellow, green, blue, then the wide ivory one).
+   One chance only: each answer is saved the moment it's tapped and can't be redone. All four right unlocks a super rare
+   prize (r.superRare; what the prize is will be decided later). Progress lives in r.quiz = { a:[picked per question] }. */
+const RWQ_NOTES = ['yellow', 'green', 'blue', 'ivory'];
+const quizScore = (rw, r) => rw.quiz.filter((q, k) => (r.quiz && r.quiz.a[k]) === q.a).length;
+const quizDone = (rw, r) => !!r.quiz && rw.quiz.every((q, k) => r.quiz.a[k] != null);
+function rewardQuiz(id, show){
+  const r = docketRec(id), rw = DOCKET_REWARDS[docketDef(id).reward], n = rw.quiz.length;
+  r.quiz = r.quiz || { a:[] };
+  let ov = document.querySelector('.rwq-ov');
+  if (!ov) { ov = document.createElement('div'); ov.className = 'rwq-ov'; document.body.appendChild(ov); lockScroll(); }
+  const next = rw.quiz.findIndex((q, k) => r.quiz.a[k] == null);
+  const i = show != null ? show : next;   // show: the question just answered, so its note stays up with the answer
+  if (i < 0) {
+    const score = quizScore(rw, r), perfect = score === n;
+    ov.innerHTML = `<h2 class="rw-h">RBG QUIZ</h2><div class="rwq-done"><b>${score} of ${n}</b><span>right</span>
+        <img class="rwq-stamp" src="${artSrc('dk_stamp_completed')}" alt="Completed"></div>
+      ${perfect ? `<p class="rwq-super">★ SUPER RARE PRIZE UNLOCKED ★</p><p class="rw-sub">All four on your one chance. Your prize will be revealed soon.</p>`
+        : `<p class="rw-sub">The quiz was one chance only. Every answer is on the back of your card for next time you study.</p>`}
+      <button class="btn-big ${perfect ? 'gold' : 'alt'}" data-act="rwq-close">BACK TO THE CARD</button>`;
+    return;
+  }
+  const q = rw.quiz[i], color = RWQ_NOTES[i % RWQ_NOTES.length], picked = r.quiz.a[i], answered = picked != null;
+  ov.innerHTML = `<h2 class="rw-h">RBG QUIZ · ${i + 1} OF ${n}</h2>
+    ${i === 0 && !answered ? `<p class="rwq-warn">One chance only · get all ${n} right to unlock a super rare prize</p>` : ''}
+    <div class="rwq-note ${color} ${answered ? '' : 'in'}" style="background-image:url('${artSrc('dk_note_' + color)}')"><div class="rwq-in">
+      <p class="rwq-q">${esc(q.q)}</p>
+      <div class="rwq-choices ${color === 'ivory' ? 'grid' : ''}">${q.c.map((c, k) => `<button class="rwq-c ${answered && k === q.a ? 'right' : ''} ${answered && k === picked && k !== q.a ? 'wrong' : ''}"
+        data-act="rwq-pick" data-id="${id}" data-i="${i}" data-k="${k}" ${answered ? 'disabled' : ''}><b>${'ABCD'[k]}</b>${esc(c)}</button>`).join('')}</div>
+      ${answered ? `<p class="rwq-fb ${picked === q.a ? 'ok' : 'no'}">${picked === q.a ? 'Correct!' : `The answer is ${esc(q.c[q.a])}.`} <a href="${q.url}" target="_blank" rel="noopener">${esc(q.src)} ↗</a></p>` : ''}
+    </div></div>
+    ${answered ? `<button class="btn-big" data-act="rwq-next" data-id="${id}">${next >= 0 ? 'NEXT NOTE →' : 'SEE MY SCORE'}</button>`
+      : `<p class="rw-hint">Tap an answer on the note. It counts right away.</p>`}
+    <button class="sheet-cancel" data-act="rwq-close">Back to the card</button>`;
+}
+function pickQuiz(id, i, k){
+  const r = docketRec(id), rw = DOCKET_REWARDS[docketDef(id).reward];
+  r.quiz = r.quiz || { a:[] };
+  if (r.quiz.a[i] != null) return rewardQuiz(id);   // already answered: one chance only
+  r.quiz.a[i] = k;
+  if (quizDone(rw, r)) { r.quiz.at = Date.now(); if (quizScore(rw, r) === rw.quiz.length) r.superRare = true; }
+  save(); rewardQuiz(id, i);
+}
+const quizButtonLabel = r => { const rw = DOCKET_REWARDS[docketDef(r.id).reward];
+  return !quizDone(rw, r) ? (r.quiz && r.quiz.a.some(a => a != null) ? 'Finish Your RBG Quiz' : 'Test Your RBG Knowledge')
+    : r.superRare ? '★ Super Rare Unlocked ★' : `RBG Quiz: ${quizScore(rw, r)} of ${rw.quiz.length}`; };
+
 /* ---------- screens ---------- */
 const DOCKET_SCREENS = {
   docket(p){
     const d = docketDef(p.id); if (!d) return { title:'Hot Docket', body:'<p class="empty">This docket is not available.</p>' };
-    const r = docketRec(p.id);
-    let tab = DOCKET_TABS.some(([k]) => k === p.tab) ? p.tab : (DOCKET_TABS.find(([k]) => !r.done[k]) || DOCKET_TABS[3])[0];
-    if (!tabOpen(r, DOCKET_TABS.findIndex(([k]) => k === tab))) tab = 'learn';
-    if (tab === 'practice' && p.q == null && !r.done.practice) p.q = Math.min(r.answers.filter(a => a != null).length, d.levels[0].practice.length - 1);
-    const all = doneCount(r) === 4;
-    return { title:'Hot Docket',
-      body:`${all ? `<div class="sf-banner">${ICO('mastered')} Level 1 complete! Levels 2 and 3 are coming soon.</div>` : ''}${studyFileHTML(d, r, tab, p)}` };
+    const r = docketRec(p.id), n = r.level, x = lvRec(r, n);
+    let tab = DOCKET_TABS.some(([k]) => k === p.tab) ? p.tab : (DOCKET_TABS.find(([k]) => !x.done[k]) || DOCKET_TABS[3])[0];
+    if (!tabOpen(x, DOCKET_TABS.findIndex(([k]) => k === tab))) tab = 'learn';
+    if (tab === 'practice' && p.q == null && !x.done.practice) p.q = Math.min(x.answers.filter(a => a != null).length, d.levels[n - 1].practice.length - 1);
+    const levelDone = doneCount(x) === 4;
+    let banner = '';
+    if (levelDone && n < 3) banner = `<div class="sf-banner"><span>${ICO('mastered')} Level ${n} complete! Level ${n + 1} adds new filings to the same case.</span><button class="sf-btn go gold" data-act="dk-level">Start Level ${n + 1}</button></div>`;
+    else if (levelDone && n === 3) banner = r.reward
+      ? `<div class="sf-banner"><span>${ICO('mastered')} Docket complete! You earned the ${r.reward === 'rare' ? 'rare full-color' : 'black-and-white'} reward card.</span><button class="sf-btn go gold" data-act="dk-reward" data-id="${d.id}">See card</button></div>`
+      : `<div class="sf-banner"><span>${ICO('mastered')} Docket complete, ${docketTotals(d, r).right} of 15 right. A reward card needs 12 (80%). A Continuance to try again is coming soon.</span></div>`;
+    return { title:'Hot Docket', body:`${banner}${studyFileHTML(d, r, n, tab, p)}` };
   },
 };
 
@@ -211,33 +437,51 @@ function dkGo(patch){
   const en = topEntry(); if (!en || en.s !== 'docket') return;
   en.p = { ...en.p, justStamped:null, flip:null, memoIn:false, ...patch }; refresh();
 }
-function dkSheet(dir){
-  const en = topEntry(), d = docketDef(en.p.id), L = d.levels[0], tab = currentScreenEl().querySelector('.sf2').dataset.tab;
+function dkSheet(dir, to){
+  const en = topEntry(), d = docketDef(en.p.id), r = docketRec(d.id), tab = currentScreenEl().querySelector('.sf2').dataset.tab;
   if (tab === 'practice') return;
-  const n = tabSheets(tab, d, L).length, i = Math.max(0, Math.min(n - 1, (en.p.sheet || 0) + dir));
-  if (i !== (en.p.sheet || 0)) dkGo({ tab, sheet:i, flip:dir > 0 ? 'next' : 'prev' });
+  const n = tabSheets(tab, d, r.level).length, cur = en.p.sheet || 0, i = to != null ? to : Math.max(0, Math.min(n - 1, cur + dir));
+  if (i !== cur) dkGo({ tab, sheet:i, flip:i > cur ? 'next' : 'prev' });
 }
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if (!t || t.disabled) return;
+  // reward card and its quiz work from anywhere (the Docket folder or the docket)
+  switch (t.dataset.act) {
+    case 'dk-reward': closeSheet(true); openReward(t.dataset.id); return;
+    case 'rw-flip': t.classList.toggle('back'); return;
+    case 'rw-quiz': e.stopPropagation(); rewardQuiz(t.dataset.id); return;
+    case 'rw-close': { const ov = t.closest('.rw-ov'); ov.remove(); unlockScroll(); refresh(); return; }
+    case 'rwq-pick': pickQuiz(t.dataset.id, +t.dataset.i, +t.dataset.k); return;
+    case 'rwq-next': rewardQuiz(t.dataset.id); return;
+    case 'rwq-close': { const ov = t.closest('.rwq-ov'); ov.remove();
+      const b = document.querySelector('.rw-quizbtn'); if (b) b.textContent = quizButtonLabel(docketRec(b.dataset.id)); return; }
+  }
   const en = topEntry && topEntry(); if (!en || en.s !== 'docket') return;
-  const d = docketDef(en.p.id), r = d && docketRec(d.id), L = d && d.levels[0]; if (!d) return;
+  const d = docketDef(en.p.id), r = d && docketRec(d.id); if (!d) return;
+  const n = r.level, x = lvRec(r, n);
   switch (t.dataset.act) {
     case 'dk-tab': { const i = DOCKET_TABS.findIndex(([k]) => k === t.dataset.tab);
-      if (!tabOpen(r, i)) { toast(`Finish ${DOCKET_TABS.find(([k]) => !r.done[k])[1]} first`, 'lock'); break; }
+      if (!tabOpen(x, i)) { toast(`Finish ${DOCKET_TABS.find(([k]) => !x.done[k])[1]} first`, 'lock'); break; }
       dkGo({ tab:t.dataset.tab, sheet:0, q:null, sel:null, memo:true }); break; }
     case 'dk-sheet': dkSheet(+t.dataset.d); break;
-    case 'dk-done': { const k = t.dataset.tab; r.done[k] = true; if (k === 'practice') r.practiceAt = Date.now(); save();
-      dkGo({ tab:k, sheet:0, q:null, justStamped:k });
-      toast(doneCount(r) === 4 ? 'Docket Level 1 complete!' : `${DOCKET_TABS.find(([x]) => x === k)[1]} complete`, 'check'); break; }
+    case 'dk-ev': dkSheet(0, +t.dataset.i); break;
+    case 'dk-done': { const k = t.dataset.tab; x.done[k] = true; if (k === 'practice') x.practiceAt = Date.now();
+      const finished = n === 3 && doneCount(x) === 4 && !r.completedAt;
+      if (finished) { r.completedAt = Date.now(); r.reward = rewardFor(docketTotals(d, r).pct); }
+      save(); dkGo({ tab:k, sheet:0, q:null, justStamped:k });
+      toast(doneCount(x) === 4 ? (n === 3 ? 'Docket complete!' : `Level ${n} complete!`) : `${DOCKET_TABS.find(([y]) => y === k)[1]} complete`, 'check');
+      if (finished && r.reward) setTimeout(() => openReward(d.id, true), 700);
+      break; }
+    case 'dk-level': if (doneCount(x) === 4 && n < 3) { r.level = n + 1; save(); dkGo({ tab:'learn', sheet:0, q:null, sel:null }); toast(`Level ${n + 1} is open`, 'star'); } break;
     case 'dk-pick': dkGo({ sel:+t.dataset.k }); break;
-    case 'dk-check': { const i = en.p.q || 0; if (en.p.sel == null || r.answers[i] != null) break; r.answers[i] = en.p.sel; save(); dkGo({ memo:true, memoIn:true }); break; }
+    case 'dk-check': { const i = en.p.q || 0; if (en.p.sel == null || x.answers[i] != null) break; x.answers[i] = en.p.sel; save(); dkGo({ memo:true, memoIn:true }); break; }
     case 'dk-memo': dkGo({ memo:false }); break;
     case 'dk-q': { const q = +t.dataset.q; dkGo({ q, sel:null, memo:true, flip:q > (en.p.q || 0) ? 'next' : 'prev' }); break; }
     case 'dk-review': dkGo({ q:t.dataset.q === '' ? null : +t.dataset.q, sel:null, memo:true }); break;
   }
 });
 let dkSwipe = null;
-document.addEventListener('pointerdown', e => { const c = e.target.closest('.sf2'); dkSwipe = c && !e.target.closest('button,a,.sf-memo') ? { x:e.clientX, y:e.clientY } : null; });
+document.addEventListener('pointerdown', e => { const c = e.target.closest('.sf2'); dkSwipe = c && !e.target.closest('button,a,.sf-memo,[data-act]') ? { x:e.clientX, y:e.clientY } : null; });
 document.addEventListener('pointerup', e => {
   if (!dkSwipe) return; const dx = e.clientX - dkSwipe.x, dy = e.clientY - dkSwipe.y; dkSwipe = null;
   if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) dkSheet(dx < 0 ? 1 : -1);
@@ -327,6 +571,67 @@ const DOCKET_CSS = `
 .sf-btn.go{background:#2b3a55;border-color:#2b3a55} .sf-btn.go.gold{background:var(--mustard);border-color:var(--mustard);color:var(--ink)}
 .sf-btn.ghost{visibility:hidden}
 .sf-btn[disabled]{opacity:.35}
-.sf-banner{margin:0 0 10px;padding:10px 12px;border-radius:12px;background:rgba(227,178,60,.16);color:var(--mustard);font:18px "Patrick Hand";display:flex;gap:8px;align-items:center}
+.sf-banner{margin:0 0 10px;padding:10px 12px;border-radius:12px;background:rgba(227,178,60,.16);color:var(--mustard);font:18px/1.3 "Patrick Hand";display:flex;gap:10px;align-items:center}
+.sf-new{display:inline-block;vertical-align:middle;margin-left:.3em;padding:.1em .4em;border-radius:.3em;background:#b3261e;color:#fff;font:700 .5em/1.2 var(--ui);letter-spacing:.02em}
+.sf-evfor{font:700 .72em/1.3 "Courier Prime",monospace;color:#8a7f6c;margin-top:-.2em !important}
+.sf-entry.has-ev{cursor:pointer;position:relative} .sf-entry.has-ev:active{background:rgba(43,58,85,.08)}
+.sf-entry .ev{position:absolute;right:0;top:.3em;font-style:normal;font-size:1.1em}
+.sf-banner span{flex:1}
+.sf-banner .sf-btn{min-width:0;min-height:40px;font-size:17px}
+.dk-rewards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.dk-rw{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;border:0;border-radius:14px;background:var(--bg2);color:var(--sub)}
+.dk-rw small{font:13px "Patrick Hand"}
+.rw-card{position:relative;display:block;border-radius:5%/3.4%;overflow:hidden;box-shadow:0 10px 24px rgba(0,0,0,.5)}
+.rw-card img{display:block;width:100%;height:auto}
+.rw-card.bw>img{filter:grayscale(1) contrast(1.08) brightness(1.02)}
+.rw-card.rare{box-shadow:0 0 0 2px #f5d77a,0 0 26px 6px rgba(245,205,90,.55),0 10px 24px rgba(0,0,0,.5)}
+.rw-holo{position:absolute;inset:0;pointer-events:none;mix-blend-mode:color-dodge;opacity:.55;
+  background:linear-gradient(115deg,transparent 20%,rgba(255,120,200,.7) 35%,rgba(120,220,255,.7) 48%,rgba(190,255,140,.7) 60%,transparent 76%);background-size:300% 100%;animation:rwshine 3.4s linear infinite}
+@keyframes rwshine{from{background-position:120% 0}to{background-position:-180% 0}}
+.rw-face.front{position:relative}
+.rw-tag{position:absolute;top:-3.2%;left:50%;translate:-50% 0;z-index:2;padding:.25em .6em;border-radius:1em;background:linear-gradient(135deg,#fff3b0,#e3b23c);color:#1d1b17;font:400 clamp(12px,3.4vw,16px)/1 "Bangers";letter-spacing:.08em;font-style:normal;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.dk-rw .rw-card{width:100%}
+.rw-ov{position:fixed;inset:0;z-index:84;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;
+  background:radial-gradient(circle at 50% 42%,rgba(70,48,14,.95),rgba(0,0,0,.97));animation:fadein .3s both}
+.rw-ov .btn-big{max-width:340px}
+.rw-h{margin:0;font:400 34px/1 "Bangers";letter-spacing:.06em;color:var(--mustard);text-shadow:0 3px 0 var(--ink)}
+.rw-sub{margin:0;font:17px "Patrick Hand";color:var(--paper);text-align:center}
+.rw-hint{margin:0;font:15px "Patrick Hand";color:var(--sub)}
+.rw-stage{width:min(72vw,300px,calc((100dvh - 250px) / 1.5));perspective:1200px}
+.rw-stage.reveal{animation:rwin .9s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes rwin{0%{transform:scale(.3) rotate(-18deg);opacity:0}60%{transform:scale(1.06) rotate(3deg);opacity:1}100%{transform:none}}
+.rw-flip{position:relative;display:grid;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.4,.1,.2,1);cursor:pointer}
+.rw-flip.back{transform:rotateY(180deg)}
+.rw-face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.rw-face.backside{transform:rotateY(180deg)}
+.rw-quizbtn{position:absolute;border:0;border-radius:3cqw;background:rgba(122,32,26,.9);color:#fff4dc;font:400 clamp(14px,4.6vw,20px)/1 "Bangers";letter-spacing:.06em;box-shadow:inset 0 0 0 2px rgba(255,236,200,.5)}
+.rw-face.backside .rw-card{container-type:inline-size}
+.rwq-ov{position:fixed;inset:0;z-index:86;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;
+  background:radial-gradient(circle at 50% 42%,#34281a,#0d0b09);animation:fadein .25s both}
+.rwq-ov .btn-big,.rwq-ov .sheet-cancel{max-width:340px}
+.rwq-note{position:relative;width:min(88vw,350px);aspect-ratio:1/1;background:no-repeat center/100% 100%;container-type:inline-size;transform:rotate(-1.5deg);filter:drop-shadow(0 8px 14px rgba(0,0,0,.45))}
+.rwq-note.green{transform:rotate(1.5deg)} .rwq-note.blue{transform:rotate(-1deg)}
+.rwq-note.ivory{aspect-ratio:1.63/1;width:min(94vw,380px);transform:rotate(1deg)}
+.rwq-note.in{animation:rwqin .45s cubic-bezier(.2,1.2,.4,1) both}
+@keyframes rwqin{from{transform:translateX(60%) rotate(8deg);opacity:0}}
+.rwq-in{position:absolute;left:9%;right:10%;top:17%;bottom:12%;display:flex;flex-direction:column;gap:2.4cqw;color:#2a241c}
+.rwq-note.ivory .rwq-in{top:15%;bottom:14%;left:6%;right:7%;gap:1.6cqw}
+.rwq-q{margin:0;font:700 5.6cqw/1.25 "Patrick Hand"}
+.rwq-note.ivory .rwq-q{font-size:4.6cqw}
+.rwq-choices{display:flex;flex-direction:column;gap:1.6cqw}
+.rwq-choices.grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4cqw 2cqw}
+.rwq-c{display:flex;align-items:center;gap:2cqw;min-height:9.6cqw;padding:0 2cqw;border:.5cqw solid rgba(42,36,28,.35);border-radius:2cqw;background:rgba(255,255,255,.35);color:#2a241c;font:5cqw/1.1 "Patrick Hand";text-align:left}
+.rwq-note.ivory .rwq-c{font-size:4.2cqw;min-height:8cqw}
+.rwq-c b{flex:none;width:6.4cqw;height:6.4cqw;border-radius:1.4cqw;background:rgba(42,36,28,.14);font:700 4cqw/6.4cqw "Courier Prime",monospace;text-align:center}
+.rwq-c.right{border-color:#2f6b3a;background:rgba(47,107,58,.2)} .rwq-c.right b{background:#2f6b3a;color:#fff}
+.rwq-c.wrong{border-color:#b3261e;background:rgba(179,38,30,.12);text-decoration:line-through;text-decoration-color:#b3261e}
+.rwq-c[disabled]{opacity:1}
+.rwq-warn{margin:-4px 0 0;font:17px "Patrick Hand";color:var(--mustard);text-align:center}
+.rwq-super{margin:4px 0 0;white-space:nowrap;font:400 clamp(18px,6vw,26px)/1 "Bangers";letter-spacing:.06em;color:#ffe27a;text-shadow:0 0 14px rgba(255,210,90,.6);text-align:center}
+.rwq-fb{margin:0;font:4.4cqw/1.3 "Patrick Hand"} .rwq-fb.ok{color:#2f6b3a} .rwq-fb.no{color:#b3261e}
+.rwq-fb a{color:#2b3a55;font-weight:700}
+.rwq-done{position:relative;display:flex;flex-direction:column;align-items:center;padding:22px 44px 64px;border-radius:10px;background:#f6ecd6;color:#2a241c;transform:rotate(-1.5deg);box-shadow:0 8px 18px rgba(0,0,0,.45)}
+.rwq-done b{font:400 56px/1 "Bangers";letter-spacing:.04em} .rwq-done span{font:20px "Patrick Hand"}
+.rwq-stamp{position:absolute;width:150px;left:50%;margin-left:-75px;bottom:10px;transform:rotate(-10deg);mix-blend-mode:multiply;animation:sfslam .4s cubic-bezier(.2,1.6,.4,1) both}
 `;
 document.head.insertAdjacentHTML('beforeend', `<style>${DOCKET_CSS}</style>`);
