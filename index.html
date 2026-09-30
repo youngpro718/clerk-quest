@@ -1122,6 +1122,10 @@ const OFFICIAL = 'NYS UCS Court Clerk Sample Questions (rev. 08/06/2026)';
 CARDS.push(
   {
     id:'whosigns', art:'whosigns', num:'★04', l1:'WHO SIGNS THE', l2:'SUMMONS?', name:'Who Signs the Summons?', emoji:'✍️',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'A summons is signed by the court itself: a judge or the clerk of the court.',
+      example:'In a juvenile delinquency case, the presentment agency needs a summons issued. A judge or the court clerk signs it, not the presentment agency or probation.',
+      source:'FCA § 312.1' },
     category:'MEMORY TRICK', set:'FAMILY COURT ACT', rarity:'uncommon', trickType:'who', icon:'court', maxLevel:3,
     quote:'Judge or Clerk.\nThe Court signs.',
     source:{ cite:'FCA § 312.1', quote:'The summons shall be signed by a judge or by the clerk of the court.', from:OFFICIAL + ', Q4',
@@ -1144,6 +1148,10 @@ CARDS.push(
   },
   {
     id:'clock6090', art:'clock6090', num:'★05', l1:'THE 60 / 90', l2:'CLOCK', name:'The 60 / 90 Clock', emoji:'⏰',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'A willful-violation hearing must start within 60 days of the date in the summons, and finish within 90 days of when it started.',
+      example:'The summons notices March 1. The hearing must start within 60 days of March 1. If it starts April 10, it must end within 90 days of April 10, not of March 1.',
+      source:'Uniform Rules § 205.43(b)' },
     category:'MEMORY TRICK', set:'UNIFORM RULES', rarity:'uncommon', trickType:'clock', icon:'court', maxLevel:3,
     quote:'Start in 60.\nFinish in 90.',
     source:{ cite:'Uniform Rules § 205.43(b)', quote:'After service is made, the judge or support magistrate must commence a hearing to determine a willful violation within 60 days of the date noticed in the summons. The hearing must be concluded within 90 days of its commencement.', from:OFFICIAL + ', Q6',
@@ -1194,6 +1202,10 @@ const CUSTODY = ['Custody proceeding','NOT a custody proceeding'];
 CARDS.push(
   {
     id:'eightdays', art:'eightdays', num:'★07', l1:'8 DAYS', l2:'BEFORE', name:'8 Days Before', emoji:'📬',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'Personal service of the summons and petition must happen at least eight days before the appearance date in the summons.',
+      example:'The summons says appear June 20. Deliver it by June 12. The same deadline applies if you leave it with someone of suitable age at the home and mail a copy.',
+      source:'FCA § 427(a)' },
     category:'MEMORY TRICK', set:'FAMILY COURT ACT', rarity:'uncommon', trickType:'clock', icon:'court', maxLevel:3,
     quote:'Serve it 8 days\nbefore you appear.',
     source:{ cite:'FCA § 427(a)', quote:'Personal service of a summons and petition may be made by delivery of a true copy thereof to the person summoned at least eight days before the time stated therein for appearance; or by delivery of a true copy thereof to a person of suitable age and discretion at the actual place of business, dwelling place or usual place of abode of the person to be served and by mailing a true copy thereof to the person to be served at his last known residence at least eight days before the time stated in the summons for appearance; proof of service shall identify such person of suitable age and discretion and state the date, time and place of service.', from:OFFICIAL + ', Q2',
@@ -1216,6 +1228,10 @@ CARDS.push(
   },
   {
     id:'sealed', art:'sealed', num:'★08', l1:'SEALED IN', l2:'YOUR FAVOR', name:'Sealed in Your Favor', emoji:'🔏',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'When a criminal case ends in the person\'s favor, the record is sealed, and the clerk immediately notifies DCJS and the police.',
+      example:'All charges against Sam are dismissed. Unless a court finds, after at least 5 days\' notice, that justice requires otherwise, the clerk seals the record and notifies DCJS and the police right away.',
+      source:'CPL § 160.50(1)' },
     category:'MEMORY TRICK', set:'CRIMINAL PROCEDURE', rarity:'uncommon', trickType:'trigger', icon:'court', maxLevel:3,
     quote:'Case ends in your\nfavor? Seal it.',
     source:{ cite:'CPL § 160.50(1)', quote:'Upon the termination of a criminal action or proceeding against a person in favor of such person, as defined in subdivision three of this section, unless the district attorney upon motion with not less than five days notice to such person or his or her attorney demonstrates to the satisfaction of the court that the interests of justice require otherwise, or the court on its own motion with not less than five days notice to such person or his or her attorney determines that the interests of justice require otherwise and states the reasons for such determination on the record, the record of such action or proceeding shall be sealed and the clerk of the court wherein such criminal action or proceeding was terminated shall immediately notify the commissioner of the division of criminal justice services and the heads of all appropriate police departments and other law enforcement agencies that the action has been terminated in favor of the accused, and unless the court has directed otherwise, that the record of such action or proceeding shall be sealed.', from:OFFICIAL + ', Q10',
@@ -1260,6 +1276,10 @@ CARDS.push(
   },
   {
     id:'amendonce', art:'amendonce', num:'★10', l1:'AMEND ONCE,', l2:'NO PERMISSION', name:'Amend Once, No Permission', emoji:'✏️',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'A party may amend a pleading once without the court\'s permission, within one of three windows.',
+      example:'Lee serves a complaint on May 1. Lee can amend it once without asking the court by May 21 (20 days after service), or any time before the defendant\'s time to answer runs out.',
+      source:'CPLR § 3025(a)' },
     category:'MEMORY TRICK', set:'CPLR', rarity:'uncommon', trickType:'clock', icon:'court', maxLevel:3,
     quote:'One free fix.\nThree windows.',
     source:{ cite:'CPLR § 3025(a)', quote:'A party may amend his pleading once without leave of court within twenty days after its service, or at any time before the period for responding to it expires, or within twenty days after service of a pleading responding to it.', from:OFFICIAL + ', Q13',
