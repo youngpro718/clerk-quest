@@ -805,6 +805,13 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .acts button[disabled]{opacity:.4}
 .acts-sep{padding:10px 16px 6px;font:600 12px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--sub);background:rgba(0,0,0,.18)}
 .sheet-cancel{display:block;width:100%;min-height:52px;margin-top:10px;border:0;border-radius:14px;background:var(--bg2);color:var(--mustard);font:600 17px var(--ui)}
+.sheet-cancel small{display:block;font:13px var(--ui);color:var(--sub);margin-top:2px}
+.intro{display:flex;flex-direction:column;gap:10px;margin:0 2px 14px}
+.intro-sec{padding:12px 14px;border-radius:14px;background:var(--bg2)}
+.intro-sec em{display:block;font:400 17px/1 "Bangers";letter-spacing:.06em;font-style:normal;color:var(--mustard);margin-bottom:6px}
+.intro-sec p{margin:0;font:18px/1.4 var(--ui);color:var(--paper)}
+.intro-sec.ex{border-left:4px solid var(--mustard)}
+.intro-src{margin:0 4px;font:14px var(--ui);color:var(--sub)}
 .sheet .btn-big{margin-top:6px}
 .as-q{margin:0 4px 14px;font:17px/1.4 var(--ui);color:var(--paper)}
 .as-list{display:flex;flex-direction:column;gap:10px}
@@ -871,12 +878,12 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js?v=cd5fc35d"></script>
-<script src="study.js?v=93a33e0e"></script>
+<script src="study.js?v=e01c771c"></script>
 <script src="economy.js?v=a7261374"></script>
 <script src="store.js?v=ee061c0a"></script>
-<script src="binder.js?v=68a84201"></script>
-<script src="onboarding.js?v=1147ed27"></script>
-<script src="account.js?v=eb869aeb"></script>
+<script src="binder.js?v=41877c4c"></script>
+<script src="onboarding.js?v=52f619be"></script>
+<script src="account.js?v=ee269b2c"></script>
 <script src="admin.js?v=fb5df08d"></script>
 <script src="stickers.js?v=9a30b930"></script>
 <script src="dockets.js?v=3cf4fcfa"></script>
@@ -958,6 +965,10 @@ const CARDS = [
 ];
 CARDS.push({
   id:'summons', art:'summons', cutout:true, scene:{3:true}, bgs:{1:'art/bg_summons_1.webp', 2:'art/bg_summons_2.webp', 3:'art/bg_summons_3.webp'}, maxLevel:3, num:'#004', l1:'THE', l2:'SUMMONS', name:'Summons',
+  // Read-first intro (checked 2026-09-30 against CPLR 304(a) and 320(a) on nysenate.gov: personal delivery under 308(1) gets 20 days)
+  intro:{ idea:'A summons tells the defendant that a lawsuit has started against them and that they must respond. Filing a summons with the complaint (or a summons with notice) is what starts a civil action.',
+    example:'A process server hands Dana a summons and complaint at her front door. That is personal delivery, so Dana has 20 days to answer or appear.',
+    source:'CPLR 304(a) · CPLR 320(a)' },
   category:'COURT TERMS', set:'COURT TERMS', rarity:'common', icon:'court', emoji:'✉️',
   quote:'You\'ve been\nexpected.',
   lore:[
@@ -2022,7 +2033,7 @@ const SERIES = [
   {g:'s1', label:'Series 1', icon:'series1'},
   {g:'s2', label:'Series 2', icon:'series2'},
   {g:'s3', label:'Series 3', icon:'series3'},
-  {g:'tricks', label:'Memory Tricks', icon:'memory'},
+  {g:'tricks', label:'All Memory Tricks', icon:'memory'},
 ];
 function groupTest(g){
   if (g.startsWith('set:')) { const n = g.slice(4); return c => c.set === n; }
@@ -2181,6 +2192,7 @@ const SCREENS = {
           <span><b>${ownedN} of ${CARDS.length} collected</b><small>${mastered} mastered</small></span>
           <button class="pill" data-act="push" data-s="stats">Statistics ${chev}</button></div>
         <div class="sec-h"><span>Series</span></div>
+        <p class="st-note">Series 1 holds the core cards. Series 2 and 3 are Memory Tricks, so "All Memory Tricks" counts them together.</p>
         <div class="list">${SERIES.map(s => groupRow(s.g, s.label, s.icon)).join('')}</div>
         <div class="sec-h"><span>Subjects</span></div>
         <div class="list">${subjects().map(s => groupRow(s.g, s.label, 'subject')).join('')}</div>`),
@@ -2269,8 +2281,8 @@ const SCREENS = {
     const dDone = DAILY_QUESTS.filter(q => questState(q, 'daily').done).length;
     const ready = claimableCount();
     let body = `<div class="summary">${ring(dDone / DAILY_QUESTS.length, dDone + '/' + DAILY_QUESTS.length, 72, '#5fd47a')}
-        <span><b>${dDone === DAILY_QUESTS.length ? 'All daily quests done!' : 'Today\'s quests'}</b><small>New quests in ${hrs}h ${mins}m</small></span>
-        ${ready ? `<button class="pill gold" data-act="claim-all">Claim ${ready}</button>` : ''}</div>`;
+        <span><b>${dDone === DAILY_QUESTS.length ? 'All daily quests done!' : 'Today\'s quests'}</b><small>New quests in ${hrs}h ${mins}m${ready ? ` · ${ready} reward${ready > 1 ? 's' : ''} ready (Daily + Milestones)` : ''}</small></span>
+        ${ready ? `<button class="pill gold" data-act="claim-all">Claim all (${ready})</button>` : ''}</div>`;
     body += `<div style="height:14px"></div>` + seg('tab', tab, [['daily', 'Daily'], ['mile', 'Milestones']]);
     if (tab === 'daily') body += `<div class="list">${DAILY_QUESTS.map(q => questRow(q, 'daily')).join('')}</div><p class="foot">Every reward is a card pack.</p>`;
     else {
@@ -2327,11 +2339,12 @@ const SCREENS = {
   help(){
     const item = (t, b) => `<details class="xrow"><summary><span class="xt">${t}</span>${chev}</summary><div>${b}</div></details>`;
     return { title:'How to Play', body:`<div class="list">
-      ${item(ICO('play') + ' Studying', 'Each round is 5 questions from one card. Correct answers earn XP. A hint (Sidebar) costs half the points. Wrong answers show the right answer and why.')}
+      ${item(ICO('play') + ' Studying', 'Each round is 5 questions from one card. Correct answers earn XP. A hint (Sidebar) halves the XP and coins for that answer. Nothing you already have is taken away. Wrong answers show the right answer and why.')}
       ${item(ICO('star') + ' Levels & glows', 'Cards level up as you earn XP. Questions get harder and the art upgrades. Near the top level a neon ring races around the card; at the top it turns gold with a gloss.')}
       ${item(ICO('trophy') + ' Quests', 'Three daily quests reset every midnight, and milestones reward long-term progress. Every reward is a card pack.')}
       ${item(ICO('pack') + ' Packs', 'Every finished study round and every quest gives a pack of 3 cards. New cards join your collection; duplicates turn into coins.')}
       ${item(ICO('thermo_snow') + ' Cold cases', 'Cards you haven\'t studied in a while go cold (2 days at Level 1, up to 21 days when mastered). One correct answer reopens the case for a +' + COLD_BONUS + ' XP bonus.')}
+      ${item(ICO('mastered') + ' Levels and Mastered', 'Right answers fill a card\'s XP bar. It levels up, and at the top it is Mastered. That is a game milestone for the card, not a promise about the exam. Cards you leave alone go cold, so come back to them.')}
       ${item(ICO('memory') + ' Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).')}
       ${item(ICO('series2') + ' Series', 'Series 2 cards use a new art style and have their own pack wrapper.')}
       ${item(ICO('subject') + ' Official sources', 'Rule cards are built only from the rule text quoted in the NYS Unified Court System Court Clerk sample questions and cite their source. Other questions are sample content. Fact-check before relying on them.')}
@@ -2523,7 +2536,7 @@ function paintStudy(anim){
     <div class="t counter" style="${PB(610,316,912,372)}${sessLen() > 9 ? ';font-size:3.3cqw;letter-spacing:.02em' : ''}">QUESTION ${sess.i+1} OF ${sessLen()}</div>
     ${mid}
     <button class="t hint ${sess.hint?'used':''}" style="${PB(68,1230,642,1408)}" data-act="hint" ${sess.hint||ans?'disabled':''}>
-      <span class="bulb">${ICO('hint')}</span><span><b>${sess.hint ? 'HINT:' : 'SIDEBAR?'}</b>${esc(sess.hint ? q.h : boosts().freeHints ? `Tap for a free hint (${boosts().freeHints} left).` : 'Tap for a hint. Costs half the points.')}</span></button>
+      <span class="bulb">${ICO('hint')}</span><span><b>${sess.hint ? 'HINT:' : 'SIDEBAR?'}</b>${esc(sess.hint ? q.h : boosts().freeHints ? `Tap for a free hint (${boosts().freeHints} left).` : 'Tap for a hint. Correct answers then earn half XP and coins.')}</span></button>
     <div class="t pts" style="${PB(664,1240,956,1408)}"><span>POINT VALUE</span><span class="v ${hintCosts()?'half':''}">${ICO('star')} +${reward}${hintCosts()?` <s>+${REWARD[lv-1] * (doubleXPOn() ? 2 : 1)}</s>`:''}</span></div>
     <div class="t nxtab" style="${PB(70,1436,358,1508)}">NEXT LEVEL</div>
     <div class="t nxl" style="${PB(86,1520,596,1670)}">
@@ -2877,12 +2890,28 @@ function renderResults(){
 /* ================= LAYERS: sheets, alerts, study round ================= */
 function lockScroll(){ document.documentElement.classList.add('noscroll'); }
 function unlockScroll(){ if (!document.querySelector('.pk,.lu,.zoom,.sheet-wrap,.alert-wrap')) document.documentElement.classList.remove('noscroll'); }
+/* Keyboard and screen readers: while a sheet or alert is open only it is reachable, Tab stays inside it, Esc closes a sheet, and focus goes back afterwards. */
+const A11Y = { n:0, last:null,
+  hide(on){ this.n = Math.max(0, this.n + (on ? 1 : -1)); const app = document.getElementById('shell'); if (!app) return;   // #shell holds every screen and the tab bar
+    if (this.n > 0) { app.setAttribute('inert', ''); app.setAttribute('aria-hidden', 'true'); } else { app.removeAttribute('inert'); app.removeAttribute('aria-hidden'); } },
+  restore(){ const el = this.last; this.last = null; if (el && document.contains(el) && el.focus) { try { el.focus({preventScroll:true}); } catch (e) {} } } };
+document.addEventListener('keydown', e => {
+  const w = document.querySelector('.sheet-wrap:not(.closing)') || document.querySelector('.alert-wrap'); if (!w) return;
+  if (e.key === 'Escape' && w.classList.contains('sheet-wrap')) { e.preventDefault(); closeSheet(); return; }
+  if (e.key !== 'Tab') return;
+  const f = [...w.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter(x => !x.disabled && x.offsetParent !== null);
+  if (!f.length) return;
+  const i = f.indexOf(document.activeElement);
+  if (e.shiftKey && (i <= 0)) { e.preventDefault(); f[f.length - 1].focus(); }
+  else if (!e.shiftKey && (i === f.length - 1 || i < 0)) { e.preventDefault(); f[0].focus(); }
+});
 function openSheet(html){
+  if (!document.querySelector('.sheet-wrap') && !A11Y.last) A11Y.last = document.activeElement;
   closeSheet(true);
   const w = document.createElement('div'); w.className = 'sheet-wrap';
   w.innerHTML = `<div class="sheet-bg" data-act="sheet-close"></div><div class="sheet" role="dialog" aria-modal="true"><div class="grabber"></div>${html}</div>`;
-  document.body.appendChild(w); lockScroll();
-  const sh = w.querySelector('.sheet'); let y0 = null, dy = 0;        // drag the sheet down to dismiss
+  document.body.appendChild(w); lockScroll(); A11Y.hide(true);
+  const sh = w.querySelector('.sheet'); sh.tabIndex = -1; sh.focus({preventScroll:true}); let y0 = null, dy = 0;        // drag the sheet down to dismiss
   sh.addEventListener('touchstart', e => { if (sh.scrollTop > 0) return; y0 = e.touches[0].clientY; dy = 0; sh.style.transition = 'none'; }, {passive:true});
   sh.addEventListener('touchmove', e => { if (y0 == null) return; dy = Math.max(0, e.touches[0].clientY - y0); sh.style.transform = `translateY(${dy}px)`; }, {passive:true});
   sh.addEventListener('touchend', () => { if (y0 == null) return; sh.style.transition = ''; if (dy > 90) closeSheet(); else sh.style.transform = ''; y0 = null; });
@@ -2897,16 +2926,18 @@ function answerSheet(focus){
 }
 function closeSheet(instant){
   const w = document.querySelector('.sheet-wrap'); if (!w) return false;
-  if (instant) { w.remove(); unlockScroll(); return true; }
-  w.classList.add('closing'); setTimeout(() => { w.remove(); unlockScroll(); }, 230); return true;
+  const gone = () => { if (w._gone) return; w._gone = true; w.remove(); unlockScroll(); A11Y.hide(false); if (!document.querySelector('.sheet-wrap')) A11Y.restore(); };
+  if (instant) { gone(); return true; }
+  if (w.classList.contains('closing')) return true;
+  w.classList.add('closing'); setTimeout(gone, 230); return true;
 }
 function iosAlert({title, msg = '', buttons}){
   return new Promise(res => {
     const w = document.createElement('div'); w.className = 'alert-wrap';
     w.innerHTML = `<div class="alert" role="alertdialog" aria-label="${esc(title)}"><h4>${esc(title)}</h4>${msg ? `<p>${esc(msg)}</p>` : ''}
       <div class="btns">${buttons.map((b, i) => `<button data-i="${i}" class="${b.style || ''}">${esc(b.label)}</button>`).join('')}</div></div>`;
-    w.addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if (!b) return; e.stopPropagation(); w.remove(); unlockScroll(); res(buttons[+b.dataset.i].value); });
-    document.body.appendChild(w); lockScroll();
+    w.addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if (!b) return; e.stopPropagation(); w.remove(); unlockScroll(); A11Y.hide(false); res(buttons[+b.dataset.i].value); });
+    document.body.appendChild(w); lockScroll(); A11Y.hide(true); const fb = w.querySelector('button'); if (fb) fb.focus({preventScroll:true});
   });
 }
 function sortSheet(){
@@ -2916,11 +2947,28 @@ function sortSheet(){
     <div class="acts" style="margin-top:12px"><button class="toggle-row" data-act="toggle-missing" role="switch" aria-checked="${showMissing}">Show undiscovered cards<i class="sw ${showMissing ? 'on' : ''}"></i></button></div>
     <button class="sheet-cancel" data-act="sheet-close">Done</button>`);
 }
+/* Read-first intro: one idea, one example, one source label, then the round. "Go straight to questions" skips it next time
+   (it stays readable from the card's menu). Cards get an intro as each one's example is written and checked. */
+function studyCard(id){
+  const c = byId(id);
+  if (c && c.intro && !(S.skipIntro && S.skipIntro[id])) introSheet(c); else startSession(id);
+}
+function introSheet(c, readOnly){
+  openSheet(`<div class="sh-head">${thumb(c)}<span><b>${esc(c.name)}</b><small>Read first · about 30 seconds</small></span></div>
+    <div class="intro">
+      <div class="intro-sec"><em>The idea</em><p>${esc(c.intro.idea)}</p></div>
+      <div class="intro-sec ex"><em>Example</em><p>${esc(c.intro.example)}</p></div>
+      <p class="intro-src">Source: ${esc(c.intro.source)}</p></div>
+    ${readOnly ? `<button class="btn-big gold" data-act="intro-go" data-id="${c.id}">${PLAY_ICON} TRY 5 QUESTIONS</button><button class="sheet-cancel" data-act="sheet-close">Close</button>`
+      : `<button class="btn-big gold" data-act="intro-go" data-id="${c.id}">${PLAY_ICON} TRY 5 QUESTIONS</button>
+         <button class="sheet-cancel" data-act="intro-skip" data-id="${c.id}">Go straight to questions<small>Skips this intro next time</small></button>`}`);
+}
 function cardMenu(id){
   const c = byId(id), st = S.cards[id];
   openSheet(`<div class="sh-head">${thumb(c)}<span><b>${esc(c.name)}</b><small>${statusLine(c)}</small></span></div>
     <div class="acts">
       <button data-act="study" data-id="${id}">${PLAY_ICON} ${isCold(st) ? 'Reopen this case' : 'Study this card'}</button>
+      ${c.intro ? `<button data-act="intro-read" data-id="${id}">${ICO('read')} Read the intro</button>` : ''}
       <button data-act="card-style" data-id="${id}">${ICO('sparkle')} Card Style</button>
       ${ADM.is ? `<div class="acts-sep">Tester tools</div>
       <button data-act="t-level" data-id="${id}" ${st.mastered ? 'disabled' : ''}>${ICO('almost')} Level up now</button>
@@ -2948,7 +2996,7 @@ function quickRound(){
   const cold = mine.filter(c => isCold(S.cards[c.id]));
   const open = mine.filter(c => !S.cards[c.id].mastered);
   const c = cold[0] || (open.length ? open[rnd(open.length)] : mine[rnd(mine.length)]);
-  if (c) { S.quickRounds = (S.quickRounds || 0) + 1; startSession(c.id); }
+  if (c) { S.quickRounds = (S.quickRounds || 0) + 1; studyCard(c.id); }
 }
 function openSessionLayer(){
   if (!app.hidden) return;
@@ -3063,7 +3111,10 @@ document.addEventListener('click', e => {
     case 'push': { const p = {}; if (id) p.id = id; if (t.dataset.g) p.g = t.dataset.g; closeSheet(true); push(t.dataset.s, p); break; }
     case 'seg': { const en = topEntry(); en.p = Object.assign({}, en.p, {[t.dataset.k]:t.dataset.v}); refresh(); break; }
     case 'stage': { const en = topEntry(); en.p = Object.assign({}, en.p, {preview:+t.dataset.l}); refresh(); break; }
-    case 'study': closeSheet(true); startSession(id); break;
+    case 'study': closeSheet(true); studyCard(id); break;
+    case 'intro-go': closeSheet(true); startSession(id); break;
+    case 'intro-skip': ((S.skipIntro = S.skipIntro || {})[id] = true); save(); closeSheet(true); startSession(id); break;
+    case 'intro-read': closeSheet(true); introSheet(byId(id), true); break;
     case 'quick': closeSheet(true); quickRound(); break;
     case 'answer': closeSheet(true); answer(t.dataset.v); break;
     case 'ans-sheet': answerSheet(t.dataset.v); break;

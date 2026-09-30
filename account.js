@@ -12,7 +12,7 @@ function acctField(kind, value, auto){
   const pw = kind === 'pw';
   return `<label class="acct-lab">${pw ? 'Password' : 'Email'}
     <span class="acct-in"><input id="acct-${kind}" data-k="${kind}" type="${pw ? (acct.show ? 'text' : 'password') : 'email'}" value="${esc(value)}"
-      autocomplete="${auto}" ${pw ? '' : 'inputmode="email" autocapitalize="off" spellcheck="false"'} placeholder="${pw ? 'At least 8 characters' : 'you@example.com'}">
+      autocomplete="${auto}" ${pw ? '' : 'inputmode="email" autocapitalize="off" spellcheck="false"'} placeholder="${pw ? (auto === 'current-password' ? 'Your password' : 'At least 8 characters') : 'you@example.com'}">
     ${pw ? `<button type="button" class="acct-eye" data-act="acct-show">${acct.show ? 'Hide' : 'Show'}</button>` : ''}</span></label>`;
 }
 const acctNotes = () => `${acct.err ? `<p class="acct-err">${ICO('warning')} ${esc(acct.err)}</p>` : ''}${acct.info ? `<p class="acct-info">${ICO('check')} ${esc(acct.info)}</p>` : ''}`;

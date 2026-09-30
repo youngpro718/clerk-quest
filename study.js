@@ -47,9 +47,13 @@ function toggleHighlight(id, phrase){
 function phrasesHTML(c){
   return splitPhrases(c.source.quote).map((raw, i) => {
     const lead = raw.match(/^\s*/)[0], ph = raw.trim(), on = isHighlighted(c.id, ph);
-    return `${lead}<span class="ph ${on ? 'on' : ''}" role="button" aria-pressed="${on}" data-act="hl" data-id="${c.id}" data-i="${i}">${esc(ph)}</span>`;
+    return `${lead}<span class="ph ${on ? 'on' : ''}" role="button" tabindex="0" aria-pressed="${on}" data-act="hl" data-id="${c.id}" data-i="${i}">${esc(ph)}</span>`;
   }).join('');
 }
+document.addEventListener('keydown', e => {   // the highlights are buttons, so Enter and Space work too
+  const t = e.key === 'Enter' || e.key === ' ' ? e.target.closest('[data-act="hl"]') : null;
+  if (t) { e.preventDefault(); t.click(); }
+});
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act="hl"]'); if (!t) return;
   const c = byId(t.dataset.id), ph = splitPhrases(c.source.quote)[+t.dataset.i].trim();

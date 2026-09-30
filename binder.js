@@ -107,8 +107,10 @@ const BINDER_SCREENS = {
         ${fixed && miss.length ? lessonDeckRow(b) : ''}
         ${!fixed && pages < BINDER.maxPages ? `<button class="row bd-addpage" data-act="bd-addpage" data-id="${b.id}"><span class="st-bimg"><img src="${artSrc('binder_page')}" alt=""></span>
           <span class="row-main"><b>Add a page</b><small>4 more pockets</small></span>${priceTag(BINDER.pagePrice, (S.coins || 0) >= BINDER.pagePrice)}</button>` : ''}`,
-      after: edit ? '' : `<div class="cta-bar"><div><button class="btn-big" data-act="bd-read" data-id="${b.id}" ${ready || (fixed && n) ? '' : 'disabled'}>${ICO('read')} START LESSON</button>
-        ${ready ? `<button class="bd-skip" data-act="bd-quiz" data-id="${b.id}">Skip to the quiz ›</button>` : ''}</div></div>`,
+      after: edit ? '' : `<div class="cta-bar"><div><button class="btn-big" data-act="bd-read" data-id="${b.id}" ${ready || (fixed && n) ? '' : 'disabled'}>${ICO('read')} READ LESSON</button>
+        ${ready ? `<button class="bd-skip" data-act="bd-quiz" data-id="${b.id}">Take the quiz ›</button>`
+          : fixed ? `<button class="bd-skip" data-act="ls-get" data-id="${b.id}">Quiz: collect ${miss.length} more card${miss.length === 1 ? '' : 's'} first ›</button>`
+          : `<small class="bd-skip">Quiz: add ${BINDER.minCards - n} more card${BINDER.minCards - n === 1 ? '' : 's'} to this binder first</small>`}</div></div>`,
     };
   },
   lessonread(p){

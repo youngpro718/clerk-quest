@@ -14,7 +14,7 @@ function onbFlag(k){ const o = onb(); if (o[k]) return; o[k] = Date.now(); save(
 
 /* ---------- welcome: 3 screens, shown once ---------- */
 const WELCOME = [
-  { art:'welcome_1', h:'Study it. Collect it. Master it.', p:'Every card is a real court rule, quoted from its official source.' },
+  { art:'welcome_1', h:'Study it. Collect it. Master it.', p:'Rule cards quote the official NYS court clerk sample questions. Memory Tricks are our own study aids.' },
   { art:'welcome_2', h:'Cards grow as you learn.', p:'Right answers earn XP. Cards level up, get new art, and can turn gold. Skip a card too long and it goes cold.' },
   { art:'welcome_3', h:'Read it. Mark it. Keep it.', p:'Read each rule, highlight what matters, write notes, and save questions for later.' },
 ];
@@ -49,7 +49,7 @@ const toRule = () => { const c = ruleCard(); if (c) push('card', { id:c.id, tab:
 const toBinders = () => { switchTab('collection'); const en = topEntry(); en.p = Object.assign({}, en.p, { tab:'binders' }); refresh(); };
 const STEPS = [
   { id:'pack', label:'Open your first pack', test:() => S.packsOpened >= 1, go:() => push('packs'), spot:'[data-act="pack-open"]', caption:'Tap here to open your pack.' },
-  { id:'round', label:'Finish a study round', test:() => S.stats.sessions >= 1, go:() => switchTab('study'), spot:'[data-act="quick"]', caption:'Start a Quick Round.' },
+  { id:'round', label:'Finish a study round', test:() => S.stats.sessions >= 1, go:() => switchTab('study'), spot:'[data-act="quick"]', caption:'Now put those cards to work. Start a Quick Round.' },
   { id:'hint', label:'Use a Sidebar hint', test:() => (S.stats.hints || 0) >= 1, go:() => switchTab('study'), spot:'[data-act="quick"]', caption:'In a round, tap SIDEBAR? for a hint.' },
   { id:'read', label:'Read a rule', test:() => !!onb().read, go:toRule, spot:'.casefile .cf-quote', caption:'This is the real rule, word for word.' },
   { id:'mark', label:'Highlight a phrase or write a note', test:() => { const n = nb(); return Object.keys(n.hl).length > 0 || Object.keys(n.notes).length > 0; }, go:toRule, spot:'.casefile .cf-quote', caption:'Tap a phrase to highlight it.' },
@@ -103,7 +103,7 @@ document.addEventListener('click', e => {
 
 /* ---------- one-time tips: a short sheet the first time something new comes up ---------- */
 const TIPS = {
-  cold:{ icon:'thermo_snow', h:'This is a Cold Case', p:'You haven\'t studied this card in a while, so it went cold. One right answer reopens it, plus a bonus.' },
+  cold:{ icon:'thermo_snow', h:'This is a Cold Case', p:'You haven\'t studied this card in a while, so it went cold. One right answer reopens it, plus a bonus. Your cards and progress stay yours.' },
   trick:{ icon:'memory', h:'A Memory Trick card', p:'These teach a trick for remembering a rule: an order, a deadline, or who does what.' },
   more:{ icon:'read', h:'Some answers are long', p:'An answer marked "more" is cut off. Tap READ FULL ANSWERS to see every word before you pick.' },
 };
