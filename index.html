@@ -1254,6 +1254,10 @@ CARDS.push(
   },
   {
     id:'followpetitioner', art:'followpetitioner', num:'★09', l1:'FOLLOW THE', l2:'PETITIONER', name:'Follow the Petitioner', emoji:'🧭',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'The clerk files a copy of an order of protection with the sheriff or police where the petitioner lives, or with the city police if the petitioner lives in a city.',
+      example:'Ana, the petitioner, lives in the City of Yonkers; the respondent lives in another county. The clerk files the order with the Yonkers police department.',
+      source:'FCA § 168.2' },
     category:'MEMORY TRICK', set:'FAMILY COURT ACT', rarity:'uncommon', trickType:'who', icon:'court', maxLevel:3,
     quote:'The order goes\nwhere they live.',
     source:{ cite:'FCA § 168.2', quote:'A copy of an order of protection or temporary order of protection shall be filed by the clerk of the court with the sheriff\'s office or police department in the county in which the petitioner resides, or, if the petitioner resides within a city, with the police department of such city.', from:OFFICIAL + ', Q3',
@@ -1302,6 +1306,10 @@ CARDS.push(
   },
   {
     id:'childvoice', art:'childvoice', num:'★11', l1:'WHO SPEAKS FOR', l2:'THE CHILD?', name:'Who Speaks for the Child?', emoji:'🧒',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'Unless the court appoints a guardian ad litem, a minor appears in a case through a set order: the guardian of their property, then a parent with legal custody, then another person or agency with legal custody.',
+      example:'A 15-year-old is a party, has no guardian of her property, and lives with her mother, who has legal custody. Unless the court appoints a guardian ad litem, her mother appears for her.',
+      source:'CPLR § 1201' },
     category:'MEMORY TRICK', set:'CPLR', rarity:'uncommon', trickType:'chain', icon:'court', maxLevel:3, gen:'sequence',
     quote:'Good Parents\nObey.',
     source:{ cite:'CPLR § 1201', quote:'Unless the court appoints a guardian ad litem, an infant shall appear by the guardian of his property or, if there is no such guardian, by a parent having legal custody, or, if there is no such parent, by another person or agency having legal custody, or, if the infant is married, by an adult spouse residing with the infant…', from:OFFICIAL + ', Q15',
@@ -1322,6 +1330,10 @@ CARDS.push(
   },
   {
     id:'custodyornot', art:'custodyornot', num:'★12', l1:'CUSTODY', l2:'OR NOT?', name:'Custody or Not?', emoji:'⚖️',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'A child custody proceeding is any case where legal custody, physical custody, or visitation is an issue. Four kinds never count: juvenile delinquency, PINS, contractual emancipation, and title-three enforcement.',
+      example:'A divorce where the parents dispute visitation counts as a child custody proceeding. A juvenile delinquency case about the same child does not.',
+      source:'DRL § 75-a' },
     category:'MEMORY TRICK', set:'DOMESTIC RELATIONS LAW', rarity:'uncommon', trickType:'difference', icon:'court', maxLevel:3,
     quote:'Custody at issue?\nIt counts.',
     source:{ cite:'DRL § 75-a', quote:'"Child custody proceeding" means a proceeding in which legal custody, physical custody, or visitation with respect to a child is an issue. The term includes a proceeding for divorce, separation, neglect, abuse, dependency, guardianship, paternity, termination of parental rights, and protection from domestic violence, in which the issue may appear. The term does not include a proceeding involving juvenile delinquency, person in need of supervision, contractual emancipation, or enforcement under title three of this article.', from:OFFICIAL + ', Q5',
@@ -1356,6 +1368,10 @@ const S2 = { series:2, category:'MEMORY TRICK', rarity:'uncommon', icon:'court',
 CARDS.push(
   Object.assign({}, S2, {
     id:'jurywaiver', art:'jurywaiver', num:'★13', l1:'WAIVE', l2:'THE JURY', name:'Waive the Jury', emoji:'✍️',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'A defendant\'s waiver of a jury trial must be in writing, signed by the defendant in person in open court in front of the judge, and approved by the court.',
+      example:'Chris wants a bench trial. A letter from his lawyer is not enough: Chris must sign a written waiver himself in open court, and the judge must approve it.',
+      source:'CPL § 320.10(2)' },
     set:'CRIMINAL PROCEDURE', trickType:'who', quote:'Write it. Sign it.\nJudge approves it.',
     source:{ cite:'CPL § 320.10(2)', quote:'Such waiver must be in writing and must be signed by the defendant in person in open court in the presence of the court, and with the approval of the court.', from:OFFICIAL + ', Q8',
       context:'A defendant waiving a jury trial in the superior court where the indictment is pending.' },
@@ -1376,6 +1392,10 @@ CARDS.push(
   }),
   Object.assign({}, S2, {
     id:'interest', art:'interest', num:'★14', l1:'THE INTEREST', l2:'CLOCK', name:'The Interest Clock', emoji:'💰',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'A money judgment earns interest from the date it is entered. An order to pay money earns interest from the date it is docketed as a judgment.',
+      example:'A $5,000 judgment is entered May 3, so interest runs from May 3. A costs order is docketed as a judgment June 9, so its interest runs from June 9.',
+      source:'CPLR § 5003' },
     set:'CPLR', trickType:'difference', quote:'Judgment? Entry.\nOrder? Docketing.',
     source:{ cite:'CPLR § 5003', quote:'Every money judgment shall bear interest from the date of its entry. Every order directing the payment of money which has been docketed as a judgment shall bear interest from the date of such docketing.', from:OFFICIAL + ', Q17',
       context:'When interest starts running on money judgments and money orders.' },
