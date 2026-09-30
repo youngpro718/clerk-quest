@@ -50,11 +50,11 @@ const lessonQuestions = b => Math.max(BINDER.minQ, Math.min(BINDER.maxQ, binderC
 const lessonMinutes = b => Math.max(2, Math.round(binderCards(b).length * 0.8 + lessonQuestions(b) * 0.3));
 
 /* ---------- pieces ---------- */
-function coverHTML(b, cls = ''){
+function coverHTML(b, cls = '', skipSticker, extra = ''){   // stickers.js adds the stickers stuck on it
   const cv = coverOf(b), [l, t, w, h] = cv.label;
   return `<span class="bd-cover ${cls}"><img src="${artSrc('cover_' + cv.id)}" alt="">
     <span class="bd-label" style="left:${l}%;top:${t}%;width:${w}%;height:${h}%"><b>${esc(b.name)}</b></span>
-    ${S.lessons && S.lessons[b.id] && S.lessons[b.id].passes ? `<img class="bd-stamp" src="${artSrc('stamp_passed')}" alt="Passed">` : ''}</span>`;
+    ${S.lessons && S.lessons[b.id] && S.lessons[b.id].passes ? `<img class="bd-stamp" src="${artSrc('stamp_passed')}" alt="Passed">` : ''}${typeof coverStickersHTML === 'function' ? coverStickersHTML(b, skipSticker) : ''}${extra}</span>`;
 }
 function pageHTML(b, p, edit, sel){
   return `<div class="bd-page"><img class="bd-page-bg" src="${artSrc('binder_page')}" alt="">${POCKETS.map((pk, k) => {

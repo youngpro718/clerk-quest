@@ -329,7 +329,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .bstk-stage{position:relative;width:min(84vw,340px);height:min(84vw * 1.1,374px,48vh);border-radius:18px;touch-action:none}
 .bstk-stage > img{width:100%;height:100%;object-fit:contain;padding:8%;box-sizing:border-box}
 .bstk-hint{margin:0;font-size:19px;color:var(--paper);text-align:center;min-height:25px;max-width:320px}
-.bstk .btn-big{max-width:340px}
+.bstk .btn-big,.bstk .sheet-cancel{max-width:340px}
 
 /* stamps */
 .stamp{z-index:6;font-family:"Luckiest Guy";padding:1.2cqw 3cqw;border:.9cqw solid currentColor;border-radius:2cqw;letter-spacing:.07em;
@@ -874,10 +874,11 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="study.js?v=93a33e0e"></script>
 <script src="economy.js?v=a7261374"></script>
 <script src="store.js?v=3dc737c6"></script>
-<script src="binder.js?v=bbc6b28d"></script>
+<script src="binder.js?v=816f649f"></script>
 <script src="onboarding.js?v=78676544"></script>
 <script src="account.js?v=eb869aeb"></script>
 <script src="admin.js?v=fb5df08d"></script>
+<script src="stickers.js?v=9a30b930"></script>
 <script src="pack3d.js?v=1cbdf0aa"></script>
 <script src="sticker3d.js?v=a56aea89"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "appeal30": {"1": "art/appeal30_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightback": {"1": "art/eightback_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "freeze": {"1": "art/freeze_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "reargue": {"1": "art/reargue_1.webp"}, "renew": {"1": "art/renew_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "sj120": {"1": "art/sj120_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "undodefault": {"1": "art/undodefault_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
@@ -2291,6 +2292,7 @@ const SCREENS = {
       <div class="list">
         ${profileAdminRow()}
         ${profileOnbRow()}
+        ${profileStickerRow()}
         <button class="row" data-act="push" data-s="stats"><span class="th emo gi">${ICO('stats')}</span><span class="row-main"><b>Statistics</b></span>${chev}</button>
         <button class="row" data-act="push" data-s="packs"><span class="th emo gi">${ICO('pack')}</span><span class="row-main"><b>Packs</b></span>${S.packs ? `<i class="dot-badge in">${S.packs}</i>` : ''}${chev}</button>
         <button class="row" data-act="push" data-s="help"><span class="th emo gi">${ICO('help')}</span><span class="row-main"><b>How to Play</b></span>${chev}</button>
@@ -2386,7 +2388,7 @@ function renderTabbar(){
 const nav = { tab:'home', stacks:{} };
 TABS.forEach(([id]) => nav.stacks[id] = [{s:id, p:{}}]);
 const topEntry = () => { const st = nav.stacks[nav.tab]; return st[st.length - 1]; };
-Object.assign(SCREENS, STUDY_SCREENS, STORE_SCREENS, BINDER_SCREENS, ACCOUNT_SCREENS, ADMIN_SCREENS);
+Object.assign(SCREENS, STUDY_SCREENS, STORE_SCREENS, BINDER_SCREENS, ACCOUNT_SCREENS, ADMIN_SCREENS, STICKER_SCREENS);
 function currentScreenEl(){ return document.querySelector('#screens .screen.current'); }
 function saveScroll(){ const el = currentScreenEl(); if (el && el._entry) el._entry.scroll = el.querySelector('.scr').scrollTop; }
 function buildScreen(entry, depth = nav.stacks[nav.tab].length - 1){
@@ -2685,8 +2687,9 @@ function openSticker(ov){
   ov.appendChild(layer);
   const stage = layer.querySelector('.bstk-stage'), hint = layer.querySelector('.bstk-hint'), btn = layer.querySelector('[data-act="bstk-auto"]');
   const peeled = () => {
-    hint.textContent = 'Saved to your Sticker Book! Soon you can stick it on a binder.';
-    btn.disabled = false; btn.className = 'btn-big gold'; btn.dataset.act = 'bstk-done'; btn.textContent = 'DONE';
+    hint.textContent = 'It\'s in your Sticker Book. Stick it on a binder now, or later from your Profile.';
+    btn.disabled = false; btn.className = 'btn-big gold'; btn.dataset.act = 'bstk-stick'; btn.textContent = 'STICK IT ON A BINDER';
+    btn.insertAdjacentHTML('afterend', '<button class="sheet-cancel" data-act="bstk-done">Save it for later</button>');
     ov.querySelector('.pk-done').textContent = 'COLLECT →'; ov.querySelector('.pk-done').dataset.act = 'pk-done';
   };
   const flat = () => { stage.innerHTML = `<img src="${src}" alt="${esc(info.name)}">`; btn.dataset.act = 'bstk-take'; btn.textContent = 'TAKE IT'; hint.textContent = ''; layer._peeled = peeled; };
@@ -3067,6 +3070,7 @@ document.addEventListener('click', e => {
     case 'bstk-auto': { const l = t.closest('.bstk'); if (l._ctl) { l._ctl.autoPeel(); t.disabled = true; } break; }
     case 'bstk-take': { const l = t.closest('.bstk'); l._peeled && l._peeled(); break; }
     case 'bstk-done': t.closest('.bstk').remove(); break;
+    case 'bstk-stick': { const uid = t.closest('.pk')._sticker.uid; goBack(); setTimeout(() => chooseBinderSheet(uid), 350); break; }
     case 'zoom-close': t.closest('.zoom').remove(); unlockScroll(); break;
     case 'card-menu': cardMenu(id); break;
     case 'missing': missingSheet(id); break;
