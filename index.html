@@ -319,6 +319,13 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .pk-hint{margin:0;font-size:20px;color:var(--paper);z-index:3;text-align:center;min-height:26px}
 .pk-done{max-width:340px;z-index:3;opacity:0;pointer-events:none;transition:opacity .3s}
 .pk.all .pk-done{opacity:1;pointer-events:auto}
+.pk-coin{display:none;z-index:3;align-items:center;gap:10px;padding:8px 16px 8px 8px;border-radius:40px;background:rgba(0,0,0,.45);border:2px solid rgba(227,178,60,.6)}
+.pk.all .pk-coin{display:flex;animation:coinpop .6s cubic-bezier(.2,1.5,.4,1) .3s both}
+.pk-coin img{width:54px;height:54px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5));animation:coinspin 1.2s ease-out .3s both}
+.pk-coin b{display:block;font:400 22px/1 "Bangers";letter-spacing:.05em;color:var(--mustard)}
+.pk-coin small{font:15px "Patrick Hand";color:var(--paper)}
+@keyframes coinpop{from{transform:scale(.3);opacity:0}}
+@keyframes coinspin{from{transform:rotateY(540deg)}}
 /* bonus sticker: a layer over the pack with the 3D peel (sticker3d.js) */
 .bstk{position:absolute;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;
   background:radial-gradient(circle at 50% 42%,#34281a,#0d0b09);animation:fadein .3s both}
@@ -886,7 +893,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="account.js?v=303970d4"></script>
 <script src="admin.js?v=fb5df08d"></script>
 <script src="stickers.js?v=9a30b930"></script>
-<script src="dockets.js?v=3cf4fcfa"></script>
+<script src="dockets.js?v=c761d98b"></script>
 <script src="pack3d.js?v=1cbdf0aa"></script>
 <script src="sticker3d.js?v=a56aea89"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "appeal30": {"1": "art/appeal30_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightback": {"1": "art/eightback_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "freeze": {"1": "art/freeze_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "reargue": {"1": "art/reargue_1.webp"}, "renew": {"1": "art/renew_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "sj120": {"1": "art/sj120_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "undodefault": {"1": "art/undodefault_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
@@ -1174,6 +1181,10 @@ CARDS.push(
   },
   {
     id:'ypsi', art:'ypsi', num:'★06', l1:'CONVICTION', l2:"WHAT'S NEXT?", name:"Conviction → What's Next?", emoji:'🎯',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'When an eligible youth is convicted, the court must order a pre-sentence investigation. Then, at sentencing and with the written report, it decides whether the youth is a youthful offender.',
+      example:'An eligible youth is convicted in March. The court orders a pre-sentence investigation. At sentencing in May, with the written report in hand, it decides youthful offender status, not back in March.',
+      source:'CPL § 720.20(1)' },
     category:'MEMORY TRICK', set:'CRIMINAL PROCEDURE', rarity:'uncommon', trickType:'trigger', icon:'court', maxLevel:3,
     quote:'Investigate first.\nDecide at sentence.',
     source:{ cite:'CPL § 720.20(1)', quote:'Upon conviction of an eligible youth, the court must order a pre-sentence investigation of the defendant. After receipt of a written report of the investigation and at the time of pronouncing sentence the court must determine whether or not the eligible youth is a youthful offender.', from:OFFICIAL + ', Q11',
@@ -1420,6 +1431,10 @@ CARDS.push(
   }),
   Object.assign({}, S2, {
     id:'quash', art:'quash', num:'★15', l1:'QUASH IT WHERE', l2:'IT RETURNS', name:'Quash It Where It Returns', emoji:'🚪',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'A motion to quash, fix conditions on, or modify a subpoena must be made promptly, in the court where the subpoena is returnable.',
+      example:'A subpoena orders records brought to Kings County Supreme Court. To challenge it, the recipient moves promptly in Kings County Supreme Court, not in some other court.',
+      source:'CPLR § 2304' },
     set:'CPLR', trickType:'who', quote:'Fight the subpoena\nwhere it returns.',
     source:{ cite:'CPLR § 2304', quote:'A motion to quash, fix conditions or modify a subpoena shall be made promptly in the court in which the subpoena is returnable.', from:OFFICIAL + ', Q16',
       context:'Challenging a subpoena.' },
@@ -1440,6 +1455,10 @@ CARDS.push(
   }),
   Object.assign({}, S2, {
     id:'newtrial', art:'newtrial', num:'★16', l1:'MID-TRIAL', l2:'RESET', name:'Mid-Trial Reset', emoji:'🔁',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'At any time during a trial, on any party\'s motion, the court may order a continuance or a new trial in the interest of justice, on terms that are just.',
+      example:'Midway through a trial, a party moves for a new trial after something happens that makes the trial unfair. The court may order a continuance or a new trial if the interest of justice calls for it.',
+      source:'CPLR § 4402' },
     set:'CPLR', trickType:'trigger', quote:'Any time during\ntrial. Any party.',
     source:{ cite:'CPLR § 4402', quote:'At any time during the trial, the court, on motion of any party, may order a continuance or a new trial in the interest of justice on such terms as may be just.', from:OFFICIAL + ', Q14',
       context:'Continuance or new trial during trial (CPLR Article 44).' },
@@ -1460,6 +1479,10 @@ CARDS.push(
   }),
   Object.assign({}, S2, {
     id:'schoolnotice', art:'schoolnotice', num:'★17', l1:'THE SCHOOL GETS', l2:'NOTIFIED', name:'The School Gets Notified', emoji:'🏫',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'When a student under 19 at a public or private elementary or secondary school is sentenced for a crime, the sentencing court notifies the school\'s designated educational official.',
+      example:'An 18-year-old high school senior is sentenced for a crime. The court that sentenced him notifies his school\'s designated educational official of the conviction and sentence.',
+      source:'CPL § 380.90(2)' },
     set:'CRIMINAL PROCEDURE', trickType:'trigger', quote:'Under 19 + sentenced\n= school is told.',
     source:{ cite:'CPL § 380.90(2)', quote:'Whenever a person under the age of nineteen who is enrolled as a student in a public or private elementary or secondary school is sentenced for a crime, the court that has sentenced such person shall provide notification of the conviction and sentence to the designated educational official of the school in which such person is enrolled as a student.', from:OFFICIAL + ', Q9',
       context:'Notifying a student\'s school after sentencing.' },
@@ -1480,6 +1503,10 @@ CARDS.push(
   }),
   Object.assign({}, S2, {
     id:'bail', art:'bail', num:'★18', l1:'WHAT COUNTS', l2:'AS BAIL', name:'What Counts as Bail', emoji:'💳',
+    // Read-first intro (checked 2026-09-30 against the card's own official source quote)
+    intro:{ idea:'Under the CPL definition, bail means cash bail, a bail bond, or money paid with a credit card.',
+      example:'A defendant\'s family can post bail in cash, through a bail bond, or by credit card. A deed to their house is not on that list.',
+      source:'CPL § 500.10(9)' },
     set:'CRIMINAL PROCEDURE', trickType:'difference', quote:'Cash, bond,\nor card.',
     source:{ cite:'CPL § 500.10(9)', quote:'"Bail" means cash bail, a bail bond or money paid with a credit card.', from:OFFICIAL + ', Q7',
       context:'The definition of "bail."' },
@@ -2847,7 +2874,10 @@ function openPack(opts = {}){
   if (!opts.pulls) S.packs--;
   const first = S.packsOpened === 0; S.packsOpened++;
   const pulls = opts.pulls || drawPack();
-  const bonus = opts.pulls ? null : rollSticker(); save();
+  const bonus = opts.pulls ? null : rollSticker();
+  const coin = !opts.pulls && !first && Math.random() < 1 / 5;   // a Continuance: about 1 in 5 packs (never the first); reopens a missed Hot Docket
+  if (coin) S.continuances = (S.continuances || 0) + 1;
+  save();
   const packImg = opts.img || packArtFor(pulls.map(p => p.c));
   const label = opts.label ? `<span class="pk-label">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(opts.label)}</b></span>` : '';
   lockScroll(); history.pushState({cq:'pack'}, '');
@@ -2867,6 +2897,7 @@ function openPack(opts = {}){
         <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? ICO('memory') + ' MEMORY TRICK!' : 'NEW!') : `DUPLICATE · +${p.coins} ${COIN}`}</span>
       </button>`).join('')}</div>
     </div>
+    ${coin ? `<div class="pk-coin"><img src="${artSrc('continuance_coin')}" alt=""><span><b>+1 CONTINUANCE</b><small>Reopens a missed Hot Docket</small></span></div>` : ''}
     <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Swipe across the top to rip it open.' : packImg.includes('s3') ? 'A Series 3 pack! Swipe across the top to rip it open.' : packImg.includes('s2') ? 'A Series 2 pack! Swipe across the top to rip it open.' : 'Swipe across the top to rip it open.'}</p>
     <button class="btn-big gold pk-done" data-act="${bonus ? 'pk-sticker' : 'pk-done'}">${bonus ? 'OPEN YOUR BONUS STICKER' : 'COLLECT →'}</button>`;
   document.body.appendChild(ov);

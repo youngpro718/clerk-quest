@@ -205,18 +205,29 @@ function docketTotals(d, r){
   const right = d.levels.reduce((t, L, n) => t + levelScore(d, r, n + 1), 0);
   return { right, total, pct:right / total };
 }
-const rewardFor = pct => pct >= DK_REWARD.rare ? 'rare' : pct >= DK_REWARD.pass ? 'bw' : null;
+const rewardFor = (pct, retry) => pct >= DK_REWARD.rare && !retry ? 'rare' : pct >= DK_REWARD.pass ? 'bw' : null;   // a retry earns the basic card at most
+/* Continuance coins (found in about 1 in 5 packs) reopen a docket that ended without a reward card:
+   the 15 practice answers clear and the player answers them again; Learn, Example and Source stay done. */
+const continuances = () => S.continuances || 0;
+function reopenDocket(id){
+  const r = docketRec(id); if (continuances() < 1 || r.reward || !docketComplete(r)) return false;
+  S.continuances = continuances() - 1;
+  for (let n = 1; n <= 3; n++) { r.lv[n].answers = []; r.lv[n].done.practice = false; delete r.lv[n].practiceAt; }
+  r.level = 1; r.retry = true; r.reopened = (r.reopened || 0) + 1; delete r.completedAt;
+  save(); return true;
+}
 
 /* ---------- the Dockets tab (inside Collection) ---------- */
 function docketsTabHTML(){
   const rows = HOT_DOCKETS.map(d => { const r = dockets().find(x => x.id === d.id), rr = r && docketRec(d.id);
-    const status = !rr ? 'not started' : docketComplete(rr) ? 'complete' : `Level ${rr.level} · ${doneCount(rr.lv[rr.level])} of 4 done`;
+    const status = !rr ? 'not started' : docketComplete(rr) ? (rr.reward ? 'complete' : 'complete · no card yet') : `${rr.retry ? 'reopened · ' : ''}Level ${rr.level} · ${doneCount(rr.lv[rr.level])} of 4 done`;
     return `<button class="row dk-row" data-act="push" data-s="docket" data-id="${d.id}"><span class="dk-thumb"><img src="${artSrc('dk_photo_learn')}" alt=""></span>
       <span class="row-main"><b>${esc(d.title)}</b><small>${esc(d.id)} · ${status}</small></span>${chev}</button>`; }).join('');
   const won = dockets().filter(r => r.reward && docketDef(r.id));
   return `<p class="st-note">Hot Dockets are court situations written as a docket. Read the file, then decide how to handle it. They test judgment, not just memory.</p>
     <div class="dk-folder"><img src="${artSrc('docket_folder')}" alt="Docket folder"></div>
     <div class="sec-h"><span>Sample docket</span></div><div class="list">${rows}</div>
+    <div class="dk-coins"><img src="${artSrc('continuance_coin')}" alt=""><span><b>${continuances()} Continuance${continuances() === 1 ? '' : 's'}</b><small>${continuances() ? 'Spend one to retry a docket that ended without a reward card.' : 'Found in some packs. One lets you retry a docket that ended without a reward card.'}</small></span></div>
     ${won.length ? `<div class="sec-h"><span>Reward cards</span></div><div class="dk-rewards">${won.map(r => rewardThumb(r)).join('')}</div>` : ''}
     <p class="foot">Soon a new Hot Docket will arrive on your Home screen about once a week. Finished ones stay in this folder as your record.</p>`;
 }
@@ -259,7 +270,7 @@ function sheetInner(tab, sh, d, r, n, p, sheets){
   const L = d.levels[n - 1], x = lvRec(r, n), done = x.done[tab], slam = p.justStamped === tab ? 'slam' : '';
   if (sh.cover) {
     const sub = { learn:`Level ${n} · ${L.name}`, example:n > 1 ? `The docket through Level ${n}` : 'The docket so far', source:'The rule behind each question' }[tab];
-    const side = `<div class="sf-side" style="${sfBox(9, 24, 45, 23)}">${stampImg(TAB_STAMP[tab], 'head')}<small>${esc(sub)}</small>${done ? stampImg('completed', 'done ' + slam) : ''}</div>`;
+    const side = `<div class="sf-side" style="${sfBox(9, 24, 45, 23)}">${stampImg(TAB_STAMP[tab], 'head')}<small>${esc(sub)}</small>${done ? stampImg('completed', 'done ' + slam) : ''}${r.reopened && tab === 'learn' ? stampImg('reopened', 'done') : ''}</div>`;
     if (tab === 'learn') return `${polaroidHTML(tab)}${side}
       <div class="sf-area sf-fit" style="${sfBox(9, 48.5, 81, 6.5)}"><p>${n > 1 ? `New for Level ${n}. The earlier cards still apply.` : 'Read each card, then open Example. Every fact you need is here before you answer.'}</p></div>
       ${noteHTML('yellow', sfBox(8.5, 55.5, 54, 25), `<b>In this file</b><ul class="sf-toc">${L.learn.map(c => `<li>${esc(c.h)}</li>`).join('')}</ul>`, 'tilt-l')}
@@ -300,7 +311,7 @@ function resultsInner(d, r, n, p){
   const note = final ? `<b class="big">${t.right} of ${t.total}</b><p>right on the whole docket (${Math.round(t.pct * 100)}%)</p>`
     : `<b class="big">${right} of ${len}</b><p>right on Level ${n}</p>`;
   return `${polaroidHTML('practice')}
-    <div class="sf-side" style="${sfBox(9, 24, 45, 23)}">${stampImg('practice', 'head')}<small>Level ${n} results</small>${stampImg('completed', 'done ' + (p.justStamped === 'practice' ? 'slam' : ''))}</div>
+    <div class="sf-side" style="${sfBox(9, 24, 45, 23)}">${stampImg('practice', 'head')}<small>Level ${n} results</small>${r.reopened ? stampImg('reopened', 'done') : stampImg('completed', 'done ' + (p.justStamped === 'practice' ? 'slam' : ''))}</div>
     ${noteHTML('green', sfBox(9, 50, 38, 17.6), note, 'tilt-l')}
     <div class="sf-area sf-fit" style="${sfBox(50, 49.5, 40, 31)}">${L.practice.map((q, k) => `<div class="sf-res ${x.answers[k] === q.a ? 'ok' : 'no'}"><b>${k + 1}</b>
       <span>${x.answers[k] === q.a ? `Right · ${'ABCD'[q.a]}` : `Chose ${'ABCD'[x.answers[k]]} · answer ${'ABCD'[q.a]}`}</span></div>`).join('')}</div>`;
@@ -427,7 +438,10 @@ const DOCKET_SCREENS = {
     if (levelDone && n < 3) banner = `<div class="sf-banner"><span>${ICO('mastered')} Level ${n} complete! Level ${n + 1} adds new filings to the same case.</span><button class="sf-btn go gold" data-act="dk-level">Start Level ${n + 1}</button></div>`;
     else if (levelDone && n === 3) banner = r.reward
       ? `<div class="sf-banner"><span>${ICO('mastered')} Docket complete! You earned the ${r.reward === 'rare' ? 'rare full-color' : 'black-and-white'} reward card.</span><button class="sf-btn go gold" data-act="dk-reward" data-id="${d.id}">See card</button></div>`
-      : `<div class="sf-banner"><span>${ICO('mastered')} Docket complete, ${docketTotals(d, r).right} of 15 right. A reward card needs 12 (80%). A Continuance to try again is coming soon.</span></div>`;
+      : `<div class="sf-banner"><span>Docket complete, ${docketTotals(d, r).right} of 15 right. A reward card needs 12 (80%).
+          ${continuances() ? `Spend a Continuance to answer the 15 questions again (you have ${continuances()}).` : 'Continuance coins come in some packs. One lets you answer the 15 questions again.'}</span>
+          ${continuances() ? `<button class="sf-btn go gold" data-act="dk-continue">Use a Continuance</button>` : ''}</div>`;
+    else if (r.retry && !levelDone) banner = `<div class="sf-banner reopen"><img src="${artSrc('dk_stamp_reopened')}" alt="Case reopened"><span>Case reopened: answer the practice questions again. A pass (80%) earns the black-and-white card.</span></div>`;
     return { title:'Hot Docket', body:`${banner}${studyFileHTML(d, r, n, tab, p)}` };
   },
 };
@@ -467,12 +481,18 @@ document.addEventListener('click', e => {
     case 'dk-ev': dkSheet(0, +t.dataset.i); break;
     case 'dk-done': { const k = t.dataset.tab; x.done[k] = true; if (k === 'practice') x.practiceAt = Date.now();
       const finished = n === 3 && doneCount(x) === 4 && !r.completedAt;
-      if (finished) { r.completedAt = Date.now(); r.reward = rewardFor(docketTotals(d, r).pct); }
+      if (finished) { r.completedAt = Date.now(); r.reward = rewardFor(docketTotals(d, r).pct, r.retry); }
       save(); dkGo({ tab:k, sheet:0, q:null, justStamped:k });
       toast(doneCount(x) === 4 ? (n === 3 ? 'Docket complete!' : `Level ${n} complete!`) : `${DOCKET_TABS.find(([y]) => y === k)[1]} complete`, 'check');
       if (finished && r.reward) setTimeout(() => openReward(d.id, true), 700);
       break; }
-    case 'dk-level': if (doneCount(x) === 4 && n < 3) { r.level = n + 1; save(); dkGo({ tab:'learn', sheet:0, q:null, sel:null }); toast(`Level ${n + 1} is open`, 'star'); } break;
+    case 'dk-continue':
+      iosAlert({ title:'Use a Continuance?', msg:`Spend 1 of your ${continuances()} Continuance${continuances() === 1 ? '' : 's'} to reopen this docket. You'll answer all 15 practice questions again; your reading stays done. A pass (80%) earns the black-and-white card.`,
+        buttons:[{ label:'Not now', value:false }, { label:'Reopen', value:true, style:'bold' }] })
+        .then(ok => { if (ok && reopenDocket(d.id)) { dkGo({ tab:'practice', q:0, sel:null, sheet:0 }); toast('Case reopened', 'sync'); } });
+      break;
+    case 'dk-level': if (doneCount(x) === 4 && n < 3) { r.level = n + 1; save();   // a reopened docket goes straight back to Practice (its reading stays done)
+      dkGo(r.retry ? { tab:'practice', q:0, sel:null, sheet:0 } : { tab:'learn', sheet:0, q:null, sel:null }); toast(`Level ${n + 1} is open`, 'star'); } break;
     case 'dk-pick': dkGo({ sel:+t.dataset.k }); break;
     case 'dk-check': { const i = en.p.q || 0; if (en.p.sel == null || x.answers[i] != null) break; x.answers[i] = en.p.sel; save(); dkGo({ memo:true, memoIn:true }); break; }
     case 'dk-memo': dkGo({ memo:false }); break;
@@ -577,6 +597,11 @@ const DOCKET_CSS = `
 .sf-entry.has-ev{cursor:pointer;position:relative} .sf-entry.has-ev:active{background:rgba(43,58,85,.08)}
 .sf-entry .ev{position:absolute;right:0;top:.3em;font-style:normal;font-size:1.1em}
 .sf-banner span{flex:1}
+.sf-banner.reopen{background:rgba(70,110,170,.18);color:#a9c8f0}
+.sf-banner.reopen img{width:92px;flex:none;transform:rotate(-6deg)}
+.dk-coins{display:flex;align-items:center;gap:12px;margin:12px 0 4px;padding:10px 14px;border-radius:14px;background:var(--bg2)}
+.dk-coins img{width:48px;height:48px;flex:none}
+.dk-coins b{display:block;font:400 20px/1.1 "Bangers";letter-spacing:.05em;color:var(--mustard)} .dk-coins small{font:14px "Patrick Hand";color:var(--sub)}
 .sf-banner .sf-btn{min-width:0;min-height:40px;font-size:17px}
 .dk-rewards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .dk-rw{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;border:0;border-radius:14px;background:var(--bg2);color:var(--sub)}
