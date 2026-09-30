@@ -57,7 +57,7 @@ const STEPS = [
   { id:'mark', label:'Highlight a phrase or write a note', test:() => { const n = nb(); return Object.keys(n.hl).length > 0 || Object.keys(n.notes).length > 0; }, go:toRule, spot:'.casefile .cf-quote', caption:'Tap a phrase to highlight it.' },
   { id:'quest', label:'Claim a daily quest', test:() => !!onb().claimed, go:() => switchTab('quests'), spot:['[data-act="claim"]', '.row.q'], caption:'Finish a quest, then claim it here.' },
   { id:'level', label:'Level up a card', test:() => CARDS.some(c => S.cards[c.id].level >= 2), go:() => switchTab('study'), spot:'[data-act="quick"]', caption:'Keep answering to fill a card\'s XP bar.' },
-  { id:'store', label:'Buy something in the store', test:() => !!onb().spent, go:() => push('store'), spot:['[data-act="st-boost"][data-set="hints"]', '.st-grid .st-item'], caption:'3 Free Hints is an easy first buy: 30 coins.' },
+  { id:'store', label:'Buy something in the store', test:() => !!onb().spent, go:() => push('store'), spot:['.st-boost', '.st-grid .st-item'], caption:'Look around the store. Anything you like counts.' },
   { id:'binder', label:'Make a binder', test:() => binders().some(b => binderCards(b).length >= 3), go:toBinders, spot:'[data-act="bd-new"]', caption:'Make a binder and put 3 cards in it.' },
   { id:'lesson', label:'Pass a lesson', test:() => Object.values(S.lessons || {}).some(r => r.passes), go:toBinders, spot:'.bd-shelf .bd-tile', caption:'Open a lesson, read it, then pass the quiz.' },
 ];

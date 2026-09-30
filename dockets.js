@@ -190,7 +190,7 @@ const DOCKET_REWARDS = {
    and it earns the black-and-white card at most). Finished dockets stay in the folder as the player's record. */
 const DK_DAY = 864e5;
 const docketOpens = d => new Date(d.opens + 'T00:00:00').getTime();
-const docketCloses = d => docketOpens(d) + d.days * DK_DAY;
+const docketCloses = d => { const c = new Date(docketOpens(d)); c.setDate(c.getDate() + d.days); return c.getTime(); };   // calendar days, so a clock change never shifts it
 function docketState(d){
   const now = Date.now(), r = dockets().find(x => x.id === d.id), rr = r && docketRec(d.id);
   if (rr && docketComplete(rr) && rr.reward) return 'done';
@@ -330,13 +330,12 @@ function sheetInner(tab, sh, d, r, n, p, sheets){
   if (sh.src) { const q = sh.src;
     return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 57)}"><h4>Question ${sh.k + 1}</h4><p class="sf-citeh">${esc(q.cite)}</p>
       <p><em class="lb">What it establishes</em>${esc(q.est)}</p><p class="sf-links">${q.links.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join('')}</p></div>`; }
-  // a practice question: question and written choices on the paper, the A-D buttons along the bottom
-  const q = sh.q, i = sh.k, ans = x.answers[i], answered = ans != null, sel = answered ? ans : p.sel, bw = (81 - 3 * 1.6) / 4;
-  return `<div class="sf-area sf-fit" style="${sfBox(9, 23.4, 81, 50)}">
+  // a practice question: the question and its answers on the paper; tap an answer (the whole paragraph) to pick it
+  const q = sh.q, i = sh.k, ans = x.answers[i], answered = ans != null, sel = answered ? ans : p.sel;
+  return `<div class="sf-area sf-fit" style="${sfBox(9, 23.4, 81, 57)}">
       <div class="sf-qhead"><b>Question ${i + 1} of ${L.practice.length}</b><span>${L.practice.map((_, k) => `<i class="${x.answers[k] == null ? '' : x.answers[k] === L.practice[k].a ? 'ok' : 'no'} ${k === i ? 'cur' : ''}"></i>`).join('')}</span></div>
       <p class="sf-q">${esc(q.q)}</p>
-      <div class="sf-choices">${q.c.map((t, k) => `<div class="sf-choice ${sel === k ? 'sel' : ''} ${answered && k === q.a ? 'right' : ''} ${answered && k === ans && ans !== q.a ? 'wrong' : ''}" ${answered ? '' : `data-act="dk-pick" data-k="${k}"`}><b>${'ABCD'[k]}</b><span>${esc(t)}</span></div>`).join('')}</div></div>
-    ${[0, 1, 2, 3].map(k => `<button class="sf-ab ${sel === k ? 'sel' : ''} ${answered && k === q.a ? 'right' : ''}" style="${sfBox(9 + k * (bw + 1.6), 74.4, bw, 5.4)}" data-act="dk-pick" data-k="${k}" ${answered ? 'disabled' : ''} aria-label="Choose ${'ABCD'[k]}"><b>${'ABCD'[k]}</b></button>`).join('')}
+      <div class="sf-choices" role="group" aria-label="Answers">${q.c.map((t, k) => `<button type="button" class="sf-choice ${sel === k ? 'sel' : ''} ${answered && k === q.a ? 'right' : ''} ${answered && k === ans && ans !== q.a ? 'wrong' : ''}" aria-pressed="${sel === k}" ${answered ? 'aria-disabled="true" tabindex="-1"' : `data-act="dk-pick" data-k="${k}"`}><b>${'ABCD'[k]}</b><span>${esc(t)}</span></button>`).join('')}</div></div>
     ${answered && p.memo !== false ? `<div class="sf-memo ${p.memoIn ? 'in' : ''}" style="${sfBox(6.5, 40, 87, 31)};background-image:url('${artSrc('dk_note_ivory')}')">
         <div class="sf-note-in sf-fit"><h4 class="${ans === q.a ? 'ok' : 'no'}">${ans === q.a ? 'Correct' : 'Not quite'} · the answer is ${'ABCD'[q.a]}</h4><p>${esc(q.why)}</p><p class="sf-cite">Source: ${esc(q.cite)}</p></div>
         <button class="sf-memo-x" data-act="dk-memo">Hide note</button></div>` : ''}`;
@@ -404,11 +403,17 @@ function rewardCardHTML(r, back){
     <div class="rw-face backside"><span class="rw-card ${r.reward}"><img src="${artSrc(rw.back)}" alt="${esc(rw.name)}, card back">
       <button class="rw-quizbtn" style="${sfBox(bl, bt, bw, bh)}" data-act="rw-quiz" data-id="${r.id}">${esc(quizButtonLabel(r))}</button></span></div></div>`;
 }
+/* Admin preview (Settings → Reward cards): shows a reward card as a player sees it, using a throwaway record,
+   so nothing is saved and nobody's one-chance quiz is used up. */
+let rwPreview = null;
+const rwRec = id => rwPreview || docketRec(id);
+function previewReward(id, kind){ rwPreview = { id, reward:kind, quiz:{ a:[] }, preview:true }; openReward(id); }
 function openReward(id, reveal){
-  const r = docketRec(id), d = docketDef(id); if (!r.reward) return;
-  const t = docketTotals(d, r), ov = document.createElement('div'); ov.className = 'rw-ov'; ov.dataset.id = id;
+  const r = rwRec(id), d = docketDef(id); if (!r.reward) return;
+  const t = r.preview ? null : docketTotals(d, r), ov = document.createElement('div'); ov.className = 'rw-ov'; ov.dataset.id = id;
   ov.innerHTML = `${reveal ? `<h2 class="rw-h">DOCKET COMPLETE</h2>` : ''}
-    <p class="rw-sub">${r.reward === 'rare' ? `Rare reward · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%)` : `Reward · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%) · 90% earns full color`}</p>
+    <p class="rw-sub">${r.preview ? `Admin preview · ${r.reward === 'rare' ? 'rare, full color (90%+)' : 'black and white (80–89%, or any retry)'} · nothing is saved`
+      : r.reward === 'rare' ? `Rare reward · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%)` : `Reward · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%) · 90% earns full color`}</p>
     <div class="rw-stage ${reveal ? 'reveal' : ''}">${rewardCardHTML(r)}</div>
     <p class="rw-hint">Tap the card to flip it.</p>
     <button class="btn-big ${r.reward === 'rare' ? 'gold' : ''}" data-act="rw-close">${reveal ? 'ADD TO MY DOCKET FOLDER' : 'DONE'}</button>`;
@@ -421,7 +426,7 @@ const RWQ_NOTES = ['yellow', 'green', 'blue', 'ivory'];
 const quizScore = (rw, r) => rw.quiz.filter((q, k) => (r.quiz && r.quiz.a[k]) === q.a).length;
 const quizDone = (rw, r) => !!r.quiz && rw.quiz.every((q, k) => r.quiz.a[k] != null);
 function rewardQuiz(id, show){
-  const r = docketRec(id), rw = DOCKET_REWARDS[docketDef(id).reward], n = rw.quiz.length;
+  const r = rwRec(id), rw = DOCKET_REWARDS[docketDef(id).reward], n = rw.quiz.length;
   r.quiz = r.quiz || { a:[] };
   let ov = document.querySelector('.rwq-ov');
   if (!ov) { ov = document.createElement('div'); ov.className = 'rwq-ov'; document.body.appendChild(ov); lockScroll(); }
@@ -450,12 +455,13 @@ function rewardQuiz(id, show){
     <button class="sheet-cancel" data-act="rwq-close">Back to the card</button>`;
 }
 function pickQuiz(id, i, k){
-  const r = docketRec(id), rw = DOCKET_REWARDS[docketDef(id).reward];
+  const r = rwRec(id), rw = DOCKET_REWARDS[docketDef(id).reward];
   r.quiz = r.quiz || { a:[] };
   if (r.quiz.a[i] != null) return rewardQuiz(id);   // already answered: one chance only
   r.quiz.a[i] = k;
   if (quizDone(rw, r)) { r.quiz.at = Date.now(); if (quizScore(rw, r) === rw.quiz.length) r.superRare = true; }
-  save(); rewardQuiz(id, i);
+  if (!r.preview) save();
+  rewardQuiz(id, i);
 }
 const quizButtonLabel = r => { const rw = DOCKET_REWARDS[docketDef(r.id).reward];
   return !quizDone(rw, r) ? (r.quiz && r.quiz.a.some(a => a != null) ? 'Finish Your RBG Quiz' : 'Test Your RBG Knowledge')
@@ -463,6 +469,14 @@ const quizButtonLabel = r => { const rw = DOCKET_REWARDS[docketDef(r.id).reward]
 
 /* ---------- screens ---------- */
 const DOCKET_SCREENS = {
+  rewardpreview(){
+    if (!(typeof ADM !== 'undefined' && ADM.is)) return { title:'Reward Cards', body:'<p class="empty">Admins only.</p>' };
+    return { title:'Reward Cards', body:`<p class="st-note">Every Hot Docket reward, as players see it. Tap one to open it, flip it, and try the quiz. Previews don't save anything.</p>
+      ${HOT_DOCKETS.map(d => { const rw = DOCKET_REWARDS[d.reward]; return `<div class="sec-h"><span>${esc(rw.name)} · ${esc(d.id)}</span></div>
+        <div class="dk-rewards">${[['rare', 'Rare · full color', '90%+ of 15'], ['bw', 'Black and white', '80–89%, or a retry']].map(([k, a, b]) =>
+          `<button class="dk-rw ${k}" data-act="rw-preview" data-id="${d.id}" data-kind="${k}"><span class="rw-card ${k}"><img src="${artSrc(rw.front)}" alt="">${k === 'rare' ? '<i class="rw-holo"></i>' : ''}</span><small>${a}<br>${b}</small></button>`).join('')}
+          <button class="dk-rw" data-act="rw-preview" data-id="${d.id}" data-kind="rare" data-back="1"><span class="rw-card"><img src="${artSrc(rw.back)}" alt=""></span><small>Card back<br>+ one-chance quiz</small></button></div>`; }).join('')}` };
+  },
   docket(p){
     const d = docketDef(p.id); if (!d) return { title:'Hot Docket', body:'<p class="empty">This docket is not available.</p>' };
     const r = docketRec(p.id), n = r.level, x = lvRec(r, n);
@@ -504,15 +518,18 @@ document.addEventListener('click', e => {
     case 'dk-reward': closeSheet(true); openReward(t.dataset.id); return;
     case 'rw-flip': t.classList.toggle('back'); return;
     case 'rw-quiz': e.stopPropagation(); rewardQuiz(t.dataset.id); return;
-    case 'rw-close': { const ov = t.closest('.rw-ov'); ov.remove(); unlockScroll(); refresh(); return; }
+    case 'rw-close': { const ov = t.closest('.rw-ov'); ov.remove(); rwPreview = null; unlockScroll(); refresh(); return; }
+    case 'rw-preview': previewReward(t.dataset.id, t.dataset.kind); if (t.dataset.back) document.querySelector('.rw-flip')?.classList.add('back'); return;
     case 'rwq-pick': pickQuiz(t.dataset.id, +t.dataset.i, +t.dataset.k); return;
     case 'rwq-next': rewardQuiz(t.dataset.id); return;
     case 'rwq-close': { const ov = t.closest('.rwq-ov'); ov.remove();
-      const b = document.querySelector('.rw-quizbtn'); if (b) b.textContent = quizButtonLabel(docketRec(b.dataset.id)); return; }
+      const b = document.querySelector('.rw-quizbtn'); if (b) b.textContent = quizButtonLabel(rwRec(b.dataset.id)); return; }
   }
   const en = topEntry && topEntry(); if (!en || en.s !== 'docket') return;
   const d = docketDef(en.p.id), r = d && docketRec(d.id); if (!d) return;
   const n = r.level, x = lvRec(r, n);
+  if (['dk-check', 'dk-done', 'dk-level'].includes(t.dataset.act) && docketState(d) === 'missed') {   // a page left open past the deadline
+    toast("This docket's week just ended. Nothing new was saved.", 'lock'); refresh(); return; }
   switch (t.dataset.act) {
     case 'dk-tab': { const i = DOCKET_TABS.findIndex(([k]) => k === t.dataset.tab);
       if (!tabOpen(x, i)) { toast(`Finish ${DOCKET_TABS.find(([k]) => !x.done[k])[1]} first`, 'lock'); break; }
@@ -558,6 +575,7 @@ const DOCKET_CSS = `
 .dk-thumb{flex:none;width:44px;height:44px;border-radius:6px;overflow:hidden;border:3px solid #f4efe4;box-shadow:0 1px 3px rgba(0,0,0,.4)}
 .dk-thumb img{width:100%;height:100%;object-fit:cover}
 .sf2{position:relative;margin:0 -8px;aspect-ratio:853/1844;container-type:inline-size;color:#2a241c}
+@media (min-width:600px){.sf2{max-width:520px;margin:0 auto}.sf-bar{max-width:520px;margin-left:auto;margin-right:auto}}
 .sf2.flip-next .sf-page{animation:sfnext .3s ease-out both} .sf2.flip-prev .sf-page{animation:sfprev .3s ease-out both}
 @keyframes sfnext{from{transform:translateX(5%);opacity:0}} @keyframes sfprev{from{transform:translateX(-5%);opacity:0}}
 .sf-base{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;filter:drop-shadow(0 2cqw 3cqw rgba(0,0,0,.45))}
@@ -610,7 +628,7 @@ const DOCKET_CSS = `
 .sf-qhead i.cur{opacity:1} .sf-qhead i.ok{background:#2f6b3a;border-color:#2f6b3a;opacity:1} .sf-qhead i.no{background:#b3261e;border-color:#b3261e;opacity:1}
 .sf-q{font-weight:700}
 .sf-choices{display:flex;flex-direction:column;gap:.3em}
-.sf-choice{display:flex;gap:.5em;align-items:flex-start;padding:.3em .4em;border-radius:1.8cqw;border:.5cqw solid transparent;font-size:.94em;line-height:1.32;cursor:pointer}
+.sf-choice{display:flex;gap:.5em;align-items:flex-start;width:100%;margin:0;background:none;color:inherit;font-family:inherit;text-align:left;-webkit-appearance:none;appearance:none;padding:.3em .4em;border-radius:1.8cqw;border:.5cqw solid transparent;font-size:.94em;line-height:1.32;cursor:pointer}
 .sf-choice b{flex:none;width:1.4em;height:1.4em;border-radius:1.2cqw;background:#dccab0;font:700 .85em/1.65em "Courier Prime",monospace;text-align:center}
 .sf-choice.sel{border-color:#2b3a55;background:rgba(43,58,85,.08)} .sf-choice.sel b{background:#2b3a55;color:#f6ecd6}
 .sf-choice.right{border-color:#2f6b3a;background:rgba(47,107,58,.12)} .sf-choice.right b{background:#2f6b3a;color:#fff}
@@ -630,7 +648,7 @@ const DOCKET_CSS = `
 .sf-res{display:flex;gap:.5em;align-items:center;padding:.3em 0;border-bottom:.4cqw solid rgba(42,36,28,.2)}
 .sf-res b{flex:none;width:1.4em;height:1.4em;border-radius:.7em;background:#2f6b3a;color:#fff;font:700 .8em/1.75em var(--ui);text-align:center}
 .sf-res.no b{background:#b3261e}
-.sf-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 4px;min-height:48px}
+.sf-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 4px;min-height:48px;position:sticky;bottom:0;z-index:20;padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));background:linear-gradient(to bottom,rgba(29,26,22,0),var(--bg,#1d1a16) 32%)}
 .sf-count{font:18px "Patrick Hand";color:var(--sub);text-align:center;flex:1}
 .sf-btn{flex:none;min-width:96px;min-height:46px;padding:0 14px;border:2px solid rgba(241,229,201,.35);border-radius:12px;background:var(--bg2);color:var(--paper);font:19px "Patrick Hand"}
 .sf-btn.go{background:#2b3a55;border-color:#2b3a55} .sf-btn.go.gold{background:var(--mustard);border-color:var(--mustard);color:var(--ink)}

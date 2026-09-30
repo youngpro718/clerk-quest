@@ -317,6 +317,8 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .zoom p{margin:0;color:var(--paper);opacity:.75}
 @keyframes zoomin{from{transform:scale(.6);opacity:0}}
 .pk-hint{margin:0;font-size:20px;color:var(--paper);z-index:3;text-align:center;min-height:26px}
+.pk-auto{z-index:3;max-width:340px;color:var(--paper)}
+.pk.out .pk-auto,.pk.all .pk-auto{display:none}
 .pk-done{max-width:340px;z-index:3;opacity:0;pointer-events:none;transition:opacity .3s}
 .pk.all .pk-done{opacity:1;pointer-events:auto}
 .pk-coin{display:none;z-index:3;align-items:center;gap:10px;padding:8px 16px 8px 8px;border-radius:40px;background:rgba(0,0,0,.45);border:2px solid rgba(227,178,60,.6)}
@@ -889,11 +891,11 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="economy.js?v=a7261374"></script>
 <script src="store.js?v=ee061c0a"></script>
 <script src="binder.js?v=41877c4c"></script>
-<script src="onboarding.js?v=704068fc"></script>
+<script src="onboarding.js?v=79c4a753"></script>
 <script src="account.js?v=ad784f4b"></script>
 <script src="admin.js?v=fb5df08d"></script>
 <script src="stickers.js?v=9a30b930"></script>
-<script src="dockets.js?v=9eaca5ac"></script>
+<script src="dockets.js?v=02ba2282"></script>
 <script src="pack3d.js?v=1cbdf0aa"></script>
 <script src="sticker3d.js?v=a56aea89"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "appeal30": {"1": "art/appeal30_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightback": {"1": "art/eightback_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "freeze": {"1": "art/freeze_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "reargue": {"1": "art/reargue_1.webp"}, "renew": {"1": "art/renew_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "sj120": {"1": "art/sj120_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "undodefault": {"1": "art/undodefault_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
@@ -2463,7 +2465,7 @@ const SCREENS = {
       ${item(ICO('play') + ' Studying', 'Each round is 5 questions from one card. Correct answers earn XP. A hint (Sidebar) halves the XP and coins for that answer. Nothing you already have is taken away. Wrong answers show the right answer and why.')}
       ${item(ICO('star') + ' Levels & glows', 'Cards level up as you earn XP. Questions get harder and the art upgrades. Near the top level a neon ring races around the card; at the top it turns gold with a gloss.')}
       ${item(ICO('trophy') + ' Quests', 'Three daily quests reset every midnight, and milestones reward long-term progress. Every reward is a card pack.')}
-      ${item(ICO('pack') + ' Packs', 'Every finished study round and every quest gives a pack of 3 cards. New cards join your collection; duplicates turn into coins.')}
+      ${item(ICO('pack') + ' Packs', 'Your first finished round each day earns a pack of 3 cards, and quests can earn more. Later rounds that day still earn XP and coins. New cards join your collection; duplicates turn into coins.')}
       ${item(ICO('thermo_snow') + ' Cold cases', 'Cards you haven\'t studied in a while go cold (2 days at Level 1, up to 21 days when mastered). One correct answer reopens the case for a +' + COLD_BONUS + ' XP bonus.')}
       ${item(ICO('mastered') + ' Levels and Mastered', 'Right answers fill a card\'s XP bar. It levels up, and at the top it is Mastered. That is a game milestone for the card, not a promise about the exam. Cards you leave alone go cold, so come back to them.')}
       ${item(ICO('memory') + ' Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).')}
@@ -2489,6 +2491,7 @@ const SCREENS = {
       </div>
       ${ADM.is ? `<div class="sec-h"><span>Tester tools</span></div>
       <div class="list">
+        <button class="row" data-act="push" data-s="rewardpreview"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Reward cards</b><small>Preview the RBG card: rare, black and white, back, quiz</small></span>${chev}</button>
         <button class="row" data-act="t-pack"><span class="th emo gi">${ICO('pack')}</span><span class="row-main"><b>Add a test pack</b></span></button>
         <button class="row danger" data-act="resetall"><span class="th emo gi">${ICO('warning')}</span><span class="row-main"><b>Reset all progress</b></span></button>
       </div>` : ''}` };
@@ -2582,6 +2585,7 @@ function refresh(){ saveScroll(); showScreen('none'); }   // re-render the curre
 
 /* ---- study session ---- */
 function startSession(id, lesson){
+  if (typeof guestWallDue === 'function' && guestWallDue()) { guestWall(); return; }   // a guest signs up before a second round
   const c = byId(id);
   openSessionLayer();
   sess = { id, i:0, results:[], xp:0, used:new Set(), startLevel:S.cards[id].level, startXP:S.cards[id].xp, wasCold:isCold(S.cards[id]), reopened:false, lesson:lesson || null };
@@ -2953,6 +2957,7 @@ function openPack(opts = {}){
     </div>
     ${coin ? `<div class="pk-coin"><img src="${artSrc('continuance_coin')}" alt=""><span><b>+1 CONTINUANCE</b><small>Reopens a missed Hot Docket</small></span></div>` : ''}
     <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Swipe across the top to rip it open.' : packImg.includes('s3') ? 'A Series 3 pack! Swipe across the top to rip it open.' : packImg.includes('s2') ? 'A Series 2 pack! Swipe across the top to rip it open.' : 'Swipe across the top to rip it open.'}</p>
+    <button class="sheet-cancel pk-auto" data-act="pk-auto">Open for me</button>
     <button class="btn-big gold pk-done" data-act="${bonus ? 'pk-sticker' : 'pk-done'}">${bonus ? 'OPEN YOUR BONUS STICKER' : 'COLLECT →'}</button>`;
   document.body.appendChild(ov);
   const pk = ov.querySelector('.pk-pack'); pk._line = line; ov._sticker = bonus;
@@ -2993,7 +2998,7 @@ function renderResults(){
       <h1>SESSION ADJOURNED</h1>
       <div class="score">${correct} / ${SESSION_LEN}</div>
       <div class="sub">correct answers</div>
-      <div class="rchips"><span class="chip">+${sess.xp} XP</span>${sess.coins ? `<span class="chip coin">+${sess.coins} ${COIN}</span>` : ''}${sess.streakCoins ? `<span class="chip" style="background:#ffd9a8">${ICO('streak')} ${S.streak.days}-DAY STREAK</span>` : ''}${claimableCount() ? `<span class="chip" style="background:#bfe8c4">${ICO('trophy')} QUEST REWARD READY</span>` : ''}${sess.reopened ? `<span class="chip" style="background:#bfe0ff">${ICO('streak')} CASE REOPENED</span>` : ''}${leveled ? `<span class="chip">${ICO('star')} LEVEL ${sess.startLevel} → ${st.level}</span>` : ''}<span class="chip">${ICO('pack')} +1 CARD PACK</span></div>
+      <div class="rchips"><span class="chip">+${sess.xp} XP</span>${sess.coins ? `<span class="chip coin">+${sess.coins} ${COIN}</span>` : ''}${sess.streakCoins ? `<span class="chip" style="background:#ffd9a8">${ICO('streak')} ${S.streak.days}-DAY STREAK</span>` : ''}${claimableCount() ? `<span class="chip" style="background:#bfe8c4">${ICO('trophy')} QUEST REWARD READY</span>` : ''}${sess.reopened ? `<span class="chip" style="background:#bfe0ff">${ICO('streak')} CASE REOPENED</span>` : ''}${leveled ? `<span class="chip">${ICO('star')} LEVEL ${sess.startLevel} → ${st.level}</span>` : ''}${sess.packGiven ? `<span class="chip">${ICO('pack')} +1 DAILY PACK</span>` : ''}</div>
       <div class="rcard">${cardEl(c, st)}</div>
       <div class="panel">
         <b>${esc(c.name)}</b> · Level ${st.level}
@@ -3006,11 +3011,11 @@ function renderResults(){
         <button class="btn-big" data-act="study" data-id="${c.id}">&#9654;&#xFE0E; ONE MORE ROUND</button>
         ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} ${sess.packGiven ? 'OPEN YOUR DAILY PACK' : 'OPEN A PACK'}</button>` : ''}
         ${c.source && correct < SESSION_LEN ? `<button class="btn-big alt" data-act="read-rule" data-id="${c.id}">REVIEW THE RULE</button>` : ''}
+        ${typeof guestWallDue === 'function' && guestWallDue() ? `<button class="btn-big alt" data-act="cloud-signin" data-tab="create">SAVE MY PROGRESS</button>` : ''}
         <button class="btn-big alt" data-act="session-close">Done</button>
       </div>
     </div>`;
   app.scrollTo({top:0});
-  setTimeout(() => { if (typeof guestWall === 'function') guestWall(); }, 1400);   // a guest's first round is done: time to sign up
 }
 
 /* ================= LAYERS: sheets, alerts, study round ================= */
@@ -3018,8 +3023,9 @@ function lockScroll(){ document.documentElement.classList.add('noscroll'); }
 function unlockScroll(){ if (!document.querySelector('.pk,.lu,.zoom,.sheet-wrap,.alert-wrap')) document.documentElement.classList.remove('noscroll'); }
 /* Keyboard and screen readers: while a sheet or alert is open only it is reachable, Tab stays inside it, Esc closes a sheet, and focus goes back afterwards. */
 const A11Y = { n:0, last:null,
-  hide(on){ this.n = Math.max(0, this.n + (on ? 1 : -1)); const app = document.getElementById('shell'); if (!app) return;   // #shell holds every screen and the tab bar
-    if (this.n > 0) { app.setAttribute('inert', ''); app.setAttribute('aria-hidden', 'true'); } else { app.removeAttribute('inert'); app.removeAttribute('aria-hidden'); } },
+  hide(on){ this.n = Math.max(0, this.n + (on ? 1 : -1));
+    ['shell', 'app'].forEach(id => { const el = document.getElementById(id); if (!el) return;   // #shell holds the screens, #app holds a study round and its results
+      if (this.n > 0) { el.setAttribute('inert', ''); el.setAttribute('aria-hidden', 'true'); } else { el.removeAttribute('inert'); el.removeAttribute('aria-hidden'); } }); },
   restore(){ const el = this.last; this.last = null; if (el && document.contains(el) && el.focus) { try { el.focus({preventScroll:true}); } catch (e) {} } } };
 document.addEventListener('keydown', e => {
   const w = document.querySelector('.sheet-wrap:not(.closing)') || document.querySelector('.alert-wrap'); if (!w) return;
@@ -3031,6 +3037,16 @@ document.addEventListener('keydown', e => {
   if (e.shiftKey && (i <= 0)) { e.preventDefault(); f[f.length - 1].focus(); }
   else if (!e.shiftKey && (i === f.length - 1 || i < 0)) { e.preventDefault(); f[0].focus(); }
 });
+/* The full-screen layers (pack opening, reward card, zoom, level-up) get the same treatment as sheets. */
+const A11Y_LAYERS = '.pk,.rw-ov,.zoom,.lu';
+new MutationObserver(ms => ms.forEach(m => {
+  m.addedNodes.forEach(n => { if (n.nodeType === 1 && n.matches(A11Y_LAYERS) && !n._a11y) {
+    n._a11y = true; if (!A11Y.last) A11Y.last = document.activeElement; A11Y.hide(true);
+    n.setAttribute('role', 'dialog'); n.setAttribute('aria-modal', 'true');
+    const f = n.querySelector('button, [tabindex]'); if (f) f.focus({preventScroll:true}); } });
+  m.removedNodes.forEach(n => { if (n.nodeType === 1 && n._a11y) { n._a11y = false; A11Y.hide(false); if (!document.querySelector(A11Y_LAYERS + ',.sheet-wrap,.alert-wrap')) A11Y.restore(); } });
+})).observe(document.body, { childList:true });
+setInterval(() => { if (A11Y.n > 0 && !document.querySelector(A11Y_LAYERS + ',.sheet-wrap,.alert-wrap')) { A11Y.n = 1; A11Y.hide(false); } }, 1500);   // safety net: never leave the app locked
 function openSheet(html){
   if (!document.querySelector('.sheet-wrap') && !A11Y.last) A11Y.last = document.activeElement;
   closeSheet(true);
@@ -3247,7 +3263,7 @@ document.addEventListener('click', e => {
     case 'hint': if (sess && !sess.answered && !sess.hint) { sess.hint = true; S.stats.hints = (S.stats.hints || 0) + 1; if (boosts().freeHints > 0) { boosts().freeHints--; sess.freeHint = true; } save(); paintStudy(); } break;
     case 'next': next(); break;
     case 'lu-close': { const ov = t.closest('.lu'); ov && ov._done(); break; }
-    case 'session-close': goBack(); break;
+    case 'session-close': goBack(); if (typeof guestWall === 'function') guestWall(); break;   // a guest sees the sign-up screen after their results
     case 'read-rule': if (app.hidden) openCaseFile(id); else { afterSessionClose = () => openCaseFile(id); goBack(); } break;
     case 'mark-read': {
       S.read = S.read || {};
@@ -3256,8 +3272,9 @@ document.addEventListener('click', e => {
     }
     case 'pack-open': closeSheet(true); openPack(); break;
     case 'pk-tear': tearPack(t); break;
+    case 'pk-auto': { const ov = t.closest('.pk'), pkb = ov && ov.querySelector('.pk-pack'); if (pkb) { pkb._swiped = false; tearPack(pkb); } t.hidden = true; break; }
     case 'pk-flip': flipPackCard(t); break;
-    case 'pk-done': goBack(); break;
+    case 'pk-done': goBack(); if (typeof guestWall === 'function') guestWall(); break;
     case 'pk-sticker': openSticker(t.closest('.pk')); break;
     case 'bstk-auto': { const l = t.closest('.bstk'); if (l._ctl) { l._ctl.autoPeel(); t.disabled = true; } break; }
     case 'bstk-take': { const l = t.closest('.bstk'); l._peeled && l._peeled(); break; }
