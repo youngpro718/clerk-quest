@@ -319,6 +319,17 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .pk-hint{margin:0;font-size:20px;color:var(--paper);z-index:3;text-align:center;min-height:26px}
 .pk-done{max-width:340px;z-index:3;opacity:0;pointer-events:none;transition:opacity .3s}
 .pk.all .pk-done{opacity:1;pointer-events:auto}
+/* bonus sticker: a layer over the pack with the 3D peel (sticker3d.js) */
+.bstk{position:absolute;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;
+  background:radial-gradient(circle at 50% 42%,#34281a,#0d0b09);animation:fadein .3s both}
+.bstk-h{margin:0;font:400 34px/1 "Bangers";letter-spacing:.05em;color:var(--mustard);text-shadow:0 3px 0 var(--ink)}
+.bstk-tag{font:400 17px/1 "Bangers";letter-spacing:.08em;padding:5px 12px;border:2px solid var(--ink);border-radius:999px;color:var(--ink);background:#e8dcc0}
+.bstk-tag.shiny{background:linear-gradient(100deg,#ffb3d9,#b3e5ff,#c9ffb3,#fff0a8,#ffb3d9);background-size:200% 100%;animation:holotag 3s linear infinite}
+@keyframes holotag{to{background-position:200% 0}}
+.bstk-stage{position:relative;width:min(84vw,340px);height:min(84vw * 1.1,374px,48vh);border-radius:18px;touch-action:none}
+.bstk-stage > img{width:100%;height:100%;object-fit:contain;padding:8%;box-sizing:border-box}
+.bstk-hint{margin:0;font-size:19px;color:var(--paper);text-align:center;min-height:25px;max-width:320px}
+.bstk .btn-big{max-width:340px}
 
 /* stamps */
 .stamp{z-index:6;font-family:"Luckiest Guy";padding:1.2cqw 3cqw;border:.9cqw solid currentColor;border-radius:2cqw;letter-spacing:.07em;
@@ -868,6 +879,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="account.js?v=eb869aeb"></script>
 <script src="admin.js?v=fb5df08d"></script>
 <script src="pack3d.js?v=1cbdf0aa"></script>
+<script src="sticker3d.js?v=a56aea89"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "appeal30": {"1": "art/appeal30_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightback": {"1": "art/eightback_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "freeze": {"1": "art/freeze_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "reargue": {"1": "art/reargue_1.webp"}, "renew": {"1": "art/renew_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "sj120": {"1": "art/sj120_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "undodefault": {"1": "art/undodefault_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
@@ -2655,6 +2667,34 @@ function confetti(host){
   }
 }
 
+/* ---- bonus stickers: about 1 in 3 packs (your first one always), about 1 in 4 of them holo ---- */
+const STICKERS = [ { id:'gavel', name:'Tired Gavel' }, { id:'summons', name:'Summons on the Go' }, { id:'motion', name:'Motion in a Hurry' } ];
+const stickerList = () => (S.stickers = Array.isArray(S.stickers) ? S.stickers : []);
+function rollSticker(){
+  if (stickerList().length && Math.random() >= 1 / 3) return null;
+  const st = { uid:'s' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), id:pick(STICKERS).id, holo:Math.random() < .25, at:Date.now() };
+  stickerList().push(st); return st;   // saved right away (the Sticker Book shows it), even if the pack is closed early
+}
+function openSticker(ov){
+  const st = ov._sticker; if (!st || ov.querySelector('.bstk')) return;
+  const info = STICKERS.find(x => x.id === st.id) || STICKERS[0], src = artSrc('sticker_' + st.id);
+  const layer = document.createElement('div'); layer.className = 'bstk';
+  layer.innerHTML = `<h2 class="bstk-h">BONUS STICKER!</h2><span class="bstk-tag ${st.holo ? 'shiny' : ''}">${st.holo ? 'HOLOGRAPHIC' : 'MATTE'} · ${esc(info.name)}</span>
+    <div class="bstk-stage"></div><p class="bstk-hint">Peel it off the sheet, starting from an edge.</p>
+    <button class="btn-big alt" data-act="bstk-auto">Peel it for me</button>`;
+  ov.appendChild(layer);
+  const stage = layer.querySelector('.bstk-stage'), hint = layer.querySelector('.bstk-hint'), btn = layer.querySelector('[data-act="bstk-auto"]');
+  const peeled = () => {
+    hint.textContent = 'Saved to your Sticker Book! Soon you can stick it on a binder.';
+    btn.disabled = false; btn.className = 'btn-big gold'; btn.dataset.act = 'bstk-done'; btn.textContent = 'DONE';
+    ov.querySelector('.pk-done').textContent = 'COLLECT →'; ov.querySelector('.pk-done').dataset.act = 'pk-done';
+  };
+  const flat = () => { stage.innerHTML = `<img src="${src}" alt="${esc(info.name)}">`; btn.dataset.act = 'bstk-take'; btn.textContent = 'TAKE IT'; hint.textContent = ''; layer._peeled = peeled; };
+  if (!window.StickerPeel) return flat();
+  StickerPeel.mount(stage, { src, holo:st.holo, onPeeled:peeled, onHint:() => { hint.textContent = 'Start right at the edge of the sticker.'; } })
+    .then(ctl => { layer._ctl = ctl; }).catch(flat);
+}
+
 /* ---- card packs ---- */
 function drawPack(){
   const owned = c => S.cards[c.id].owned;
@@ -2736,7 +2776,8 @@ function openPack(opts = {}){
   if (!opts.pulls && S.packs <= 0) return;
   if (!opts.pulls) S.packs--;
   const first = S.packsOpened === 0; S.packsOpened++;
-  const pulls = opts.pulls || drawPack(); save();
+  const pulls = opts.pulls || drawPack();
+  const bonus = opts.pulls ? null : rollSticker(); save();
   const packImg = opts.img || packArtFor(pulls.map(p => p.c));
   const label = opts.label ? `<span class="pk-label">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(opts.label)}</b></span>` : '';
   lockScroll(); history.pushState({cq:'pack'}, '');
@@ -2757,9 +2798,9 @@ function openPack(opts = {}){
       </button>`).join('')}</div>
     </div>
     <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Swipe across the top to rip it open.' : packImg.includes('s3') ? 'A Series 3 pack! Swipe across the top to rip it open.' : packImg.includes('s2') ? 'A Series 2 pack! Swipe across the top to rip it open.' : 'Swipe across the top to rip it open.'}</p>
-    <button class="btn-big gold pk-done" data-act="pk-done">COLLECT →</button>`;
+    <button class="btn-big gold pk-done" data-act="${bonus ? 'pk-sticker' : 'pk-done'}">${bonus ? 'OPEN YOUR BONUS STICKER' : 'COLLECT →'}</button>`;
   document.body.appendChild(ov);
-  const pk = ov.querySelector('.pk-pack'); pk._line = line;
+  const pk = ov.querySelector('.pk-pack'); pk._line = line; ov._sticker = bonus;
   // the 3D sticker curl (pack3d.js); until it's ready, or if it can't load, the flat rip below is used
   if (window.Pack3D) Pack3D.attach(pk, packImg, line, TEAR_Y).then(ctl => { if (!pk._p && !pk._done) pk._3d = ctl; else ctl.destroy(); }).catch(() => {});
 }
@@ -2780,7 +2821,7 @@ function flipPackCard(card){
   card.classList.add('flipped');
   const ov = card.closest('.pk');
   if (card.querySelector('.pk-badge.new, .pk-badge.trick')) confetti(ov);
-  if (!ov.querySelector('.pk-card:not(.flipped)')) { ov.classList.add('all'); ov.querySelector('.pk-hint').textContent = 'Nice pull! Tap a card to see it up close.'; }
+  if (!ov.querySelector('.pk-card:not(.flipped)')) { ov.classList.add('all'); ov.querySelector('.pk-hint').textContent = ov._sticker ? 'Nice pull! And there\'s a bonus sticker inside.' : 'Nice pull! Tap a card to see it up close.'; }
 }
 
 /* ---- results ---- */
@@ -3022,6 +3063,10 @@ document.addEventListener('click', e => {
     case 'pk-tear': tearPack(t); break;
     case 'pk-flip': flipPackCard(t); break;
     case 'pk-done': goBack(); break;
+    case 'pk-sticker': openSticker(t.closest('.pk')); break;
+    case 'bstk-auto': { const l = t.closest('.bstk'); if (l._ctl) { l._ctl.autoPeel(); t.disabled = true; } break; }
+    case 'bstk-take': { const l = t.closest('.bstk'); l._peeled && l._peeled(); break; }
+    case 'bstk-done': t.closest('.bstk').remove(); break;
     case 'zoom-close': t.closest('.zoom').remove(); unlockScroll(); break;
     case 'card-menu': cardMenu(id); break;
     case 'missing': missingSheet(id); break;
