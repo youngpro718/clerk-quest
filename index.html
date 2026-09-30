@@ -883,7 +883,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="store.js?v=ee061c0a"></script>
 <script src="binder.js?v=41877c4c"></script>
 <script src="onboarding.js?v=52f619be"></script>
-<script src="account.js?v=ee269b2c"></script>
+<script src="account.js?v=303970d4"></script>
 <script src="admin.js?v=fb5df08d"></script>
 <script src="stickers.js?v=9a30b930"></script>
 <script src="dockets.js?v=3cf4fcfa"></script>
@@ -2925,6 +2925,7 @@ function renderResults(){
       </div>
     </div>`;
   app.scrollTo({top:0});
+  setTimeout(() => { if (typeof guestWall === 'function') guestWall(); }, 1400);   // a guest's first round is done: time to sign up
 }
 
 /* ================= LAYERS: sheets, alerts, study round ================= */
@@ -3222,7 +3223,7 @@ probeArt().then(async () => {
   if (/[?&]demo=glows/.test(location.search)) { nav.tab = 'profile'; nav.stacks.profile = [{s:'profile', p:{}}, {s:'glows', p:{}}]; }
   history.replaceState({}, '');
   showScreen('none');
-  requireLogin();   // everyone signs in to play; then the welcome (first run only)
+  requireLogin();   // guests play until their first round ends, then sign up; the welcome shows on first run
 });
 window.addEventListener('cq-cloud', e => {
   if (e.detail.status === 'error') toast('Cloud sync paused. Progress is saved on this device.');

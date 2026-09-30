@@ -1,5 +1,6 @@
-/* Clerk Quest accounts. Everyone signs in to play: the login screen covers the app until there's an account,
-   then the welcome and the game follow. Email + password, forgotten-password reset, change password, sign out,
+/* Clerk Quest accounts. Try first, then sign up: a new player plays as a guest (welcome, first pack, first round).
+   When the first study round ends, the sign-up screen covers the app until there's an account (the guest's progress
+   moves into it; see cloud-sync.js). A guest can also sign up any time from Settings. Email + password, forgotten-password reset, change password, sign out,
    and delete account (an App Store requirement). Loaded before the main script; everything here runs at call time
    and uses the app's globals (S, esc, push, refresh, topEntry, goBack, nav, toast, iosAlert, ICO, chev, maybeWelcome)
    and window.CQCloud. */
@@ -28,7 +29,7 @@ function authFormHTML(tab){
   const create = tab !== 'signin';
   return `<div class="seg" role="tablist">${[['create', 'Create account'], ['signin', 'Sign in']].map(([v, l]) =>
       `<button role="tab" class="${(create ? 'create' : 'signin') === v ? 'on' : ''}" data-act="acct-tab" data-tab="${v}">${l}</button>`).join('')}</div>
-    <p class="acct-sub">${create ? 'Create your account to start playing. Your cards, coins, and notes save to it.' : 'Welcome back. Sign in to pick up where you left off.'}</p>
+    <p class="acct-sub">${create ? 'Create a free account. Your cards, coins, and notes save to it, on every device.' : 'Welcome back. Sign in to pick up where you left off.'}</p>
     <form class="acct-form" novalidate data-form="${create ? 'create' : 'signin'}">
       ${acctField('email', acct.email, 'email')}${acctField('pw', acct.pw, create ? 'new-password' : 'current-password')}${acctNotes()}
       ${acctBtn(create ? 'CREATE ACCOUNT' : 'SIGN IN')}</form>
@@ -37,19 +38,24 @@ function authFormHTML(tab){
 }
 
 /* ---------- the login screen: covers everything until you're signed in ---------- */
-function showLogin(){
+function showLogin(wall){
   let el = document.getElementById('login-root');
   if (!el) { el = document.createElement('div'); el.id = 'login-root'; document.body.appendChild(el); }
+  if (wall) el.dataset.wall = '1';
   el.innerHTML = `<div class="login">
     <div class="home-logo">CLERK <span>QUEST</span></div>
-    <p class="login-tag">Study the court rules. Collect the cards.</p>
+    ${el.dataset.wall ? `<p class="login-wall"><b>Nice work!</b> Create your account to keep your cards and keep playing.</p>`
+      : `<p class="login-tag">Study the court rules. Collect the cards.</p>`}
     ${cloud() ? authFormHTML(acct.tab)
       : `<p class="acct-err">${ICO('warning')} Can't reach Clerk Quest right now. Check your connection, then try again.</p>
          <button class="btn-big gold" data-act="acct-retry">TRY AGAIN</button>`}</div>`;
 }
 function hideLogin(){ const el = document.getElementById('login-root'); if (!el) return; el.remove(); refresh(); maybeWelcome(); }
-/* Called once at startup, after the cloud has loaded */
-function requireLogin(){ if (cloudUser()) maybeWelcome(); else showLogin(); }
+/* The guest wall: once a guest has finished a study round, they sign up (or sign in) to keep playing. */
+const guestWallDue = () => !cloudUser() && !!(S.stats && S.stats.sessions >= 1);
+function guestWall(){ if (guestWallDue() && !document.getElementById('login-root')) { acct.tab = 'create'; showLogin(true); } }
+/* Called once at startup, after the cloud has loaded: guests play until their first round is done */
+function requireLogin(){ if (cloudUser()) maybeWelcome(); else if (guestWallDue()) guestWall(); else maybeWelcome(); }
 
 const ACCOUNT_SCREENS = {
   account(p){
@@ -137,6 +143,8 @@ const ACCOUNT_CSS = `
 .login{max-width:420px;margin:0 auto;padding:calc(40px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom))}
 .login .home-logo{text-align:center;margin:0 0 6px}
 .login-tag{margin:0 0 22px;text-align:center;font:19px "Patrick Hand";color:var(--sub)}
+.login-wall{margin:0 0 22px;text-align:center;font:20px/1.35 "Patrick Hand";color:var(--paper)}
+.login-wall b{display:block;font:400 30px/1.1 "Bangers";letter-spacing:.05em;color:var(--mustard)}
 .acct-sub{margin:0 0 14px;font:19px/1.3 "Patrick Hand";color:var(--sub)}
 .acct-foot{margin:6px 0 0;text-align:center;font:18px "Patrick Hand";color:var(--sub)}
 .acct-card{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 14px;padding:14px;border:2px solid var(--mustard);border-radius:16px;background:var(--bg2);color:var(--paper);text-align:left}
