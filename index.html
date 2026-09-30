@@ -289,9 +289,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 /* swipe to rip: a dotted tear line with a moving arrow until the rip starts */
 .pk-pack{touch-action:none}
 .pk-pack.ripping{animation:none}
-.pk-cut{position:absolute;left:5%;right:5%;height:0;z-index:2;border-top:3px dashed rgba(255,248,220,.95);filter:drop-shadow(0 1px 2px rgba(0,0,0,.8));pointer-events:none;transition:opacity .2s}
-.pk-cut i{position:absolute;top:-17px;left:0;font:700 22px/1 var(--ui);font-style:normal;color:#fff8dc;text-shadow:0 1px 3px rgba(0,0,0,.9);animation:swipehint 1.5s ease-in-out infinite}
-@keyframes swipehint{0%{left:0;opacity:0}15%{opacity:1}80%{opacity:1}100%{left:88%;opacity:0}}
+.pk-cut{position:absolute;left:5%;right:5%;height:0;z-index:2;border-top:2px dashed rgba(255,248,220,.7);filter:drop-shadow(0 1px 2px rgba(0,0,0,.8));pointer-events:none;transition:opacity .2s}
 .pk-pack.ripping .pk-cut,.pk-pack.torn .pk-cut,.pk-pack.shake .pk-cut{opacity:0}
 .pk-pack.torn .pk-body{transition:transform .8s .5s ease-in,opacity .5s .85s;transform:translateY(80%);opacity:0}
 .pk-cards{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:clamp(8px,2.4vw,18px);z-index:2;pointer-events:none}
@@ -869,6 +867,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="onboarding.js?v=78676544"></script>
 <script src="account.js?v=eb869aeb"></script>
 <script src="admin.js?v=fb5df08d"></script>
+<script src="pack3d.js?v=1cbdf0aa"></script>
 <script>window.ART_MANIFEST = {"acd": {"1": "art/acd_1.webp"}, "adjournment": {"1": "art/adjournment_1.webp"}, "affidavit": {"1": "art/affidavit_1.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "appeal30": {"1": "art/appeal30_1.webp"}, "bail": {"1": "art/bail_1.webp"}, "calendarcall": {"1": "art/calendarcall_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightback": {"1": "art/eightback_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "freeze": {"1": "art/freeze_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "interest": {"1": "art/interest_1.webp"}, "judgment": {"1": "art/judgment_1.webp"}, "jurywaiver": {"1": "art/jurywaiver_1.webp"}, "military": {"1": "art/military_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "motion": {"1": "art/motion_1.webp"}, "newtrial": {"1": "art/newtrial_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "quash": {"1": "art/quash_1.webp"}, "reargue": {"1": "art/reargue_1.webp"}, "renew": {"1": "art/renew_1.webp"}, "schoolnotice": {"1": "art/schoolnotice_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "sj120": {"1": "art/sj120_1.webp"}, "summons": {"1": "art/summons_1.webp", "3": "art/summons_3.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "undodefault": {"1": "art/undodefault_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
@@ -2690,6 +2689,7 @@ function flapClip(line, a, b){   // the wrapper above the tear line, from x = a 
   return `polygon(${ptc([a, 0])},${ptc([b, 0])},${edge.reverse().map(ptc).join(',')})`;
 }
 function setRip(btn, p){   // p: 0 (whole) to 1 (torn all the way across)
+  if (btn._3d) return btn._3d.peel(p, btn._dir < 0 ? -1 : 1);
   const line = btn._line, fromR = btn._dir < 0, P = p * 100, hinge = fromR ? 100 - P : P;
   const flap = btn.querySelector('.pk-flap'), rest = btn.querySelector('.pk-rest');
   flap.style.clipPath = fromR ? flapClip(line, hinge, 100) : flapClip(line, 0, hinge);
@@ -2700,6 +2700,7 @@ function setRip(btn, p){   // p: 0 (whole) to 1 (torn all the way across)
 function finishRip(btn){   // past 70%: finish the tear, then open
   if (btn._done) return; btn._done = true; btn._drag = null; btn.classList.add('ripping');
   if (!btn._dir) btn._dir = 1;
+  if (btn._3d) return btn._3d.finish(btn._dir < 0 ? -1 : 1, () => packTorn(btn));
   const start = btn._p || 0, t0 = performance.now();
   const step = now => { const k = Math.min(1, (now - t0) / 170); setRip(btn, start + (1 - start) * k); k < 1 ? requestAnimationFrame(step) : packTorn(btn); };
   requestAnimationFrame(step);
@@ -2707,7 +2708,8 @@ function finishRip(btn){   // past 70%: finish the tear, then open
 function packTorn(btn){
   const ov = btn.closest('.pk');
   btn.querySelector('.pk-rest').style.visibility = 'hidden';
-  btn.querySelector('.pk-flap').style.transform = '';   // the .torn rule flings it away
+  if (btn._3d) btn.querySelector('.pk-flap').style.visibility = 'hidden';   // the 3D flap flings itself away
+  else btn.querySelector('.pk-flap').style.transform = '';   // the .torn rule flings it away
   btn.classList.toggle('from-r', btn._dir < 0); btn.classList.remove('shake'); btn.classList.add('torn');
   const f = document.getElementById('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
   ov.classList.add('out'); ov.querySelector('.pk-hint').textContent = 'Tap each card to flip it.';
@@ -2746,7 +2748,7 @@ function openPack(opts = {}){
         <img class="pk-body" src="${packImg}" alt="" style="clip-path:polygon(${line.map(ptc).join(',')},100% 100%,0% 100%)">
         <img class="pk-top pk-rest" src="${packImg}" alt="" style="clip-path:${flapClip(line, 0, 100)}">
         <img class="pk-top pk-flap" src="${packImg}" alt="" style="clip-path:${flapClip(line, 0, 0)}">
-        <span class="pk-cut" style="top:${TEAR_Y}%"><i>➜</i></span>${label}
+        <span class="pk-cut" style="top:${TEAR_Y}%"></span>${label}
       </button>
       <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
         <div class="pk-inner"><div class="pk-face pk-back"><img class="cbackimg" src="${backSrc()}" alt="Card back"></div>
@@ -2757,11 +2759,13 @@ function openPack(opts = {}){
     <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Swipe across the top to rip it open.' : packImg.includes('s3') ? 'A Series 3 pack! Swipe across the top to rip it open.' : packImg.includes('s2') ? 'A Series 2 pack! Swipe across the top to rip it open.' : 'Swipe across the top to rip it open.'}</p>
     <button class="btn-big gold pk-done" data-act="pk-done">COLLECT →</button>`;
   document.body.appendChild(ov);
-  ov.querySelector('.pk-pack')._line = line;
+  const pk = ov.querySelector('.pk-pack'); pk._line = line;
+  // the 3D sticker curl (pack3d.js); until it's ready, or if it can't load, the flat rip below is used
+  if (window.Pack3D) Pack3D.attach(pk, packImg, line, TEAR_Y).then(ctl => { if (!pk._p && !pk._done) pk._3d = ctl; else ctl.destroy(); }).catch(() => {});
 }
 function tearPack(btn){   // a tap: finishes a half-done rip, or opens the pack the old way (shake, then open)
   if (btn._swiped || btn._done) return;
-  if (btn._p) return finishRip(btn);
+  if (btn._p || btn._3d) return finishRip(btn);   // with 3D, a tap peels the whole flap off
   btn._done = true; btn._dir = 1; setRip(btn, 1); btn.querySelector('.pk-flap').style.transform = '';
   btn.classList.add('shake');
   setTimeout(() => packTorn(btn), 900);
