@@ -361,8 +361,8 @@ function studyFileHTML(d, r, n, tab, p){
   const header = `<span class="sf-title" style="${sfBox(9, 16.9, 61, 5)}">${esc(d.title)}</span>
     <span class="sf-cell" style="${sfBox(70, 16.9, 20, 5)}">${esc(d.id)}<br>LEVEL ${n}</span><span class="sf-rule" style="${sfBox(9, 22.4, 81, .2)}"></span>`;
   const inner = results ? resultsInner(d, r, n, p) : sheetInner(tab, sheets[i], d, r, n, p, sheets);
-  const card = `<div class="sf2 ${p.flip ? 'flip-' + p.flip : ''}" data-tab="${tab}">
-    <img class="sf-base" src="${artSrc('sf_template')}" alt="">${tabs}<div class="sf-page">${header}${inner}</div></div>`;
+  const card = `<div class="sf-crop"><div class="sf2 ${p.flip ? 'flip-' + p.flip : ''}" data-tab="${tab}">
+    <img class="sf-base" src="${artSrc('sf_template')}" alt="">${tabs}<div class="sf-page">${header}${inner}</div></div></div>`;
   // the control bar under the card: always the same place and size
   let bar;
   if (tab === 'practice') {
@@ -380,7 +380,7 @@ function studyFileHTML(d, r, n, tab, p){
         : x.done[tab] ? `<button class="sf-btn go" data-act="dk-tab" data-tab="${next[0]}">${next[1]} ›</button>`
         : `<button class="sf-btn go gold" data-act="dk-done" data-tab="${tab}">Finish ✓</button>`}`;
   }
-  return `${card}<div class="sf-bar">${bar}</div>`;
+  return { html:card, bar };   // the bar goes in the screen's fixed footer, under the paper, always in view
 }
 
 /* shrink a sheet's writing until it fits its fixed box (never below a readable size) */
@@ -497,9 +497,11 @@ const DOCKET_SCREENS = {
           ${continuances() ? `Spend a Continuance to answer the 15 questions again (you have ${continuances()}).` : 'Continuance coins come in some packs. One lets you answer the 15 questions again.'}</span>
           ${continuances() ? `<button class="sf-btn go gold" data-act="dk-continue">Use a Continuance</button>` : ''}</div>`;
     else if (r.retry && !levelDone) banner = `<div class="sf-banner reopen"><img src="${artSrc('dk_stamp_reopened')}" alt="Case reopened"><span>Case reopened: answer the practice questions again. A pass (80%) earns the black-and-white card.</span></div>`;
+    if (p.miss) return missScreen(d, r, p);
     const missed = missedQs(d, r);
     if (missed.length && levelDone) banner += `<div class="sf-banner"><span>You missed ${missed.length} so far. Practice just those, free. It earns nothing and changes no score.</span><button class="sf-btn go" data-act="dm-start" data-id="${d.id}">Practice my misses</button></div>`;
-    return { title:'Hot Docket', body:`${banner}${studyFileHTML(d, r, n, tab, p)}` };
+    const sf = studyFileHTML(d, r, n, tab, p);
+    return { title:'Hot Docket', body:`${banner}${sf.html}`, cta:true, after:dkFoot(sf.bar) };
   },
 };
 
@@ -510,17 +512,33 @@ function missedQs(d, r){
     L.practice.forEach((q, k) => { if (x.answers[k] != null && x.answers[k] !== q.a) out.push({ lv, k, q }); }); }
   return out;
 }
-let MISS = null;
-function missSheet(){
-  const m = MISS, it = m.list[m.i];
-  if (!it) { openSheet(`<h3>Nice work</h3><p class="as-q">You got ${m.right} of ${m.list.length} right this time. This was practice only: no reward, and your record is unchanged.</p>
-      <button class="btn-big gold" data-act="sheet-close">DONE</button>`); return; }
-  const q = it.q, done = m.picked != null, last = m.i === m.list.length - 1;
-  openSheet(`<h3>Practice your misses</h3><p class="dm-note">Free practice · ${m.i + 1} of ${m.list.length} · Level ${it.lv}, question ${it.k + 1}</p><p class="as-q">${esc(q.q)}</p>
-    <div class="as-list">${q.c.map((t, k) => `<button class="${done && k === q.a ? 'right' : ''} ${done && k === m.picked && k !== q.a ? 'wrong' : ''}" ${done ? 'aria-disabled="true"' : `data-act="dm-pick" data-k="${k}"`}><b>${'ABCD'[k]}</b><span>${esc(t)}</span></button>`).join('')}</div>
-    ${done ? `<div class="dm-why"><b>${m.picked === q.a ? 'Right' : 'Not quite'} · the answer is ${'ABCD'[q.a]}</b><p>${esc(q.why)}</p><p class="sf-cite">Source: ${esc(q.cite)}</p></div>
-      <button class="btn-big gold" data-act="dm-next">${last ? 'FINISH' : 'NEXT ›'}</button>` : ''}
-    <button class="sheet-cancel" data-act="sheet-close">Close</button>`);
+const dkFoot = bar => `<div class="cta-bar dk-foot"><div class="sf-bar">${bar}</div></div>`;
+/* The same paper, the same tap-an-answer layout, but nothing is saved and nothing is earned. */
+function missScreen(d, r, p){
+  const m = p.miss, it = m.list[m.i], tabsHtml = DOCKET_TABS.map(([k, label], ti) => { const [x0, x1] = TAB_X[ti];
+    return `<span class="sf-tab ${k === 'practice' ? 'on' : ''}" style="${sfBox(x0, 5.4, x1 - x0, 4.4)}" aria-hidden="true"><span>${label}</span></span>`; }).join('');
+  const header = `<span class="sf-title" style="${sfBox(9, 16.9, 61, 5)}">Practice your misses</span>
+    <span class="sf-cell" style="${sfBox(70, 16.9, 20, 5)}">FREE<br>NO REWARD</span><span class="sf-rule" style="${sfBox(9, 22.4, 81, .2)}"></span>`;
+  let inner, bar;
+  if (!it) {
+    inner = `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 57)}"><h4>Nice work</h4><p>You got ${m.right} of ${m.list.length} right this time.</p>
+      <p>This was practice only. No reward, and your record is unchanged.</p></div>`;
+    bar = `<button class="sf-btn go gold" data-act="dm-exit">Back to the docket</button>`;
+  } else {
+    const q = it.q, answered = m.picked != null, sel = answered ? m.picked : m.sel, last = m.i === m.list.length - 1;
+    inner = `<div class="sf-area sf-fit" style="${sfBox(9, 23.4, 81, 57)}">
+        <div class="sf-qhead"><b>Miss ${m.i + 1} of ${m.list.length}</b><span>Level ${it.lv}, question ${it.k + 1}</span></div>
+        <p class="sf-q">${esc(q.q)}</p>
+        <div class="sf-choices" role="group" aria-label="Answers">${q.c.map((t, k) => `<button type="button" class="sf-choice ${sel === k ? 'sel' : ''} ${answered && k === q.a ? 'right' : ''} ${answered && k === m.picked && m.picked !== q.a ? 'wrong' : ''}" aria-pressed="${sel === k}" ${answered ? 'aria-disabled="true" tabindex="-1"' : `data-act="dm-pick" data-k="${k}"`}><b>${'ABCD'[k]}</b><span>${esc(t)}</span></button>`).join('')}</div></div>
+      ${answered && p.memo !== false ? `<div class="sf-memo in" style="${sfBox(6.5, 40, 87, 31)};background-image:url('${artSrc('dk_note_ivory')}')">
+        <div class="sf-note-in sf-fit"><h4 class="${m.picked === q.a ? 'ok' : 'no'}">${m.picked === q.a ? 'Right' : 'Not quite'} · the answer is ${'ABCD'[q.a]}</h4><p>${esc(q.why)}</p><p class="sf-cite">Source: ${esc(q.cite)}</p></div>
+        <button class="sf-memo-x" data-act="dk-memo">Hide note</button></div>` : ''}`;
+    bar = `<button class="sf-btn" data-act="dm-exit">‹ Exit</button><span class="sf-count">Free practice</span>
+      ${!answered ? `<button class="sf-btn go" data-act="dm-check" ${m.sel == null ? 'disabled' : ''}>Check ✓</button>`
+        : `<button class="sf-btn go ${last ? 'gold' : ''}" data-act="dm-next">${last ? 'Finish ✓' : 'Next ›'}</button>`}`;
+  }
+  return { title:'Practice misses', cta:true, after:dkFoot(bar),
+    body:`<div class="sf-crop"><div class="sf2" data-tab="practice"><img class="sf-base" src="${artSrc('sf_template')}" alt="">${tabsHtml}<div class="sf-page">${header}${inner}</div></div></div>` };
 }
 const sheetTitle = (sh, k) => sh.cover ? 'Cover' : sh.card ? sh.card.h : sh.entries ? `Level ${sh.chapter} · ${sh.name}` : sh.ev ? sh.ev.h : sh.src ? `Question ${sh.k + 1} source` : `Sheet ${k + 1}`;
 
@@ -540,10 +558,6 @@ document.addEventListener('click', e => {
   // reward card and its quiz work from anywhere (the Docket folder or the docket)
   switch (t.dataset.act) {
     case 'dk-reward': closeSheet(true); openReward(t.dataset.id); return;
-    case 'dm-start': { const dd = docketDef(t.dataset.id), list = dd ? missedQs(dd, docketRec(dd.id)) : []; if (!list.length) return;
-      MISS = { list, i:0, right:0, picked:null }; missSheet(); return; }
-    case 'dm-pick': if (MISS && MISS.picked == null) { MISS.picked = +t.dataset.k; if (MISS.picked === MISS.list[MISS.i].q.a) MISS.right++; missSheet(); } return;
-    case 'dm-next': if (MISS) { MISS.i++; MISS.picked = null; missSheet(); } return;
     case 'rw-flip': t.classList.toggle('back'); return;
     case 'rw-quiz': e.stopPropagation(); rewardQuiz(t.dataset.id); return;
     case 'rw-close': { const ov = t.closest('.rw-ov'); ov.remove(); rwPreview = null; unlockScroll(); refresh(); return; }
@@ -559,6 +573,12 @@ document.addEventListener('click', e => {
   if (['dk-check', 'dk-done', 'dk-level'].includes(t.dataset.act) && docketState(d) === 'missed') {   // a page left open past the deadline
     toast("This docket's week just ended. Nothing new was saved.", 'lock'); refresh(); return; }
   switch (t.dataset.act) {
+    case 'dm-start': { const list = missedQs(d, r); if (list.length) dkGo({ miss:{ list, i:0, sel:null, picked:null, right:0 }, memo:true }); break; }
+    case 'dm-pick': if (en.p.miss && en.p.miss.picked == null) dkGo({ miss:{ ...en.p.miss, sel:+t.dataset.k } }); break;
+    case 'dm-check': { const m = en.p.miss; if (!m || m.sel == null || m.picked != null) break;
+      dkGo({ miss:{ ...m, picked:m.sel, right:m.right + (m.sel === m.list[m.i].q.a ? 1 : 0) }, memo:true }); break; }
+    case 'dm-next': { const m = en.p.miss; if (m) dkGo({ miss:{ ...m, i:m.i + 1, sel:null, picked:null }, memo:true }); break; }
+    case 'dm-exit': dkGo({ miss:null }); break;
     case 'dk-toc': { const tab = currentScreenEl().querySelector('.sf2').dataset.tab, sheets = tabSheets(tab, d, n), cur = en.p.sheet || 0, ti = DOCKET_TABS.findIndex(([k]) => k === tab), nx = DOCKET_TABS[ti + 1];
       openSheet(`<h3>Contents</h3><div class="list">${sheets.map((sh, k) => `<button class="row" data-act="dk-jump" data-i="${k}"><span class="row-main"><b>${esc(sheetTitle(sh, k))}</b>${k === cur ? '<small>You are here</small>' : ''}</span>${chev}</button>`).join('')}</div>
         ${nx && tabOpen(x, ti + 1) ? `<button class="btn-big gold" data-act="dk-tab" data-tab="${nx[0]}">GO TO ${nx[1].toUpperCase()}</button>` : ''}
@@ -607,8 +627,9 @@ const DOCKET_CSS = `
 .dk-folder img{display:block;width:100%;height:auto;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))}
 .dk-thumb{flex:none;width:44px;height:44px;border-radius:6px;overflow:hidden;border:3px solid #f4efe4;box-shadow:0 1px 3px rgba(0,0,0,.4)}
 .dk-thumb img{width:100%;height:100%;object-fit:cover}
-.sf2{position:relative;margin:0 -8px;aspect-ratio:853/1844;container-type:inline-size;color:#2a241c}
-@media (min-width:600px){.sf2{max-width:520px;margin:0 auto}.sf-bar{max-width:520px;margin-left:auto;margin-right:auto}}
+.sf-crop{margin:0 -8px;aspect-ratio:853/1600;overflow:hidden;position:relative}   /* the art has empty space under the paper: cut it off */
+.sf2{position:absolute;left:0;top:0;width:100%;aspect-ratio:853/1844;container-type:inline-size;color:#2a241c}
+@media (min-width:600px){.sf-crop{max-width:520px;margin:0 auto}}
 .sf2.flip-next .sf-page{animation:sfnext .3s ease-out both} .sf2.flip-prev .sf-page{animation:sfprev .3s ease-out both}
 @keyframes sfnext{from{transform:translateX(5%);opacity:0}} @keyframes sfprev{from{transform:translateX(-5%);opacity:0}}
 .sf-base{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;filter:drop-shadow(0 2cqw 3cqw rgba(0,0,0,.45))}
@@ -681,7 +702,9 @@ const DOCKET_CSS = `
 .sf-res{display:flex;gap:.5em;align-items:center;padding:.3em 0;border-bottom:.4cqw solid rgba(42,36,28,.2)}
 .sf-res b{flex:none;width:1.4em;height:1.4em;border-radius:.7em;background:#2f6b3a;color:#fff;font:700 .8em/1.75em var(--ui);text-align:center}
 .sf-res.no b{background:#b3261e}
-.sf-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 4px;min-height:48px;position:sticky;bottom:0;z-index:20;padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));background:linear-gradient(to bottom,rgba(29,26,22,0),var(--bg,#1d1a16) 32%)}
+.sf-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 4px;min-height:48px;}
+.dk-foot{padding-top:10px}.dk-foot .sf-bar{margin:0;max-width:520px}
+.screen.has-cta:has(.sf-crop) .scr{padding-bottom:84px}
 .sf-count{font:18px "Patrick Hand";color:var(--sub);text-align:center;flex:1}
 button.sf-count{background:none;border:0;padding:6px 4px;min-height:44px;text-decoration:underline;text-underline-offset:3px}
 .dm-note{margin:0 4px 6px;font:15px var(--ui);color:var(--sub)}
