@@ -318,21 +318,21 @@ function sheetInner(tab, sh, d, r, n, p, sheets){
       <div class="sf-area sf-fit" style="${sfBox(9, 49, 81, 9)}"><p>Each explanation is ours; the rule itself is at the link on its sheet.</p></div>
       ${noteHTML('blue', sfBox(9, 59, 42, 19.4), `<b>${esc(d.checked)}</b><p>As of September 29, 2026 · next review due December 29, 2026.</p>`, 'tilt-r')}`;
   }
-  if (sh.card) return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 57)}"><h4>${esc(sh.card.h)}</h4>${(sh.card.p || []).map(t => `<p>${esc(t)}</p>`).join('')}${sh.card.list ? `<ul>${sh.card.list.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}</div>`;
+  if (sh.card) return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 60)}"><h4>${esc(sh.card.h)}</h4>${(sh.card.p || []).map(t => `<p>${esc(t)}</p>`).join('')}${sh.card.list ? `<ul>${sh.card.list.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}</div>`;
   if (sh.entries) {
     const C = d.levels[sh.chapter - 1], evIdx = id => sheets.findIndex(s => s.ev && (s.ev.id === id || (s.ev.also || []).includes(id)));
-    return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 57)}"><h4>Level ${sh.chapter} · ${esc(sh.name)}${sh.chapter === n && n > 1 ? ' <span class="sf-new">Added in Level ' + n + '</span>' : ''}</h4>
+    return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 60)}"><h4>Level ${sh.chapter} · ${esc(sh.name)}${sh.chapter === n && n > 1 ? ' <span class="sf-new">Added in Level ' + n + '</span>' : ''}</h4>
       <div class="sf-entries">${sh.entries.map(([id, when, what]) => { const ei = evIdx(id);
         return `<div class="sf-entry ${ei > 0 ? 'has-ev' : ''}" ${ei > 0 ? `data-act="dk-ev" data-i="${ei}"` : ''}><b>${id}</b><span><em>${esc(when)}</em>${esc(what)}</span>${ei > 0 ? '<i class="ev">📎</i>' : ''}</div>`; }).join('')}</div></div>`;
   }
-  if (sh.ev) return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 57)}"><h4>${esc(sh.ev.h)}${sh.chapter === n && n > 1 ? ' <span class="sf-new">Added in Level ' + n + '</span>' : ''}</h4>
+  if (sh.ev) return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 60)}"><h4>${esc(sh.ev.h)}${sh.chapter === n && n > 1 ? ' <span class="sf-new">Added in Level ' + n + '</span>' : ''}</h4>
       <p class="sf-evfor">Evidence for ${[sh.ev.id, ...(sh.ev.also || [])].join(', ')}</p>${sh.ev.p.map(t => `<p>${esc(t)}</p>`).join('')}</div>`;
   if (sh.src) { const q = sh.src;
-    return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 57)}"><h4>Question ${sh.k + 1}</h4><p class="sf-citeh">${esc(q.cite)}</p>
+    return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 60)}"><h4>Question ${sh.k + 1}</h4><p class="sf-citeh">${esc(q.cite)}</p>
       <p><em class="lb">What it establishes</em>${esc(q.est)}</p><p class="sf-links">${q.links.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join('')}</p></div>`; }
   // a practice question: the question and its answers on the paper; tap an answer (the whole paragraph) to pick it
   const q = sh.q, i = sh.k, ans = x.answers[i], answered = ans != null, sel = answered ? ans : p.sel;
-  return `<div class="sf-area sf-fit" style="${sfBox(9, 23.4, 81, 57)}">
+  return `<div class="sf-area sf-fit" style="${sfBox(9, 23.4, 81, 60)}">
       <div class="sf-qhead"><b>Question ${i + 1} of ${L.practice.length}</b><span>${L.practice.map((_, k) => `<i class="${x.answers[k] == null ? '' : x.answers[k] === L.practice[k].a ? 'ok' : 'no'} ${k === i ? 'cur' : ''}"></i>`).join('')}</span></div>
       <p class="sf-q">${esc(q.q)}</p>
       <div class="sf-choices" role="group" aria-label="Answers">${q.c.map((t, k) => `<button type="button" class="sf-choice ${sel === k ? 'sel' : ''} ${answered && k === q.a ? 'right' : ''} ${answered && k === ans && ans !== q.a ? 'wrong' : ''}" aria-pressed="${sel === k}" ${answered ? 'aria-disabled="true" tabindex="-1"' : `data-act="dk-pick" data-k="${k}"`}><b>${'ABCD'[k]}</b><span>${esc(t)}</span></button>`).join('')}</div></div>
@@ -387,11 +387,14 @@ function studyFileHTML(d, r, n, tab, p){
 function fitSheets(root){
   (root || document).querySelectorAll('.sf-fit').forEach(el => {
     if (!el.closest('.sf2').clientWidth) return;
-    let fs = parseFloat(el.dataset.fs || '') || (el.classList.contains('sf-note-in') ? 4.8 : 5.4); el.dataset.fs = fs; el.style.fontSize = fs + 'cqw';
+    let fs = parseFloat(el.dataset.fs || '') || (el.classList.contains('sf-note-in') ? 4.8 : 4.6); el.dataset.fs = fs; el.style.fontSize = fs + 'cqw';
     for (let k = 0; k < 24 && el.scrollHeight > el.clientHeight + 1 && fs > 3.9; k++) { fs -= .1; el.style.fontSize = fs.toFixed(2) + 'cqw'; }
     el.classList.toggle('scrolls', el.scrollHeight > el.clientHeight + 1);   // still too long: scroll inside the paper
   });
 }
+/* the docket type is a bundled font: load it up front, and re-fit the sheets if it arrives after they were laid out */
+if (document.fonts && document.fonts.load) { document.fonts.load('400 1em "Courier Prime"'); document.fonts.load('700 1em "Courier Prime"');
+  document.fonts.addEventListener('loadingdone', () => requestAnimationFrame(() => { document.querySelectorAll('.sf-fit').forEach(el => { delete el.dataset.fs; el.style.fontSize = ''; }); fitSheets(); })); }
 new MutationObserver(ms => { if (ms.some(m => [...m.addedNodes].some(n => n.nodeType === 1 && (n.matches('.sf2') || n.querySelector && n.querySelector('.sf2'))))) requestAnimationFrame(() => fitSheets()); })
   .observe(document.documentElement, { childList:true, subtree:true });
 
@@ -521,12 +524,12 @@ function missScreen(d, r, p){
     <span class="sf-cell" style="${sfBox(70, 16.9, 20, 5)}">FREE<br>NO REWARD</span><span class="sf-rule" style="${sfBox(9, 22.4, 81, .2)}"></span>`;
   let inner, bar;
   if (!it) {
-    inner = `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 57)}"><h4>Nice work</h4><p>You got ${m.right} of ${m.list.length} right this time.</p>
+    inner = `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 60)}"><h4>Nice work</h4><p>You got ${m.right} of ${m.list.length} right this time.</p>
       <p>This was practice only. No reward, and your record is unchanged.</p></div>`;
     bar = `<button class="sf-btn go gold" data-act="dm-exit">Back to the docket</button>`;
   } else {
     const q = it.q, answered = m.picked != null, sel = answered ? m.picked : m.sel, last = m.i === m.list.length - 1;
-    inner = `<div class="sf-area sf-fit" style="${sfBox(9, 23.4, 81, 57)}">
+    inner = `<div class="sf-area sf-fit" style="${sfBox(9, 23.4, 81, 60)}">
         <div class="sf-qhead"><b>Miss ${m.i + 1} of ${m.list.length}</b><span>Level ${it.lv}, question ${it.k + 1}</span></div>
         <p class="sf-q">${esc(q.q)}</p>
         <div class="sf-choices" role="group" aria-label="Answers">${q.c.map((t, k) => `<button type="button" class="sf-choice ${sel === k ? 'sel' : ''} ${answered && k === q.a ? 'right' : ''} ${answered && k === m.picked && m.picked !== q.a ? 'wrong' : ''}" aria-pressed="${sel === k}" ${answered ? 'aria-disabled="true" tabindex="-1"' : `data-act="dm-pick" data-k="${k}"`}><b>${'ABCD'[k]}</b><span>${esc(t)}</span></button>`).join('')}</div></div>
@@ -661,23 +664,23 @@ const DOCKET_CSS = `
 .sf-note-in b{display:block;font:400 1.15em/1.1 "Bangers";letter-spacing:.04em;margin-bottom:.25em}
 .sf-note-in b.big{font-size:2.2em}
 .sf-note-in p{margin:0 0 .35em}
-.sf-area{position:absolute;overflow:hidden;font:5.4cqw/1.42 "Patrick Hand"}
+.sf-area{position:absolute;overflow:hidden;font:4.6cqw/1.42 "Courier Prime",monospace}   /* docket type for everything you read; handwriting stays on the notes */
 .sf-area.scrolls,.sf-note-in.scrolls{overflow-y:auto;-webkit-mask-image:linear-gradient(#000 88%,transparent)}
-.sf-area h4{margin:0 0 .4em;font:400 1.3em/1.1 "Bangers";letter-spacing:.04em;color:#2b3a55}
+.sf-area h4{margin:0 0 .5em;font:700 1.02em/1.25 "Courier Prime",monospace;text-transform:uppercase;letter-spacing:.05em;color:#2b3a55}
 .sf-area p,.sf-area li{margin:0 0 .55em}
 .sf-area ul{margin:0 0 .5em;padding-left:1.1em}
-.sf-aside{font-size:.85em;color:#5a5040}
+.sf-aside{font:1.12em/1.3 "Patrick Hand";color:#5a5040}
 .sf-toc{margin:0;padding-left:1.2em} .sf-toc li{list-style:none;position:relative;margin:0 0 .15em} .sf-toc li::before{content:"☐";position:absolute;left:-1.2em;color:#8a7f6c}
-.sf-case b{display:block;font:700 .82em/1.3 "Courier Prime",monospace;margin-bottom:.4em}
+.sf-case b{display:block;font:700 1em/1.3 "Courier Prime",monospace;margin-bottom:.4em}
 .sf-entries{display:flex;flex-direction:column;border-top:.4cqw solid rgba(42,36,28,.35)}
-.sf-entry{display:flex;gap:.6em;padding:.38em 0;border-bottom:.4cqw solid rgba(42,36,28,.2);font:.78em/1.32 "Courier Prime",monospace}
+.sf-entry{display:flex;gap:.6em;padding:.38em 0;border-bottom:.4cqw solid rgba(42,36,28,.2);font:.94em/1.32 "Courier Prime",monospace}
 .sf-entry b{flex:none;width:2.2em;font-weight:700;color:#b3261e}
 .sf-entry em{display:block;font-style:normal;font-weight:700}
-.sf-citeh{font:700 .9em/1.3 "Courier Prime",monospace}
-.sf-area em.lb{display:block;font-style:normal;font:400 .8em/1.2 "Bangers";letter-spacing:.06em;color:#8a7f6c}
+.sf-citeh{font:700 1em/1.3 "Courier Prime",monospace}
+.sf-area em.lb{display:block;font-style:normal;font:700 .8em/1.2 "Courier Prime",monospace;text-transform:uppercase;letter-spacing:.06em;color:#8a7f6c}
 .sf-links{display:flex;flex-wrap:wrap;gap:.3em .9em} .sf-links a{color:#2b3a55;font-weight:700}
 .sf-qhead{display:flex;align-items:center;justify-content:space-between;margin:0 0 .3em}
-.sf-qhead b{font:400 1.05em "Bangers";letter-spacing:.05em;color:#2b3a55}
+.sf-qhead b{font:700 .9em "Courier Prime",monospace;text-transform:uppercase;letter-spacing:.05em;color:#2b3a55}
 .sf-qhead span{display:flex;gap:1.2cqw} .sf-qhead i{width:2.6cqw;height:2.6cqw;border-radius:1.3cqw;border:.4cqw solid #2a241c;opacity:.45}
 .sf-qhead i.cur{opacity:1} .sf-qhead i.ok{background:#2f6b3a;border-color:#2f6b3a;opacity:1} .sf-qhead i.no{background:#b3261e;border-color:#b3261e;opacity:1}
 .sf-q{font-weight:700}
@@ -718,7 +721,7 @@ button.sf-count{background:none;border:0;padding:6px 4px;min-height:44px;text-de
 .sf-btn[disabled]{opacity:.35}
 .sf-banner{margin:0 0 10px;padding:10px 12px;border-radius:12px;background:rgba(227,178,60,.16);color:var(--mustard);font:18px/1.3 "Patrick Hand";display:flex;gap:10px;align-items:center}
 .sf-new{display:inline-block;vertical-align:middle;margin-left:.3em;padding:.1em .4em;border-radius:.3em;background:#b3261e;color:#fff;font:700 .5em/1.2 var(--ui);letter-spacing:.02em}
-.sf-evfor{font:700 .72em/1.3 "Courier Prime",monospace;color:#8a7f6c;margin-top:-.2em !important}
+.sf-evfor{font:700 .82em/1.3 "Courier Prime",monospace;color:#8a7f6c;margin-top:-.2em !important}
 .sf-entry.has-ev{cursor:pointer;position:relative} .sf-entry.has-ev:active{background:rgba(43,58,85,.08)}
 .sf-entry .ev{position:absolute;right:0;top:.3em;font-style:normal;font-size:1.1em}
 .sf-banner span{flex:1}
