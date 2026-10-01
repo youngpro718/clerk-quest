@@ -4,287 +4,315 @@ window.QBANK = {
  "gavel": [
   {
    "lv": 1,
-   "q": "What is a request, made in writing or orally to the court, asking the judge to make a ruling or take a specific action?",
+   "q": "A paper begins \"PLEASE TAKE NOTICE that the undersigned will move this court ...\" What is it?",
    "c": [
-    "Complaint",
-    "Motion",
-    "Summons",
-    "Affidavit"
-   ],
-   "a": "Motion",
-   "h": "It is commonly used to ask for things like a dismissal or an adjournment.",
-   "w": "A motion is a request asking the court to issue a ruling or take a particular action."
-  },
-  {
-   "lv": 1,
-   "q": "A written statement of facts, sworn to be true before someone authorized to give oaths, is called a(n):",
-   "c": [
-    "Affidavit",
-    "Motion",
-    "Verdict",
-    "Calendar"
-   ],
-   "a": "Affidavit",
-   "h": "Think \"written\" + \"sworn\".",
-   "w": "An affidavit is a written statement made under oath, usually signed in front of a notary public."
-  },
-  {
-   "lv": 1,
-   "q": "Postponing a court proceeding to a later date is called a(n):",
-   "c": [
-    "Adjournment",
-    "Judgment",
-    "Arraignment",
-    "Appeal"
-   ],
-   "a": "Adjournment",
-   "h": "The case gets a new date.",
-   "w": "An adjournment moves a case or proceeding to a later date."
-  },
-  {
-   "lv": 1,
-   "q": "The party who starts a civil lawsuit is usually called the:",
-   "c": [
-    "Plaintiff",
-    "Defendant",
-    "Respondent",
-    "Witness"
-   ],
-   "a": "Plaintiff",
-   "h": "Not the one being sued.",
-   "w": "The plaintiff starts a civil lawsuit. The defendant is the party being sued."
-  },
-  {
-   "lv": 1,
-   "q": "A court order requiring a person to appear and testify is a:",
-   "c": [
-    "Subpoena",
-    "Affidavit",
-    "Stipulation",
-    "Judgment"
-   ],
-   "a": "Subpoena",
-   "h": "It comes from Latin for \"under penalty.\"",
-   "w": "A subpoena orders a person to appear (and often testify). Ignoring it can lead to penalties."
-  },
-  {
-   "lv": 1,
-   "q": "The list of cases scheduled to be heard by the court on a given day is called the:",
-   "c": [
-    "Calendar",
-    "Transcript",
-    "Exhibit",
-    "Pleading"
-   ],
-   "a": "Calendar",
-   "h": "It is about scheduling.",
-   "w": "The court calendar lists the cases scheduled to be heard on a given day."
-  },
-  {
-   "lv": 2,
-   "q": "An attorney stands up and asks the judge to dismiss the case. What is the attorney making?",
-   "c": [
-    "A motion",
-    "An objection",
-    "A stipulation",
-    "A verdict"
-   ],
-   "a": "A motion",
-   "h": "It is a request for a ruling.",
-   "w": "Asking the court to dismiss is a motion (a \"motion to dismiss\")."
-  },
-  {
-   "lv": 2,
-   "q": "A lawyer cannot attend next Tuesday's appearance because of another trial. What will they most likely ask the court for?",
-   "c": [
-    "An adjournment",
+    "A notice of motion",
+    "A summons",
     "A judgment",
-    "A subpoena",
+    "An affirmation"
+   ],
+   "a": "A notice of motion",
+   "h": "It announces a request for an order.",
+   "w": "CPLR 2211 and 2214(a): a notice of motion specifies the hearing time and place, supporting papers, relief and grounds."
+  },
+  {
+   "lv": 1,
+   "q": "A paper ends \"I affirm this 3rd day of May ... under the penalties of perjury ...\" What is it?",
+   "c": [
+    "A notice of motion",
+    "A stipulation",
+    "A judgment",
+    "An affirmation used like an affidavit"
+   ],
+   "a": "An affirmation used like an affidavit",
+   "h": "Look for \"penalties of perjury.\"",
+   "w": "CPLR 2106(a): such an affirmation may be used in lieu of an affidavit."
+  },
+  {
+   "lv": 1,
+   "q": "A paper says \"IT IS STIPULATED AND AGREED that the return date is adjourned to ...\" What is it?",
+   "c": [
+    "An order to show cause",
+    "A judgment",
+    "A stipulation of adjournment",
+    "A notice of appearance"
+   ],
+   "a": "A stipulation of adjournment",
+   "h": "Two sides agreeing on a new date.",
+   "w": "Uniform Rule 202.8(e)(1): stipulations of adjournment are in writing and submitted to the assigned judge."
+  },
+  {
+   "lv": 1,
+   "q": "A paper lists the cases set for Part 12 on Tuesday at 9:30. What is it?",
+   "c": [
+    "A judgment",
+    "A calendar",
+    "A summons",
     "An affidavit"
    ],
-   "a": "An adjournment",
-   "h": "They need a new date.",
-   "w": "When a party needs more time or a new date, they request an adjournment."
+   "a": "A calendar",
+   "h": "It is a list of cases for a day.",
+   "w": "Uniform Rule 202.22: a judge may establish calendars and schedule calls of them."
   },
   {
-   "lv": 2,
-   "q": "TRUE or FALSE: An affidavit is sworn to (or affirmed) before an official authorized to administer oaths, such as a notary public.",
+   "lv": 1,
+   "q": "A paper states the jury's verdict and the parties' rights. What is it?",
    "c": [
-    "True",
-    "False"
-   ],
-   "a": "True",
-   "h": "What makes an affidavit different from an ordinary letter?",
-   "w": "True. The oath is what makes an affidavit a sworn statement.",
-   "type": "tf"
-  },
-  {
-   "lv": 2,
-   "q": "A company must be formally notified that a lawsuit has been started against it. Which document does that?",
-   "c": [
-    "Summons",
-    "Subpoena",
-    "Motion",
-    "Judgment"
-   ],
-   "a": "Summons",
-   "h": "It \"summons\" the defendant into the case.",
-   "w": "A summons notifies the defendant that an action has been started and that they must respond or appear."
-  },
-  {
-   "lv": 2,
-   "q": "TRUE or FALSE: A subpoena can only be served on a party to the case.",
-   "c": [
-    "True",
-    "False"
-   ],
-   "a": "False",
-   "h": "Think about witnesses.",
-   "w": "False. Subpoenas are often directed to non-parties, such as witnesses or record keepers.",
-   "type": "tf"
-  },
-  {
-   "lv": 2,
-   "q": "Fill in the blank: The court's final decision that determines the rights of the parties is the ______.",
-   "c": [
-    "Judgment",
-    "Motion",
-    "Summons",
-    "Calendar"
-   ],
-   "a": "Judgment",
-   "h": "It comes at the end of the case.",
-   "w": "A judgment is the court's final decision determining the rights of the parties."
-  },
-  {
-   "lv": 3,
-   "q": "A witness must bring employment records to court. Which document requires this?",
-   "c": [
-    "Subpoena duces tecum",
-    "Summons",
-    "Affidavit of service",
-    "Notice of motion"
-   ],
-   "a": "Subpoena duces tecum",
-   "h": "\"Duces tecum\" means \"bring with you.\"",
-   "w": "A subpoena duces tecum requires a person to produce documents or records."
-  },
-  {
-   "lv": 3,
-   "q": "The plaintiff must prove the summons was delivered to the defendant. What document typically shows this?",
-   "c": [
-    "Affidavit of service",
-    "Notice of appearance",
-    "Stipulation",
-    "Judgment"
-   ],
-   "a": "Affidavit of service",
-   "h": "It is sworn, and it is about delivery.",
-   "w": "An affidavit of service is a sworn statement by the person who delivered the papers, describing when, where, and how they were served."
-  },
-  {
-   "lv": 3,
-   "q": "Both sides agree in writing to postpone a hearing and submit that agreement to the court. The written agreement is a:",
-   "c": [
-    "Stipulation",
-    "Subpoena",
-    "Verdict",
-    "Summons"
-   ],
-   "a": "Stipulation",
-   "h": "Both parties agree to it.",
-   "w": "A stipulation is an agreement between the parties, often put in writing and filed with the court."
-  },
-  {
-   "lv": 3,
-   "q": "A party disagrees with a lower court's final judgment and asks a higher court to review it. This is an:",
-   "c": [
-    "Appeal",
-    "Adjournment",
-    "Arraignment",
-    "Affidavit"
-   ],
-   "a": "Appeal",
-   "h": "A higher court gets involved.",
-   "w": "An appeal asks a higher court to review the decision of a lower court."
-  },
-  {
-   "lv": 3,
-   "q": "A party files papers asking the court to order the other side to hand over documents. What are these papers?",
-   "c": [
-    "Motion papers",
+    "A judgment",
+    "A motion",
     "A summons",
-    "A verdict sheet",
-    "An affidavit of service"
+    "An affirmation"
    ],
-   "a": "Motion papers",
-   "h": "They ask the court to order something.",
-   "w": "Asking the court to order something is done by motion (for example, a motion to compel)."
+   "a": "A judgment",
+   "h": "It records the outcome.",
+   "w": "CPLR 5011: a judgment determines the rights of the parties and states the result of the verdict or decision."
+  },
+  {
+   "lv": 1,
+   "q": "A paper says \"You are hereby summoned to answer the complaint ...\" What is it?",
+   "c": [
+    "A notice of motion",
+    "A judgment",
+    "An order to show cause",
+    "A summons"
+   ],
+   "a": "A summons",
+   "h": "It tells the defendant the case has begun.",
+   "w": "CPLR 304(a) and 320(a): a summons is filed with the complaint and the defendant must appear after service."
+  },
+  {
+   "lv": 2,
+   "q": "Two lawyers agree to move a hearing date and tell the judge in writing. Which paper?",
+   "c": [
+    "A notice of appearance",
+    "An affidavit of service",
+    "A written stipulation of adjournment",
+    "A judgment"
+   ],
+   "a": "A written stipulation of adjournment",
+   "h": "Agreement plus writing plus the judge.",
+   "w": "Uniform Rule 202.8(e)(1)."
+  },
+  {
+   "lv": 2,
+   "q": "A witness has no notary but must give facts for a motion. What can the witness use?",
+   "c": [
+    "A judgment",
+    "An affirmation under CPLR 2106",
+    "A summons",
+    "A calendar call"
+   ],
+   "a": "An affirmation under CPLR 2106",
+   "h": "A statement that can stand in for an affidavit.",
+   "w": "CPLR 2106(a): any person's affirmation may be used in lieu of an affidavit."
+  },
+  {
+   "lv": 2,
+   "q": "Nobody answered and time to appear ran out. The plaintiff gets a judgment. What must it recite?",
+   "c": [
+    "The default it is based on",
+    "The defendant's phone number",
+    "The clerk's name",
+    "The next calendar date"
+   ],
+   "a": "The default it is based on",
+   "h": "It explains why there was no trial.",
+   "w": "CPLR 5011."
+  },
+  {
+   "lv": 2,
+   "q": "A lawyer wants the court to hear a dismissal request. Which calendar hears motions?",
+   "c": [
+    "The ready calendar",
+    "The general calendar",
+    "The preliminary conference calendar",
+    "The motion calendar"
+   ],
+   "a": "The motion calendar",
+   "h": "It is named for its job.",
+   "w": "Uniform Rule 202.22(a)(2)."
+  },
+  {
+   "lv": 2,
+   "q": "A lawyer needs urgent relief and the court agrees. What is served instead of a notice of motion?",
+   "c": [
+    "A summons",
+    "An affirmation",
+    "An order to show cause",
+    "A stipulation"
+   ],
+   "a": "An order to show cause",
+   "h": "A court-granted paper for urgent cases.",
+   "w": "CPLR 2214(d)."
+  },
+  {
+   "lv": 2,
+   "q": "A defendant is handed a summons in New York on May 4. By when must she appear?",
+   "c": [
+    "May 14",
+    "May 24",
+    "June 3",
+    "May 4"
+   ],
+   "a": "May 24",
+   "h": "Twenty days from service.",
+   "w": "CPLR 320(a): within 20 days after service."
+  },
+  {
+   "lv": 3,
+   "q": "A summons and complaint are filed Monday and served Wednesday. On which day was the action commenced?",
+   "c": [
+    "Monday, when they were filed",
+    "Wednesday, when they were served",
+    "The day the defendant appears",
+    "The day the judge reads them"
+   ],
+   "a": "Monday, when they were filed",
+   "h": "Filing, not service.",
+   "w": "CPLR 304(a): an action is commenced by filing a summons and complaint, or a summons with notice."
+  },
+  {
+   "lv": 3,
+   "q": "A motion is noticed for March 30. Which date is too late to serve the notice of motion and affidavits?",
+   "c": [
+    "March 10",
+    "March 18",
+    "March 22",
+    "March 23"
+   ],
+   "a": "March 23",
+   "h": "At least eight days before the hearing.",
+   "w": "CPLR 2214(b): at least eight days before. March 22 is exactly eight days; March 23 is seven."
+  },
+  {
+   "lv": 3,
+   "q": "Three stipulations adjourn a motion for 10 days each. A fourth adds 5. Which needs permission?",
+   "c": [
+    "None. The total is only 35 days",
+    "The third",
+    "The fourth",
+    "All of them"
+   ],
+   "a": "The fourth",
+   "h": "Count the stipulations, not only the days.",
+   "w": "Uniform Rule 202.8(e)(1): no more than three stipulated adjournments without prior permission."
+  },
+  {
+   "lv": 3,
+   "q": "One witness paper is notarized. The other says \"I affirm ... under penalties of perjury.\" Which fails CPLR 2106?",
+   "c": [
+    "The one with no notary",
+    "Neither. Both can be used",
+    "The notarized one",
+    "Both fail"
+   ],
+   "a": "Neither. Both can be used",
+   "h": "Think about what an affirmation is for.",
+   "w": "CPLR 2106(a): an affirmation may be used in lieu of and with the same force and effect as an affidavit."
+  },
+  {
+   "lv": 3,
+   "q": "A motion is returnable April 10. The lawyers sign one written 14-day stipulation and send it to the judge. New date?",
+   "c": [
+    "April 24",
+    "April 10",
+    "April 17",
+    "May 10"
+   ],
+   "a": "April 24",
+   "h": "Add the days to the return date.",
+   "w": "Uniform Rule 202.8(e)(1): a written stipulation of adjournment submitted to the assigned judge is effective unless the court directs otherwise. April 10 plus 14 days is April 24."
+  },
+  {
+   "lv": 3,
+   "q": "A packet has a notice of motion and an answering affidavit. Which is due at least two days before the hearing?",
+   "c": [
+    "The notice of motion",
+    "Neither",
+    "Both",
+    "The answering affidavit"
+   ],
+   "a": "The answering affidavit",
+   "h": "One side answers, one side moves.",
+   "w": "CPLR 2214(b): answering affidavits at least two days before; the notice of motion at least eight days before."
   },
   {
    "lv": 4,
-   "q": "In a jury trial, the jury's finding is the ______, and the court's final decision on the case is the ______.",
+   "q": "A notice of motion gives the hearing place and time and the relief wanted, but not the supporting papers. Complete?",
    "c": [
-    "verdict; judgment",
-    "judgment; verdict",
-    "verdict; order",
-    "ruling; verdict"
+    "Yes. Those items are optional",
+    "No. It needs the judge's signature",
+    "No. It must name the supporting papers",
+    "Yes, if the defendant is named"
    ],
-   "a": "verdict; judgment",
-   "h": "Juries deliver one; courts enter the other.",
-   "w": "The jury returns a verdict; the court then enters a judgment."
+   "a": "No. It must name the supporting papers",
+   "h": "Four items are required.",
+   "w": "CPLR 2214(a)."
   },
   {
    "lv": 4,
-   "q": "Which document ORDERS a non-party witness to appear, rather than notifying a defendant that they are being sued?",
+   "q": "A typed witness statement says it is true under penalties of perjury but carries no signature. What's missing?",
    "c": [
-    "Subpoena",
-    "Summons",
-    "Notice of motion",
-    "Complaint"
+    "A notary stamp",
+    "Signing and affirming by the person",
+    "A summons attached",
+    "The judge's approval"
    ],
-   "a": "Subpoena",
-   "h": "Summons is for defendants.",
-   "w": "A subpoena compels a witness to appear. A summons notifies a defendant that an action has been started."
+   "a": "Signing and affirming by the person",
+   "h": "Who has to sign?",
+   "w": "CPLR 2106(a): the statement must be subscribed and affirmed by that person."
   },
   {
    "lv": 4,
-   "q": "The judge calls a 15-minute break in the middle of today's session. This is a:",
+   "q": "A clerk relays two lawyers' adjournment agreement to the judge by word of mouth. What is wrong?",
    "c": [
-    "Recess",
-    "Adjournment",
-    "Continuance",
-    "Stay"
+    "It must be in writing, sent to the judge",
+    "Nothing. Word of mouth is enough",
+    "It must go to the defendant",
+    "It needs a notary stamp"
    ],
-   "a": "Recess",
-   "h": "It is short and the same day.",
-   "w": "A recess is a short break within a session. An adjournment moves the matter to another time or date."
+   "a": "It must be in writing, sent to the judge",
+   "h": "How must the stipulation be made?",
+   "w": "Uniform Rule 202.8(e)(1)."
   },
   {
    "lv": 4,
-   "q": "Sworn testimony given out of court, recorded, and later used in the case is a(n):",
+   "q": "A plaintiff files a complaint only, with no summons. Is the action commenced under CPLR 304(a)?",
    "c": [
-    "Deposition",
-    "Affidavit",
-    "Interrogatory",
-    "Transcript"
+    "Yes. The complaint starts it",
+    "Yes, once the defendant reads it",
+    "No. A judge must sign it",
+    "No. A summons must be filed too"
    ],
-   "a": "Deposition",
-   "h": "It is spoken, not written.",
-   "w": "A deposition is oral testimony under oath taken outside of court. An affidavit is written; interrogatories are written questions answered in writing."
+   "a": "No. A summons must be filed too",
+   "h": "Read what has to be filed.",
+   "w": "CPLR 304(a): an action is commenced by filing a summons and complaint, or a summons with notice."
   },
   {
    "lv": 4,
-   "q": "The papers that start an action and state the plaintiff's claims are the:",
+   "q": "Notice served Feb 1, returnable Feb 20, papers at the clerk Feb 18. Date \"made,\" and date \"submitted\"?",
    "c": [
-    "Complaint",
-    "Answer",
-    "Reply",
-    "Motion"
+    "Made Feb 18; submitted Feb 18",
+    "Made Feb 20; submitted Feb 1",
+    "Made Feb 1; submitted Feb 20",
+    "Made Feb 1; submitted Feb 18"
    ],
-   "a": "Complaint",
-   "h": "The defendant responds to it.",
-   "w": "The complaint states the plaintiff's claims. The defendant responds with an answer."
+   "a": "Made Feb 1; submitted Feb 20",
+   "h": "One rule for each date.",
+   "w": "CPLR 2211: made when the notice is served. Uniform Rule 202.8(d): papers received by the return date are deemed submitted as of the return date."
+  },
+  {
+   "lv": 4,
+   "q": "An action moves from the pretrial calendar to reserve, and a clerk places it at the head. What does the rule say?",
+   "c": [
+    "It must go to the head",
+    "It goes to the foot of the next calendar",
+    "Calendars can't be changed",
+    "Only lawyers may move cases"
+   ],
+   "a": "It goes to the foot of the next calendar",
+   "h": "Progression has a fixed direction.",
+   "w": "Uniform Rule 202.22(b)."
   },
   {
    "lv": 5,
@@ -355,721 +383,1099 @@ window.QBANK = {
  "summons": [
   {
    "lv": 1,
-   "q": "What document notifies a defendant that a lawsuit has been started against them?",
+   "q": "Ray's lawyer hands him a summons. Nothing has been filed with the court. Has the action started?",
    "c": [
-    "Summons",
-    "Subpoena",
-    "Verdict",
-    "Affidavit"
+    "Yes. Service starts an action.",
+    "Yes, once Ray reads it.",
+    "No. Filing starts an action.",
+    "No. A judge must sign it first."
    ],
-   "a": "Summons",
-   "h": "It \"summons\" the defendant into the case.",
-   "w": "A summons notifies the defendant that an action has been started and that they must respond or appear."
+   "a": "No. Filing starts an action.",
+   "h": "What does the court have in its hands yet?",
+   "w": "CPLR 304(a): an action is commenced by filing a summons and complaint, or a summons with notice. Handing over papers does not commence it."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: A summons and a subpoena are the same document.",
+   "q": "Dana is handed a summons and complaint in New York on March 3. She must appear by:",
+   "c": [
+    "March 13",
+    "March 23",
+    "April 2",
+    "May 2"
+   ],
+   "a": "March 23",
+   "h": "Count from service, not from filing.",
+   "w": "CPLR 320(a): appearance is due within 20 days after service of the summons. March 3 plus 20 days is March 23."
+  },
+  {
+   "lv": 1,
+   "q": "Which of these is an appearance under CPLR 320(a)?",
+   "c": [
+    "Serving a notice of appearance",
+    "Phoning the clerk about the papers",
+    "Mailing the judge a denial letter",
+    "Asking the counter for a copy"
+   ],
+   "a": "Serving a notice of appearance",
+   "h": "An appearance is something you serve.",
+   "w": "CPLR 320(a): a defendant appears by serving an answer or a notice of appearance, or by making a motion that extends the time to answer."
+  },
+  {
+   "lv": 1,
+   "q": "The time to appear starts when the plaintiff files the summons. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "False",
-   "h": "One is for defendants, one is for witnesses.",
-   "w": "False. A summons starts the case against a defendant. A subpoena orders someone (often a witness) to appear or produce records.",
+   "h": "The defendant may not even know about it yet.",
+   "w": "The time runs from service of the summons (CPLR 320(a)), not from filing.",
    "type": "tf"
   },
   {
    "lv": 1,
-   "q": "In a civil case, the person who receives the summons is usually the:",
+   "q": "Dana serves an answer instead of a notice of appearance. Has she appeared?",
    "c": [
-    "Defendant",
-    "Plaintiff",
-    "Judge",
-    "Court clerk"
+    "No. Only a notice of appearance counts.",
+    "No. She must also file proof of service.",
+    "Yes. An answer is one way to appear.",
+    "Yes, but only if a judge accepts it."
    ],
-   "a": "Defendant",
-   "h": "The one being sued.",
-   "w": "The summons is served on the defendant, the party being sued."
-  },
-  {
-   "lv": 1,
-   "q": "Fill in the blank: A ______ tells the defendant they must respond to the lawsuit.",
-   "c": [
-    "summons",
-    "verdict",
-    "calendar",
-    "transcript"
-   ],
-   "a": "summons",
-   "h": "It is card #004.",
-   "w": "The summons tells the defendant that a case has started and that they must respond or appear."
+   "a": "Yes. An answer is one way to appear.",
+   "h": "Read the list in the rule again.",
+   "w": "CPLR 320(a) lists an answer, a notice of appearance, or a motion that extends the time to answer."
   },
   {
    "lv": 2,
-   "q": "Formally delivering a summons to the defendant is called:",
+   "q": "Papers go to Ray's adult roommate at home; a copy is mailed 8 days later. When is service complete?",
    "c": [
-    "Service",
-    "Filing",
-    "Docketing",
-    "Arraignment"
+    "When the roommate gets the papers",
+    "10 days after proof is filed with the clerk",
+    "The day the copy is mailed",
+    "20 days after the mailing"
    ],
-   "a": "Service",
-   "h": "\"You've been ____.\"",
-   "w": "Delivering court papers to a party is called service (or \"service of process\")."
+   "a": "10 days after proof is filed with the clerk",
+   "h": "Service is not complete until something is filed.",
+   "w": "CPLR 308(2): proof is filed with the clerk, and service is complete ten days after that filing."
   },
   {
    "lv": 2,
-   "q": "What document usually proves that the summons was delivered?",
+   "q": "Papers left with an adult at Ray's job on Jan 5. Copy mailed Feb 15. What is wrong?",
    "c": [
-    "Affidavit of service",
-    "Notice of appearance",
-    "Stipulation",
-    "Judgment"
+    "Delivery and mailing were over 20 days apart",
+    "Nothing is wrong",
+    "Mailing must come before delivery",
+    "Papers can't be left at a workplace"
    ],
-   "a": "Affidavit of service",
-   "h": "It is sworn, and it is about delivery.",
-   "w": "An affidavit of service is a sworn statement by the person who delivered the papers, describing when, where, and how they were served."
+   "a": "Delivery and mailing were over 20 days apart",
+   "h": "Count the days between the two dates.",
+   "w": "CPLR 308(2): delivery and mailing are effected within twenty days of each other. Delivery at the actual place of business is allowed."
   },
   {
    "lv": 2,
-   "q": "TRUE or FALSE: A summons is directed to a party in the case, not to an outside witness.",
+   "q": "Ray was served by leaving papers with a suitable person, plus mailing. How long to appear after service is complete?",
    "c": [
-    "True",
-    "False"
+    "10 days",
+    "20 days",
+    "60 days",
+    "30 days"
    ],
-   "a": "True",
-   "h": "Witnesses get a different document.",
-   "w": "True. Witnesses who are not parties are brought in with a subpoena, not a summons.",
-   "type": "tf"
+   "a": "30 days",
+   "h": "Personal delivery gets the shorter time.",
+   "w": "CPLR 320(a): 30 days after service is complete for service under 308(2), (3), (4) or (5). Personal delivery under 308(1) is 20 days."
+  },
+  {
+   "lv": 2,
+   "q": "Which is NOT a way to appear under CPLR 320(a)?",
+   "c": [
+    "Serving an answer",
+    "Serving a notice of appearance",
+    "Filing proof that the summons was served",
+    "A motion that extends the time to answer"
+   ],
+   "a": "Filing proof that the summons was served",
+   "h": "Who files proof of service?",
+   "w": "Proof of service belongs to the plaintiff's side of the paper trail. It is not an appearance."
+  },
+  {
+   "lv": 2,
+   "q": "Proof of substituted service names the person, date and place, but not the time. Is it complete?",
+   "c": [
+    "Yes. The mailing date fixes the time.",
+    "No. It must also state the time.",
+    "Yes, if a judge approves it.",
+    "Only if the defendant asks for the time."
+   ],
+   "a": "No. It must also state the time.",
+   "h": "Read the list of what the proof must show.",
+   "w": "CPLR 308(2): proof of service must identify the person of suitable age and discretion and state the date, time and place of service."
   },
   {
    "lv": 3,
-   "q": "A process server hands the summons directly to the defendant. This is called:",
+   "q": "Papers left with an adult at Ray's home Mar 1, copy mailed Mar 4, proof filed Mar 10. Last day for Ray to appear?",
    "c": [
-    "Personal service",
-    "Substituted service",
-    "Service by publication",
-    "Filing"
+    "April 19",
+    "March 21",
+    "March 31",
+    "April 9"
    ],
-   "a": "Personal service",
-   "h": "Hand to hand.",
-   "w": "Delivering the papers directly to the person is personal (in-hand) service."
+   "a": "April 19",
+   "h": "Service completes before the 30 days start.",
+   "w": "CPLR 308(2): service is complete ten days after filing, so March 20. CPLR 320(a): 30 days after service is complete gives April 19."
   },
   {
    "lv": 3,
-   "q": "A summons is often served together with which document that states the plaintiff's claims?",
+   "q": "A judge finds circumstances prevent immediate filing and orders filing within five days. When is the action commenced?",
    "c": [
-    "Complaint",
-    "Answer",
-    "Verdict",
-    "Affidavit of service"
+    "When the papers are filed",
+    "When the defendant is served",
+    "On the fifth day",
+    "When the judge signs the order"
    ],
-   "a": "Complaint",
-   "h": "The defendant later responds to it with an answer.",
-   "w": "The complaint states the plaintiff's claims. It is commonly served with the summons."
+   "a": "When the judge signs the order",
+   "h": "This is the exception to \"filing starts it.\"",
+   "w": "CPLR 304(a): the signing of the order requiring filing not later than five days thereafter commences the action."
   },
   {
    "lv": 3,
-   "q": "A person who is NOT a party must come to court to testify. Which document should be used?",
+   "q": "When may a server affix the summons to the door and mail a copy (CPLR 308(4))?",
    "c": [
-    "Subpoena",
-    "Summons",
-    "Complaint",
-    "Notice of motion"
+    "Whenever the defendant is out of state",
+    "Only after a judge gives permission",
+    "After due diligence fails on 308(1) and (2)",
+    "Whenever the defendant refuses papers"
    ],
-   "a": "Subpoena",
-   "h": "Summons is for parties.",
-   "w": "A subpoena compels a witness to appear. A summons is for bringing a defendant into the case."
+   "a": "After due diligence fails on 308(1) and (2)",
+   "h": "It is the fallback, not the first choice.",
+   "w": "CPLR 308(4): it applies where service under paragraphs 1 and 2 cannot be made with due diligence. A court order is the different route in 308(5)."
+  },
+  {
+   "lv": 3,
+   "q": "Dana is served in New York Oct 1. On Oct 18 she serves a motion that extends her time to answer. Appeared?",
+   "c": [
+    "No. Only an answer or notice counts.",
+    "Yes. Such a motion is an appearance.",
+    "No. It came after the tenth day.",
+    "Yes, but only if the court grants it."
+   ],
+   "a": "Yes. Such a motion is an appearance.",
+   "h": "The rule names three ways.",
+   "w": "CPLR 320(a): a motion that has the effect of extending the time to answer is an appearance. October 1 plus 20 days is October 21."
+  },
+  {
+   "lv": 3,
+   "q": "A is handed a summons in NY. B is served by affix-and-mail; proof filed 4 days later. Whose deadline is later?",
+   "c": [
+    "B's: 30 days from completed service",
+    "A's: personal delivery gets longer",
+    "Same. Both were served the same day",
+    "B's, but only by 4 days"
+   ],
+   "a": "B's: 30 days from completed service",
+   "h": "Both the length and the start date differ.",
+   "w": "CPLR 308(4) and 320(a): affix-and-mail service is complete ten days after proof is filed, and the time is then 30 days. A has 20 days from service."
+  },
+  {
+   "lv": 3,
+   "q": "Papers are left with a neighbor at the neighbor's own house. Valid under CPLR 308(2)?",
+   "c": [
+    "Yes. A neighbor is a suitable person",
+    "Yes, if a copy is also mailed",
+    "No. Only a family member qualifies",
+    "No. It must be at Ray's home or workplace"
+   ],
+   "a": "No. It must be at Ray's home or workplace",
+   "h": "Where matters as much as who.",
+   "w": "CPLR 308(2): delivery is to a person of suitable age and discretion at the actual place of business, dwelling place or usual place of abode of the person to be served."
   }
  ],
  "motion": [
   {
    "lv": 1,
-   "q": "A request asking the court to make a ruling or issue an order is a:",
+   "q": "When is a motion on notice \"made\" under CPLR 2211?",
    "c": [
-    "Motion",
-    "Complaint",
-    "Verdict",
-    "Summons"
+    "When the papers are filed",
+    "When the notice of motion is served",
+    "When the judge signs the order",
+    "On the day of the hearing"
    ],
-   "a": "Motion",
-   "h": "It \"moves\" the court to act.",
-   "w": "A motion is a request asking the court to issue a ruling or take a particular action."
+   "a": "When the notice of motion is served",
+   "h": "Which act puts the other side on notice?",
+   "w": "CPLR 2211: a motion is an application for an order, and a motion on notice is made when a notice of the motion or an order to show cause is served."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: A motion can be made in writing or out loud in court.",
+   "q": "A notice of motion must say what the movant wants and why. Which pair of terms does CPLR 2214(a) use?",
+   "c": [
+    "Relief demanded and grounds",
+    "Summons and complaint",
+    "Verdict and judgment",
+    "Calendar and return date"
+   ],
+   "a": "Relief demanded and grounds",
+   "h": "What is asked for, and the reasons.",
+   "w": "CPLR 2214(a): a notice of motion specifies the time and place of the hearing, the supporting papers, the relief demanded and the grounds."
+  },
+  {
+   "lv": 1,
+   "q": "One notice of motion may demand relief in the alternative or of several types. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "True",
-   "h": "Think about a lawyer standing up in court.",
-   "w": "True. Motions are often written, but they can also be made orally in court.",
+   "h": "Read the last sentence of 2214(a).",
+   "w": "CPLR 2214(a): relief in the alternative or of several different types may be demanded.",
    "type": "tf"
   },
   {
    "lv": 1,
-   "q": "The party who makes a motion is often called the:",
+   "q": "Under Uniform Rule 202.8(c), what is an affidavit on a motion for, and what is a brief for?",
    "c": [
-    "Movant",
-    "Respondent",
-    "Juror",
-    "Clerk"
+    "Affidavit: the law. Brief: the facts.",
+    "Both are for facts",
+    "Affidavit: the facts. Brief: the law.",
+    "Both are for law"
    ],
-   "a": "Movant",
-   "h": "The one who \"moves.\"",
-   "w": "The party making the motion is the movant (or moving party)."
+   "a": "Affidavit: the facts. Brief: the law.",
+   "h": "Facts on one side, law on the other.",
+   "w": "Uniform Rule 202.8(c): affidavits are for a statement of the relevant facts, and briefs are for a statement of the relevant law."
+  },
+  {
+   "lv": 1,
+   "q": "A lawyer needs urgent relief. In a proper case, what may the court grant under CPLR 2214(d)?",
+   "c": [
+    "A second summons",
+    "An order to show cause",
+    "An interim judgment",
+    "A notice of appearance"
+   ],
+   "a": "An order to show cause",
+   "h": "It is served in lieu of a notice of motion.",
+   "w": "CPLR 2214(d): the court in a proper case may grant an order to show cause, to be served in lieu of a notice of motion, at a time and in a manner specified in it."
   },
   {
    "lv": 2,
-   "q": "An attorney asks the court to throw the case out. This is a motion to:",
+   "q": "A motion is noticed for March 16. Latest day to serve the notice of motion and supporting affidavits?",
    "c": [
-    "Dismiss",
-    "Adjourn",
-    "Appeal",
-    "Serve"
+    "March 8",
+    "March 10",
+    "March 12",
+    "March 14"
    ],
-   "a": "Dismiss",
-   "h": "Throw it out = ?",
-   "w": "Asking the court to throw out a case is a motion to dismiss."
+   "a": "March 8",
+   "h": "Count back eight days.",
+   "w": "CPLR 2214(b): a notice of motion and supporting affidavits are served at least eight days before the hearing. March 16 minus 8 days is March 8."
   },
   {
    "lv": 2,
-   "q": "The side that disagrees with a motion submits papers called:",
+   "q": "Hearing June 12, no early-answer demand. Latest day to serve answering affidavits?",
    "c": [
-    "Opposition papers",
-    "A summons",
-    "A verdict sheet",
-    "A subpoena"
+    "June 4",
+    "June 5",
+    "June 11",
+    "June 10"
    ],
-   "a": "Opposition papers",
-   "h": "They oppose it.",
-   "w": "The other side answers a motion with opposition (answering) papers."
+   "a": "June 10",
+   "h": "The default is shorter than you may expect.",
+   "w": "CPLR 2214(b): answering affidavits are served at least two days before the hearing. June 12 minus 2 days is June 10."
   },
   {
    "lv": 2,
-   "q": "The date a motion is scheduled to be heard is often called the:",
+   "q": "A notice of motion is served Jan 5 and filed Jan 7. On what date is the motion \"made\"?",
    "c": [
-    "Return date",
-    "Verdict date",
-    "Index date",
-    "Filing fee"
+    "January 6",
+    "January 7",
+    "January 5",
+    "The hearing date"
    ],
-   "a": "Return date",
-   "h": "The motion \"returns\" to court on this day.",
-   "w": "The return date is the day the motion is scheduled to be heard or submitted."
+   "a": "January 5",
+   "h": "Service, not filing.",
+   "w": "CPLR 2211: a motion on notice is made when the notice of motion is served."
+  },
+  {
+   "lv": 2,
+   "q": "Answering papers are served one day before the hearing. What does CPLR 2214(c) say about reading them?",
+   "c": [
+    "The court must read everything it gets",
+    "Read only if the court allows for good cause",
+    "Read only if the clerk stamps them",
+    "Read only if the other side agrees"
+   ],
+   "a": "Read only if the court allows for good cause",
+   "h": "The rule gives the court one exception.",
+   "w": "CPLR 2214(c): only papers served in accordance with the rule shall be read, unless the court for good cause shall otherwise direct."
+  },
+  {
+   "lv": 2,
+   "q": "Papers reach the clerk the day before the return date. When are they deemed submitted?",
+   "c": [
+    "As of the return date",
+    "The day the clerk got them",
+    "When the judge first opens them",
+    "Ten days after the return date"
+   ],
+   "a": "As of the return date",
+   "h": "The rule fixes one date for everyone.",
+   "w": "Uniform Rule 202.8(d): papers received by the clerk on or before the return date are deemed submitted as of the return date."
   },
   {
    "lv": 3,
-   "q": "One side refuses to hand over documents in discovery. The other side asks the court to order it. Which motion is this?",
+   "q": "Notice served 16 days before a June 20 hearing demands early answers. Answers and reply due when?",
    "c": [
-    "Motion to compel",
-    "Motion to dismiss",
-    "Motion to adjourn",
-    "Motion to reargue"
+    "Answers June 18; reply June 19",
+    "Answers June 12; reply June 18",
+    "Answers June 13; reply June 20",
+    "Answers June 13; reply June 19"
    ],
-   "a": "Motion to compel",
-   "h": "\"Compel\" means force.",
-   "w": "A motion to compel asks the court to order the other side to comply, for example with discovery."
+   "a": "Answers June 13; reply June 19",
+   "h": "Seven days for the answer, one for the reply.",
+   "w": "CPLR 2214(b): with a 16-day demand, answering papers and any cross-motion are served at least seven days before, and any reply at least one day before."
   },
   {
    "lv": 3,
-   "q": "A party asks the court to decide the case without a trial because no important facts are in dispute. This is a motion for:",
+   "q": "An order to show cause runs against a state body. Who must ALSO be served under CPLR 2214(d)?",
    "c": [
-    "Summary judgment",
-    "Default",
-    "Adjournment",
-    "Service"
+    "The chief judge",
+    "The county clerk",
+    "The attorney general",
+    "The governor's counsel"
    ],
-   "a": "Summary judgment",
-   "h": "It skips the trial.",
-   "w": "Summary judgment decides a case without trial when there is no genuine dispute about the key facts."
+   "a": "The attorney general",
+   "h": "One more official must be served.",
+   "w": "CPLR 2214(d): an order to show cause against a state body or officers must also be served on the attorney general, by delivery to an assistant attorney general at an office of the attorney general."
   },
   {
    "lv": 3,
-   "q": "The papers that tell the other side when and where a motion will be heard are the:",
+   "q": "A lawyer serves the notice of motion Monday and the affidavits Thursday. What does Rule 202.8(c) say?",
    "c": [
-    "Notice of motion",
-    "Affidavit of service",
-    "Summons",
-    "Stipulation"
+    "Affidavits may follow any time",
+    "Serve the affidavits with the notice",
+    "Affidavits are served only on request",
+    "Affidavits are filed but never served"
    ],
-   "a": "Notice of motion",
-   "h": "It gives notice.",
-   "w": "A notice of motion tells the other side what is being requested and when it will be heard."
+   "a": "Serve the affidavits with the notice",
+   "h": "Watch the timing words.",
+   "w": "Uniform Rule 202.8(c): the moving party shall serve copies of all affidavits and briefs upon all other parties at the time of service of the notice of motion."
+  },
+  {
+   "lv": 3,
+   "q": "Under Uniform Rule 202.8(a), motions are returnable before whom, and papers are filed by when?",
+   "c": [
+    "The assigned judge; by the return date",
+    "The clerk; 10 days after the return date",
+    "Any judge; the day after the return date",
+    "The assigned judge; after the hearing starts"
+   ],
+   "a": "The assigned judge; by the return date",
+   "h": "Two parts: who and when.",
+   "w": "Uniform Rule 202.8(a): all motions are returnable before the assigned judge, and all papers are filed with the court on or before the return date."
+  },
+  {
+   "lv": 3,
+   "q": "Moving papers served Apr 1 for an Apr 20 hearing, no early demand. Answering affidavits due, and is Apr 1 early enough?",
+   "c": [
+    "April 13; no, they need 20 days",
+    "April 18; no, they need 30 days",
+    "April 19; yes, any date works",
+    "April 18; yes, moving papers are timely"
+   ],
+   "a": "April 18; yes, moving papers are timely",
+   "h": "Two counts from the same hearing date.",
+   "w": "CPLR 2214(b): moving papers at least eight days before (April 12 at the latest), answering affidavits at least two days before (April 18)."
   }
  ],
  "affidavit": [
   {
    "lv": 1,
-   "q": "A written statement of facts sworn to be true is a(n):",
+   "q": "Under CPLR 2106(a), who may use an affirmation in place of an affidavit?",
    "c": [
-    "Affidavit",
-    "Motion",
-    "Verdict",
-    "Calendar"
+    "Only attorneys and licensed professionals",
+    "Any person, wherever the statement is made",
+    "Only a party to the action",
+    "Only a witness outside New York"
    ],
-   "a": "Affidavit",
-   "h": "Written + sworn.",
-   "w": "An affidavit is a written statement made under oath."
+   "a": "Any person, wherever the statement is made",
+   "h": "The rule says \"any person.\"",
+   "w": "CPLR 2106(a): any person's statement, wherever made, subscribed and affirmed under penalties of perjury, can be used in place of an affidavit."
   },
   {
    "lv": 1,
-   "q": "The person who signs and swears to an affidavit is called the:",
+   "q": "An affirmation can replace an affidavit in most places. Which can it NOT replace?",
    "c": [
-    "Affiant",
-    "Plaintiff",
-    "Notary",
-    "Movant"
+    "Testimony at a deposition",
+    "A verification of a pleading",
+    "A bill of particulars",
+    "An answer to interrogatories"
    ],
-   "a": "Affiant",
-   "h": "It sounds like \"affidavit.\"",
-   "w": "The affiant (sometimes called the deponent) is the person who makes the sworn statement."
+   "a": "Testimony at a deposition",
+   "h": "The rule carves out some oaths.",
+   "w": "CPLR 2106(a) excludes a deposition, an oath of office, and an oath required before a specified person other than a notary."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: An affidavit is made under oath.",
+   "q": "A proper affirmation has the same force and effect as an affidavit. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "True",
-   "h": "Look at the raised hand.",
-   "w": "True. The oath is what makes it an affidavit.",
+   "h": "Read \"in lieu of and with the same force and effect.\"",
+   "w": "CPLR 2106(a): the affirmation may be used in lieu of and with the same force and effect as an affidavit.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "Who commonly administers the oath for an affidavit?",
+   "lv": 1,
+   "q": "Which closing line matches the CPLR 2106(a) affirmation form?",
    "c": [
-    "A notary public",
-    "A juror",
-    "A process server",
-    "The plaintiff"
+    "\"I swear this is true to my knowledge\"",
+    "\"Sworn before me. Notary Public\"",
+    "\"I affirm ... under penalties of perjury ...\"",
+    "\"I declare under U.S. law this is true\""
    ],
-   "a": "A notary public",
-   "h": "They have a stamp.",
-   "w": "Affidavits are commonly sworn before a notary public or another official authorized to give oaths."
+   "a": "\"I affirm ... under penalties of perjury ...\"",
+   "h": "The form names penalties of perjury and New York law.",
+   "w": "CPLR 2106(a) sets out the form: \"I affirm this ___ day of ___ under the penalties of perjury under the laws of New York ... that the foregoing is true.\""
+  },
+  {
+   "lv": 1,
+   "q": "On a motion, what does an affidavit tell the court?",
+   "c": [
+    "The relevant law",
+    "The relevant facts",
+    "The judge's prior rulings",
+    "The hearing time and place"
+   ],
+   "a": "The relevant facts",
+   "h": "Facts or law?",
+   "w": "Uniform Rule 202.8(c): affidavits are for a statement of the relevant facts, and briefs are for a statement of the relevant law."
   },
   {
    "lv": 2,
-   "q": "Knowingly lying in a sworn affidavit can be the crime of:",
+   "q": "A deposition needs an oath. Can a CPLR 2106 affirmation replace it?",
    "c": [
-    "Perjury",
-    "Adjournment",
-    "Stipulation",
-    "Service"
+    "No. Depositions are excluded",
+    "Yes. An affirmation always equals an oath",
+    "Yes, but only for attorneys",
+    "Yes, if the witness is out of state"
    ],
-   "a": "Perjury",
-   "h": "Lying under oath.",
-   "w": "Lying under oath can be perjury."
+   "a": "No. Depositions are excluded",
+   "h": "Look at the exceptions in the rule.",
+   "w": "CPLR 2106(a) applies to statements \"other than in a deposition, or an oath of office, or an oath required to be taken before a specified person other than a notary.\""
   },
   {
    "lv": 2,
-   "q": "An affidavit attached to motion papers is mainly used to:",
+   "q": "A signer includes facts she only heard from a colleague. What does the CPLR 2106 form allow?",
    "c": [
-    "Present facts under oath",
-    "Schedule a hearing",
-    "Notify a defendant of a lawsuit",
-    "Appeal a decision"
+    "She may not include them",
+    "She needs the colleague's notarized note",
+    "She may swear to them as personal knowledge",
+    "Affirm them on information and belief"
    ],
-   "a": "Present facts under oath",
-   "h": "What does an affidavit contain?",
-   "w": "Affidavits put facts before the court under oath, often to support or oppose a motion."
+   "a": "Affirm them on information and belief",
+   "h": "The form has an exception clause.",
+   "w": "The CPLR 2106(a) form says the foregoing is true \"except as to matters alleged on information and belief and as to those matters I believe it to be true.\""
+  },
+  {
+   "lv": 2,
+   "q": "Dana and Lee use a CPLR 2106 affirmation instead of acknowledging a matrimonial agreement. Enough?",
+   "c": [
+    "Yes. It replaces any acknowledgment",
+    "Yes, if both sign the same day",
+    "No. The DRL acknowledgment is still required",
+    "No. Affirmations are invalid in family matters"
+   ],
+   "a": "No. The DRL acknowledgment is still required",
+   "h": "Read subdivision (b).",
+   "w": "CPLR 2106(b): nothing in the rule eliminates any domestic relations law requirement that matrimonial agreements be acknowledged in the form of deed."
+  },
+  {
+   "lv": 2,
+   "q": "An affirmation was signed while the person was traveling abroad. Usable in a New York action?",
+   "c": [
+    "No. It must be signed in New York",
+    "Yes. The rule says \"wherever made\"",
+    "No. A foreign notary must sign",
+    "Yes, but only with a consul's stamp"
+   ],
+   "a": "Yes. The rule says \"wherever made\"",
+   "h": "Two words in the rule decide it.",
+   "w": "CPLR 2106(a): \"The statement of any person wherever made.\""
+  },
+  {
+   "lv": 2,
+   "q": "An assistant types a witness's name and affirms the statement for her. Is that an affirmation?",
+   "c": [
+    "No. The person must sign and affirm it",
+    "Yes, if the assistant is an adult",
+    "Yes, if the assistant works for a lawyer",
+    "Yes, if the witness agrees aloud"
+   ],
+   "a": "No. The person must sign and affirm it",
+   "h": "Who has to sign and affirm?",
+   "w": "CPLR 2106(a): the statement must be \"subscribed and affirmed by that person to be true under the penalties of perjury.\""
   },
   {
    "lv": 3,
-   "q": "Sworn proof that court papers were delivered is an:",
+   "q": "Which can be used in place of an affidavit in a New York action under CPLR 2106(a)?",
    "c": [
-    "Affidavit of service",
-    "Affidavit of merit",
-    "Notice of motion",
-    "Order to show cause"
+    "An unsigned statement saying it is true",
+    "A statement made at a deposition",
+    "A statement given under an oath of office",
+    "A signed affirmation in the rule's form"
    ],
-   "a": "Affidavit of service",
-   "h": "It is about delivery.",
-   "w": "An affidavit of service is sworn by the person who delivered the papers, describing when, where, and how."
+   "a": "A signed affirmation in the rule's form",
+   "h": "Two of these are excluded and one isn't affirmed at all.",
+   "w": "CPLR 2106(a) requires a statement subscribed and affirmed under the penalties of perjury, and excludes depositions and oaths of office."
   },
   {
    "lv": 3,
-   "q": "What is the main difference between an affidavit and a deposition?",
+   "q": "A party must verify a pleading and no notary is handy. What does CPLR 2106(a) allow?",
    "c": [
-    "An affidavit is written; a deposition is spoken testimony",
-    "An affidavit is not sworn",
-    "A deposition always happens in court",
-    "There is no difference"
+    "Nothing. Only a notary can verify",
+    "A pleading can't be verified",
+    "An affirmation instead of a verification",
+    "Only an attorney may affirm it"
    ],
-   "a": "An affidavit is written; a deposition is spoken testimony",
-   "h": "One is on paper, one is out loud.",
-   "w": "Both are under oath. An affidavit is a written statement; a deposition is oral testimony recorded outside of court."
+   "a": "An affirmation instead of a verification",
+   "h": "Check the list of what an affirmation can replace.",
+   "w": "CPLR 2106(a) lists \"a verification of a pleading\" among the sworn statements an affirmation may replace."
   },
   {
    "lv": 3,
-   "q": "The section at the end of an affidavit showing when, where, and before whom it was sworn is the:",
+   "q": "Moving papers use a CPLR 2106 affirmation, not an affidavit. Does it count as a supporting affidavit for timing?",
    "c": [
-    "Jurat",
-    "Caption",
-    "Index number",
-    "Verdict"
+    "No. Only notarized affidavits count",
+    "Yes. Same force; serve 8+ days before",
+    "Yes, but serve it 20 days before",
+    "No. Affirmations are used after the hearing"
    ],
-   "a": "Jurat",
-   "h": "It sounds like \"jury,\" but it isn't one.",
-   "w": "The jurat is the notary's certification at the end showing the oath was taken."
+   "a": "Yes. Same force; serve 8+ days before",
+   "h": "CPLR 2106 says what force it has.",
+   "w": "CPLR 2106(a): an affirmation has the same force and effect as an affidavit. CPLR 2214(b): a notice of motion and supporting affidavits are served at least eight days before the hearing."
   }
  ],
  "adjournment": [
   {
    "lv": 1,
-   "q": "Postponing a court proceeding to a later date is an:",
+   "q": "The parties agree to adjourn a motion's return date. How must the stipulation be made?",
    "c": [
-    "Adjournment",
-    "Appeal",
-    "Arraignment",
-    "Affidavit"
+    "Orally at the clerk's counter",
+    "By phone to the judge's clerk",
+    "In writing, sent to the assigned judge",
+    "By a note in each lawyer's file"
    ],
-   "a": "Adjournment",
-   "h": "The case gets a new date.",
-   "w": "An adjournment moves a case or proceeding to a later date."
+   "a": "In writing, sent to the assigned judge",
+   "h": "Two requirements in one sentence.",
+   "w": "Uniform Rule 202.8(e)(1): stipulations of adjournment made by the parties shall be in writing and shall be submitted to the assigned judge."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: An adjournment ends the case permanently.",
+   "q": "How many stipulated adjournments may the parties submit without asking the court?",
    "c": [
-    "True",
-    "False"
+    "One",
+    "No more than three",
+    "Two",
+    "Five"
    ],
-   "a": "False",
-   "h": "It is a pause, not an ending.",
-   "w": "False. An adjournment just moves the matter to another date.",
-   "type": "tf"
+   "a": "No more than three",
+   "h": "There is a limit on count and on days.",
+   "w": "Uniform Rule 202.8(e)(1): no more than three stipulated adjournments for an aggregate period of 60 days without prior permission of the court."
   },
   {
    "lv": 1,
-   "q": "When a case is adjourned, it usually gets a new:",
-   "c": [
-    "Court date",
-    "Plaintiff",
-    "Index number",
-    "Verdict"
-   ],
-   "a": "Court date",
-   "h": "Look at the calendar.",
-   "w": "An adjourned case is given a new date to come back."
-  },
-  {
-   "lv": 2,
-   "q": "A lawyer is on trial in another courtroom and cannot appear. What will they most likely ask for?",
-   "c": [
-    "An adjournment",
-    "A judgment",
-    "A subpoena",
-    "An affidavit"
-   ],
-   "a": "An adjournment",
-   "h": "They need a new date.",
-   "w": "When a party needs more time or a new date, they ask for an adjournment."
-  },
-  {
-   "lv": 2,
-   "q": "When both sides agree to an adjournment in writing, it is often done by:",
-   "c": [
-    "Stipulation",
-    "Subpoena",
-    "Verdict",
-    "Summons"
-   ],
-   "a": "Stipulation",
-   "h": "An agreement between the parties.",
-   "w": "A stipulation is a written agreement between the parties, often used for adjournments."
-  },
-  {
-   "lv": 2,
-   "q": "A short break during the SAME day's session is a:",
-   "c": [
-    "Recess",
-    "Adjournment",
-    "Appeal",
-    "Default"
-   ],
-   "a": "Recess",
-   "h": "It is short and the same day.",
-   "w": "A recess is a short break. An adjournment moves the matter to another time or date."
-  },
-  {
-   "lv": 3,
-   "q": "In New York criminal court, an \"ACD\" is an adjournment in contemplation of:",
-   "c": [
-    "Dismissal",
-    "Discovery",
-    "Deposition",
-    "Default"
-   ],
-   "a": "Dismissal",
-   "h": "The case may go away later.",
-   "w": "An ACD is an adjournment in contemplation of dismissal: the case is dismissed later if conditions are met."
-  },
-  {
-   "lv": 3,
-   "q": "A case adjourned with no future date set is sometimes said to be adjourned:",
-   "c": [
-    "Sine die",
-    "Pro se",
-    "Ex parte",
-    "Nunc pro tunc"
-   ],
-   "a": "Sine die",
-   "h": "Latin for \"without a day.\"",
-   "w": "\"Sine die\" means without a day: no new date has been set."
-  },
-  {
-   "lv": 3,
-   "q": "Which one moves a matter to ANOTHER date: an adjournment or a recess?",
-   "c": [
-    "Adjournment",
-    "Recess",
-    "Both",
-    "Neither"
-   ],
-   "a": "Adjournment",
-   "h": "Which one packs a suitcase?",
-   "w": "An adjournment moves the matter to a later date. A recess is a short break in the same session."
-  }
- ],
- "calendarcall": [
-  {
-   "lv": 1,
-   "q": "The list of cases scheduled to be heard by the court is the court:",
-   "c": [
-    "Calendar",
-    "Transcript",
-    "Exhibit",
-    "Pleading"
-   ],
-   "a": "Calendar",
-   "h": "It is about scheduling.",
-   "w": "The court calendar lists the cases scheduled to be heard."
-  },
-  {
-   "lv": 1,
-   "q": "At a calendar call, the court:",
-   "c": [
-    "Calls each case on the list to see who is present",
-    "Sentences defendants",
-    "Selects a jury",
-    "Collects filing fees"
-   ],
-   "a": "Calls each case on the list to see who is present",
-   "h": "It is a roll call for cases.",
-   "w": "At a calendar call, each case on the list is called to check who is present and ready."
-  },
-  {
-   "lv": 1,
-   "q": "TRUE or FALSE: At a calendar call, cases are called to check whether the parties are ready.",
+   "q": "A written adjournment stipulation is effective unless the court directs otherwise. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "True",
-   "h": "Roll call.",
-   "w": "True. The calendar call checks attendance and readiness.",
+   "h": "Does the judge have to approve each one?",
+   "w": "Uniform Rule 202.8(e)(1): such stipulation shall be effective unless the court otherwise directs.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "In a civil case, the defendant does not appear when the case is called. The plaintiff may ask for a:",
+   "lv": 1,
+   "q": "The parties disagree. How must one lawyer request an adjournment?",
    "c": [
-    "Default",
-    "Recess",
-    "Subpoena",
-    "Verdict"
+    "By phone to the clerk, unannounced",
+    "Orally in court on the return date",
+    "By letter to the other side only",
+    "In writing, on notice, to the assigned judge"
    ],
-   "a": "Default",
-   "h": "The other side did not show up.",
-   "w": "When a party fails to appear, the other side may ask the court to find that party in default."
+   "a": "In writing, on notice, to the assigned judge",
+   "h": "Writing, notice, and the right person.",
+   "w": "Uniform Rule 202.8(e)(2): absent agreement, a request for an adjournment is submitted in writing, upon notice to the other party, to the assigned judge."
+  },
+  {
+   "lv": 1,
+   "q": "By when must a contested adjournment request be submitted?",
+   "c": [
+    "Within ten days after the return date",
+    "Any time before the judge rules",
+    "On or before the return date",
+    "Only on the return date itself"
+   ],
+   "a": "On or before the return date",
+   "h": "The deadline is tied to one date.",
+   "w": "Uniform Rule 202.8(e)(2): the request is submitted on or before the return date."
   },
   {
    "lv": 2,
-   "q": "A \"second call\" means:",
+   "q": "Lawyers adjourned 3 times (20, 20, 20 days). They want a fourth 10-day stipulation. Permission needed?",
    "c": [
-    "Cases not ready the first time are called again later",
-    "The case is sent to a higher court",
-    "A new jury is selected",
-    "The case is dismissed"
+    "No. Each stipulation stands alone",
+    "Yes. More than three, and over 60 days",
+    "No. Only the clerk must be told",
+    "Yes, but only if the other side objects"
    ],
-   "a": "Cases not ready the first time are called again later",
-   "h": "Try again later.",
-   "w": "On second call, cases that were not ready the first time are called again."
+   "a": "Yes. More than three, and over 60 days",
+   "h": "Count the stipulations and add the days.",
+   "w": "Uniform Rule 202.8(e)(1): no more than three stipulated adjournments for an aggregate period of 60 days without prior permission of the court."
   },
   {
    "lv": 2,
-   "q": "Who typically reads out the cases at a calendar call?",
+   "q": "Two 30-day stipulations are submitted. A third for 15 days is signed. What follows?",
    "c": [
-    "The court clerk",
-    "The jury",
-    "The plaintiff",
+    "It needs permission: the total passes 60",
+    "It is fine. It is only the third",
+    "It is fine. Fifteen days is short",
+    "It is void. Three is never allowed"
+   ],
+   "a": "It needs permission: the total passes 60",
+   "h": "Two limits, and both count.",
+   "w": "Uniform Rule 202.8(e)(1): three stipulated adjournments are allowed only up to an aggregate of 60 days without permission. Here the total would be 75."
+  },
+  {
+   "lv": 2,
+   "q": "Two lawyers sign an adjournment stipulation and keep it in their files. What is missing?",
+   "c": [
+    "Nothing. Signing is enough",
+    "Filing with the county clerk",
+    "A third lawyer as witness",
+    "Submission to the assigned judge"
+   ],
+   "a": "Submission to the assigned judge",
+   "h": "Who has to receive it?",
+   "w": "Uniform Rule 202.8(e)(1): the stipulation is in writing and submitted to the assigned judge."
+  },
+  {
+   "lv": 2,
+   "q": "After a contested adjournment request is submitted, who says whether it is granted?",
+   "c": [
+    "The other lawyer",
+    "The county clerk",
+    "The court",
     "The process server"
    ],
-   "a": "The court clerk",
-   "h": "This is your future job.",
-   "w": "The court clerk usually calls the calendar."
+   "a": "The court",
+   "h": "The rule says who notifies.",
+   "w": "Uniform Rule 202.8(e)(2): the court will notify the requesting party whether the adjournment has been granted."
+  },
+  {
+   "lv": 2,
+   "q": "A judge disagrees with a properly submitted stipulated adjournment. What does the rule allow?",
+   "c": [
+    "Nothing. A stipulation binds the court",
+    "The court may direct otherwise",
+    "The clerk may cancel it on request",
+    "Only the parties may withdraw it"
+   ],
+   "a": "The court may direct otherwise",
+   "h": "Read the \"unless\" clause.",
+   "w": "Uniform Rule 202.8(e)(1): such stipulation shall be effective unless the court otherwise directs."
   },
   {
    "lv": 3,
-   "q": "The plaintiff appears, but the defendant never answered the complaint and does not show up. What might the plaintiff request?",
+   "q": "A motion is returnable May 1. Stipulations move it to May 15, June 1, June 15, then June 30. Which needs permission?",
    "c": [
-    "A default judgment",
-    "A deposition",
-    "A recess",
-    "A subpoena"
+    "The fourth, to June 30",
+    "The third, to June 15",
+    "The second, to June 1",
+    "None. The total is only 60 days"
    ],
-   "a": "A default judgment",
-   "h": "Default + judgment.",
-   "w": "When a defendant fails to answer or appear, the plaintiff may seek a default judgment."
+   "a": "The fourth, to June 30",
+   "h": "The total is exactly 60. Is that the only limit?",
+   "w": "The days add to 60 (14 + 17 + 14 + 15), but Uniform Rule 202.8(e)(1) also allows no more than three stipulated adjournments without permission. The fourth needs it."
   },
   {
    "lv": 3,
-   "q": "Neither side appears when a case is called. What may the court do?",
+   "q": "One lawyer wants an adjournment, the other objects. She phones the judge's clerk on the return date. Right?",
    "c": [
-    "Mark it off or dismiss it",
-    "Enter judgment for the plaintiff",
-    "Issue a new summons",
-    "Swear in a jury"
+    "Yes. A call on the return date is enough",
+    "Yes, if she tells the other side after",
+    "No. It must be made in person",
+    "No. It must be in writing, on notice"
    ],
-   "a": "Mark it off or dismiss it",
-   "h": "Nobody showed up.",
-   "w": "If no one appears, the court may mark the case off the calendar or dismiss it."
+   "a": "No. It must be in writing, on notice",
+   "h": "Which parts of the method are missing?",
+   "w": "Uniform Rule 202.8(e)(2): absent agreement, a request is submitted in writing, upon notice to the other party, to the assigned judge on or before the return date."
   },
   {
    "lv": 3,
-   "q": "A case removed from the active calendar is often described as being:",
+   "q": "A contested adjournment request is mailed the day AFTER the return date. What does the rule say?",
    "c": [
-    "Marked off",
-    "Sworn",
-    "Notarized",
-    "Served"
+    "It is fine any day before a ruling",
+    "It is fine if the other side is phoned",
+    "It is late. It was due by the return date",
+    "It is late only if the motion is decided"
    ],
-   "a": "Marked off",
-   "h": "Crossed off the list.",
-   "w": "A case taken off the active calendar is \"marked off.\""
+   "a": "It is late. It was due by the return date",
+   "h": "When is the deadline?",
+   "w": "Uniform Rule 202.8(e)(2): the request is submitted on or before the return date."
+  },
+  {
+   "lv": 3,
+   "q": "Which describes stipulated adjournments under Uniform Rule 202.8(e)(1)?",
+   "c": [
+    "Oral, to the clerk, need a judge's signature",
+    "Written, to the judge, effective unless barred",
+    "Written, to the other side only",
+    "Oral, to the judge, effective after a hearing"
+   ],
+   "a": "Written, to the judge, effective unless barred",
+   "h": "Three parts in the rule.",
+   "w": "Uniform Rule 202.8(e)(1): in writing; submitted to the assigned judge; effective unless the court otherwise directs."
+  },
+  {
+   "lv": 3,
+   "q": "Stipulated adjournments of 25, 25 and 25 days. Is permission needed for the third?",
+   "c": [
+    "Yes. The total would be 75 days",
+    "No. It is only the third",
+    "No. Each is under 30 days",
+    "Yes, but only for the first one"
+   ],
+   "a": "Yes. The total would be 75 days",
+   "h": "Add the days.",
+   "w": "Uniform Rule 202.8(e)(1): up to three stipulated adjournments for an aggregate period of 60 days without permission. Three of 25 days is 75."
   }
  ],
- "judgment": [
+ "calendarcall": [
   {
    "lv": 1,
-   "q": "The court's final decision in a case is the:",
+   "q": "Judge Ruiz wants a list just for hearing motions. Which calendar under Rule 202.22(a)?",
    "c": [
-    "Judgment",
-    "Motion",
-    "Summons",
-    "Calendar"
+    "The motion calendar",
+    "The general calendar",
+    "The reserve calendar",
+    "The ready calendar"
    ],
-   "a": "Judgment",
-   "h": "It comes at the end.",
-   "w": "A judgment is the court's final decision determining the rights of the parties."
+   "a": "The motion calendar",
+   "h": "It is named for what it hears.",
+   "w": "Uniform Rule 202.22(a)(2): a motion calendar is for the hearing of motions."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: A jury's verdict and the court's judgment are the same thing.",
+   "q": "No note of issue or certificate of readiness is filed yet. Which calendar conferences such a case?",
+   "c": [
+    "The ready calendar",
+    "The general calendar",
+    "The pretrial conference calendar",
+    "The preliminary conference calendar"
+   ],
+   "a": "The preliminary conference calendar",
+   "h": "Look for the words \"not yet.\"",
+   "w": "Uniform Rule 202.22(a)(1): a preliminary conference calendar is for cases in which a note of issue and certificate of readiness have not yet been filed."
+  },
+  {
+   "lv": 1,
+   "q": "Every judge must use the same set of calendars. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "False",
-   "h": "The jury does one; the court does the other.",
-   "w": "False. The jury returns a verdict; the court enters the judgment.",
+   "h": "Read the first sentence of 202.22(a).",
+   "w": "Uniform Rule 202.22(a): a judge may establish such calendars as the judge deems necessary or desirable for proper case management.",
    "type": "tf"
   },
   {
    "lv": 1,
-   "q": "The party who WINS a money judgment is the judgment:",
+   "q": "Which calendar is for actions in which a trial is imminent?",
    "c": [
-    "Creditor",
-    "Debtor",
-    "Juror",
-    "Clerk"
+    "The reserve calendar",
+    "The ready calendar",
+    "The general calendar",
+    "The preliminary conference calendar"
    ],
-   "a": "Creditor",
-   "h": "They are owed the money.",
-   "w": "The judgment creditor is owed the money. The judgment debtor owes it."
+   "a": "The ready calendar",
+   "h": "\"Imminent\" is the key word.",
+   "w": "Uniform Rule 202.22(a)(6): a ready calendar is for actions in which a trial is imminent."
+  },
+  {
+   "lv": 1,
+   "q": "Who schedules the call of a calendar under the individual assignment system?",
+   "c": [
+    "The assigned judge",
+    "The chief clerk",
+    "The county clerk",
+    "The lawyers, by agreement"
+   ],
+   "a": "The assigned judge",
+   "h": "The rule names the decision maker.",
+   "w": "Uniform Rule 202.22(c): judges may schedule calls of any calendars they have established at such times as they deem appropriate."
   },
   {
    "lv": 2,
-   "q": "The party who OWES money under a judgment is the judgment:",
+   "q": "The note of issue and certificate of readiness are in the file, but the action has not moved. Which calendar?",
    "c": [
-    "Debtor",
-    "Creditor",
-    "Movant",
-    "Affiant"
+    "The preliminary conference calendar",
+    "The reserve calendar",
+    "The ready calendar",
+    "The general calendar"
    ],
-   "a": "Debtor",
-   "h": "Debt = owes.",
-   "w": "The judgment debtor owes the money."
+   "a": "The general calendar",
+   "h": "It is the waiting room between filing and the conference.",
+   "w": "Uniform Rule 202.22(a)(3): a general calendar is for actions with a note of issue and certificate of readiness filed that have not yet been transferred to a pretrial conference or ready calendar."
   },
   {
    "lv": 2,
-   "q": "A judgment entered because the defendant never answered or appeared is a:",
+   "q": "An action awaits its conference after the note of issue and certificate of readiness. Which calendar?",
    "c": [
-    "Default judgment",
-    "Summary judgment",
-    "Verdict",
-    "Stipulation"
+    "The motion calendar",
+    "The reserve calendar",
+    "The pretrial conference calendar",
+    "The continuous calendar"
    ],
-   "a": "Default judgment",
-   "h": "They did not show up.",
-   "w": "A default judgment is entered when a defendant fails to answer or appear."
+   "a": "The pretrial conference calendar",
+   "h": "It is named for what the action waits for.",
+   "w": "Uniform Rule 202.22(a)(4): a pretrial conference calendar is for actions awaiting conference after the note of issue and certificate of readiness have been filed."
   },
   {
    "lv": 2,
-   "q": "Officially recording a judgment in the court's records is called:",
+   "q": "A pretrial conference was held. Trial is not yet imminent. Which calendar holds the action?",
    "c": [
-    "Entering the judgment",
-    "Serving the judgment",
-    "Adjourning the judgment",
-    "Calendaring the judgment"
+    "The general calendar",
+    "The reserve calendar",
+    "The preliminary conference calendar",
+    "The military calendar"
    ],
-   "a": "Entering the judgment",
-   "h": "It is \"entered\" into the record.",
-   "w": "A judgment becomes official when it is entered by the clerk."
+   "a": "The reserve calendar",
+   "h": "It sits between conference and ready.",
+   "w": "Uniform Rule 202.22(a)(5): a reserve calendar is for actions that have had a pretrial conference (or where it was dispensed with) but are not yet on a ready calendar."
+  },
+  {
+   "lv": 2,
+   "q": "An action advances to the next calendar. Where does it go, absent a contrary order?",
+   "c": [
+    "The foot of the next calendar",
+    "The head of the next calendar",
+    "The middle of the next calendar",
+    "Back to the foot of the same one"
+   ],
+   "a": "The foot of the next calendar",
+   "h": "Think of a line you join at the back.",
+   "w": "Uniform Rule 202.22(b): actions progress from the head of one calendar to the foot of the next, unless otherwise determined by the court."
+  },
+  {
+   "lv": 2,
+   "q": "A court not continuously in session closes a term. What happens to its calendars?",
+   "c": [
+    "They are rebuilt from scratch",
+    "They are merged at random",
+    "Every action moves to the foot",
+    "They open the next term; positions stay"
+   ],
+   "a": "They open the next term; positions stay",
+   "h": "Positions matter here.",
+   "w": "Uniform Rule 202.22(a)(8): in a court not continuously in session, the calendars at the close of one term open the next term, and actions retain their positions."
   },
   {
    "lv": 3,
-   "q": "A party unhappy with a final judgment usually starts an appeal by filing a:",
+   "q": "The court dispensed with a pretrial conference. The action isn't on the ready calendar. Where is it?",
    "c": [
-    "Notice of appeal",
-    "Notice of motion",
-    "Summons",
-    "Affidavit of service"
+    "The pretrial conference calendar",
+    "The general calendar",
+    "The reserve calendar",
+    "The preliminary conference calendar"
    ],
-   "a": "Notice of appeal",
-   "h": "It gives notice of the appeal.",
-   "w": "An appeal is generally started by filing a notice of appeal."
+   "a": "The reserve calendar",
+   "h": "Read the definition closely.",
+   "w": "Uniform Rule 202.22(a)(5): a reserve calendar is for actions that have had a pretrial conference or where such conference was dispensed with by the court."
   },
   {
    "lv": 3,
-   "q": "A judgment decided without a trial because no important facts are in dispute is a:",
+   "q": "An action is announced \"ready\" but trial isn't available. What may counsel arrange under 202.22(d)?",
    "c": [
-    "Summary judgment",
-    "Default judgment",
-    "Verdict",
-    "Recess"
+    "To skip the trial date",
+    "To be phoned and appear on one hour's notice",
+    "To send a clerk instead",
+    "To be excused from appearing"
    ],
-   "a": "Summary judgment",
-   "h": "It skips the trial.",
-   "w": "Summary judgment decides a case without trial when no genuine factual dispute exists."
+   "a": "To be phoned and appear on one hour's notice",
+   "h": "There is a condition attached.",
+   "w": "Uniform Rule 202.22(d): counsel may be summoned by telephone if they stay available and appear on one hour's notice (or as the court orders)."
   },
   {
    "lv": 3,
-   "q": "The jury finds for the plaintiff. What makes the result final and official?",
+   "q": "Case A is at the head of the general calendar and is advanced. Case B is at the foot of the next. Where does A go?",
    "c": [
-    "The court enters judgment",
-    "The clerk calls the calendar",
-    "The defendant is served a summons",
-    "The plaintiff files an affidavit of service"
+    "The foot, behind Case B",
+    "The head, ahead of Case B",
+    "Between B and the case before it",
+    "Back to the general calendar"
    ],
-   "a": "The court enters judgment",
-   "h": "Verdict first, then…",
-   "w": "After the verdict, the court enters judgment, which makes the result official."
+   "a": "The foot, behind Case B",
+   "h": "Progression goes head to foot.",
+   "w": "Uniform Rule 202.22(b): actions progress from the head of one calendar to the foot of the next."
+  },
+  {
+   "lv": 3,
+   "q": "Why isn't a pending motion on the general calendar?",
+   "c": [
+    "The general calendar is for trials only",
+    "Motions go on the ready calendar",
+    "Motions never go on a calendar",
+    "Motions are heard on the motion calendar"
+   ],
+   "a": "Motions are heard on the motion calendar",
+   "h": "Two calendars, two jobs.",
+   "w": "Uniform Rule 202.22(a)(2) and (3): the motion calendar is for hearing motions; the general calendar is for actions with a note of issue and certificate of readiness filed but not yet transferred."
+  },
+  {
+   "lv": 3,
+   "q": "A judge wants to call a motion calendar and a reserve calendar on different days. Allowed?",
+   "c": [
+    "No. All must be called together",
+    "No. Only the chief clerk sets times",
+    "Yes. The judge sets call times",
+    "Yes, but the county clerk must approve"
+   ],
+   "a": "Yes. The judge sets call times",
+   "h": "Who sets the timing?",
+   "w": "Uniform Rule 202.22(c): judges may schedule calls of any calendars they have established at such times as they deem appropriate."
+  }
+ ],
+ "judgment": [
+  {
+   "lv": 1,
+   "q": "Under CPLR 5011, a judgment is:",
+   "c": [
+    "A written request for an order",
+    "The determination of the parties' rights",
+    "A sworn statement of facts",
+    "The notice that starts a case"
+   ],
+   "a": "The determination of the parties' rights",
+   "h": "It decides who has what rights.",
+   "w": "CPLR 5011: a judgment is the determination of the rights of the parties in an action or special proceeding."
+  },
+  {
+   "lv": 1,
+   "q": "A judgment may be interlocutory or final. True or false?",
+   "c": [
+    "False",
+    "True"
+   ],
+   "a": "True",
+   "h": "Read the first sentence of 5011.",
+   "w": "CPLR 5011: a judgment may be either interlocutory or final.",
+   "type": "tf"
+  },
+  {
+   "lv": 1,
+   "q": "What must a judgment refer to, and state the result of?",
+   "c": [
+    "The plaintiff's summons",
+    "The judge's notes",
+    "The clerk's docket entries",
+    "The verdict or decision, or the default"
+   ],
+   "a": "The verdict or decision, or the default",
+   "h": "Where did the result come from?",
+   "w": "CPLR 5011: a judgment shall refer to, and state the result of, the verdict or decision, or recite the default upon which it is based."
+  },
+  {
+   "lv": 2,
+   "q": "A petitioner wins a special proceeding. Is the court's determination a judgment under CPLR 5011?",
+   "c": [
+    "No. Only actions produce judgments",
+    "No. Only jury verdicts do",
+    "Yes. It covers special proceedings",
+    "Yes, but only after an appeal"
+   ],
+   "a": "Yes. It covers special proceedings",
+   "h": "Read the words after \"rights of the parties in an.\"",
+   "w": "CPLR 5011: a judgment is the determination of the rights of the parties in an action or special proceeding."
+  },
+  {
+   "lv": 2,
+   "q": "When may a judgment direct property to be paid into court?",
+   "c": [
+    "Whenever the losing side asks",
+    "If the party couldn't use or control it",
+    "Only for sums over $10,000",
+    "Only when the clerk requests it"
+   ],
+   "a": "If the party couldn't use or control it",
+   "h": "There are two conditions.",
+   "w": "CPLR 5011: a judgment may direct payment into court when the party would not have the benefit or use or control of the property, or special circumstances make it desirable to withhold payment to the party."
+  },
+  {
+   "lv": 2,
+   "q": "Damages go to an incarcerated individual. What must the court do under CPLR 5011?",
+   "c": [
+    "Notify victim services; hold payment 30 days",
+    "Notify the DA; hold payment 10 days",
+    "Order immediate payment",
+    "Nothing. The rule is for free persons"
+   ],
+   "a": "Notify victim services; hold payment 30 days",
+   "h": "Two duties: a notice and a pause.",
+   "w": "CPLR 5011: the court gives prompt written notice to the office of victim services and directs that no payment be made to the incarcerated individual for thirty days."
+  },
+  {
+   "lv": 2,
+   "q": "In that case, the thirty days run from when?",
+   "c": [
+    "The verdict",
+    "The sentencing date",
+    "Docketing of the judgment",
+    "Entry of the order with the direction"
+   ],
+   "a": "Entry of the order with the direction",
+   "h": "It is tied to a particular order.",
+   "w": "CPLR 5011: no payment for a period of thirty days following the date of entry of the order containing such direction."
+  },
+  {
+   "lv": 3,
+   "q": "A default judgment and a judgment after a judge's decision. What must each do under 5011?",
+   "c": [
+    "Both recite a default",
+    "Neither needs to refer to anything",
+    "Recite the default; refer to the decision",
+    "Refer to a verdict; recite a default"
+   ],
+   "a": "Recite the default; refer to the decision",
+   "h": "The rule gives two different anchors.",
+   "w": "CPLR 5011: a judgment shall refer to, and state the result of, the verdict or decision, or recite the default upon which it is based."
+  },
+  {
+   "lv": 3,
+   "q": "Order with the no-payment direction is entered Sept 10. Which payment date breaks the 30-day rule?",
+   "c": [
+    "October 11",
+    "September 25",
+    "October 20",
+    "November 1"
+   ],
+   "a": "September 25",
+   "h": "Count thirty days from entry of the order.",
+   "w": "CPLR 5011: no payment for thirty days following the date of entry of the order containing the direction. September 25 is only fifteen days later."
+  },
+  {
+   "lv": 3,
+   "q": "A clerk asks if a judgment can decide only part of a case. Under CPLR 5011?",
+   "c": [
+    "Yes. A judgment may be interlocutory",
+    "No. Only final judgments exist",
+    "No. It must include damages",
+    "Yes, but only in special proceedings"
+   ],
+   "a": "Yes. A judgment may be interlocutory",
+   "h": "Look at the two labels the rule uses.",
+   "w": "CPLR 5011: a judgment may be either interlocutory or final."
   }
  ],
  "svs": [
