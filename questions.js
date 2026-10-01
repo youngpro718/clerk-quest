@@ -1481,1214 +1481,2068 @@ window.QBANK = {
  "svs": [
   {
    "lv": 1,
-   "q": "Which document gives a defendant formal notice that a case has been started against them?",
+   "q": "Which document tells a defendant a case has started against them?",
    "c": [
-    "Summons",
-    "Subpoena"
+    "A subpoena",
+    "A verdict",
+    "A summons",
+    "An affidavit"
    ],
-   "a": "Summons",
+   "a": "A summons",
    "h": "\"You're IN the case.\"",
-   "w": "A summons notifies the defendant that an action has started and that they must respond or appear.",
-   "type": "tf"
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
   },
   {
    "lv": 1,
    "q": "Which document orders a witness to come to court and testify?",
    "c": [
-    "Summons",
-    "Subpoena"
+    "A summons",
+    "A subpoena",
+    "A complaint",
+    "A judgment"
    ],
-   "a": "Subpoena",
+   "a": "A subpoena",
    "h": "\"You're NEEDED for the case.\"",
-   "w": "A subpoena commands a person to appear and testify (or produce records).",
-   "type": "tf"
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
   },
   {
    "lv": 1,
-   "q": "Memory hook: \"You're IN the case.\" Which document is that?",
+   "q": "The hook \"You're IN the case\" goes with which document?",
    "c": [
-    "Summons",
-    "Subpoena"
+    "A summons",
+    "A subpoena",
+    "A stipulation",
+    "A calendar"
    ],
-   "a": "Summons",
-   "h": "Who is IN a case? The parties.",
-   "w": "Summons = you're IN the case. It goes to the party being sued.",
+   "a": "A summons",
+   "h": "In means a party.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 1,
+   "q": "The hook \"You're NEEDED for the case\" goes with which document?",
+   "c": [
+    "A summons",
+    "A complaint",
+    "A verdict",
+    "A subpoena"
+   ],
+   "a": "A subpoena",
+   "h": "Needed means a witness or records.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 1,
+   "q": "A summons goes to the party being sued. True or false?",
+   "c": [
+    "True",
+    "False"
+   ],
+   "a": "True",
+   "h": "\"You're IN.\"",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS.",
    "type": "tf"
   },
   {
    "lv": 2,
-   "q": "Which document can require someone to produce documents or records?",
+   "q": "Which document can require someone to bring records?",
    "c": [
-    "Summons",
-    "Subpoena"
+    "A summons",
+    "A subpoena duces tecum",
+    "A notice of appearance",
+    "A stipulation"
    ],
-   "a": "Subpoena",
-   "h": "The case NEEDS the records.",
-   "w": "A subpoena (duces tecum) can require a person to bring documents or records.",
-   "type": "tf"
+   "a": "A subpoena duces tecum",
+   "h": "Records, not a defendant.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
   },
   {
    "lv": 2,
    "q": "A \"subpoena duces tecum\" requires a person to:",
    "c": [
-    "Bring documents or records",
-    "Answer the complaint",
-    "Pay a judgment",
-    "Leave the courtroom"
+    "Bring records or documents",
+    "Pay a fee",
+    "Sign a plea",
+    "Move out"
    ],
-   "a": "Bring documents or records",
-   "h": "\"Duces tecum\" = bring with you.",
-   "w": "\"Duces tecum\" means \"bring with you\": the person must produce documents or records."
+   "a": "Bring records or documents",
+   "h": "Duces tecum means bring with you.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
   },
   {
    "lv": 2,
-   "q": "Memory hook: \"You're NEEDED for the case.\" Which document is that?",
+   "q": "A neighbor saw the accident and must testify. Which document do they get?",
    "c": [
-    "Summons",
-    "Subpoena"
+    "A summons",
+    "A complaint",
+    "A judgment",
+    "A subpoena"
    ],
-   "a": "Subpoena",
-   "h": "Witnesses and records are NEEDED.",
-   "w": "Subpoena = you're NEEDED for the case: to testify or to bring records.",
-   "type": "tf"
+   "a": "A subpoena",
+   "h": "They are needed, not sued.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
   },
   {
-   "lv": 3,
-   "q": "Hospital records are needed for a trial. The hospital is not being sued. Which document gets the records?",
+   "lv": 2,
+   "q": "A landlord sues a tenant. Which document tells the tenant the case has started?",
    "c": [
-    "Summons",
-    "Subpoena"
+    "A subpoena",
+    "A verdict",
+    "A summons",
+    "A calendar"
    ],
-   "a": "Subpoena",
-   "h": "The hospital isn't IN the case. Its records are NEEDED.",
-   "w": "A subpoena duces tecum is used to get records, including from people or businesses that are not parties.",
-   "type": "tf"
-  },
-  {
-   "lv": 3,
-   "q": "A landlord sues a tenant. The tenant must be formally told about the case and respond. Which document?",
-   "c": [
-    "Summons",
-    "Subpoena"
-   ],
-   "a": "Summons",
+   "a": "A summons",
    "h": "The tenant is IN the case.",
-   "w": "The defendant (the tenant) receives a summons notifying them of the case.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 2,
+   "q": "A subpoena can only go to someone who is a party to the case. True or false?",
+   "c": [
+    "True",
+    "False"
+   ],
+   "a": "False",
+   "h": "It is often for a witness.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS.",
    "type": "tf"
   },
   {
    "lv": 3,
-   "q": "A neighbor saw the accident and must testify. The neighbor is not being sued. Which document?",
+   "q": "A hospital must hand over records for a trial. The hospital is not being sued. Which document?",
    "c": [
-    "Summons",
-    "Subpoena"
+    "A subpoena duces tecum",
+    "A summons",
+    "A complaint",
+    "A verdict"
    ],
-   "a": "Subpoena",
-   "h": "The neighbor is NEEDED, not IN.",
-   "w": "A witness who is not a party is brought to court with a subpoena.",
-   "type": "tf"
+   "a": "A subpoena duces tecum",
+   "h": "Needed, not sued.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 3,
+   "q": "A store's records custodian is served with a summons. What went wrong?",
+   "c": [
+    "Nothing went wrong",
+    "A summons is for witnesses",
+    "Custodians cannot be served",
+    "A summons is for the party being sued"
+   ],
+   "a": "A summons is for the party being sued",
+   "h": "Which person is IN the case?",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 3,
+   "q": "Someone ignores a summons. What is the risk?",
+   "c": [
+    "Contempt of court",
+    "A mistrial",
+    "A default judgment",
+    "A new trial"
+   ],
+   "a": "A default judgment",
+   "h": "Ignore the summons, lose by default.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 3,
+   "q": "Someone ignores a subpoena. What is the risk?",
+   "c": [
+    "A default judgment",
+    "Contempt of court",
+    "A mistrial",
+    "A new trial"
+   ],
+   "a": "Contempt of court",
+   "h": "Ignore the subpoena, risk contempt.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 3,
+   "q": "Which claim about these two papers is FALSE?",
+   "c": [
+    "A subpoena starts the lawsuit",
+    "A summons notifies a defendant",
+    "A subpoena can ask for records",
+    "Ignoring a summons risks default"
+   ],
+   "a": "A subpoena starts the lawsuit",
+   "h": "One paper starts the case. Which?",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 4,
+   "q": "A plaintiff sues a company and needs the company's file clerk to testify. Which papers?",
+   "c": [
+    "Subpoena to the company; summons to the clerk",
+    "Summons to both",
+    "Subpoena to both",
+    "Summons to the company; subpoena to the clerk"
+   ],
+   "a": "Summons to the company; subpoena to the clerk",
+   "h": "IN for the company, NEEDED for the clerk.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 4,
+   "q": "A non-party must bring a diary to court. Which document is served on them?",
+   "c": [
+    "A summons",
+    "A complaint",
+    "A subpoena duces tecum",
+    "A notice of motion"
+   ],
+   "a": "A subpoena duces tecum",
+   "h": "Records from someone not in the case.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
   },
   {
    "lv": 4,
    "q": "Which of these is an INCORRECT use?",
    "c": [
-    "Serving a summons on a witness to make them testify",
-    "Serving a summons on the defendant to start the case",
-    "Serving a subpoena on a bank for account records",
-    "Serving a subpoena on a witness to testify"
+    "A summons to a defendant",
+    "A summons to a witness who isn't a party",
+    "A subpoena to a records keeper",
+    "A subpoena to a witness"
    ],
-   "a": "Serving a summons on a witness to make them testify",
-   "h": "Which one sends the wrong document to a witness?",
-   "w": "Witnesses are brought in by subpoena. A summons is for notifying the party being sued."
+   "a": "A summons to a witness who isn't a party",
+   "h": "The paper doesn't match the person.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
   },
   {
    "lv": 4,
-   "q": "Which statement is WRONG?",
+   "q": "A summons brings you INTO the case. A subpoena brings:",
    "c": [
-    "A summons is used to get records from a non-party",
-    "A subpoena can require records",
-    "A summons notifies a defendant of a lawsuit",
-    "A subpoena can require testimony"
+    "What the case needs",
+    "The jury",
+    "The judge",
+    "The verdict"
    ],
-   "a": "A summons is used to get records from a non-party",
-   "h": "Records are NEEDED…",
-   "w": "Records from a non-party are obtained with a subpoena (duces tecum), not a summons."
+   "a": "What the case needs",
+   "h": "Testimony or records.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
   },
   {
    "lv": 4,
-   "q": "A \"summons\" is addressed to a store's records custodian, asking for receipts in a case the store isn't part of. What's the problem?",
+   "q": "A defendant ignores a paper and a default judgment follows. Which paper was ignored?",
    "c": [
-    "It should be a subpoena",
-    "Nothing is wrong",
-    "It should be a judgment",
-    "It should be an affidavit"
+    "A subpoena",
+    "A calendar",
+    "A verdict",
+    "A summons"
    ],
-   "a": "It should be a subpoena",
-   "h": "The store is NEEDED, not IN.",
-   "w": "Getting records from someone who is not a party is the job of a subpoena duces tecum."
-  },
-  {
-   "lv": 5,
-   "q": "A plaintiff (1) starts a lawsuit against a company and (2) needs the company's former employee to testify. Which documents, in order?",
-   "c": [
-    "Summons, then subpoena",
-    "Subpoena, then summons",
-    "Two summonses",
-    "Two subpoenas"
-   ],
-   "a": "Summons, then subpoena",
-   "h": "First bring the company IN, then get who is NEEDED.",
-   "w": "The summons starts the case against the company. The subpoena later compels the witness to testify."
-  },
-  {
-   "lv": 5,
-   "q": "Ignoring a SUMMONS can lead to ______; ignoring a SUBPOENA can lead to ______.",
-   "c": [
-    "a default judgment; contempt of court",
-    "contempt of court; a default judgment",
-    "an appeal; a recess",
-    "a verdict; a stipulation"
-   ],
-   "a": "a default judgment; contempt of court",
-   "h": "A party who never answers can lose by default.",
-   "w": "A defendant who ignores a summons risks a default judgment. A person who ignores a subpoena risks being held in contempt."
+   "a": "A summons",
+   "h": "Default follows the summons.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
   },
   {
    "lv": 5,
    "q": "Which document is commonly served together with the complaint?",
    "c": [
-    "Summons",
-    "Subpoena",
-    "Verdict",
-    "Judgment"
+    "A subpoena",
+    "A verdict",
+    "A summons",
+    "An affidavit of service"
    ],
-   "a": "Summons",
-   "h": "It starts the case.",
-   "w": "The summons is commonly served with the complaint to start the case."
+   "a": "A summons",
+   "h": "The complaint and the notice go together.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 5,
+   "q": "Ignoring a SUMMONS can lead to ____; ignoring a SUBPOENA, to ____.",
+   "c": [
+    "contempt; default",
+    "default; contempt",
+    "appeal; mistrial",
+    "mistrial; appeal"
+   ],
+   "a": "default; contempt",
+   "h": "Default for IN, contempt for NEEDED.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 5,
+   "q": "A bank is sued, and also holds records needed in a different case. What does it receive?",
+   "c": [
+    "Summons in its own case; subpoena in the other",
+    "Subpoena in both cases",
+    "Summons in both cases",
+    "Subpoena in its own; summons in the other"
+   ],
+   "a": "Summons in its own case; subpoena in the other",
+   "h": "One company, two roles.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 5,
+   "q": "The hook \"IN vs. NEEDED\" separates:",
+   "c": [
+    "A judge from a clerk",
+    "A plaintiff from a lawyer",
+    "A verdict from a judgment",
+    "A party from a person or record needed"
+   ],
+   "a": "A party from a person or record needed",
+   "h": "Who is in the case, and who is needed for it.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+  },
+  {
+   "lv": 5,
+   "q": "Which pairing matches the hooks?",
+   "c": [
+    "IN: subpoena. NEEDED: summons.",
+    "IN: verdict. NEEDED: summons.",
+    "IN: summons. NEEDED: subpoena.",
+    "IN: subpoena. NEEDED: verdict."
+   ],
+   "a": "IN: summons. NEEDED: subpoena.",
+   "h": "Hooks and papers, in order.",
+   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
   }
  ],
  "whosigns": [
   {
    "lv": 1,
-   "q": "Under FCA § 312.1, who may sign a summons issued on a juvenile delinquency petition?",
+   "q": "Who may sign a juvenile delinquency summons under FCA 312.1?",
    "c": [
-    "A judge or the clerk of the court",
-    "The probation department or the presentment agency",
-    "Only the presentment agency",
-    "Only the probation department"
+    "Probation or the presentment agency",
+    "The respondent's parent",
+    "A judge or the court clerk",
+    "Any police officer"
    ],
-   "a": "A judge or the clerk of the court",
-   "h": "The COURT signs its own summons.",
-   "w": "FCA § 312.1: \"The summons shall be signed by a judge or by the clerk of the court.\""
+   "a": "A judge or the court clerk",
+   "h": "\"The Court signs.\"",
+   "w": "The summons shall be signed by a judge or by the clerk of the court."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: Under FCA § 312.1, the clerk of the court may sign a juvenile delinquency summons.",
+   "q": "The clerk of the court may sign the summons. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "True",
-   "h": "Judge or ___.",
-   "w": "True. FCA § 312.1 allows a judge or the clerk of the court to sign it.",
+   "h": "Read the end of the sentence.",
+   "w": "Signed by a judge or by the clerk of the court.",
    "type": "tf"
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: Under FCA § 312.1, the probation department may sign a juvenile delinquency summons.",
+   "q": "The probation department may sign the summons. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "False",
-   "h": "Is probation part of \"the court\"?",
-   "w": "False. FCA § 312.1 lists only a judge or the clerk of the court. Probation is not mentioned.",
+   "h": "Probation keeps asking. The answer is still no.",
+   "w": "Only a judge or the clerk of the court.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "Which of these is NOT listed in FCA § 312.1 as able to sign the summons?",
+   "lv": 1,
+   "q": "\"Judge or Clerk. The ____ signs.\" Fill in the blank.",
    "c": [
-    "The presentment agency",
-    "A judge of the court",
-    "The clerk of the court"
+    "Agency",
+    "Parent",
+    "Officer",
+    "Court"
    ],
-   "a": "The presentment agency",
-   "h": "Only the court's own people sign.",
-   "w": "Only a judge or the clerk of the court may sign. The presentment agency is not listed."
+   "a": "Court",
+   "h": "The court signs its own summons.",
+   "w": "Signed by a judge or by the clerk of the court."
   },
   {
-   "lv": 2,
-   "q": "The FCA § 312.1 summons is issued upon the filing of what kind of petition?",
+   "lv": 1,
+   "q": "The FCA 312.1 summons is issued after the filing of what?",
    "c": [
-    "A juvenile delinquency petition",
-    "A support petition",
+    "A divorce complaint",
     "A custody petition",
-    "A family offense petition"
+    "A juvenile delinquency petition",
+    "A guardianship petition"
    ],
    "a": "A juvenile delinquency petition",
-   "h": "Article 3 of the FCA.",
-   "w": "FCA § 312.1 covers the summons issued upon the filing of a juvenile delinquency petition."
+   "h": "Look at the card's context.",
+   "w": "The card's context: a summons issued by Family Court upon the filing of a juvenile delinquency petition."
   },
   {
    "lv": 2,
-   "q": "Exam format. Under FCA § 312.1 the summons must be signed by either: (1) the probation department, (2) the presentment agency, (3) the clerk of the court, (4) a judge of the court.",
+   "q": "Who is NOT listed as able to sign under FCA 312.1?",
    "c": [
-    "3 and 4, but not 1 and 2",
-    "1 and 2, but not 3 and 4",
-    "2 and 3, but not 1 and 4",
-    "1 and 3, but not 2 and 4"
+    "A judge",
+    "The clerk of the court",
+    "The probation department"
    ],
-   "a": "3 and 4, but not 1 and 2",
-   "h": "Judge or Clerk.",
-   "w": "Correct answer: 3 and 4. FCA § 312.1: \"The summons shall be signed by a judge or by the clerk of the court.\""
+   "a": "The probation department",
+   "h": "Two signers are listed.",
+   "w": "A judge or the clerk of the court."
+  },
+  {
+   "lv": 2,
+   "q": "The presentment agency asks to sign the summons. Allowed?",
+   "c": [
+    "No. Only a judge or the clerk",
+    "Yes. It filed the petition",
+    "Yes, with probation's help",
+    "Yes, if the judge agrees"
+   ],
+   "a": "No. Only a judge or the clerk",
+   "h": "Look at the list of signers.",
+   "w": "The summons shall be signed by a judge or by the clerk of the court."
+  },
+  {
+   "lv": 2,
+   "q": "A juvenile delinquency petition is filed. Who issues the summons?",
+   "c": [
+    "The probation department",
+    "The presentment agency",
+    "The police",
+    "The court, signed by a judge or clerk"
+   ],
+   "a": "The court, signed by a judge or clerk",
+   "h": "The court signs its own paperwork.",
+   "w": "Signed by a judge or by the clerk of the court."
+  },
+  {
+   "lv": 2,
+   "q": "Exam format: who signs? (1) probation (2) a judge or the clerk (3) the presentment agency.",
+   "c": [
+    "Only (1)",
+    "Only (3)",
+    "Only (2)",
+    "(1) and (3)"
+   ],
+   "a": "Only (2)",
+   "h": "Judge or clerk. Every time.",
+   "w": "Signed by a judge or by the clerk of the court."
   },
   {
    "lv": 3,
-   "q": "A juvenile delinquency petition is filed. The presentment agency offers to sign the summons to save time. Under FCA § 312.1, is that allowed?",
+   "q": "The presentment agency prepared the summons. Who must sign it?",
    "c": [
-    "No. It must be signed by a judge or the clerk of the court",
-    "Yes, any attorney on the case may sign it",
-    "Yes, if probation agrees",
-    "No. Only the probation department may sign it"
+    "The presentment agency",
+    "A judge or the court clerk",
+    "Probation",
+    "The respondent"
    ],
-   "a": "No. It must be signed by a judge or the clerk of the court",
-   "h": "Who is on the list?",
-   "w": "FCA § 312.1 permits only a judge or the clerk of the court to sign the summons."
+   "a": "A judge or the court clerk",
+   "h": "Preparing is not signing.",
+   "w": "The summons shall be signed by a judge or by the clerk of the court."
   },
   {
    "lv": 3,
-   "q": "Find the INCORRECT statement about the FCA § 312.1 summons.",
+   "q": "Which claim about the FCA 312.1 summons is FALSE?",
    "c": [
-    "The probation department may sign it",
+    "The presentment agency may sign it",
     "A judge may sign it",
-    "The clerk of the court may sign it",
-    "It is issued upon the filing of a juvenile delinquency petition"
+    "The clerk may sign it",
+    "It follows a delinquency petition"
    ],
-   "a": "The probation department may sign it",
-   "h": "One of these people is not on the list.",
-   "w": "Probation is not listed. FCA § 312.1: signed \"by a judge or by the clerk of the court.\""
+   "a": "The presentment agency may sign it",
+   "h": "One statement adds a signer.",
+   "w": "A judge or the clerk of the court."
   },
   {
    "lv": 3,
-   "q": "You are the clerk. A juvenile delinquency summons arrives signed only by a probation officer. What is the problem?",
+   "q": "A summons is signed \"Probation Officer J. Lee.\" Valid under FCA 312.1?",
    "c": [
-    "It must be signed by a judge or the clerk of the court",
-    "Nothing, probation may sign",
-    "It needs the presentment agency's signature too",
-    "It needs the respondent's signature"
+    "Yes. Probation may sign",
+    "Yes, with a stamp",
+    "No. Only the judge may sign",
+    "No. Only a judge or the clerk may sign"
    ],
-   "a": "It must be signed by a judge or the clerk of the court",
-   "h": "Judge or Clerk.",
-   "w": "Under FCA § 312.1 the summons must be signed by a judge or the clerk of the court, so a probation officer's signature is not enough."
+   "a": "No. Only a judge or the clerk may sign",
+   "h": "Probation is not on the list.",
+   "w": "A judge or the clerk of the court."
   }
  ],
  "clock6090": [
   {
    "lv": 1,
-   "q": "Under Uniform Rule 205.43(b), within how many days of the date noticed in the summons must a willful-violation hearing BEGIN?",
+   "q": "Within how many days of the summons date must the willful-violation hearing start?",
    "c": [
-    "60",
-    "30",
-    "90",
-    "15"
+    "30 days",
+    "90 days",
+    "120 days",
+    "60 days"
    ],
-   "a": "60",
-   "h": "Start in 60.",
-   "w": "205.43(b): the hearing must commence \"within 60 days of the date noticed in the summons.\""
+   "a": "60 days",
+   "h": "\"Start in 60.\"",
+   "w": "Commence a hearing within 60 days of the date noticed in the summons."
   },
   {
    "lv": 1,
-   "q": "Under Uniform Rule 205.43(b), once the hearing has begun, within how many days must it be CONCLUDED?",
+   "q": "Once the hearing has begun, how long to finish it?",
    "c": [
-    "90",
-    "60",
-    "30",
-    "120"
+    "60 days",
+    "30 days",
+    "90 days from the start",
+    "One year"
    ],
-   "a": "90",
-   "h": "Finish in 90.",
-   "w": "205.43(b): \"The hearing must be concluded within 90 days of its commencement.\""
+   "a": "90 days from the start",
+   "h": "\"Finish in 90.\"",
+   "w": "Concluded within 90 days of its commencement."
   },
   {
    "lv": 1,
-   "q": "The 60/90 rule in Uniform Rule 205.43(b) applies to a hearing to determine:",
+   "q": "The 60/90 rule applies to a hearing about:",
    "c": [
-    "A willful violation",
-    "Youthful offender status",
-    "A motion to quash a subpoena",
-    "Custody"
+    "A jury selection",
+    "A willful violation of a support order",
+    "A name change",
+    "An adoption"
    ],
-   "a": "A willful violation",
-   "h": "Someone didn't pay support on purpose.",
-   "w": "205.43(b) covers the hearing to determine a willful violation (of a support order)."
+   "a": "A willful violation of a support order",
+   "h": "Look at the card's context.",
+   "w": "The card's context: a hearing to determine a willful violation (of a support order)."
+  },
+  {
+   "lv": 1,
+   "q": "The 60 days run from the date noticed in the summons. True or false?",
+   "c": [
+    "True",
+    "False"
+   ],
+   "a": "True",
+   "h": "Two clocks, two starting lines.",
+   "w": "Within 60 days of the date noticed in the summons.",
+   "type": "tf"
+  },
+  {
+   "lv": 1,
+   "q": "\"Start in 60. Finish in 90.\" The 90 counts from:",
+   "c": [
+    "The summons date",
+    "The order date",
+    "The first missed payment",
+    "When the hearing began"
+   ],
+   "a": "When the hearing began",
+   "h": "The second clock starts with the hearing.",
+   "w": "Concluded within 90 days of its commencement."
   },
   {
    "lv": 2,
-   "q": "WHAT STARTS THE CLOCK? The 60-day period in 205.43(b) runs from:",
+   "q": "What starts the 60-day clock?",
    "c": [
+    "The support order",
+    "The end of the hearing",
     "The date noticed in the summons",
-    "The date the petition was filed",
-    "The date of the last missed payment",
-    "The date the hearing begins"
+    "The first missed payment"
    ],
    "a": "The date noticed in the summons",
-   "h": "Look at the summons.",
-   "w": "The 60 days run \"from the date noticed in the summons.\""
+   "h": "The first clock starts with the summons date.",
+   "w": "Within 60 days of the date noticed in the summons."
   },
   {
    "lv": 2,
-   "q": "WHAT STARTS THE CLOCK? The 90-day period in 205.43(b) runs from:",
+   "q": "What starts the 90-day clock?",
    "c": [
-    "The hearing's commencement",
-    "The date noticed in the summons",
-    "Service of the summons",
-    "The filing of the petition"
+    "The summons date",
+    "Commencement of the hearing",
+    "The order date",
+    "Service of the petition"
    ],
-   "a": "The hearing's commencement",
+   "a": "Commencement of the hearing",
    "h": "The second clock starts when the hearing does.",
-   "w": "The hearing \"must be concluded within 90 days of its commencement.\""
+   "w": "Concluded within 90 days of its commencement."
   },
   {
    "lv": 2,
-   "q": "Under 205.43(b), WHO must commence the willful-violation hearing?",
+   "q": "Summons date May 1. Latest day to start the hearing?",
    "c": [
+    "June 30",
+    "June 1",
+    "July 30",
+    "August 29"
+   ],
+   "a": "June 30",
+   "h": "Count 60 days.",
+   "w": "Within 60 days of the date noticed in the summons. May 1 plus 60 days is June 30."
+  },
+  {
+   "lv": 2,
+   "q": "The hearing starts June 30. Latest day to finish it?",
+   "c": [
+    "August 29",
+    "September 30",
+    "October 28",
+    "September 28"
+   ],
+   "a": "September 28",
+   "h": "Count 90 days from the start.",
+   "w": "Within 90 days of its commencement. June 30 plus 90 days is September 28."
+  },
+  {
+   "lv": 2,
+   "q": "Who must commence the willful-violation hearing?",
+   "c": [
+    "The petitioner",
+    "The clerk",
     "The judge or support magistrate",
-    "The clerk of the court",
-    "The probation department",
-    "The petitioner's attorney"
+    "The respondent"
    ],
    "a": "The judge or support magistrate",
-   "h": "Who holds the hearing?",
-   "w": "205.43(b): \"the judge or support magistrate must commence a hearing…\""
+   "h": "The rule names who.",
+   "w": "The judge or support magistrate must commence a hearing."
   },
   {
    "lv": 3,
-   "q": "A willful-violation hearing began 50 days after the date noticed in the summons. By when must it be concluded?",
+   "q": "A hearing began 50 days after the summons date and ended 100 days after it began. Which clock was missed?",
    "c": [
-    "Within 90 days of the day it began",
-    "Within 90 days of the date noticed in the summons",
-    "Within 10 more days, since 60 days are almost up",
-    "Within 60 days of the day it began"
+    "The 60-day clock",
+    "The 90-day clock",
+    "Both clocks",
+    "Neither clock"
    ],
-   "a": "Within 90 days of the day it began",
-   "h": "The finish clock starts at the START of the hearing.",
-   "w": "The 90 days are counted from the hearing's commencement, not from the summons date."
+   "a": "The 90-day clock",
+   "h": "Check each clock against its start.",
+   "w": "Started within 60 days (day 50), but concluded after 90 days (day 100)."
   },
   {
    "lv": 3,
-   "q": "A support magistrate plans to START the hearing 75 days after the date noticed in the summons. What is the problem?",
+   "q": "A support magistrate plans to START at day 75 after the summons date. What is the problem?",
    "c": [
-    "It must begin within 60 days of that date",
-    "Nothing, 90 days are allowed to start",
+    "It must begin within 60 days",
+    "Nothing. 90 days are allowed",
     "It must begin within 30 days",
-    "Only a judge may hold the hearing"
+    "It must begin within 120 days"
    ],
-   "a": "It must begin within 60 days of that date",
-   "h": "Start in 60.",
-   "w": "205.43(b) requires the hearing to commence within 60 days of the date noticed in the summons."
+   "a": "It must begin within 60 days",
+   "h": "Which number is for starting?",
+   "w": "Commence a hearing within 60 days of the date noticed in the summons."
   },
   {
    "lv": 3,
-   "q": "Which sequence matches Uniform Rule 205.43(b)?",
+   "q": "Which timeline fits Uniform Rule 205.43(b)?",
    "c": [
-    "Service → hearing begins within 60 days of the summons date → hearing ends within 90 days of beginning",
-    "Service → hearing begins within 90 days → hearing ends within 60 days",
-    "Hearing begins within 60 days of filing → ends within 90 days of the summons date",
-    "Hearing ends within 60 days of the summons date"
+    "Start by day 90; finish by day 60",
+    "Finish by day 60 after service",
+    "Start by day 90 after the hearing",
+    "Start by day 60; finish by day 90 after start"
    ],
-   "a": "Service → hearing begins within 60 days of the summons date → hearing ends within 90 days of beginning",
-   "h": "Start in 60, finish in 90.",
-   "w": "205.43(b): after service, commence within 60 days of the date noticed in the summons; conclude within 90 days of commencement."
+   "a": "Start by day 60; finish by day 90 after start",
+   "h": "Two clocks, two starting lines.",
+   "w": "Commence within 60 days of the summons date; conclude within 90 days of commencement."
+  },
+  {
+   "lv": 3,
+   "q": "Which pairing of clocks is right?",
+   "c": [
+    "60: hearing start. 90: summons date.",
+    "Both from the summons date",
+    "60: summons date. 90: hearing start.",
+    "Both from the order date"
+   ],
+   "a": "60: summons date. 90: hearing start.",
+   "h": "Different starting points.",
+   "w": "60 days from the date noticed in the summons; 90 days from commencement."
+  },
+  {
+   "lv": 3,
+   "q": "Summons date Jan 5, 2027. Hearing starts Mar 1 and ends Apr 15. Timely?",
+   "c": [
+    "No. It started too late",
+    "Yes. Started within 60; ended within 90",
+    "No. It ended too late",
+    "No. Both clocks were missed"
+   ],
+   "a": "Yes. Started within 60; ended within 90",
+   "h": "Start day 55; end 45 days after the start.",
+   "w": "Jan 5 to Mar 1 is 55 days (within 60); Mar 1 to Apr 15 is 45 days (within 90)."
   }
  ],
  "ypsi": [
   {
    "lv": 1,
-   "q": "Under CPL § 720.20(1), what must the court order upon conviction of an eligible youth?",
+   "q": "Upon conviction of an eligible youth, what must the court order?",
    "c": [
-    "A pre-sentence investigation",
-    "An immediate youthful offender finding",
     "A new trial",
-    "Sealing of the record"
+    "A youthful offender finding",
+    "A sealing order",
+    "A pre-sentence investigation"
    ],
    "a": "A pre-sentence investigation",
    "h": "Investigate first.",
-   "w": "CPL § 720.20(1): \"Upon conviction of an eligible youth, the court must order a pre-sentence investigation of the defendant.\""
+   "w": "Upon conviction of an eligible youth, the court must order a pre-sentence investigation."
   },
   {
    "lv": 1,
-   "q": "When must the court determine whether or not an eligible youth is a youthful offender?",
+   "q": "When must the court decide whether the youth is a youthful offender?",
    "c": [
-    "At the time of pronouncing sentence",
     "At arraignment",
-    "At any time before trial",
-    "Upon conviction"
+    "Upon conviction",
+    "At the time of pronouncing sentence",
+    "Before trial"
    ],
    "a": "At the time of pronouncing sentence",
    "h": "Decide at sentence.",
-   "w": "CPL § 720.20(1): \"at the time of pronouncing sentence the court must determine whether or not the eligible youth is a youthful offender.\""
+   "w": "At the time of pronouncing sentence the court must determine whether or not the eligible youth is a youthful offender."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: Under CPL § 720.20(1), the youthful offender decision is made at the moment of conviction.",
+   "q": "The youthful offender decision is made at the moment of conviction. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "False",
    "h": "Conviction triggers the investigation, not the decision.",
-   "w": "False. Conviction triggers the pre-sentence investigation. YO status is decided at sentencing.",
+   "w": "The determination is made at the time of pronouncing sentence.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "Under CPL § 720.20(1), what must the court receive BEFORE making the youthful offender determination?",
+   "lv": 1,
+   "q": "Is ordering the pre-sentence investigation optional?",
    "c": [
-    "A written report of the pre-sentence investigation",
-    "The defendant's school records",
-    "A jury recommendation",
-    "The prosecutor's consent"
+    "No. The court must order it",
+    "Yes. It is optional",
+    "Only if the prosecutor asks",
+    "Only if the youth asks"
    ],
-   "a": "A written report of the pre-sentence investigation",
-   "h": "\"After receipt of…\"",
-   "w": "The court decides \"after receipt of a written report of the investigation.\""
+   "a": "No. The court must order it",
+   "h": "Read the verb.",
+   "w": "The court must order a pre-sentence investigation."
+  },
+  {
+   "lv": 1,
+   "q": "\"Investigate first. Decide at ____.\" Fill in the blank.",
+   "c": [
+    "Arraignment",
+    "Trial",
+    "Appeal",
+    "Sentence"
+   ],
+   "a": "Sentence",
+   "h": "The trick's last word.",
+   "w": "The YO determination is made at the time of pronouncing sentence."
   },
   {
    "lv": 2,
-   "q": "WHAT TRIGGERS IT? Under CPL § 720.20(1), which event requires the court to order a pre-sentence investigation?",
+   "q": "What must the court receive BEFORE deciding YO status?",
    "c": [
-    "Conviction of an eligible youth",
+    "The jury's notes",
+    "A sealing order",
+    "A written report of the investigation",
+    "A school record"
+   ],
+   "a": "A written report of the investigation",
+   "h": "The report comes first.",
+   "w": "After receipt of a written report of the investigation."
+  },
+  {
+   "lv": 2,
+   "q": "Which event requires the court to order the pre-sentence investigation?",
+   "c": [
     "Arraignment",
+    "Conviction of an eligible youth",
     "Filing of the accusatory instrument",
     "Jury selection"
    ],
    "a": "Conviction of an eligible youth",
-   "h": "IF ___ THEN investigate.",
-   "w": "\"Upon conviction of an eligible youth, the court must order a pre-sentence investigation.\""
+   "h": "What triggers it?",
+   "w": "Upon conviction of an eligible youth."
   },
   {
    "lv": 2,
-   "q": "Under CPL § 720.20(1), is ordering the pre-sentence investigation optional?",
+   "q": "A judge convicts an eligible youth and declares YO status at once, with no investigation. What is wrong?",
    "c": [
-    "No. The court must order it",
-    "Yes, at the court's discretion",
-    "Only if the prosecutor requests it",
-    "Only if the defense requests it"
-   ],
-   "a": "No. The court must order it",
-   "h": "\"must order\"",
-   "w": "The statute says the court \"must order a pre-sentence investigation.\""
-  },
-  {
-   "lv": 3,
-   "q": "Which sequence matches CPL § 720.20(1)?",
-   "c": [
-    "Conviction → PSI ordered → written report → YO decided at sentencing",
-    "Conviction → YO decided → PSI ordered → sentencing",
-    "Arraignment → YO decided → conviction → PSI",
-    "PSI ordered → conviction → YO decided at arraignment"
-   ],
-   "a": "Conviction → PSI ordered → written report → YO decided at sentencing",
-   "h": "Investigate first, decide at sentence.",
-   "w": "Conviction triggers the PSI; after the written report, YO status is decided when sentence is pronounced."
-  },
-  {
-   "lv": 3,
-   "q": "A judge convicts an eligible youth and immediately declares them a youthful offender, before any investigation. What is wrong?",
-   "c": [
-    "A PSI must be ordered first, and YO decided at sentencing",
+    "A PSI must come first; decide at sentencing",
     "Nothing is wrong",
-    "Only a jury can decide YO status",
-    "YO status must be decided at arraignment"
+    "YO is decided before conviction",
+    "The clerk decides YO"
    ],
-   "a": "A PSI must be ordered first, and YO decided at sentencing",
-   "h": "What comes right after conviction?",
-   "w": "CPL § 720.20(1) requires a pre-sentence investigation and a YO decision at the time of pronouncing sentence."
+   "a": "A PSI must come first; decide at sentencing",
+   "h": "Convicted is not the end of the story.",
+   "w": "Order a PSI, then determine YO status at sentencing."
+  },
+  {
+   "lv": 2,
+   "q": "The written report is in. When does the court decide YO status?",
+   "c": [
+    "At once",
+    "At the next hearing",
+    "On appeal",
+    "At sentencing"
+   ],
+   "a": "At sentencing",
+   "h": "Report first, decision at sentence.",
+   "w": "At the time of pronouncing sentence."
+  },
+  {
+   "lv": 2,
+   "q": "Which comes first: the YO decision or the written report?",
+   "c": [
+    "The YO decision",
+    "They happen together",
+    "The written report",
+    "Neither is required"
+   ],
+   "a": "The written report",
+   "h": "Investigate first.",
+   "w": "After receipt of a written report, the court must determine YO status."
   },
   {
    "lv": 3,
-   "q": "FIND THE INCORRECT NEXT STEP. After conviction of an eligible youth, the court…",
+   "q": "Put the steps in order for an eligible youth.",
    "c": [
-    "declares youthful offender status on the spot",
-    "orders a pre-sentence investigation",
-    "waits for the written report",
-    "decides YO status when pronouncing sentence"
+    "Conviction, YO, PSI, sentencing",
+    "Conviction, PSI, report, YO at sentencing",
+    "Arraignment, YO, PSI, sentence",
+    "Sentence, PSI, conviction, YO"
    ],
-   "a": "declares youthful offender status on the spot",
-   "h": "One of these skips the investigation.",
-   "w": "YO status is not decided on the spot. It is decided at sentencing, after the written PSI report."
+   "a": "Conviction, PSI, report, YO at sentencing",
+   "h": "Convict, investigate, decide.",
+   "w": "Conviction; PSI ordered; written report; YO determined at sentencing."
+  },
+  {
+   "lv": 3,
+   "q": "After conviction of an eligible youth, which step is INCORRECT?",
+   "c": [
+    "The court declares YO status on the spot",
+    "The court orders a PSI",
+    "The court waits for the report",
+    "The court decides YO at sentencing"
+   ],
+   "a": "The court declares YO status on the spot",
+   "h": "One step skips the report.",
+   "w": "The PSI and written report come before the YO determination."
+  },
+  {
+   "lv": 3,
+   "q": "Convicted is not the end of the story. What happens next?",
+   "c": [
+    "The court decides YO",
+    "The court seals the file",
+    "The court dismisses",
+    "The court orders a PSI"
+   ],
+   "a": "The court orders a PSI",
+   "h": "Investigate first.",
+   "w": "Upon conviction, the court must order a pre-sentence investigation."
+  },
+  {
+   "lv": 3,
+   "q": "The YO decision should rest on what, per the rule?",
+   "c": [
+    "A jury vote",
+    "The prosecutor's note",
+    "The written PSI report",
+    "A clerk's summary"
+   ],
+   "a": "The written PSI report",
+   "h": "The report is the basis.",
+   "w": "After receipt of a written report of the investigation, the court must determine whether the youth is a YO."
+  },
+  {
+   "lv": 3,
+   "q": "At what stage does \"Investigate first\" begin?",
+   "c": [
+    "At arraignment",
+    "Upon conviction",
+    "At trial's start",
+    "After sentence"
+   ],
+   "a": "Upon conviction",
+   "h": "What triggers it?",
+   "w": "Upon conviction of an eligible youth."
   }
  ],
  "eightdays": [
   {
    "lv": 1,
-   "q": "Under FCA § 427(a), personal delivery of the summons and petition must be made at least how many days before the appearance date?",
+   "q": "Under FCA 427(a), personal delivery must be made at least how many days before the appearance?",
    "c": [
-    "8",
-    "13",
-    "15",
-    "30"
+    "5 days",
+    "8 days",
+    "7 days",
+    "10 days"
    ],
-   "a": "8",
-   "h": "Eight.",
-   "w": "FCA § 427(a): delivery \"at least eight days before the time stated therein for appearance.\""
+   "a": "8 days",
+   "h": "\"Not seven.\"",
+   "w": "Delivery at least eight days before the time stated for appearance."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: Under FCA § 427(a), service may be made by leaving a copy with a person of suitable age and discretion at the home or business AND mailing a copy to the last known residence.",
+   "q": "Service may be made by leaving papers with a suitable person AND mailing a copy. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "True",
-   "h": "Two steps: leave it and mail it.",
-   "w": "True. That is the second method in FCA § 427(a), with the same 8-day deadline.",
+   "h": "Two steps.",
+   "w": "Delivery to a person of suitable age and discretion and mailing a true copy.",
    "type": "tf"
   },
   {
    "lv": 1,
-   "q": "The 8 days in FCA § 427(a) are counted back from:",
+   "q": "The 8 days are counted back from:",
    "c": [
-    "The time stated in the summons for appearance",
-    "The date the petition was filed",
-    "The date the copy was mailed",
-    "The end of the hearing"
+    "The filing date",
+    "The date of the petition",
+    "The date of mailing",
+    "The appearance date in the summons"
    ],
-   "a": "The time stated in the summons for appearance",
-   "h": "Count back from the appearance date.",
-   "w": "Service must be made \"at least eight days before the time stated in the summons for appearance.\""
+   "a": "The appearance date in the summons",
+   "h": "Count backward.",
+   "w": "At least eight days before the time stated in the summons for appearance."
+  },
+  {
+   "lv": 1,
+   "q": "\"Eight days. Not ____.\" Fill in the blank.",
+   "c": [
+    "Eight",
+    "Eighty",
+    "Seven",
+    "Eighteen"
+   ],
+   "a": "Seven",
+   "h": "Not \"about a week.\"",
+   "w": "At least eight days before the appearance."
+  },
+  {
+   "lv": 1,
+   "q": "Which Act's Article 4 holds this summons and petition service rule?",
+   "c": [
+    "The Penal Law",
+    "The Family Court Act",
+    "The Vehicle and Traffic Law",
+    "The Education Law"
+   ],
+   "a": "The Family Court Act",
+   "h": "Look at the section name: FCA.",
+   "w": "The card's context: Family Court Act Article 4, service of a summons and petition."
   },
   {
    "lv": 2,
-   "q": "With \"suitable age and discretion\" service under FCA § 427(a), what ELSE must happen besides leaving a copy?",
+   "q": "Suitable-age delivery under FCA 427(a) must also include:",
    "c": [
-    "Mailing a true copy to the last known residence",
-    "Filing a copy with probation",
-    "Publishing a notice in a newspaper",
-    "Calling the person by phone"
+    "Mailing a true copy",
+    "A phone call",
+    "A newspaper notice",
+    "A second delivery"
    ],
-   "a": "Mailing a true copy to the last known residence",
-   "h": "Leave it AND…",
-   "w": "FCA § 427(a) requires delivery to the person of suitable age and discretion and mailing a true copy to the last known residence."
+   "a": "Mailing a true copy",
+   "h": "Leave it, then mail it.",
+   "w": "Delivery to a person of suitable age and discretion and mailing a true copy."
   },
   {
    "lv": 2,
-   "q": "For suitable-age service, what must the proof of service include under FCA § 427(a)?",
+   "q": "For suitable-age service, proof of service must show:",
    "c": [
-    "Who the person of suitable age was, and the date, time, and place of service",
-    "Only the date of mailing",
-    "The judge's signature",
-    "The respondent's employer"
+    "Only the date",
+    "Only the person",
+    "Only the place",
+    "Who got it, plus date, time and place"
    ],
-   "a": "Who the person of suitable age was, and the date, time, and place of service",
-   "h": "Who, when, and where.",
-   "w": "\"Proof of service shall identify such person of suitable age and discretion and state the date, time and place of service.\""
+   "a": "Who got it, plus date, time and place",
+   "h": "Four details.",
+   "w": "Proof of service shall identify such person and state the date, time and place of service."
   },
   {
    "lv": 2,
-   "q": "Exam format. Under FCA Article 4, suitable-age delivery plus mailing must be done at least how many days before the time stated in the summons for appearance?",
+   "q": "The appearance is set for the 20th. Latest day for personal delivery?",
    "c": [
-    "8 days",
-    "13 days",
-    "15 days",
-    "30 days"
+    "The 13th",
+    "The 10th",
+    "The 12th",
+    "The 19th"
    ],
-   "a": "8 days",
-   "h": "Same as personal delivery.",
-   "w": "Both methods in FCA § 427(a) share the same deadline: at least eight days before the appearance."
+   "a": "The 12th",
+   "h": "Count back eight.",
+   "w": "At least eight days before the appearance. The 20th minus 8 days is the 12th."
+  },
+  {
+   "lv": 2,
+   "q": "A copy is left with a suitable person. By when must the copy also be mailed?",
+   "c": [
+    "30 days after",
+    "At least 8 days before the appearance",
+    "At least 3 days before",
+    "On the appearance day"
+   ],
+   "a": "At least 8 days before the appearance",
+   "h": "Same eight days.",
+   "w": "Mailing a true copy at least eight days before the time stated for appearance."
+  },
+  {
+   "lv": 2,
+   "q": "Where may suitable-age delivery be made?",
+   "c": [
+    "Place of business, dwelling, or usual abode",
+    "Any public place",
+    "A neighbor's house",
+    "The courthouse lobby"
+   ],
+   "a": "Place of business, dwelling, or usual abode",
+   "h": "Three places.",
+   "w": "At the actual place of business, dwelling place or usual place of abode of the person to be served."
   },
   {
    "lv": 3,
-   "q": "The appearance is set for the 20th. The summons and petition are handed to the respondent on the 15th. Is that timely under FCA § 427(a)?",
+   "q": "Appearance on the 20th. Papers are handed to the person on the 13th. Timely?",
    "c": [
-    "No. It must be at least 8 days before the appearance",
-    "Yes. Any time before the appearance works",
-    "Yes. 5 days is enough",
-    "No. It must be at least 30 days before"
+    "Yes. A week is enough",
+    "Yes. It is 8 days",
+    "No. It needed 10 days",
+    "No. That is only 7 days before"
    ],
-   "a": "No. It must be at least 8 days before the appearance",
-   "h": "Is 5 days at least 8?",
-   "w": "Only 5 days before the appearance is too late. FCA § 427(a) requires at least eight days."
+   "a": "No. That is only 7 days before",
+   "h": "Count back from the 20th.",
+   "w": "At least eight days. The 13th is seven days before the 20th."
   },
   {
    "lv": 3,
-   "q": "A server leaves the papers with an adult relative at the respondent's home 10 days before the appearance, but never mails a copy. What is missing?",
+   "q": "Papers left with an adult at home on the 10th; copy mailed on the 14th; appearance the 20th. Valid?",
    "c": [
-    "Mailing a true copy to the last known residence",
-    "Nothing, 10 days is enough",
-    "The respondent's signature",
-    "A second delivery 8 days later"
+    "Yes. Delivery was timely",
+    "Yes. Mailing may follow",
+    "No. The mailing was under 8 days before",
+    "No. Relatives never qualify"
    ],
-   "a": "Mailing a true copy to the last known residence",
-   "h": "The second method has two parts.",
-   "w": "Suitable-age service under FCA § 427(a) also requires mailing a true copy to the last known residence."
+   "a": "No. The mailing was under 8 days before",
+   "h": "Both steps need the eight days.",
+   "w": "The mailing must also be at least eight days before. The 14th is six days before the 20th."
   },
   {
    "lv": 3,
-   "q": "FIND THE INCORRECT STATEMENT about FCA § 427(a).",
+   "q": "Which claim about the 8-day rule is FALSE?",
    "c": [
-    "Suitable-age service has a shorter deadline than personal delivery",
-    "Personal delivery must be at least 8 days before appearance",
-    "Suitable-age service requires mailing a copy too",
-    "Proof of service must state the date, time, and place"
+    "Count back from the appearance date",
+    "Seven days is enough",
+    "Suitable-age service also needs mailing",
+    "Proof identifies the person served"
    ],
-   "a": "Suitable-age service has a shorter deadline than personal delivery",
-   "h": "Compare the two deadlines.",
-   "w": "Both methods have the same deadline: at least eight days before the appearance."
+   "a": "Seven days is enough",
+   "h": "The number is eight.",
+   "w": "At least eight days."
+  },
+  {
+   "lv": 3,
+   "q": "A summons says appear on June 20. Papers are handed over June 12. Timely?",
+   "c": [
+    "Yes. Exactly 8 days before",
+    "No. It needed 10 days",
+    "No. It needed 14 days",
+    "Yes, but only by mail"
+   ],
+   "a": "Yes. Exactly 8 days before",
+   "h": "At least eight days.",
+   "w": "At least eight days. June 20 minus 8 days is June 12."
+  },
+  {
+   "lv": 3,
+   "q": "Why mail a copy after leaving papers with someone else?",
+   "c": [
+    "The mail is faster",
+    "The clerk asks for it",
+    "Delivery is invalid otherwise",
+    "The rule requires delivery and mailing"
+   ],
+   "a": "The rule requires delivery and mailing",
+   "h": "Two steps for suitable-age service.",
+   "w": "Delivery to a person of suitable age and discretion and by mailing a true copy."
   }
  ],
  "sealed": [
   {
    "lv": 1,
-   "q": "Under CPL § 160.50(1), when a criminal action ends in favor of the accused, what normally happens to the record?",
+   "q": "When a case ends in the person's favor, what happens to the record?",
    "c": [
-    "It is sealed",
     "It is published",
-    "It is sent to the jury",
-    "It stays open for one year"
+    "It is deleted by the DA",
+    "It is sent to the school",
+    "It is sealed"
    ],
    "a": "It is sealed",
-   "h": "Look at the card title.",
-   "w": "Unless the interests-of-justice exception applies, \"the record of such action or proceeding shall be sealed.\""
+   "h": "Win the case, lose the paper trail.",
+   "w": "The record of such action or proceeding shall be sealed."
   },
   {
    "lv": 1,
-   "q": "Under CPL § 160.50(1), who IMMEDIATELY notifies DCJS and the police that the action ended in favor of the accused?",
+   "q": "Who immediately notifies DCJS and police that the record is sealed?",
    "c": [
-    "The clerk of the court where it ended",
     "The district attorney",
-    "The defense attorney",
-    "The probation department"
+    "The defense lawyer",
+    "The clerk of the court",
+    "The sheriff"
    ],
-   "a": "The clerk of the court where it ended",
-   "h": "That could be you.",
-   "w": "\"…the clerk of the court wherein such criminal action or proceeding was terminated shall immediately notify…\""
+   "a": "The clerk of the court",
+   "h": "The clerk doesn't wait.",
+   "w": "The clerk of the court shall immediately notify the commissioner of DCJS and heads of appropriate police departments."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: Under CPL § 160.50(1), sealing can be avoided if the DA (on motion) or the court shows the interests of justice require otherwise.",
+   "q": "Sealing can be avoided on a DA's motion with at least 5 days' notice. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "True",
-   "h": "There is one exception.",
-   "w": "True. The DA on motion, or the court on its own motion, may show the interests of justice require otherwise, with at least 5 days' notice.",
+   "h": "The only way around it.",
+   "w": "Unless the district attorney upon motion with not less than five days notice demonstrates the interests of justice require otherwise.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "If the DA moves to keep a favorably terminated record from being sealed, how much notice must the person or their attorney get?",
+   "lv": 1,
+   "q": "How much notice does a DA motion to avoid sealing need?",
    "c": [
-    "Not less than 5 days",
-    "7 days",
-    "10 days",
-    "14 days"
+    "At least five days",
+    "One day",
+    "Two days",
+    "Thirty days"
    ],
-   "a": "Not less than 5 days",
-   "h": "Five.",
-   "w": "CPL § 160.50(1): \"upon motion with not less than five days notice to such person or his or her attorney.\""
+   "a": "At least five days",
+   "h": "Five days. No shortcuts.",
+   "w": "Not less than five days notice."
+  },
+  {
+   "lv": 1,
+   "q": "\"Case ends in your favor? ____ it.\" Fill in the blank.",
+   "c": [
+    "Appeal",
+    "Retry",
+    "Publish",
+    "Seal"
+   ],
+   "a": "Seal",
+   "h": "The trick's last word.",
+   "w": "The record shall be sealed."
   },
   {
    "lv": 2,
-   "q": "Under CPL § 160.50(1), whom does the clerk notify?",
+   "q": "The DA moves to keep a favorable-end record unsealed. What must the DA show?",
    "c": [
-    "The commissioner of DCJS and the heads of appropriate police departments and law enforcement agencies",
-    "The victim and the press",
-    "The jury",
-    "The defendant's employer"
+    "That the defendant agrees",
+    "That the clerk is busy",
+    "The interests of justice require otherwise",
+    "That a year has passed"
    ],
-   "a": "The commissioner of DCJS and the heads of appropriate police departments and law enforcement agencies",
-   "h": "The people who keep criminal records.",
-   "w": "The clerk notifies \"the commissioner of the division of criminal justice services and the heads of all appropriate police departments and other law enforcement agencies.\""
+   "a": "The interests of justice require otherwise",
+   "h": "One standard.",
+   "w": "Demonstrates to the satisfaction of the court that the interests of justice require otherwise."
   },
   {
    "lv": 2,
-   "q": "If the COURT, on its own motion, decides the record should not be sealed, what must it do?",
+   "q": "Whom does the clerk notify when a record is sealed?",
    "c": [
-    "Give not less than 5 days' notice and state its reasons on the record",
-    "Nothing else",
-    "Get the jury's consent",
-    "Notify the defendant's school"
+    "Newspapers and schools",
+    "DCJS and police agencies",
+    "The DA and the jury",
+    "The IRS and the DMV"
    ],
-   "a": "Give not less than 5 days' notice and state its reasons on the record",
-   "h": "Notice, plus reasons.",
-   "w": "The court must act \"with not less than five days notice\" and \"state the reasons for such determination on the record.\""
+   "a": "DCJS and police agencies",
+   "h": "Two groups.",
+   "w": "The commissioner of DCJS and the heads of police departments and other law enforcement agencies."
+  },
+  {
+   "lv": 2,
+   "q": "The court, on its own motion, decides not to seal. What must it do?",
+   "c": [
+    "Give 5 days' notice; state reasons on record",
+    "Nothing special",
+    "Ask the clerk",
+    "Give 1 day's notice"
+   ],
+   "a": "Give 5 days' notice; state reasons on record",
+   "h": "Notice and reasons.",
+   "w": "With not less than five days notice and states the reasons for such determination on the record."
+  },
+  {
+   "lv": 2,
+   "q": "When does the clerk give the notices?",
+   "c": [
+    "After 30 days",
+    "After an appeal",
+    "At year end",
+    "Immediately"
+   ],
+   "a": "Immediately",
+   "h": "\"Immediately\" means immediately.",
+   "w": "The clerk shall immediately notify."
+  },
+  {
+   "lv": 2,
+   "q": "What event triggers sealing under CPL 160.50(1)?",
+   "c": [
+    "Arraignment",
+    "A guilty plea",
+    "Termination of the case in the person's favor",
+    "A jury verdict of guilty"
+   ],
+   "a": "Termination of the case in the person's favor",
+   "h": "Which way did the case end?",
+   "w": "Upon the termination of a criminal action or proceeding against a person in favor of such person."
   },
   {
    "lv": 3,
-   "q": "Which sequence matches CPL § 160.50(1) when no exception applies?",
+   "q": "Which order of events fits CPL 160.50(1)?",
    "c": [
-    "Case ends in favor of the accused → record sealed → clerk immediately notifies DCJS and police",
-    "Record sealed → case ends → clerk notifies the jury",
-    "Case ends → clerk waits 30 days → record sealed",
-    "Case ends → record published → DA notifies police"
+    "Favorable end, clerk notifies, DA moves",
+    "Favorable end, sealed, clerk notifies",
+    "Conviction, sealed, clerk notifies",
+    "Favorable end, appeal, sealed"
    ],
-   "a": "Case ends in favor of the accused → record sealed → clerk immediately notifies DCJS and police",
-   "h": "IF → THEN → THEN.",
-   "w": "Termination in favor triggers sealing and the clerk's immediate notification."
+   "a": "Favorable end, sealed, clerk notifies",
+   "h": "IF, THEN, AND.",
+   "w": "Termination in favor; record sealed; clerk immediately notifies DCJS and police."
   },
   {
    "lv": 3,
-   "q": "The DA gives the defense 2 days' notice of a motion to keep a record unsealed. What is the problem?",
+   "q": "The DA gives the defense 2 days' notice of a motion to avoid sealing. Valid?",
    "c": [
-    "The notice must be not less than 5 days",
-    "Nothing is wrong",
-    "Only the defense may make that motion",
-    "The clerk must approve the motion"
+    "No. At least 5 days' notice is required",
+    "Yes. Two days is enough",
+    "Yes. One day is enough",
+    "No. 30 days is required"
    ],
-   "a": "The notice must be not less than 5 days",
-   "h": "Count the days.",
-   "w": "CPL § 160.50(1) requires \"not less than five days notice.\""
+   "a": "No. At least 5 days' notice is required",
+   "h": "Five days. No shortcuts.",
+   "w": "Not less than five days notice."
   },
   {
    "lv": 3,
-   "q": "FIND THE INCORRECT STEP after a criminal action ends in favor of the accused (no exception applies).",
+   "q": "Which step is INCORRECT after a case ends in favor?",
    "c": [
-    "The clerk waits 30 days before notifying DCJS",
     "The record is sealed",
     "The clerk notifies DCJS",
-    "The clerk notifies the appropriate police departments"
+    "Police agencies are notified",
+    "The clerk waits 30 days to notify"
    ],
-   "a": "The clerk waits 30 days before notifying DCJS",
-   "h": "\"Immediately.\"",
-   "w": "The clerk must notify \"immediately,\" not after a waiting period."
+   "a": "The clerk waits 30 days to notify",
+   "h": "The clerk doesn't wait.",
+   "w": "The clerk shall immediately notify."
+  },
+  {
+   "lv": 3,
+   "q": "A judge declines to seal on her own motion with 5 days' notice but gives no reasons. What is missing?",
+   "c": [
+    "A jury",
+    "A second judge",
+    "Reasons stated on the record",
+    "A bond"
+   ],
+   "a": "Reasons stated on the record",
+   "h": "Notice is not enough.",
+   "w": "The court states the reasons for such determination on the record."
+  },
+  {
+   "lv": 3,
+   "q": "Who may ask to avoid sealing?",
+   "c": [
+    "The defendant's neighbor",
+    "The DA, or the court on its own motion",
+    "The clerk",
+    "The newspaper"
+   ],
+   "a": "The DA, or the court on its own motion",
+   "h": "Two actors, both need 5 days' notice.",
+   "w": "The district attorney upon motion, or the court on its own motion, each with not less than five days notice."
   }
  ],
  "followpetitioner": [
   {
    "lv": 1,
-   "q": "Under FCA § 168.2, who files a copy of an order of protection with the sheriff or police?",
+   "q": "Who files a copy of an order of protection under FCA 168.2?",
    "c": [
-    "The clerk of the court",
     "The petitioner",
     "The respondent",
-    "The probation department"
+    "The clerk of the court",
+    "The sheriff"
    ],
    "a": "The clerk of the court",
-   "h": "That could be you.",
-   "w": "\"…shall be filed by the clerk of the court…\""
+   "h": "The clerk does the filing.",
+   "w": "A copy shall be filed by the clerk of the court."
   },
   {
    "lv": 1,
-   "q": "Under FCA § 168.2, the copy is filed where WHICH person resides?",
+   "q": "The copy is filed where WHICH person lives?",
    "c": [
-    "Petitioner",
-    "Respondent"
+    "The respondent",
+    "The petitioner",
+    "The judge",
+    "The clerk"
    ],
-   "a": "Petitioner",
-   "h": "Follow the…",
-   "w": "It is filed in the county (or city) \"in which the petitioner resides.\"",
-   "type": "tf"
+   "a": "The petitioner",
+   "h": "\"The order goes where they live.\"",
+   "w": "In the county in which the petitioner resides."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: FCA § 168.2 also applies to TEMPORARY orders of protection.",
+   "q": "FCA 168.2 also applies to temporary orders of protection. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "True",
-   "h": "Read the first line of the rule.",
-   "w": "True. It covers \"an order of protection or temporary order of protection.\"",
+   "h": "Read the first line.",
+   "w": "An order of protection or temporary order of protection.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "The petitioner lives inside a city. Under FCA § 168.2, where is the copy filed?",
+   "lv": 1,
+   "q": "\"The order goes where they ____.\" Fill in the blank.",
    "c": [
-    "With the police department of that city",
-    "With the county sheriff, always",
-    "With the state police",
-    "With the respondent's local precinct"
+    "Work",
+    "Marry",
+    "Move",
+    "Live"
    ],
-   "a": "With the police department of that city",
-   "h": "City resident, city police.",
-   "w": "\"…if the petitioner resides within a city, with the police department of such city.\""
+   "a": "Live",
+   "h": "The trick's last word.",
+   "w": "The county in which the petitioner resides."
+  },
+  {
+   "lv": 1,
+   "q": "The petitioner lives in a county, outside any city. The copy goes to:",
+   "c": [
+    "The state police only",
+    "The court of appeals",
+    "The county sheriff or police",
+    "The post office"
+   ],
+   "a": "The county sheriff or police",
+   "h": "Sheriff's office or police department.",
+   "w": "With the sheriff's office or police department in the county in which the petitioner resides."
   },
   {
    "lv": 2,
-   "q": "The petitioner lives in a county, outside any city. Under FCA § 168.2, where is the copy filed?",
+   "q": "The petitioner lives inside a city. The copy goes to:",
    "c": [
-    "The sheriff's office or police department of that county",
-    "The police of the nearest city",
-    "The respondent's county",
-    "Only in the Family Court file"
+    "The county sheriff",
+    "That city's police department",
+    "The state police",
+    "The court clerk"
    ],
-   "a": "The sheriff's office or police department of that county",
-   "h": "County resident, county sheriff or police.",
-   "w": "It is filed \"with the sheriff's office or police department in the county in which the petitioner resides.\""
+   "a": "That city's police department",
+   "h": "City resident? City police.",
+   "w": "If the petitioner resides within a city, with the police department of such city."
   },
   {
    "lv": 2,
-   "q": "Under FCA § 168.2, whose address decides where the copy is filed?",
+   "q": "The petitioner moved into a city before the order issued. Where does the copy go?",
    "c": [
-    "The petitioner's",
+    "To that city's police department",
+    "To the old county's sheriff",
+    "To the state police",
+    "To the respondent's police"
+   ],
+   "a": "To that city's police department",
+   "h": "Follow where the petitioner lives now.",
+   "w": "If the petitioner resides within a city, with the police department of such city."
+  },
+  {
+   "lv": 2,
+   "q": "Whose address decides where the copy is filed?",
+   "c": [
     "The respondent's",
+    "The judge's",
     "The clerk's",
-    "Both parties'"
+    "The petitioner's"
    ],
    "a": "The petitioner's",
-   "h": "Follow the petitioner.",
-   "w": "Only the petitioner's residence decides it."
+   "h": "Protection follows the person who asked.",
+   "w": "The county in which the petitioner resides."
   },
   {
-   "lv": 3,
-   "q": "The petitioner lives in County A, outside any city. The respondent lives in City B. Where does the clerk file the copy?",
+   "lv": 2,
+   "q": "The respondent lives in another county. Does that change the filing?",
    "c": [
-    "The sheriff's office or police in County A",
-    "The police department of City B",
-    "Both County A and City B",
-    "Neither; it stays in court"
+    "Yes. It goes to the respondent's county",
+    "Yes. It goes to both",
+    "No. The petitioner's residence decides",
+    "No. It goes to the clerk's county"
    ],
-   "a": "The sheriff's office or police in County A",
-   "h": "Ignore the respondent's address.",
-   "w": "FCA § 168.2 follows the petitioner's residence: County A."
+   "a": "No. The petitioner's residence decides",
+   "h": "The respondent's address doesn't decide it.",
+   "w": "Where the petitioner resides."
+  },
+  {
+   "lv": 2,
+   "q": "Who does the filing: the petitioner or the clerk?",
+   "c": [
+    "The petitioner",
+    "The clerk",
+    "The respondent",
+    "The police"
+   ],
+   "a": "The clerk",
+   "h": "The clerk does the filing.",
+   "w": "Shall be filed by the clerk of the court."
   },
   {
    "lv": 3,
-   "q": "A clerk files the order of protection only with the respondent's local police. What is wrong?",
+   "q": "The petitioner lives in County A, outside any city. The respondent lives in City B. Where is the copy filed?",
    "c": [
-    "It must be filed where the petitioner resides",
+    "County A's sheriff or police",
+    "City B's police",
+    "Both of them",
+    "The state police"
+   ],
+   "a": "County A's sheriff or police",
+   "h": "Follow the petitioner.",
+   "w": "The county in which the petitioner resides."
+  },
+  {
+   "lv": 3,
+   "q": "A clerk files the order only with the respondent's police. What is wrong?",
+   "c": [
     "Nothing is wrong",
-    "The petitioner must file it personally",
-    "It must be filed with the state police"
+    "It must go to the judge",
+    "It must go to the school",
+    "It must follow the petitioner's residence"
    ],
-   "a": "It must be filed where the petitioner resides",
-   "h": "Follow the petitioner.",
-   "w": "FCA § 168.2 requires filing where the petitioner resides."
+   "a": "It must follow the petitioner's residence",
+   "h": "Wrong person's address.",
+   "w": "The county or city where the petitioner resides."
   },
   {
    "lv": 3,
-   "q": "Exam format. Under FCA § 168.2 the copy is filed with the sheriff or police where the ______ resides.",
+   "q": "Which claim about filing an order of protection is FALSE?",
    "c": [
-    "Petitioner only",
-    "Respondent only",
-    "Petitioner or Respondent",
-    "Petitioner and Respondent"
+    "The clerk files the copy",
+    "It follows the petitioner",
+    "The petitioner files the copy",
+    "City residents use city police"
    ],
-   "a": "Petitioner only",
-   "h": "Only one person's address counts.",
-   "w": "Correct answer: Petitioner only. \"…in the county in which the petitioner resides.\""
+   "a": "The petitioner files the copy",
+   "h": "One statement names the wrong filer.",
+   "w": "The clerk of the court files the copy."
+  },
+  {
+   "lv": 3,
+   "q": "A temporary order of protection issues. Does the FCA 168.2 filing apply?",
+   "c": [
+    "No. Only final orders",
+    "Yes. It covers temporary orders",
+    "Yes, but only for 10 days",
+    "No. Only the police file"
+   ],
+   "a": "Yes. It covers temporary orders",
+   "h": "Check the first line.",
+   "w": "An order of protection or temporary order of protection."
+  },
+  {
+   "lv": 3,
+   "q": "\"Protection follows the person who asked for it.\" Who is that?",
+   "c": [
+    "The petitioner",
+    "The respondent",
+    "The clerk",
+    "The sheriff"
+   ],
+   "a": "The petitioner",
+   "h": "The person who asked.",
+   "w": "Filed where the petitioner resides."
   }
  ],
  "amendonce": [
   {
    "lv": 1,
-   "q": "Under CPLR § 3025(a), how many times may a party amend a pleading WITHOUT leave of court?",
+   "q": "How many times may a party amend a pleading without leave under CPLR 3025(a)?",
    "c": [
     "Once",
     "Twice",
-    "Any number of times",
+    "Three times",
     "Never"
    ],
    "a": "Once",
-   "h": "One free fix.",
-   "w": "\"A party may amend his pleading once without leave of court…\""
+   "h": "\"One free fix.\"",
+   "w": "A party may amend his pleading once without leave of court."
   },
   {
    "lv": 1,
-   "q": "Under CPLR § 3025(a), one window is within how many days after the pleading's service?",
+   "q": "One window is within how many days after serving the pleading?",
    "c": [
-    "20",
-    "30",
-    "10",
-    "15"
+    "10 days",
+    "30 days",
+    "60 days",
+    "20 days"
    ],
-   "a": "20",
-   "h": "Not 30.",
-   "w": "\"…within twenty days after its service…\""
+   "a": "20 days",
+   "h": "Twenty, not thirty.",
+   "w": "Within twenty days after its service."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: Under CPLR § 3025(a), a party may amend without leave at any time before the period for responding to the pleading expires.",
+   "q": "A party may amend at any time before the period for responding expires. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "True",
-   "h": "That is the middle window.",
-   "w": "True: \"…or at any time before the period for responding to it expires…\"",
+   "h": "Read the second window.",
+   "w": "Or at any time before the period for responding to it expires.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "Which is NOT one of the CPLR § 3025(a) windows?",
+   "lv": 1,
+   "q": "\"One free fix. ____ windows.\" Fill in the blank.",
    "c": [
-    "Within 30 days after its service",
-    "Within 20 days after its service",
-    "Any time before the period for responding to it expires",
-    "Within 20 days after service of a pleading responding to it"
+    "One",
+    "Three",
+    "Two",
+    "Five"
    ],
-   "a": "Within 30 days after its service",
-   "h": "The exam loves thirty.",
-   "w": "All the day counts in 3025(a) are twenty, not thirty."
+   "a": "Three",
+   "h": "Count them.",
+   "w": "Three windows."
+  },
+  {
+   "lv": 1,
+   "q": "\"Twenty, not thirty.\" Which wrong number does the exam love?",
+   "c": [
+    "Thirty",
+    "Ten",
+    "Forty",
+    "Ninety"
+   ],
+   "a": "Thirty",
+   "h": "Both numbers are twenty.",
+   "w": "Twenty days, not thirty."
   },
   {
    "lv": 2,
-   "q": "The third CPLR § 3025(a) window is within 20 days after:",
+   "q": "Which is NOT a CPLR 3025(a) window?",
    "c": [
-    "Service of a pleading responding to it",
-    "The start of trial",
-    "Filing of the note of issue",
-    "Entry of judgment"
+    "20 days after you serve",
+    "Before their time to respond expires",
+    "20 days after they respond",
+    "30 days after their response"
    ],
-   "a": "Service of a pleading responding to it",
-   "h": "After THEY respond.",
-   "w": "\"…or within twenty days after service of a pleading responding to it.\""
+   "a": "30 days after their response",
+   "h": "Spot the wrong number.",
+   "w": "Twenty days after service, before the period for responding expires, or twenty days after a responding pleading."
   },
   {
    "lv": 2,
-   "q": "Exam format. When may a party amend once without leave under CPLR § 3025(a)? (1) within 20 days after its service (2) within 30 days after its service (3) any time before the period for responding expires (4) within 30 days after service of a responding pleading",
+   "q": "The third window is within 20 days after:",
    "c": [
-    "1 and 3, but not 2 or 4",
-    "2 and 3, but not 1 or 4",
-    "1 and 4, but not 2 or 3",
-    "2 and 4, but not 1 or 3"
+    "The verdict",
+    "The note of issue",
+    "Service of a responding pleading",
+    "The hearing"
    ],
-   "a": "1 and 3, but not 2 or 4",
-   "h": "Throw out anything with 30.",
-   "w": "Correct answer: 1 and 3. The responding-pleading window is 20 days, not 30."
+   "a": "Service of a responding pleading",
+   "h": "After their response.",
+   "w": "Within twenty days after service of a pleading responding to it."
   },
   {
-   "lv": 3,
-   "q": "A defendant served an answer 12 days ago. The plaintiff has never amended the complaint. May the plaintiff amend once without leave under CPLR § 3025(a)?",
+   "lv": 2,
+   "q": "A defendant served an answer 12 days ago. The plaintiff wants to amend once without leave. Allowed?",
    "c": [
-    "Yes. It is within 20 days after service of a responding pleading",
-    "No. The 20 days after serving the complaint have passed",
-    "No. Amending always needs leave",
-    "Yes, but only with the defendant's consent"
+    "No. It needs leave",
+    "Yes. It is within 20 days of the answer",
+    "No. Only before the answer",
+    "Yes, but only once more after"
    ],
-   "a": "Yes. It is within 20 days after service of a responding pleading",
-   "h": "Which window is still open?",
-   "w": "The third window is open: within twenty days after service of a pleading responding to it."
+   "a": "Yes. It is within 20 days of the answer",
+   "h": "Check the third window.",
+   "w": "Within twenty days after service of a pleading responding to it."
   },
   {
-   "lv": 3,
-   "q": "A party already amended once without leave and now wants to amend again without leave. Allowed under CPLR § 3025(a)?",
+   "lv": 2,
+   "q": "A party already amended once without leave. A second amendment without leave?",
    "c": [
     "No. Only once without leave",
-    "Yes, within 20 days",
-    "Yes, before trial",
-    "Yes, if the other side hasn't answered"
+    "Yes. Twice is allowed",
+    "Yes. Any time",
+    "No. Not even with leave"
    ],
    "a": "No. Only once without leave",
    "h": "One free fix.",
-   "w": "CPLR § 3025(a) allows amending \"once\" without leave of court."
+   "w": "A party may amend his pleading once without leave of court."
+  },
+  {
+   "lv": 2,
+   "q": "Which window needs no number at all?",
+   "c": [
+    "20 days after you serve",
+    "20 days after they respond",
+    "30 days after the answer",
+    "Before their time to respond expires"
+   ],
+   "a": "Before their time to respond expires",
+   "h": "It is tied to their deadline.",
+   "w": "At any time before the period for responding to it expires."
   },
   {
    "lv": 3,
-   "q": "FIND THE INCORRECT STATEMENT about CPLR § 3025(a).",
+   "q": "Pleading served Jan 1, 2027. Last day to amend under the first window?",
    "c": [
-    "A party may amend within 30 days after service of a responding pleading",
-    "A party may amend within 20 days after its service",
-    "A party may amend before the period for responding expires",
-    "The free amendment may be used only once"
+    "January 31",
+    "January 11",
+    "January 21",
+    "February 1"
    ],
-   "a": "A party may amend within 30 days after service of a responding pleading",
-   "h": "Spot the 30.",
-   "w": "The responding-pleading window is twenty days, not thirty."
+   "a": "January 21",
+   "h": "Count 20 days.",
+   "w": "Within twenty days after its service. January 1 plus 20 days is January 21."
+  },
+  {
+   "lv": 3,
+   "q": "Their response was served Feb 10, 2027. Last day for the third window?",
+   "c": [
+    "March 12",
+    "March 2",
+    "February 20",
+    "March 10"
+   ],
+   "a": "March 2",
+   "h": "Twenty days from the response.",
+   "w": "Within twenty days after service of a pleading responding to it. February 10 plus 20 days is March 2."
+  },
+  {
+   "lv": 3,
+   "q": "Spot the false claim about CPLR 3025(a).",
+   "c": [
+    "The windows are 30 days",
+    "The windows are 20 days",
+    "It allows one free amendment",
+    "One window has no day count"
+   ],
+   "a": "The windows are 30 days",
+   "h": "One statement uses the wrong number.",
+   "w": "Twenty days, not thirty."
+  },
+  {
+   "lv": 3,
+   "q": "Three windows, pick any one. May you use two windows for two free amendments?",
+   "c": [
+    "Yes. Each window gives one",
+    "Yes. Up to three",
+    "No. None without leave",
+    "No. Only one amendment without leave"
+   ],
+   "a": "No. Only one amendment without leave",
+   "h": "Three windows, one fix.",
+   "w": "A party may amend once without leave of court within any of the three windows."
+  },
+  {
+   "lv": 3,
+   "q": "Their time to respond has not yet run out and you amend today. Which window?",
+   "c": [
+    "20 days after you serve",
+    "20 days after they respond",
+    "Before their time to respond expires",
+    "None. You need leave"
+   ],
+   "a": "Before their time to respond expires",
+   "h": "No day count.",
+   "w": "At any time before the period for responding to it expires."
   }
  ],
  "childvoice": [
   {
    "lv": 1,
-   "q": "Under CPLR § 1201, if no guardian ad litem is appointed, who appears for an infant FIRST?",
+   "q": "Unless the court appoints a guardian ad litem, an infant appears by:",
    "c": [
-    "The guardian of the infant's property",
     "Any adult relative",
     "The court clerk",
-    "The infant alone"
+    "The guardian of their property",
+    "A family friend"
    ],
-   "a": "The guardian of the infant's property",
-   "h": "G comes first.",
-   "w": "\"…an infant shall appear by the guardian of his property…\""
+   "a": "The guardian of their property",
+   "h": "\"Good\" comes first.",
+   "w": "An infant shall appear by the guardian of his property."
+  },
+  {
+   "lv": 1,
+   "q": "If there is no guardian of the property, who appears for the infant?",
+   "c": [
+    "The court clerk",
+    "A parent with legal custody",
+    "A neighbor",
+    "A relative with no custody"
+   ],
+   "a": "A parent with legal custody",
+   "h": "\"Parents\" come second.",
+   "w": "By a parent having legal custody."
+  },
+  {
+   "lv": 1,
+   "q": "If there is neither, who may appear for the infant?",
+   "c": [
+    "Another person or agency with legal custody",
+    "Any relative",
+    "The clerk",
+    "A family friend"
+   ],
+   "a": "Another person or agency with legal custody",
+   "h": "\"Obey\" comes third.",
+   "w": "By another person or agency having legal custody."
+  },
+  {
+   "lv": 1,
+   "q": "In \"Good Parents Obey,\" what does G stand for?",
+   "c": [
+    "Grandparent",
+    "Guardian ad litem",
+    "Government",
+    "Guardian of the property"
+   ],
+   "a": "Guardian of the property",
+   "h": "First on the list.",
+   "w": "The guardian of his property comes first."
+  },
+  {
+   "lv": 1,
+   "q": "A guardian ad litem appointed by the court overrides the G-P-O list. True or false?",
+   "c": [
+    "False",
+    "True"
+   ],
+   "a": "True",
+   "h": "Read the first words of the rule.",
+   "w": "Unless the court appoints a guardian ad litem.",
+   "type": "tf"
   },
   {
    "lv": 2,
-   "q": "Under CPLR § 1201, a MARRIED infant may appear by:",
+   "q": "A married infant may appear by:",
    "c": [
-    "An adult spouse residing with the infant",
-    "Any spouse, wherever they live",
-    "Only a parent",
-    "The court clerk"
+    "Any adult relative",
+    "An adult spouse living with them",
+    "The court clerk",
+    "A family friend"
    ],
-   "a": "An adult spouse residing with the infant",
-   "h": "Adult, and living with them.",
-   "w": "\"…or, if the infant is married, by an adult spouse residing with the infant.\""
+   "a": "An adult spouse living with them",
+   "h": "A special case.",
+   "w": "If the infant is married, by an adult spouse residing with the infant."
   },
   {
    "lv": 2,
-   "q": "Under CPLR § 1201, what overrides the whole G-P-O list?",
+   "q": "What overrides the whole G-P-O list?",
    "c": [
-    "The court appointing a guardian ad litem",
-    "The infant's written consent",
-    "A notarized letter from a relative",
-    "The clerk's approval"
+    "A guardian ad litem appointed by the court",
+    "The clerk's choice",
+    "The infant's wish",
+    "The eldest relative"
    ],
-   "a": "The court appointing a guardian ad litem",
-   "h": "\"Unless the court appoints…\"",
-   "w": "The rule begins: \"Unless the court appoints a guardian ad litem…\""
+   "a": "A guardian ad litem appointed by the court",
+   "h": "The rule opens with an exception.",
+   "w": "Unless the court appoints a guardian ad litem."
   },
   {
-   "lv": 3,
-   "q": "Exam format. Under CPLR § 1201, an infant may be represented by: (1) the guardian of his property (2) a parent that has legal custody (3) an adult spouse who resides with the infant",
+   "lv": 2,
+   "q": "A guardian of the property and a custodial parent both exist. Who comes first?",
    "c": [
-    "1, 2, and 3",
-    "1 only, but not 2 or 3",
-    "2 only, but not 1 or 3",
-    "1 and 3, but not 2"
-   ],
-   "a": "1, 2, and 3",
-   "h": "All three appear in the rule.",
-   "w": "Correct answer: 1, 2, and 3. Each appears in CPLR § 1201 (the spouse when the infant is married)."
-  },
-  {
-   "lv": 3,
-   "q": "An infant has no guardian of the property. The mother has legal custody. No guardian ad litem is appointed. Who appears for the infant under CPLR § 1201?",
-   "c": [
-    "The mother, as the parent having legal custody",
-    "Any adult relative",
+    "The parent",
+    "They are equal",
     "The court clerk",
-    "No one; the case must wait"
+    "The guardian of the property"
    ],
-   "a": "The mother, as the parent having legal custody",
-   "h": "G is missing, so go to P.",
-   "w": "\"…if there is no such guardian, by a parent having legal custody…\""
+   "a": "The guardian of the property",
+   "h": "Good Parents Obey, in order.",
+   "w": "The guardian of his property, or if there is none, a parent having legal custody."
+  },
+  {
+   "lv": 2,
+   "q": "In \"Good Parents Obey,\" what does O stand for?",
+   "c": [
+    "Older relative",
+    "Ordering judge",
+    "Other person or agency with legal custody",
+    "Official guardian"
+   ],
+   "a": "Other person or agency with legal custody",
+   "h": "The last step down the list.",
+   "w": "By another person or agency having legal custody."
+  },
+  {
+   "lv": 2,
+   "q": "Which is NOT on the G-P-O list?",
+   "c": [
+    "Guardian of the property",
+    "Any adult relative",
+    "Parent with legal custody",
+    "Agency with legal custody"
+   ],
+   "a": "Any adult relative",
+   "h": "Relatives are not on the list.",
+   "w": "CPLR 1201 lists the guardian of the property, a parent with legal custody, and another person or agency with legal custody."
+  },
+  {
+   "lv": 3,
+   "q": "An infant has no guardian of the property. The mother has legal custody; the father does not. Who appears?",
+   "c": [
+    "The mother",
+    "The father",
+    "The clerk",
+    "Either parent"
+   ],
+   "a": "The mother",
+   "h": "Custody decides.",
+   "w": "A parent having legal custody."
+  },
+  {
+   "lv": 3,
+   "q": "No guardian, no custodial parent. A children's agency has legal custody. Who appears?",
+   "c": [
+    "A relative",
+    "The clerk",
+    "The court",
+    "The agency"
+   ],
+   "a": "The agency",
+   "h": "Down to the third step.",
+   "w": "Another person or agency having legal custody."
+  },
+  {
+   "lv": 3,
+   "q": "An infant has a guardian of the property and a custodial parent. Who appears?",
+   "c": [
+    "The parent",
+    "Both together",
+    "The guardian of the property",
+    "The clerk"
+   ],
+   "a": "The guardian of the property",
+   "h": "Guardian first.",
+   "w": "The guardian of his property comes first."
+  },
+  {
+   "lv": 3,
+   "q": "The court appoints a guardian ad litem though a custodial parent exists. Who appears?",
+   "c": [
+    "The parent",
+    "The guardian ad litem",
+    "The clerk",
+    "The agency"
+   ],
+   "a": "The guardian ad litem",
+   "h": "The court's choice overrides.",
+   "w": "Unless the court appoints a guardian ad litem."
+  },
+  {
+   "lv": 3,
+   "q": "A married infant lives with an adult spouse. No guardian ad litem. May the spouse appear?",
+   "c": [
+    "Yes. An adult spouse living with them",
+    "No. Only parents",
+    "No. Only a guardian",
+    "Yes, but only for money"
+   ],
+   "a": "Yes. An adult spouse living with them",
+   "h": "The married-infant case.",
+   "w": "If the infant is married, by an adult spouse residing with the infant."
   }
  ],
  "custodyornot": [
   {
    "lv": 1,
-   "q": "Under DRL § 75-a, is a PATERNITY proceeding (where custody may be an issue) a child custody proceeding?",
+   "q": "Does a paternity case count when custody is an issue?",
    "c": [
-    "Custody proceeding",
-    "NOT a custody proceeding"
+    "No. Paternity is excluded",
+    "Yes. Paternity is listed",
+    "Only if the father agrees",
+    "Only in Family Court"
    ],
-   "a": "Custody proceeding",
-   "h": "It's on the \"includes\" list.",
-   "w": "DRL § 75-a includes paternity proceedings in which the custody issue may appear.",
+   "a": "Yes. Paternity is listed",
+   "h": "Custody at issue? It counts.",
+   "w": "A proceeding for paternity in which the issue may appear is a child custody proceeding."
+  },
+  {
+   "lv": 1,
+   "q": "Does juvenile delinquency count as a child custody proceeding?",
+   "c": [
+    "No. It is excluded by name",
+    "Yes. Any youth case counts",
+    "Yes, if custody is raised",
+    "Only in some counties"
+   ],
+   "a": "No. It is excluded by name",
+   "h": "Learn the four exclusions.",
+   "w": "The term does not include a proceeding involving juvenile delinquency."
+  },
+  {
+   "lv": 1,
+   "q": "Does contractual emancipation count?",
+   "c": [
+    "Yes. It counts",
+    "Only with a parent",
+    "Only for adults",
+    "No. It is excluded by name"
+   ],
+   "a": "No. It is excluded by name",
+   "h": "One of the four.",
+   "w": "The term does not include a proceeding involving contractual emancipation."
+  },
+  {
+   "lv": 1,
+   "q": "Custody or visitation being an issue can make a case a child custody proceeding. True or false?",
+   "c": [
+    "False",
+    "True"
+   ],
+   "a": "True",
+   "h": "\"Custody at issue? It counts.\"",
+   "w": "A proceeding in which legal custody, physical custody, or visitation with respect to a child is an issue.",
    "type": "tf"
   },
   {
    "lv": 1,
-   "q": "Under DRL § 75-a, is a JUVENILE DELINQUENCY proceeding a child custody proceeding?",
+   "q": "How many things does DRL 75-a exclude by name?",
    "c": [
-    "Custody proceeding",
-    "NOT a custody proceeding"
+    "One",
+    "Four",
+    "Two",
+    "Six"
    ],
-   "a": "NOT a custody proceeding",
-   "h": "One of the four exclusions.",
-   "w": "\"The term does not include a proceeding involving juvenile delinquency…\"",
-   "type": "tf"
-  },
-  {
-   "lv": 1,
-   "q": "Under DRL § 75-a, is a CONTRACTUAL EMANCIPATION proceeding a child custody proceeding?",
-   "c": [
-    "Custody proceeding",
-    "NOT a custody proceeding"
-   ],
-   "a": "NOT a custody proceeding",
-   "h": "One of the four exclusions.",
-   "w": "Contractual emancipation is specifically excluded by DRL § 75-a.",
-   "type": "tf"
+   "a": "Four",
+   "h": "Learn those four.",
+   "w": "DRL 75-a excludes juvenile delinquency, PINS, contractual emancipation, and title-three enforcement."
   },
   {
    "lv": 2,
-   "q": "Under DRL § 75-a, is a GUARDIANSHIP proceeding (where custody may be an issue) a child custody proceeding?",
+   "q": "Does a guardianship proceeding count when custody is an issue?",
    "c": [
-    "Custody proceeding",
-    "NOT a custody proceeding"
+    "Yes. Guardianship is listed",
+    "No. It is excluded",
+    "Only for adults",
+    "Only in Supreme Court"
    ],
-   "a": "Custody proceeding",
-   "h": "It's on the \"includes\" list.",
-   "w": "DRL § 75-a includes guardianship proceedings.",
-   "type": "tf"
+   "a": "Yes. Guardianship is listed",
+   "h": "It is on the included list.",
+   "w": "The term includes a proceeding for guardianship."
   },
   {
    "lv": 2,
-   "q": "Under DRL § 75-a, is a PERSON IN NEED OF SUPERVISION (PINS) proceeding a child custody proceeding?",
+   "q": "Does a PINS proceeding count?",
    "c": [
-    "Custody proceeding",
-    "NOT a custody proceeding"
+    "Yes. It counts",
+    "Only if custody is raised",
+    "Only for adults",
+    "No. It is excluded by name"
    ],
-   "a": "NOT a custody proceeding",
-   "h": "One of the four exclusions.",
-   "w": "PINS proceedings are specifically excluded by DRL § 75-a.",
-   "type": "tf"
+   "a": "No. It is excluded by name",
+   "h": "Person in need of supervision.",
+   "w": "The term does not include a proceeding involving a person in need of supervision."
   },
   {
    "lv": 2,
-   "q": "Under DRL § 75-a, what makes a proceeding a \"child custody proceeding\"?",
+   "q": "What makes a proceeding a \"child custody proceeding\"?",
    "c": [
-    "Legal custody, physical custody, or visitation with respect to a child is an issue",
-    "A child is a witness",
-    "The case is in Family Court",
-    "A parent is a party"
+    "A child is involved",
+    "A lawyer is hired",
+    "Custody or visitation is an issue",
+    "A judge is assigned"
    ],
-   "a": "Legal custody, physical custody, or visitation with respect to a child is an issue",
-   "h": "Custody or visitation.",
-   "w": "\"…a proceeding in which legal custody, physical custody, or visitation with respect to a child is an issue.\""
+   "a": "Custody or visitation is an issue",
+   "h": "Look at the first sentence.",
+   "w": "Legal custody, physical custody, or visitation with respect to a child is an issue."
   },
   {
-   "lv": 3,
-   "q": "Exam format. Which of the following is NOT considered a child custody proceeding under DRL § 75-a?",
+   "lv": 2,
+   "q": "Which of these is INCLUDED?",
    "c": [
-    "Contractual Emancipation",
-    "Paternity",
-    "Visitation",
-    "Guardianship"
-   ],
-   "a": "Contractual Emancipation",
-   "h": "Find the exclusion.",
-   "w": "Correct answer: Contractual Emancipation. It is excluded by name."
-  },
-  {
-   "lv": 3,
-   "q": "Which of these is INCLUDED as a child custody proceeding under DRL § 75-a?",
-   "c": [
-    "Protection from domestic violence",
     "Juvenile delinquency",
-    "Person in need of supervision",
-    "Enforcement under title three"
+    "Protection from domestic violence",
+    "PINS",
+    "Contractual emancipation"
    ],
    "a": "Protection from domestic violence",
-   "h": "Three of these are exclusions.",
-   "w": "Protection from domestic violence is on the \"includes\" list. The other three are excluded."
+   "h": "Three are excluded by name.",
+   "w": "The term includes a proceeding for protection from domestic violence."
+  },
+  {
+   "lv": 2,
+   "q": "Which of these is NOT included?",
+   "c": [
+    "Enforcement under title three",
+    "Divorce",
+    "Neglect",
+    "Paternity"
+   ],
+   "a": "Enforcement under title three",
+   "h": "One of the four.",
+   "w": "The term does not include enforcement under title three of this article."
   },
   {
    "lv": 3,
-   "q": "Name ALL FOUR things DRL § 75-a excludes from \"child custody proceeding.\"",
+   "q": "A divorce where visitation is disputed. Does it count?",
    "c": [
-    "Juvenile delinquency, PINS, contractual emancipation, title-three enforcement",
-    "Divorce, separation, neglect, abuse",
-    "Paternity, guardianship, dependency, visitation",
-    "Juvenile delinquency, paternity, divorce, abuse"
+    "No. Divorce is excluded",
+    "Only with children over 10",
+    "Only in Family Court",
+    "Yes. Divorce is listed"
    ],
-   "a": "Juvenile delinquency, PINS, contractual emancipation, title-three enforcement",
-   "h": "Learn the four.",
-   "w": "DRL § 75-a excludes juvenile delinquency, person in need of supervision, contractual emancipation, and enforcement under title three."
+   "a": "Yes. Divorce is listed",
+   "h": "Custody at issue.",
+   "w": "The term includes a proceeding for divorce in which the issue may appear."
+  },
+  {
+   "lv": 3,
+   "q": "A PINS case where the court asks about custody. Does it count?",
+   "c": [
+    "Yes. Custody is at issue",
+    "Yes, if both parents agree",
+    "No. PINS is excluded by name",
+    "Only for first-time cases"
+   ],
+   "a": "No. PINS is excluded by name",
+   "h": "Exclusions beat the general rule.",
+   "w": "The term does not include a proceeding involving a person in need of supervision."
+  },
+  {
+   "lv": 3,
+   "q": "Which list names the four exclusions?",
+   "c": [
+    "Divorce, PINS, abuse, title 3",
+    "Delinquency, PINS, emancipation, title 3",
+    "Delinquency, neglect, paternity, title 3",
+    "Delinquency, PINS, guardianship, title 3"
+   ],
+   "a": "Delinquency, PINS, emancipation, title 3",
+   "h": "Learn those four.",
+   "w": "DRL 75-a excludes juvenile delinquency, PINS, contractual emancipation, and title-three enforcement."
+  },
+  {
+   "lv": 3,
+   "q": "A termination of parental rights case, with custody at issue. Does it count?",
+   "c": [
+    "Yes. It is listed",
+    "No. It is excluded",
+    "Only for infants",
+    "Only with a lawyer"
+   ],
+   "a": "Yes. It is listed",
+   "h": "It is on the included list.",
+   "w": "The term includes a proceeding for termination of parental rights."
+  },
+  {
+   "lv": 3,
+   "q": "An enforcement proceeding under title three. Does it count?",
+   "c": [
+    "Yes. Enforcement counts",
+    "Yes, if custody is raised",
+    "Only for visits",
+    "No. It is excluded by name"
+   ],
+   "a": "No. It is excluded by name",
+   "h": "The fourth exclusion.",
+   "w": "The term does not include enforcement under title three of this article."
   }
  ],
  "jurywaiver": [
   {
    "lv": 1,
-   "q": "Under CPL § 320.10(2), a waiver of a jury trial must be:",
+   "q": "How must a jury-trial waiver be made under CPL 320.10(2)?",
    "c": [
-    "In writing",
-    "Oral only",
-    "Sent by email",
-    "Made by the attorney by phone"
+    "Orally, on the record only",
+    "In writing, with the court's approval",
+    "By the defense lawyer's letter",
+    "With the prosecutor's consent"
    ],
-   "a": "In writing",
-   "h": "Write it.",
-   "w": "CPL § 320.10(2): \"Such waiver must be in writing…\""
+   "a": "In writing, with the court's approval",
+   "h": "Two things are required.",
+   "w": "The waiver must be in writing, signed by the defendant in person in open court in the presence of the court, and with the court's approval."
   },
   {
    "lv": 1,
-   "q": "Under CPL § 320.10(2), WHO must sign the jury-trial waiver?",
+   "q": "Who signs a jury waiver under CPL 320.10(2)?",
    "c": [
     "The defendant, in person",
     "The defense attorney",
@@ -2696,1881 +3550,3167 @@ window.QBANK = {
     "The court clerk"
    ],
    "a": "The defendant, in person",
-   "h": "Sign it yourself.",
-   "w": "The waiver \"must be signed by the defendant in person.\""
+   "h": "Whose right is being given up?",
+   "w": "The waiver must be signed by the defendant in person."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: Under CPL § 320.10(2), the waiver needs the approval of the court.",
+   "q": "Where must the defendant sign the jury waiver?",
    "c": [
-    "True",
-    "False"
+    "In the lawyer's office",
+    "At the clerk's counter",
+    "At the jail",
+    "In open court"
+   ],
+   "a": "In open court",
+   "h": "The rule names the place.",
+   "w": "Signed by the defendant in person in open court in the presence of the court."
+  },
+  {
+   "lv": 1,
+   "q": "A jury waiver needs the approval of the court. True or false?",
+   "c": [
+    "False",
+    "True"
    ],
    "a": "True",
-   "h": "Judge approves it.",
-   "w": "True: \"…and with the approval of the court.\"",
+   "h": "Read the last clause.",
+   "w": "The waiver must be made with the approval of the court.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "WHERE must the defendant sign the waiver under CPL § 320.10(2)?",
+   "lv": 1,
+   "q": "Which is NOT a requirement of CPL 320.10(2)?",
    "c": [
-    "In open court, in the presence of the court",
-    "At home, then mail it in",
-    "In the clerk's office",
-    "In the jury room"
-   ],
-   "a": "In open court, in the presence of the court",
-   "h": "In front of the judge.",
-   "w": "It must be signed \"in person in open court in the presence of the court.\""
-  },
-  {
-   "lv": 2,
-   "q": "Exam format. A jury-trial waiver: (1) may be made in writing (2) must be signed by the defendant in person in open court in the presence of the court (3) must have the consent of the prosecutor (4) must be approved by the court.",
-   "c": [
-    "2 and 4, but not 1 or 3",
-    "1, 2 and 3, but not 4",
-    "1 and 4, but not 2 or 3",
-    "2 and 3, but not 1 or 4"
-   ],
-   "a": "2 and 4, but not 1 or 3",
-   "h": "\"May\" is a trap, and the prosecutor isn't in the rule.",
-   "w": "Correct answer: 2 and 4. Statement 1 is wrong because the waiver MUST be in writing; the prosecutor's consent is not among the listed requirements."
-  },
-  {
-   "lv": 2,
-   "q": "Which is NOT one of the requirements listed in CPL § 320.10(2)?",
-   "c": [
+    "A written waiver",
     "The prosecutor's consent",
-    "Being in writing",
-    "Signed by the defendant in open court",
+    "The defendant's signature",
     "The court's approval"
    ],
    "a": "The prosecutor's consent",
-   "h": "Three are listed. One isn't.",
-   "w": "CPL § 320.10(2) lists writing, the defendant's signature in open court, and the court's approval. It does not list the prosecutor's consent."
+   "h": "It is the one missing from the list.",
+   "w": "CPL 320.10(2) lists a writing, the defendant's signature in open court, and the court's approval. No prosecutor consent."
+  },
+  {
+   "lv": 2,
+   "q": "A defendant says \"I waive a jury\" aloud and the judge nods. Valid waiver?",
+   "c": [
+    "No. It must be written and signed",
+    "Yes. Open court is enough",
+    "Yes. The judge approved it",
+    "No. The prosecutor must agree"
+   ],
+   "a": "No. It must be written and signed",
+   "h": "What does the rule say about form?",
+   "w": "The waiver must be in writing and signed by the defendant in person."
+  },
+  {
+   "lv": 2,
+   "q": "The defense lawyer signs the waiver for her client in court. Valid?",
+   "c": [
+    "Yes. Lawyers may sign for clients",
+    "Yes, if the judge approves",
+    "Yes, if the client is present",
+    "No. The defendant signs in person"
+   ],
+   "a": "No. The defendant signs in person",
+   "h": "Read who has to sign.",
+   "w": "Signed by the defendant in person."
+  },
+  {
+   "lv": 2,
+   "q": "A defendant signs a written waiver in jail and mails it in. Valid?",
+   "c": [
+    "Yes. A signed writing is enough",
+    "Yes, if his lawyer agrees",
+    "No. He must sign in open court",
+    "Yes, if the clerk files it"
+   ],
+   "a": "No. He must sign in open court",
+   "h": "Where must the signing happen?",
+   "w": "Signed in open court in the presence of the court."
+  },
+  {
+   "lv": 2,
+   "q": "A written waiver is signed in open court, but the judge withholds approval. Is the jury waived?",
+   "c": [
+    "Yes. The signature controls",
+    "No. The court must approve it",
+    "Yes. The prosecutor decides",
+    "No. The clerk must approve it"
+   ],
+   "a": "No. The court must approve it",
+   "h": "One more step is missing.",
+   "w": "The waiver is made with the approval of the court."
+  },
+  {
+   "lv": 2,
+   "q": "The prosecutor objects to a waiver that meets every step of CPL 320.10(2). Does that matter?",
+   "c": [
+    "No. Her consent is not on the list",
+    "Yes. She can veto it",
+    "Yes. The clerk decides",
+    "Yes. The jury decides"
+   ],
+   "a": "No. Her consent is not on the list",
+   "h": "Check the list of requirements.",
+   "w": "The listed requirements are a writing, the defendant's signature in open court, and the court's approval."
   },
   {
    "lv": 3,
-   "q": "The defense attorney signs the jury waiver for the defendant in the judge's chambers. What is the problem?",
+   "q": "The defendant signs a written waiver in open court before the judge. The judge has not ruled yet. Complete?",
    "c": [
-    "The defendant must sign it in person, in open court",
-    "Nothing is wrong",
-    "The prosecutor must sign too",
-    "The clerk must sign instead"
+    "Yes. The signature completes it",
+    "Yes. The writing completes it",
+    "No. The prosecutor must sign too",
+    "No. The court's approval is still needed"
    ],
-   "a": "The defendant must sign it in person, in open court",
-   "h": "Who signs, and where?",
-   "w": "CPL § 320.10(2) requires the defendant's own signature, in person, in open court, in the presence of the court."
+   "a": "No. The court's approval is still needed",
+   "h": "Count the steps.",
+   "w": "Writing, signature in open court, and approval of the court."
   },
   {
    "lv": 3,
-   "q": "In open court, the defendant says \"I waive the jury,\" and the judge approves. Nothing is signed. What is missing?",
+   "q": "Why is \"the waiver MAY be made in writing\" a wrong statement of the rule?",
    "c": [
-    "A written waiver signed by the defendant",
-    "The prosecutor's consent",
-    "A new indictment",
-    "Nothing is missing"
+    "Waivers are always oral",
+    "Only lawyers may write them",
+    "The rule says it must be in writing",
+    "Writing is banned"
    ],
-   "a": "A written waiver signed by the defendant",
-   "h": "Write it. Sign it.",
-   "w": "The waiver must be in writing and signed by the defendant."
+   "a": "The rule says it must be in writing",
+   "h": "One word makes it wrong.",
+   "w": "\"Such waiver must be in writing.\""
   },
   {
    "lv": 3,
-   "q": "Why is \"the waiver MAY be made in writing\" a WRONG answer?",
+   "q": "Which sequence gives a valid jury waiver?",
    "c": [
-    "Because it MUST be in writing",
-    "Because it must be made orally",
-    "Because only the attorney may write it",
-    "Because the jury writes it"
+    "Say it, sign it later, clerk approves",
+    "Write it, sign it in court, judge approves",
+    "Write it, lawyer signs, judge approves",
+    "Write it, sign in court, prosecutor approves"
    ],
-   "a": "Because it MUST be in writing",
-   "h": "May vs. must.",
-   "w": "CPL § 320.10(2) says the waiver \"must be in writing,\" so \"may\" is incorrect."
+   "a": "Write it, sign it in court, judge approves",
+   "h": "Write it. Sign it. Judge approves it.",
+   "w": "In writing; signed by the defendant in person in open court; with the approval of the court."
+  },
+  {
+   "lv": 3,
+   "q": "A waiver is written, signed in open court in front of the judge, and approved. Does CPL 320.10(2) ask for more?",
+   "c": [
+    "No. Those are the listed requirements",
+    "Yes. The prosecutor must also sign",
+    "Yes. A second signature from the lawyer",
+    "Yes. A hearing on the record"
+   ],
+   "a": "No. Those are the listed requirements",
+   "h": "Check what the rule lists.",
+   "w": "CPL 320.10(2) lists those three requirements."
+  },
+  {
+   "lv": 3,
+   "q": "In which court does this waiver rule apply, per the card?",
+   "c": [
+    "Any local criminal court",
+    "Family Court",
+    "The defendant's home-county court",
+    "Superior court where the indictment is pending"
+   ],
+   "a": "Superior court where the indictment is pending",
+   "h": "Look at the context line.",
+   "w": "The card's context: a defendant waiving a jury trial in the superior court where the indictment is pending."
   }
  ],
  "interest": [
   {
    "lv": 1,
-   "q": "Under CPLR § 5003, a money judgment bears interest from:",
+   "q": "A money judgment bears interest from:",
    "c": [
     "The date of its entry",
-    "The date of the verdict",
-    "The date the complaint was served",
-    "The date of payment"
+    "The date of the trial",
+    "The date the lawsuit began",
+    "The date it was signed"
    ],
    "a": "The date of its entry",
-   "h": "Judgment → Entry.",
-   "w": "\"Every money judgment shall bear interest from the date of its entry.\""
+   "h": "Judgment pairs with entry.",
+   "w": "Every money judgment shall bear interest from the date of its entry."
   },
   {
    "lv": 1,
-   "q": "Under CPLR § 5003, an order directing payment of money that has been docketed as a judgment bears interest from:",
+   "q": "An order to pay money, docketed as a judgment, bears interest from:",
    "c": [
-    "The date of such docketing",
-    "The earliest ascertainable date of deposition",
-    "The final report",
-    "The date of reasonable breach"
+    "The date it was signed",
+    "The date it was entered",
+    "The date of service",
+    "The date of docketing"
    ],
-   "a": "The date of such docketing",
-   "h": "Order → Docketing.",
-   "w": "\"…shall bear interest from the date of such docketing.\" (Official sample Q17.)"
+   "a": "The date of docketing",
+   "h": "Order pairs with docketing.",
+   "w": "An order directing payment of money which has been docketed as a judgment bears interest from the date of such docketing."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: Under CPLR § 5003, every money judgment bears interest.",
+   "q": "Every money judgment bears interest under CPLR 5003. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "True",
-   "h": "\"Every money judgment…\"",
-   "w": "True: \"Every money judgment shall bear interest from the date of its entry.\"",
+   "h": "Read the first sentence.",
+   "w": "Every money judgment shall bear interest from the date of its entry.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "A MONEY JUDGMENT. When does interest start under CPLR § 5003?",
+   "lv": 1,
+   "q": "The trick \"J goes with E, O goes with D.\" What does the O stand for?",
    "c": [
-    "Date of entry",
-    "Date of docketing"
+    "Order, paired with entry",
+    "Order, paired with docketing",
+    "Offset, paired with docketing",
+    "Owed, paired with entry"
    ],
-   "a": "Date of entry",
-   "h": "J goes with E.",
-   "w": "Money judgments bear interest from the date of entry.",
-   "type": "tf"
+   "a": "Order, paired with docketing",
+   "h": "Judgment-Entry, Order-Docketing.",
+   "w": "A judgment starts earning interest at entry; an order to pay starts at docketing as a judgment (CPLR 5003)."
   },
   {
-   "lv": 2,
-   "q": "An ORDER directing payment of money, docketed as a judgment. When does interest start under CPLR § 5003?",
+   "lv": 1,
+   "q": "Which paper starts earning interest on its docketing date?",
    "c": [
-    "Date of entry",
-    "Date of docketing"
+    "An order to pay money, docketed as a judgment",
+    "A money judgment",
+    "A summons",
+    "A notice of motion"
    ],
-   "a": "Date of docketing",
-   "h": "O goes with D.",
-   "w": "Such orders bear interest from the date of docketing.",
-   "type": "tf"
+   "a": "An order to pay money, docketed as a judgment",
+   "h": "It is the one that needs docketing.",
+   "w": "An order directing payment of money docketed as a judgment bears interest from docketing."
   },
   {
    "lv": 2,
-   "q": "For an order to pay money to earn interest under CPLR § 5003, what must happen to it first?",
+   "q": "A money judgment is entered March 3 and docketed March 10. Interest starts:",
    "c": [
-    "It must be docketed as a judgment",
+    "March 10",
+    "March 7",
+    "The verdict date",
+    "March 3"
+   ],
+   "a": "March 3",
+   "h": "Judgment, so entry.",
+   "w": "A money judgment bears interest from the date of its entry."
+  },
+  {
+   "lv": 2,
+   "q": "An order to pay is signed May 1, entered May 3, docketed as a judgment May 9. Interest starts:",
+   "c": [
+    "May 1",
+    "May 3",
+    "May 9",
+    "May 12"
+   ],
+   "a": "May 9",
+   "h": "Order, so docketing.",
+   "w": "An order docketed as a judgment bears interest from the date of such docketing."
+  },
+  {
+   "lv": 2,
+   "q": "For an order to pay money to earn interest under CPLR 5003, what must happen to it?",
+   "c": [
     "It must be appealed",
+    "It must be docketed as a judgment",
     "It must be served by mail",
-    "It must be read aloud in court"
+    "It must be sealed"
    ],
    "a": "It must be docketed as a judgment",
-   "h": "\"…which has been docketed as a judgment…\"",
-   "w": "The rule covers orders \"which [have] been docketed as a judgment.\""
+   "h": "The rule has a condition.",
+   "w": "An order directing payment of money which has been docketed as a judgment."
+  },
+  {
+   "lv": 2,
+   "q": "A money judgment is entered but never docketed. Does it bear interest from entry?",
+   "c": [
+    "Yes. Entry starts the interest",
+    "No. It needs docketing",
+    "No. It needs an appeal",
+    "Yes, but from the signing date"
+   ],
+   "a": "Yes. Entry starts the interest",
+   "h": "For judgments, entry is the trigger.",
+   "w": "Every money judgment bears interest from its entry."
+  },
+  {
+   "lv": 2,
+   "q": "An order to pay is entered but never docketed as a judgment. Does CPLR 5003 give it interest?",
+   "c": [
+    "Yes. Entry starts it",
+    "Yes. Signing starts it",
+    "Yes. Service starts it",
+    "No. The rule needs docketing"
+   ],
+   "a": "No. The rule needs docketing",
+   "h": "The order needs one more step.",
+   "w": "Interest on an order runs from docketing as a judgment."
   },
   {
    "lv": 3,
-   "q": "A money judgment is entered on March 3 and docketed on March 10. Under CPLR § 5003, interest runs from:",
+   "q": "Judgment entered Aug 4, docketed Aug 20. Order signed Aug 1, docketed Aug 12. Which started earning interest first?",
    "c": [
-    "March 3, the date of entry",
-    "March 10, the date of docketing",
-    "The date of the verdict",
-    "The date it is paid"
+    "The order, on August 12",
+    "Both on August 20",
+    "The judgment, on August 4",
+    "Neither until paid"
    ],
-   "a": "March 3, the date of entry",
-   "h": "Is it a judgment or an order?",
-   "w": "It is a money judgment, so interest runs from the date of entry: March 3."
+   "a": "The judgment, on August 4",
+   "h": "Compare entry for one and docketing for the other.",
+   "w": "Judgment from entry (Aug 4); order from docketing (Aug 12)."
   },
   {
    "lv": 3,
-   "q": "An order directing payment of money is signed May 1 and docketed as a judgment May 12. Under CPLR § 5003, interest runs from:",
+   "q": "Spot the false statement about CPLR 5003.",
    "c": [
-    "May 12, the date of docketing",
-    "May 1, the date it was signed",
-    "The date of the motion",
-    "The date of payment"
+    "A money judgment bears interest from entry",
+    "Order interest starts when it is signed",
+    "A docketed order bears interest from docketing",
+    "J goes with E, O goes with D"
    ],
-   "a": "May 12, the date of docketing",
-   "h": "Is it a judgment or an order?",
-   "w": "It is an order docketed as a judgment, so interest runs from the date of docketing: May 12."
+   "a": "Order interest starts when it is signed",
+   "h": "One statement breaks the pairing.",
+   "w": "Interest on an order runs from docketing, not signing."
   },
   {
    "lv": 3,
-   "q": "FIND THE INCORRECT STATEMENT about CPLR § 5003.",
+   "q": "A clerk dockets an order as a judgment Sept 5. It was signed Aug 20. What is the interest start date?",
    "c": [
-    "A money judgment bears interest from the date it is docketed",
-    "A money judgment bears interest from the date of its entry",
-    "An order docketed as a judgment bears interest from the docketing date",
-    "Every money judgment bears interest"
+    "September 5",
+    "August 20",
+    "The entry date",
+    "September 20"
    ],
-   "a": "A money judgment bears interest from the date it is docketed",
-   "h": "Swap check: J→E, O→D.",
-   "w": "Money judgments run from ENTRY. Docketing is the start date for orders directing payment of money."
+   "a": "September 5",
+   "h": "The docketing date decides.",
+   "w": "From the date of such docketing."
+  },
+  {
+   "lv": 3,
+   "q": "An order is docketed June 2. The party says interest ran from entry on May 28. Who is right?",
+   "c": [
+    "Yes. Entry controls orders too",
+    "Yes, if entry came first",
+    "No. It runs from the signing date",
+    "No. Interest runs from June 2"
+   ],
+   "a": "No. Interest runs from June 2",
+   "h": "Orders follow docketing.",
+   "w": "An order's interest runs from the date of docketing."
+  },
+  {
+   "lv": 3,
+   "q": "A judgment and an order are both docketed the same day. The judgment was entered a week earlier. Which has run longer?",
+   "c": [
+    "The order, from its signing",
+    "They are equal",
+    "The judgment, from its entry",
+    "Neither has started"
+   ],
+   "a": "The judgment, from its entry",
+   "h": "Different triggers, different dates.",
+   "w": "Judgments run from entry; orders from docketing."
   }
  ],
  "quash": [
   {
    "lv": 1,
-   "q": "Under CPLR § 2304, a motion to quash, fix conditions, or modify a subpoena must be made in the:",
+   "q": "Where is a motion to quash a subpoena made under CPLR 2304?",
    "c": [
-    "Court in which the subpoena is returnable",
-    "Supreme Court",
-    "Court of record",
-    "Court of Claims"
+    "Any Supreme Court",
+    "The Court of Claims",
+    "The court where it is returnable",
+    "The recipient's home court"
    ],
-   "a": "Court in which the subpoena is returnable",
-   "h": "Where it returns.",
-   "w": "CPLR § 2304: \"…shall be made promptly in the court in which the subpoena is returnable.\" (Official sample Q16.)"
+   "a": "The court where it is returnable",
+   "h": "Fight it where it returns.",
+   "w": "The motion is made in the court in which the subpoena is returnable."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: Under CPLR § 2304, the motion must be made promptly.",
+   "q": "A CPLR 2304 motion must be made promptly. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "True",
-   "h": "Speed matters.",
-   "w": "True: the motion \"shall be made promptly.\"",
+   "h": "Look for the timing word.",
+   "w": "The motion shall be made promptly.",
    "type": "tf"
   },
   {
    "lv": 1,
-   "q": "Besides quashing it, a CPLR § 2304 motion can ask the court to:",
+   "q": "Besides quashing, what else may a CPLR 2304 motion ask?",
    "c": [
-    "Fix conditions on or modify the subpoena",
-    "Enter a default judgment",
-    "Seal the record",
-    "Change the jury"
+    "To fix conditions or modify it",
+    "To reverse the verdict",
+    "To dismiss the case",
+    "To seal the record"
    ],
-   "a": "Fix conditions on or modify the subpoena",
-   "h": "Three asks.",
-   "w": "The motion may be \"to quash, fix conditions or modify a subpoena.\""
+   "a": "To fix conditions or modify it",
+   "h": "Two other things are listed.",
+   "w": "A motion to quash, fix conditions or modify a subpoena."
   },
   {
-   "lv": 2,
-   "q": "Which three things can a CPLR § 2304 motion ask for?",
+   "lv": 1,
+   "q": "Which word describes the timing of a CPLR 2304 motion?",
    "c": [
-    "Quash, fix conditions, or modify",
-    "Quash, seal, or dismiss",
-    "Modify, appeal, or stay",
-    "Serve, file, or docket"
-   ],
-   "a": "Quash, fix conditions, or modify",
-   "h": "Q-F-M.",
-   "w": "CPLR § 2304 covers a motion \"to quash, fix conditions or modify a subpoena.\""
-  },
-  {
-   "lv": 2,
-   "q": "Under CPLR § 2304, how quickly must the motion be made?",
-   "c": [
-    "Promptly",
-    "Within 60 days",
-    "Only after trial",
-    "At any time"
+    "Annually",
+    "Eventually",
+    "Only on appeal",
+    "Promptly"
    ],
    "a": "Promptly",
-   "h": "Don't wait.",
-   "w": "The motion \"shall be made promptly.\""
+   "h": "It is one word in the rule.",
+   "w": "Shall be made promptly."
+  },
+  {
+   "lv": 1,
+   "q": "Which three requests does CPLR 2304 list?",
+   "c": [
+    "Quash, appeal, reargue",
+    "Fix, renew, vacate",
+    "Quash, fix conditions, modify",
+    "Modify, seal, dismiss"
+   ],
+   "a": "Quash, fix conditions, modify",
+   "h": "Three asks, one place, one speed.",
+   "w": "Quash, fix conditions or modify."
   },
   {
    "lv": 2,
-   "q": "Where do you move to modify a subpoena under CPLR § 2304?",
+   "q": "A subpoena is returnable in County Court. The motion is filed in a Supreme Court elsewhere. What is wrong?",
    "c": [
-    "Where it's returnable",
-    "Any court you choose"
-   ],
-   "a": "Where it's returnable",
-   "h": "Where it returns.",
-   "w": "The motion is made in the court in which the subpoena is returnable.",
-   "type": "tf"
-  },
-  {
-   "lv": 3,
-   "q": "A subpoena is returnable in County Court. The recipient files a motion to quash in a different county's Supreme Court. What is the problem?",
-   "c": [
-    "It must be made in the court where the subpoena is returnable",
     "Nothing is wrong",
-    "It must be made in the Court of Claims",
-    "Only the issuing attorney can move"
+    "Wrong court. It must be where returnable",
+    "The motion is too early",
+    "The motion needs a jury"
    ],
-   "a": "It must be made in the court where the subpoena is returnable",
+   "a": "Wrong court. It must be where returnable",
+   "h": "Which court does the rule name?",
+   "w": "In the court in which the subpoena is returnable."
+  },
+  {
+   "lv": 2,
+   "q": "A witness waits until after testifying to move to quash. What is the problem?",
+   "c": [
+    "It was not made promptly",
+    "It was made too soon",
+    "Only the judge may move",
+    "It needs the sheriff"
+   ],
+   "a": "It was not made promptly",
+   "h": "Think about the timing word.",
+   "w": "The motion shall be made promptly."
+  },
+  {
+   "lv": 2,
+   "q": "A lawyer wants gentler terms on a subpoena, not to cancel it. Which motion fits CPLR 2304?",
+   "c": [
+    "A motion to reargue",
+    "A motion to renew",
+    "A motion for a new trial",
+    "A motion to fix conditions or modify"
+   ],
+   "a": "A motion to fix conditions or modify",
+   "h": "There are three asks.",
+   "w": "A motion to quash, fix conditions or modify a subpoena."
+  },
+  {
+   "lv": 2,
+   "q": "Can a person choose the court for a CPLR 2304 motion?",
+   "c": [
+    "Yes. Any court works",
+    "Yes. Their home court",
+    "No. Only where it is returnable",
+    "Yes. The Court of Claims"
+   ],
+   "a": "No. Only where it is returnable",
+   "h": "Where does the rule send the motion?",
+   "w": "Made in the court in which the subpoena is returnable."
+  },
+  {
+   "lv": 2,
+   "q": "A subpoena is returnable in Family Court. The recipient moves in Supreme Court. Right place?",
+   "c": [
+    "Yes. Supreme Court is higher",
+    "No. Family Court, where it returns",
+    "Yes. Any court works",
+    "No. The Court of Claims"
+   ],
+   "a": "No. Family Court, where it returns",
    "h": "Where does it return?",
-   "w": "CPLR § 2304 requires the motion in the court in which the subpoena is returnable."
+   "w": "In the court in which the subpoena is returnable."
   },
   {
    "lv": 3,
-   "q": "A witness waits months, until after testifying, to move to quash. What rule does that ignore?",
+   "q": "One statement about CPLR 2304 is false. Which?",
    "c": [
-    "The motion must be made promptly",
-    "The motion must be in the Court of Claims",
-    "Only a judge may quash",
-    "Subpoenas can never be challenged"
+    "A motion may go to any court",
+    "It must be made promptly",
+    "It covers quashing and modifying",
+    "It goes where the subpoena is returnable"
    ],
-   "a": "The motion must be made promptly",
-   "h": "Speed.",
-   "w": "CPLR § 2304 requires the motion to be made \"promptly.\""
+   "a": "A motion may go to any court",
+   "h": "One statement lets you pick any court.",
+   "w": "The motion is made in the court in which the subpoena is returnable."
   },
   {
    "lv": 3,
-   "q": "FIND THE INCORRECT STATEMENT about CPLR § 2304.",
+   "q": "\"Three asks, one place, one speed.\" What is the one speed?",
    "c": [
-    "The motion may be made in any court of record",
-    "The motion may seek to fix conditions",
-    "The motion must be made promptly",
-    "The motion goes to the court where the subpoena is returnable"
+    "Within a year",
+    "After the trial",
+    "Before the summons",
+    "Promptly"
    ],
-   "a": "The motion may be made in any court of record",
-   "h": "One place only.",
-   "w": "The motion must be made in the court in which the subpoena is returnable, not any court of record."
+   "a": "Promptly",
+   "h": "It is the timing word.",
+   "w": "Shall be made promptly."
+  },
+  {
+   "lv": 3,
+   "q": "The trick: \"Fight the subpoena where it ____.\" Fill in the blank.",
+   "c": [
+    "Starts",
+    "Ends",
+    "Returns",
+    "Is signed"
+   ],
+   "a": "Returns",
+   "h": "It is the place rule.",
+   "w": "The court in which the subpoena is returnable."
+  },
+  {
+   "lv": 3,
+   "q": "A recipient moves to quash in the right court but only after the return date passed. What does CPLR 2304 stress?",
+   "c": [
+    "Nothing. Timing is free",
+    "Promptness: the motion must be made promptly",
+    "Only the court matters",
+    "Only the sheriff matters"
+   ],
+   "a": "Promptness: the motion must be made promptly",
+   "h": "The right court is not enough.",
+   "w": "Shall be made promptly in the court in which the subpoena is returnable."
+  },
+  {
+   "lv": 3,
+   "q": "Which pair does CPLR 2304 require for a motion to quash?",
+   "c": [
+    "Promptly, in the court where returnable",
+    "Slowly, in any court",
+    "Promptly, in any court",
+    "Slowly, where returnable"
+   ],
+   "a": "Promptly, in the court where returnable",
+   "h": "Both parts.",
+   "w": "Made promptly in the court in which the subpoena is returnable."
   }
  ],
  "newtrial": [
   {
    "lv": 1,
-   "q": "Under CPLR § 4402, when may the court order a continuance or new trial?",
+   "q": "When may a court order a continuance or new trial under CPLR 4402?",
    "c": [
+    "Only before trial",
+    "Only after the verdict",
     "At any time during the trial",
-    "Twenty days before the trial",
-    "Eight days after service of the summons",
-    "Fifteen days after the joinder of claims"
+    "Only on appeal"
    ],
    "a": "At any time during the trial",
-   "h": "\"During.\"",
-   "w": "CPLR § 4402: \"At any time during the trial…\" (Official sample Q14.)"
+   "h": "The rule names the window.",
+   "w": "At any time during the trial."
   },
   {
    "lv": 1,
-   "q": "Under CPLR § 4402, who may make the motion?",
+   "q": "Who may make the CPLR 4402 motion?",
    "c": [
-    "Any party",
     "Only the plaintiff",
+    "Any party",
     "Only the defendant",
-    "Only the jury"
+    "Only the judge's clerk"
    ],
    "a": "Any party",
-   "h": "Either side.",
-   "w": "The court acts \"on motion of any party.\""
+   "h": "The trick says \"Any party.\"",
+   "w": "On motion of any party."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: The standard in CPLR § 4402 is \"in the interest of justice.\"",
+   "q": "CPLR 4402 uses the standard \"in the interest of justice.\" True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "True",
-   "h": "Read the rule.",
-   "w": "True: \"…in the interest of justice on such terms as may be just.\"",
+   "h": "Read the middle of the sentence.",
+   "w": "In the interest of justice on such terms as may be just.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "What two things may the court order under CPLR § 4402?",
+   "lv": 1,
+   "q": "Which two things may the court order under CPLR 4402?",
    "c": [
-    "A continuance or a new trial",
-    "A dismissal or a default",
-    "An appeal or a stay",
-    "Sealing or expungement"
+    "A summons or a subpoena",
+    "A default or a verdict",
+    "A stipulation or an affidavit",
+    "A continuance or a new trial"
    ],
    "a": "A continuance or a new trial",
-   "h": "Pause, or restart.",
-   "w": "The court \"may order a continuance or a new trial.\""
+   "h": "A pause or a restart.",
+   "w": "The court may order a continuance or a new trial."
+  },
+  {
+   "lv": 1,
+   "q": "On what terms may the court order a continuance or new trial?",
+   "c": [
+    "Only on the plaintiff's terms",
+    "Only on the clerk's terms",
+    "On such terms as may be just",
+    "Only with a bond"
+   ],
+   "a": "On such terms as may be just",
+   "h": "It is open-ended.",
+   "w": "On such terms as may be just."
   },
   {
    "lv": 2,
-   "q": "Under CPLR § 4402, on what terms may the court order it?",
+   "q": "Halfway through trial, the defendant moves for a new trial in the interest of justice. Is the court allowed to grant it?",
    "c": [
-    "Such terms as may be just",
-    "Only the plaintiff's terms",
-    "Terms set by the jury",
-    "No terms at all"
-   ],
-   "a": "Such terms as may be just",
-   "h": "\"…as may be just.\"",
-   "w": "\"…on such terms as may be just.\""
-  },
-  {
-   "lv": 2,
-   "q": "WHAT TRIGGERS IT? The court's power under CPLR § 4402 is triggered by:",
-   "c": [
-    "A motion of any party during the trial",
-    "The jury's request",
-    "A settlement offer",
-    "Filing of the complaint"
-   ],
-   "a": "A motion of any party during the trial",
-   "h": "IF a party moves…",
-   "w": "The court acts \"on motion of any party\" \"at any time during the trial.\""
-  },
-  {
-   "lv": 3,
-   "q": "Halfway through trial, the DEFENDANT moves for a new trial in the interest of justice. Can the court grant it under CPLR § 4402?",
-   "c": [
-    "Yes. Any party may move at any time during the trial",
+    "No. Only plaintiffs may move",
+    "Yes. Any party may move during trial",
     "No. Only after the verdict",
-    "No. Only the plaintiff may ask",
-    "No. Only before trial begins"
+    "No. Only on appeal"
    ],
-   "a": "Yes. Any party may move at any time during the trial",
-   "h": "Any party, any time during.",
-   "w": "CPLR § 4402 allows the motion by any party at any time during the trial."
+   "a": "Yes. Any party may move during trial",
+   "h": "Both who and when fit the rule.",
+   "w": "At any time during the trial, on motion of any party."
+  },
+  {
+   "lv": 2,
+   "q": "A lawyer asks for a new trial a week BEFORE trial starts. Does CPLR 4402 fit?",
+   "c": [
+    "No. It applies during the trial",
+    "Yes. Any time works",
+    "Yes. Before is better",
+    "No. Only after the verdict"
+   ],
+   "a": "No. It applies during the trial",
+   "h": "The rule names a window.",
+   "w": "At any time during the trial."
+  },
+  {
+   "lv": 2,
+   "q": "A motion is made on the day after the verdict. Is CPLR 4402's window still open?",
+   "c": [
+    "Yes. Any time works",
+    "Yes, for the first week",
+    "No. Only the clerk can ask",
+    "No. The window is during the trial"
+   ],
+   "a": "No. The window is during the trial",
+   "h": "Before, during, after: which one?",
+   "w": "At any time during the trial."
+  },
+  {
+   "lv": 2,
+   "q": "The court is persuaded a witness needs more time. What may it order under 4402?",
+   "c": [
+    "A default judgment",
+    "A summons",
+    "A continuance",
+    "A bill of particulars"
+   ],
+   "a": "A continuance",
+   "h": "A pause, not a restart.",
+   "w": "The court may order a continuance or a new trial."
+  },
+  {
+   "lv": 2,
+   "q": "What does the \"IF ... THEN\" trick for CPLR 4402 start with?",
+   "c": [
+    "The verdict",
+    "A party's motion during trial",
+    "The jury's question",
+    "The clerk's note"
+   ],
+   "a": "A party's motion during trial",
+   "h": "Trigger, motion, outcome.",
+   "w": "During the trial, on motion of any party, the court may order a continuance or new trial."
   },
   {
    "lv": 3,
-   "q": "FIND THE INCORRECT STATEMENT about CPLR § 4402.",
+   "q": "Find the error in these statements about CPLR 4402.",
    "c": [
-    "Only the plaintiff may move under it",
-    "The court may order a continuance",
-    "The court may order a new trial",
-    "The motion may be made at any time during the trial"
+    "Only the court's clerk may ask for it",
+    "Any party may move",
+    "It applies during the trial",
+    "It uses \"in the interest of justice\""
    ],
-   "a": "Only the plaintiff may move under it",
-   "h": "Who can move?",
-   "w": "Any party may move, not only the plaintiff."
+   "a": "Only the court's clerk may ask for it",
+   "h": "One statement limits who may ask.",
+   "w": "On motion of any party."
   },
   {
    "lv": 3,
-   "q": "Which sequence matches CPLR § 4402?",
+   "q": "Which sequence matches CPLR 4402?",
    "c": [
-    "Trial underway → a party moves → court may order a continuance or new trial",
-    "Trial ends → jury moves → court orders appeal",
-    "Before trial → clerk moves → court orders default",
-    "Trial underway → court must order a new trial automatically"
+    "After verdict, plaintiff moves, court retries",
+    "Before trial, clerk moves, court may dismiss",
+    "During trial, judge alone, court must stop",
+    "During trial, a party moves, court may retry"
    ],
-   "a": "Trial underway → a party moves → court may order a continuance or new trial",
-   "h": "IF → THEN.",
-   "w": "During trial, on a party's motion, the court may (not must) order a continuance or new trial."
+   "a": "During trial, a party moves, court may retry",
+   "h": "Trigger, motion, outcome.",
+   "w": "During the trial, on motion of any party, the court may order a continuance or new trial."
+  },
+  {
+   "lv": 3,
+   "q": "Does CPLR 4402 say the court MUST order a new trial if a party asks?",
+   "c": [
+    "Yes. It must",
+    "Yes, if the plaintiff asks",
+    "No. The court MAY order it",
+    "No. Only the jury may"
+   ],
+   "a": "No. The court MAY order it",
+   "h": "Look at the verb.",
+   "w": "The court may order a continuance or a new trial."
+  },
+  {
+   "lv": 3,
+   "q": "A new trial is ordered \"on such terms as may be just.\" What does that give the court?",
+   "c": [
+    "No power over terms",
+    "Flexibility in setting the terms",
+    "Power only over costs",
+    "A fixed 30-day limit"
+   ],
+   "a": "Flexibility in setting the terms",
+   "h": "The phrase is open-ended.",
+   "w": "On such terms as may be just."
+  },
+  {
+   "lv": 3,
+   "q": "Which words in CPLR 4402 support the trick \"Any time during trial. Any party.\"?",
+   "c": [
+    "\"At any time during the trial ... any party\"",
+    "\"Before trial ... the plaintiff\"",
+    "\"After verdict ... the defendant\"",
+    "\"At arraignment ... the court\""
+   ],
+   "a": "\"At any time during the trial ... any party\"",
+   "h": "The trick quotes the rule.",
+   "w": "At any time during the trial, on motion of any party."
   }
  ],
  "schoolnotice": [
   {
    "lv": 1,
-   "q": "Under CPL § 380.90(2), who must notify the school?",
+   "q": "Under CPL 380.90(2), who notifies the school after a sentencing?",
    "c": [
-    "The court that sentenced the person",
-    "The probation department",
     "The district attorney",
-    "The student's parents"
+    "The student's parents",
+    "The county clerk",
+    "The sentencing court"
    ],
-   "a": "The court that sentenced the person",
-   "h": "The sentencing court.",
-   "w": "\"…the court that has sentenced such person shall provide notification…\""
+   "a": "The sentencing court",
+   "h": "The court tells the school.",
+   "w": "The court that has sentenced such person shall provide notification."
   },
   {
    "lv": 1,
-   "q": "CPL § 380.90(2) notice is required for students up to and including what age?",
+   "q": "CPL 380.90(2) notice covers students under what age?",
    "c": [
-    "18",
-    "16",
-    "17",
-    "19"
+    "Under 16",
+    "Under 18",
+    "Under 19 (up to and including 18)",
+    "Under 21"
    ],
-   "a": "18",
-   "h": "\"Under the age of nineteen.\"",
-   "w": "\"Under the age of nineteen\" means up to and including 18. (Official sample Q9.)"
+   "a": "Under 19 (up to and including 18)",
+   "h": "\"Under 19\" is the rule's wording.",
+   "w": "A person under the age of nineteen."
   },
   {
    "lv": 1,
-   "q": "Under CPL § 380.90(2), which schools are covered?",
+   "q": "Which schools does CPL 380.90(2) cover?",
    "c": [
-    "Public or private elementary or secondary schools",
+    "Colleges only",
+    "Public or private elementary or secondary",
     "Only public high schools",
-    "Colleges and universities",
     "Only private schools"
    ],
-   "a": "Public or private elementary or secondary schools",
-   "h": "K–12, public or private.",
-   "w": "The rule covers a student \"in a public or private elementary or secondary school.\""
+   "a": "Public or private elementary or secondary",
+   "h": "Think K to 12.",
+   "w": "A public or private elementary or secondary school."
   },
   {
-   "lv": 2,
-   "q": "Under CPL § 380.90(2), who RECEIVES the notice?",
+   "lv": 1,
+   "q": "The notice goes to the school's designated educational official. True or false?",
    "c": [
-    "The designated educational official of the school",
-    "Every teacher",
-    "The school board president",
-    "The student's classmates"
+    "False",
+    "True"
    ],
-   "a": "The designated educational official of the school",
-   "h": "One designated person.",
-   "w": "Notice goes \"to the designated educational official of the school.\""
+   "a": "True",
+   "h": "Read the end of the sentence.",
+   "w": "Notification to the designated educational official of the school.",
+   "type": "tf"
+  },
+  {
+   "lv": 1,
+   "q": "When is the CPL 380.90(2) notice triggered?",
+   "c": [
+    "When the student is arrested",
+    "When the student is arraigned",
+    "When the student is suspended",
+    "When the student is sentenced for a crime"
+   ],
+   "a": "When the student is sentenced for a crime",
+   "h": "One event triggers it.",
+   "w": "Whenever such a student is sentenced for a crime."
   },
   {
    "lv": 2,
-   "q": "What does the notice under CPL § 380.90(2) cover?",
+   "q": "A 19-year-old high school student is sentenced for a crime. Is notice required?",
    "c": [
+    "Yes. High school is covered",
+    "Yes. Any student is covered",
+    "No. The rule covers students under 19",
+    "No. The student is too young"
+   ],
+   "a": "No. The rule covers students under 19",
+   "h": "Check the age limit.",
+   "w": "A person under the age of nineteen."
+  },
+  {
+   "lv": 2,
+   "q": "A 17-year-old at a private high school is sentenced. Is notice required?",
+   "c": [
+    "No. Only public schools",
+    "Yes. Under 19, private secondary school",
+    "No. Only elementary schools",
+    "Yes, but only to the parents"
+   ],
+   "a": "Yes. Under 19, private secondary school",
+   "h": "Both age and school type fit.",
+   "w": "Under nineteen, public or private elementary or secondary school."
+  },
+  {
+   "lv": 2,
+   "q": "A 17-year-old COLLEGE student is sentenced. Does CPL 380.90(2) apply?",
+   "c": [
+    "No. Only elementary or secondary schools",
+    "Yes. Any school",
+    "Yes. Any student under 19",
+    "No. Only students over 18"
+   ],
+   "a": "No. Only elementary or secondary schools",
+   "h": "Which schools are named?",
+   "w": "Elementary or secondary school."
+  },
+  {
+   "lv": 2,
+   "q": "Who receives the notice under CPL 380.90(2)?",
+   "c": [
+    "The student's parents",
+    "The school bus company",
+    "The county clerk",
+    "The school's designated educational official"
+   ],
+   "a": "The school's designated educational official",
+   "h": "The rule names a role.",
+   "w": "The designated educational official of the school."
+  },
+  {
+   "lv": 2,
+   "q": "What does the notice cover under CPL 380.90(2)?",
+   "c": [
+    "The student's grades",
+    "The arrest report",
     "The conviction and sentence",
-    "Only the arrest",
-    "Only the charges",
-    "Only the bail amount"
+    "The family's address"
    ],
    "a": "The conviction and sentence",
-   "h": "What happened at the end.",
-   "w": "The court notifies the school \"of the conviction and sentence.\""
-  },
-  {
-   "lv": 2,
-   "q": "WHAT TRIGGERS IT? The CPL § 380.90(2) notice is triggered when the student is:",
-   "c": [
-    "Sentenced for a crime",
-    "Arrested",
-    "Arraigned",
-    "Indicted"
-   ],
-   "a": "Sentenced for a crime",
-   "h": "IF sentenced…",
-   "w": "The duty arises when the student \"is sentenced for a crime.\""
+   "h": "Two things.",
+   "w": "Notification of the conviction and sentence."
   },
   {
    "lv": 3,
-   "q": "A 19-year-old high school student is sentenced for a crime. Is notice required under CPL § 380.90(2)?",
+   "q": "An 18-year-old high school senior is sentenced. Is notice required?",
    "c": [
-    "No. The rule covers persons under 19",
-    "Yes, all high school students",
-    "Yes, if the school asks",
-    "Only if the crime was at school"
+    "No. 18 is an adult",
+    "Yes. 18 is under 19",
+    "No. Only minors count",
+    "Yes, but only if suspended"
    ],
-   "a": "No. The rule covers persons under 19",
-   "h": "Under 19.",
-   "w": "CPL § 380.90(2) applies to persons \"under the age of nineteen.\""
+   "a": "Yes. 18 is under 19",
+   "h": "\"Under 19\" includes 18.",
+   "w": "A person under the age of nineteen."
   },
   {
    "lv": 3,
-   "q": "A 17-year-old enrolled in a private high school is sentenced for a crime. What must happen?",
+   "q": "A student of 17 is sentenced and is NOT enrolled in any school. Is notice required?",
    "c": [
-    "The sentencing court notifies the school's designated educational official",
-    "Nothing, private schools are excluded",
-    "The DA notifies the principal",
-    "The student must tell the school"
+    "No. The student must be enrolled",
+    "Yes. Under 19 is enough",
+    "Yes. The court tells the parents",
+    "No. Only students over 18"
    ],
-   "a": "The sentencing court notifies the school's designated educational official",
-   "h": "Public or private.",
-   "w": "Private secondary schools are covered, and the sentencing court sends the notice."
+   "a": "No. The student must be enrolled",
+   "h": "Check the enrollment condition.",
+   "w": "A person under nineteen who is enrolled as a student in a school."
   },
   {
    "lv": 3,
-   "q": "A 17-year-old COLLEGE student is sentenced for a crime. Does CPL § 380.90(2) require school notice?",
+   "q": "Under 19 plus sentenced equals school is told. Which fact is NOT part of the trigger?",
    "c": [
-    "No. It covers elementary or secondary schools",
-    "Yes, any school",
-    "Yes, if under 19",
-    "Only public colleges"
+    "The student's age",
+    "Enrollment in a school",
+    "The sentence for a crime",
+    "The student's grade point average"
    ],
-   "a": "No. It covers elementary or secondary schools",
-   "h": "What kind of school?",
-   "w": "The rule is limited to \"elementary or secondary\" schools."
+   "a": "The student's grade point average",
+   "h": "The trick has three parts.",
+   "w": "Under nineteen, enrolled, sentenced for a crime."
+  },
+  {
+   "lv": 3,
+   "q": "A court sentences a 16-year-old enrolled at a public high school. Who gets the notice?",
+   "c": [
+    "The student's employer",
+    "The county clerk",
+    "The school's designated official",
+    "The parents only"
+   ],
+   "a": "The school's designated official",
+   "h": "The rule names a role at the school.",
+   "w": "Notification to the designated educational official of the school in which the person is enrolled."
+  },
+  {
+   "lv": 3,
+   "q": "Which of these misstates CPL 380.90(2)?",
+   "c": [
+    "The sentencing court notifies",
+    "The notice goes to the student's parents",
+    "Under 19 is covered",
+    "The school is public or private"
+   ],
+   "a": "The notice goes to the student's parents",
+   "h": "One statement has the wrong recipient.",
+   "w": "The court notifies the designated educational official of the school."
   }
  ],
  "bail": [
   {
    "lv": 1,
-   "q": "Under CPL § 500.10(9), \"bail\" means:",
+   "q": "Under CPL 500.10(9), \"bail\" means:",
    "c": [
-    "Cash bail, a bail bond, or money paid with a credit card",
-    "Only cash",
-    "Cash or real property",
-    "Any property worth the bail amount"
+    "Cash bail, a bail bond, or credit card money",
+    "Cash only",
+    "Real property or equity",
+    "A signed promise to appear"
    ],
-   "a": "Cash bail, a bail bond, or money paid with a credit card",
+   "a": "Cash bail, a bail bond, or credit card money",
    "h": "Cash, bond, or card.",
-   "w": "CPL § 500.10(9): \"'Bail' means cash bail, a bail bond or money paid with a credit card.\""
+   "w": "\"Bail\" means cash bail, a bail bond or money paid with a credit card."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: Money paid with a credit card is part of the definition of bail in CPL § 500.10(9).",
+   "q": "Money paid with a credit card is part of the CPL 500.10(9) definition of bail. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "True",
-   "h": "Cash, bond, or…",
-   "w": "True. Credit card payment is expressly included.",
+   "h": "The trick says \"card.\"",
+   "w": "Bail includes money paid with a credit card.",
    "type": "tf"
   },
   {
    "lv": 1,
-   "q": "Exam format. Under CPL § 500.10(9), \"bail\" means: (1) cash bail or a bail bond (2) real property (3) equity in full force and effect",
+   "q": "How many forms of bail does CPL 500.10(9) list?",
    "c": [
-    "1 only, but not 2 or 3",
-    "1 and 2, but not 3",
-    "1 and 3, but not 2",
-    "1, 2, and 3"
-   ],
-   "a": "1 only, but not 2 or 3",
-   "h": "Only one item matches the definition.",
-   "w": "Correct answer: 1 only. The definition lists cash bail, a bail bond, or money paid with a credit card. (Official sample Q7.)"
-  },
-  {
-   "lv": 2,
-   "q": "CASH BAIL. Is it in the CPL § 500.10(9) definition?",
-   "c": [
-    "Listed as bail",
-    "Not listed"
-   ],
-   "a": "Listed as bail",
-   "h": "Cash, bond, or card.",
-   "w": "Cash bail is listed.",
-   "type": "tf"
-  },
-  {
-   "lv": 2,
-   "q": "REAL PROPERTY. Is it in the CPL § 500.10(9) definition?",
-   "c": [
-    "Listed as bail",
-    "Not listed"
-   ],
-   "a": "Not listed",
-   "h": "Cash, bond, or card.",
-   "w": "Real property is not one of the three items in the definition.",
-   "type": "tf"
-  },
-  {
-   "lv": 2,
-   "q": "A BAIL BOND. Is it in the CPL § 500.10(9) definition?",
-   "c": [
-    "Listed as bail",
-    "Not listed"
-   ],
-   "a": "Listed as bail",
-   "h": "Cash, bond, or card.",
-   "w": "A bail bond is listed.",
-   "type": "tf"
-  },
-  {
-   "lv": 3,
-   "q": "How many forms of bail does CPL § 500.10(9) list?",
-   "c": [
-    "Three",
+    "One",
     "Two",
-    "Four",
+    "Three",
     "Five"
    ],
    "a": "Three",
    "h": "Cash, bond, card.",
-   "w": "Three: cash bail, a bail bond, and money paid with a credit card."
+   "w": "Cash bail, a bail bond, or money paid with a credit card."
+  },
+  {
+   "lv": 1,
+   "q": "Which of these is a form of bail in CPL 500.10(9)?",
+   "c": [
+    "A signed IOU",
+    "A bail bond",
+    "A mortgage",
+    "A car title"
+   ],
+   "a": "A bail bond",
+   "h": "One of the three.",
+   "w": "A bail bond."
+  },
+  {
+   "lv": 1,
+   "q": "The trick \"Cash, bond, or ____.\" Fill in the blank.",
+   "c": [
+    "Card",
+    "Deed",
+    "Title",
+    "Check"
+   ],
+   "a": "Card",
+   "h": "Think of paying by plastic.",
+   "w": "Money paid with a credit card."
+  },
+  {
+   "lv": 2,
+   "q": "CASH BAIL. Is it in the CPL 500.10(9) definition?",
+   "c": [
+    "No. Only bonds count",
+    "No. Only cards count",
+    "Yes, but only over $1,000",
+    "Yes. It is the first form listed"
+   ],
+   "a": "Yes. It is the first form listed",
+   "h": "It is on the list.",
+   "w": "Cash bail."
+  },
+  {
+   "lv": 2,
+   "q": "REAL PROPERTY. Is it in the CPL 500.10(9) definition?",
+   "c": [
+    "Yes. It is the second form",
+    "Yes. As equity",
+    "No. It is not listed",
+    "Yes, with a bond"
+   ],
+   "a": "No. It is not listed",
+   "h": "The exam likes to add things.",
+   "w": "CPL 500.10(9) lists cash bail, a bail bond, and a credit card payment only."
+  },
+  {
+   "lv": 2,
+   "q": "A BAIL BOND. Is it in the CPL 500.10(9) definition?",
+   "c": [
+    "No. Only cash counts",
+    "Yes. It is one of the three",
+    "No. Only cards count",
+    "Yes, but only with real property"
+   ],
+   "a": "Yes. It is one of the three",
+   "h": "It is named in the rule.",
+   "w": "A bail bond."
+  },
+  {
+   "lv": 2,
+   "q": "A family offers the title to a car as bail. Does it fit CPL 500.10(9)?",
+   "c": [
+    "No. It is not a listed form",
+    "Yes. Titles are bonds",
+    "Yes. Titles are cash",
+    "Yes, if the judge likes it"
+   ],
+   "a": "No. It is not a listed form",
+   "h": "Three forms only.",
+   "w": "CPL 500.10(9) lists cash bail, a bail bond, and a credit card payment."
+  },
+  {
+   "lv": 2,
+   "q": "A defendant's family wants to pay the bail amount by credit card. Under CPL 500.10(9)?",
+   "c": [
+    "It does not fit",
+    "It fits only up to $100",
+    "It fits only for a bond",
+    "It fits: money paid with a credit card"
+   ],
+   "a": "It fits: money paid with a credit card",
+   "h": "The trick says card.",
+   "w": "Money paid with a credit card is bail."
   },
   {
    "lv": 3,
-   "q": "Which is NOT listed in CPL § 500.10(9)?",
+   "q": "Which is NOT listed in CPL 500.10(9)?",
    "c": [
-    "Real property",
     "Cash bail",
     "A bail bond",
+    "Equity in real property",
     "Money paid with a credit card"
    ],
-   "a": "Real property",
-   "h": "Find the extra.",
-   "w": "Real property is not in the definition. The three listed forms are cash bail, a bail bond, and credit card payment."
+   "a": "Equity in real property",
+   "h": "Watch for the add-ons.",
+   "w": "CPL 500.10(9) lists three forms. Equity in real property is not one of them."
   },
   {
    "lv": 3,
-   "q": "A defendant's family asks to pay the bail amount by credit card. Under CPL § 500.10(9), is that within the definition of bail?",
+   "q": "A claim says bail can be \"cash, bond, card, or property.\" What is wrong?",
    "c": [
-    "Yes. Money paid with a credit card is bail",
-    "No. Only cash counts",
-    "No. Only a bail bond counts",
-    "Only with the prosecutor's consent"
+    "Cash is not in it",
+    "Property is not in the definition",
+    "Cards are not in it",
+    "Bonds are not in it"
    ],
-   "a": "Yes. Money paid with a credit card is bail",
-   "h": "Cash, bond, or card.",
-   "w": "The definition expressly includes \"money paid with a credit card.\""
+   "a": "Property is not in the definition",
+   "h": "Which word was added?",
+   "w": "Cash bail, a bail bond or money paid with a credit card."
+  },
+  {
+   "lv": 3,
+   "q": "\"Cash, bond, or card.\" What kind of memory aid is this?",
+   "c": [
+    "A three-item list from the rule",
+    "A five-step process",
+    "A deadline",
+    "A court order"
+   ],
+   "a": "A three-item list from the rule",
+   "h": "Count the items.",
+   "w": "Three forms of bail."
+  },
+  {
+   "lv": 3,
+   "q": "A student says the CPL 500.10(9) list is open-ended. What does the card say?",
+   "c": [
+    "Yes. Any form may be added",
+    "Yes. The judge may add forms",
+    "No. There are exactly seven",
+    "No. Three forms. That's it."
+   ],
+   "a": "No. Three forms. That's it.",
+   "h": "The card says it plainly.",
+   "w": "CPL 500.10(9) defines bail as three listed forms."
+  },
+  {
+   "lv": 3,
+   "q": "Which is the best example of a form of bail under CPL 500.10(9)?",
+   "c": [
+    "A promise from a neighbor",
+    "A deed to a vacant lot",
+    "Money paid with a credit card",
+    "A diploma"
+   ],
+   "a": "Money paid with a credit card",
+   "h": "Pick the listed one.",
+   "w": "Money paid with a credit card."
   }
  ],
  "acd": [
   {
    "lv": 1,
-   "q": "Under CPL § 170.56, the total period of this adjournment in contemplation of dismissal may not exceed:",
+   "q": "Under CPL 170.56, what is the longest total adjournment in contemplation of dismissal?",
    "c": [
-    "12 months",
-    "90 days",
-    "30 days",
-    "6 months"
+    "Twelve months",
+    "Six months",
+    "Eighteen months",
+    "Two years"
    ],
-   "a": "12 months",
+   "a": "Twelve months",
    "h": "Max: 12.",
-   "w": "\"…the total period of adjournment shall not exceed twelve months.\" (Official sample Q12.)"
+   "w": "The total period of adjournment shall not exceed twelve months."
   },
   {
    "lv": 1,
-   "q": "\"ACD\" in CPL § 170.56 stands for adjournment in contemplation of:",
+   "q": "What does \"ACD\" stand for in CPL 170.56?",
    "c": [
-    "Dismissal",
-    "Discovery",
-    "Default",
-    "Deposition"
+    "Appeal of a criminal docket",
+    "Adjusted court date",
+    "Arraignment, charge, disposition",
+    "Adjournment in contemplation of dismissal"
    ],
-   "a": "Dismissal",
-   "h": "What happens at the end?",
-   "w": "An ACD is an adjournment in contemplation of dismissal."
+   "a": "Adjournment in contemplation of dismissal",
+   "h": "Three words after \"adjournment.\"",
+   "w": "The action adjourned in contemplation of dismissal."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: Under CPL § 170.56, the court may modify the conditions at any time before dismissal.",
+   "q": "Before dismissal, the court may modify the ACD conditions. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "True",
-   "h": "Adjustable.",
-   "w": "True: \"At any time prior to dismissal the court may modify the conditions…\"",
+   "h": "Read the second sentence.",
+   "w": "At any time prior to dismissal the court may modify the conditions.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "When ordering the ACD, what MUST the court do under CPL § 170.56?",
+   "lv": 1,
+   "q": "When ordering the ACD, what MUST the court do?",
    "c": [
-    "Set and specify appropriate conditions",
-    "Dismiss the case immediately",
-    "Enter a guilty plea",
-    "Order a jury trial"
+    "Pick a jury",
+    "Set and specify conditions",
+    "Name a victim advocate",
+    "Close the file"
    ],
-   "a": "Set and specify appropriate conditions",
-   "h": "\"must set and specify…\"",
-   "w": "\"…the court must set and specify such conditions for the adjournment as may be appropriate.\""
+   "a": "Set and specify conditions",
+   "h": "Conditions are a must.",
+   "w": "The court must set and specify such conditions for the adjournment as may be appropriate."
   },
   {
-   "lv": 2,
-   "q": "Which condition does CPL § 170.56 expressly allow?",
+   "lv": 1,
+   "q": "Which condition does CPL 170.56 expressly allow?",
    "c": [
     "Supervision by a public or private agency",
-    "A jail sentence",
-    "Loss of a driver's license",
-    "A $10,000 fine"
+    "Jail time",
+    "A fine of $1,000",
+    "Community service only"
    ],
    "a": "Supervision by a public or private agency",
-   "h": "\"…may include placing the defendant under…\"",
-   "w": "Conditions \"may include placing the defendant under the supervision of any public or private agency.\""
+   "h": "Supervision is an option.",
+   "w": "Conditions may include placing the defendant under the supervision of any public or private agency."
   },
   {
    "lv": 2,
-   "q": "Before dismissal, what may the court do to the ACD under CPL § 170.56?",
+   "q": "Before dismissal, which of these may the court do to the ACD?",
    "c": [
-    "Modify the conditions or extend or reduce the term",
-    "Nothing, it is locked in",
-    "Only shorten it",
-    "Convert it to a conviction automatically"
+    "Raise it above 12 months",
+    "Turn it into a conviction",
+    "Skip the conditions",
+    "Extend or reduce the term"
    ],
-   "a": "Modify the conditions or extend or reduce the term",
-   "h": "Adjust it, within the cap.",
-   "w": "\"…the court may modify the conditions or extend or reduce the term of the adjournment.\""
+   "a": "Extend or reduce the term",
+   "h": "It can stretch or shrink.",
+   "w": "The court may modify the conditions or extend or reduce the term, but the total shall not exceed twelve months."
   },
   {
-   "lv": 3,
-   "q": "An ACD was set for 9 months. The court wants to extend it by 5 more months. Allowed under CPL § 170.56?",
+   "lv": 2,
+   "q": "An ACD was set for 9 months. The court wants to add 5 more. Allowed?",
    "c": [
-    "No. The total would be 14 months, over the 12-month cap",
-    "Yes, extensions are unlimited",
-    "Yes, if the defendant agrees",
-    "No. ACDs can never be extended"
+    "Yes. Extensions are unlimited",
+    "Yes. Up to 24 months",
+    "No. That would be 14 months",
+    "No. It cannot be extended at all"
    ],
-   "a": "No. The total would be 14 months, over the 12-month cap",
-   "h": "Add it up.",
-   "w": "9 + 5 = 14 months, which exceeds the twelve-month total limit."
+   "a": "No. That would be 14 months",
+   "h": "Add the months.",
+   "w": "The total period of adjournment shall not exceed twelve months."
   },
   {
-   "lv": 3,
-   "q": "An ACD was set for 6 months. The court extends it by 6 more. Allowed under CPL § 170.56?",
+   "lv": 2,
+   "q": "An ACD was set for 6 months. The court extends it by 6 more. Allowed?",
    "c": [
-    "Yes. The total is exactly 12 months",
-    "No. Extensions are not allowed",
+    "No. Extensions are banned",
+    "Yes. The total is 12 months",
     "No. The limit is 6 months",
-    "Only with the prosecutor's consent"
+    "Yes, and 6 more after that"
    ],
-   "a": "Yes. The total is exactly 12 months",
-   "h": "\"shall not exceed\" twelve.",
-   "w": "6 + 6 = 12 months, which does not exceed the limit."
+   "a": "Yes. The total is 12 months",
+   "h": "Count the total.",
+   "w": "The total shall not exceed twelve months. Six plus six is twelve."
+  },
+  {
+   "lv": 2,
+   "q": "An ACD is set for 12 months. Can the court reduce it to 8 months before dismissal?",
+   "c": [
+    "Yes. It may extend or reduce the term",
+    "No. 12 is fixed",
+    "No. Only the prosecutor may",
+    "Yes, but only to 11"
+   ],
+   "a": "Yes. It may extend or reduce the term",
+   "h": "Shrink is allowed.",
+   "w": "The court may extend or reduce the term of the adjournment."
+  },
+  {
+   "lv": 2,
+   "q": "May the court change the conditions after setting them but before dismissal?",
+   "c": [
+    "No. They are fixed",
+    "Yes, but only the clerk",
+    "No. Only on appeal",
+    "Yes. It may modify them"
+   ],
+   "a": "Yes. It may modify them",
+   "h": "The rule says any time before dismissal.",
+   "w": "At any time prior to dismissal the court may modify the conditions."
   },
   {
    "lv": 3,
-   "q": "In the official sample, this 12-month ACD applies where the only remaining counts charge violations of which Penal Law sections?",
+   "q": "An ACD was extended once to 10 months. The court wants to extend again by 4. Allowed?",
    "c": [
-    "§§ 222.10, 222.15, 222.25, 222.30, 222.45, or 222.50",
-    "§§ 120.00 and 120.05",
-    "§ 155.25 only",
-    "Any felony"
+    "Yes. Each extension stands alone",
+    "Yes. Only one extension counts",
+    "No. The total would be 14 months",
+    "No. A second extension is banned"
    ],
-   "a": "§§ 222.10, 222.15, 222.25, 222.30, 222.45, or 222.50",
-   "h": "The 222 series.",
-   "w": "The official sample question describes counts charging violations of Penal Law §§ 222.10, 222.15, 222.25, 222.30, 222.45, or 222.50."
+   "a": "No. The total would be 14 months",
+   "h": "The cap is on the total.",
+   "w": "The total period of adjournment shall not exceed twelve months."
+  },
+  {
+   "lv": 3,
+   "q": "Which claim about the 12-month ACD rule is FALSE?",
+   "c": [
+    "The court must set conditions",
+    "The court may extend the term past 12 months",
+    "Supervision is allowed",
+    "The total cannot exceed 12 months"
+   ],
+   "a": "The court may extend the term past 12 months",
+   "h": "One statement breaks the cap.",
+   "w": "The total shall not exceed twelve months, even if extended."
+  },
+  {
+   "lv": 3,
+   "q": "\"Adjust it all you want. Max: 12.\" What can the court adjust?",
+   "c": [
+    "Conditions and the length of the term",
+    "The charge",
+    "The plea",
+    "The date of arrest"
+   ],
+   "a": "Conditions and the length of the term",
+   "h": "Two things.",
+   "w": "Modify the conditions or extend or reduce the term."
+  },
+  {
+   "lv": 3,
+   "q": "Per the card, this ACD applies where the only remaining counts charge:",
+   "c": [
+    "Any felony",
+    "Any traffic ticket",
+    "Only murder",
+    "Certain Penal Law violations"
+   ],
+   "a": "Certain Penal Law violations",
+   "h": "The context line limits it.",
+   "w": "Context: a local criminal court, only remaining counts charge specified Penal Law violations, before a plea or trial."
+  },
+  {
+   "lv": 3,
+   "q": "The court sets an ACD with no conditions at all. What does CPL 170.56 say?",
+   "c": [
+    "Conditions are optional",
+    "Conditions are banned",
+    "The court must set and specify conditions",
+    "Conditions are for the clerk"
+   ],
+   "a": "The court must set and specify conditions",
+   "h": "Conditions are a must.",
+   "w": "The court must set and specify such conditions as may be appropriate."
   }
  ],
  "military": [
   {
    "lv": 1,
-   "q": "Under Uniform Rules § 202.22(a)(7), a Military Calendar is:",
+   "q": "A military calendar is for cases where:",
    "c": [
-    "A listing of cases where a party or witness is presently not available for trial due to military service",
-    "A calendar of cases where a party is a military contractor",
-    "Cases where the defendant was discharged three years ago",
-    "Cases where the military is suing someone"
+    "The judge served in the military",
+    "The lawyer is a veteran",
+    "A party or needed witness is serving",
+    "The case concerns a military contract"
    ],
-   "a": "A listing of cases where a party or witness is presently not available for trial due to military service",
-   "h": "Serving and unavailable.",
-   "w": "Official sample Q18, answer D. It is for cases where a party or needed witness is in military service and not presently available for trial."
+   "a": "A party or needed witness is serving",
+   "h": "Someone who serves.",
+   "w": "A party to an action or a witness necessary upon the trial is in military service."
   },
   {
    "lv": 1,
-   "q": "Under Uniform Rules § 202.22(a), who may establish calendars like the military calendar?",
+   "q": "Who may establish calendars such as the military calendar?",
    "c": [
-    "A judge to whom cases are assigned under the individual assignment system",
-    "The court clerk",
-    "Any attorney",
-    "The jury"
+    "The county clerk",
+    "The assigned judge",
+    "The chief of police",
+    "The lawyers"
    ],
-   "a": "A judge to whom cases are assigned under the individual assignment system",
-   "h": "The assigned judge.",
-   "w": "\"A judge to whom cases are assigned under the individual assignment system may establish such calendars…\""
+   "a": "The assigned judge",
+   "h": "The rule starts with the judge.",
+   "w": "A judge assigned cases under the individual assignment system may establish calendars."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: The witness must be one \"necessary upon the trial\" to qualify under 202.22(a)(7).",
+   "q": "The witness must be one \"necessary upon the trial\" to qualify. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "True",
-   "h": "Not just any witness.",
-   "w": "True: \"…a witness necessary upon the trial is in military service…\"",
+   "h": "Read the rule's wording.",
+   "w": "A witness necessary upon the trial.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "A party is in military service and not available for trial. What ELSE must be true for the military calendar?",
+   "lv": 1,
+   "q": "Which of these does the military calendar require, besides military service?",
    "c": [
-    "A deposition cannot be taken, or would not provide adequate evidence",
-    "The party must be overseas for 2 years",
-    "The other side must agree",
-    "The case must be a felony"
+    "A written order from the Army",
+    "A jury trial",
+    "A prior default",
+    "Not presently available for trial"
    ],
-   "a": "A deposition cannot be taken, or would not provide adequate evidence",
-   "h": "Could a deposition fix it?",
-   "w": "\"…and a deposition cannot be taken, or, if taken, would not provide adequate evidence.\""
+   "a": "Not presently available for trial",
+   "h": "Three conditions in all.",
+   "w": "In military service, not presently available for trial, and a deposition cannot be taken or would not provide adequate evidence."
+  },
+  {
+   "lv": 1,
+   "q": "How many conditions must ALL be true for the military calendar?",
+   "c": [
+    "One",
+    "Two",
+    "Three",
+    "Five"
+   ],
+   "a": "Three",
+   "h": "Serving, unavailable, no good deposition.",
+   "w": "Uniform Rule 202.22(a)(7) lists three conditions."
   },
   {
    "lv": 2,
-   "q": "A party is a contractor selling supplies to the military. Is that, by itself, a military-calendar case?",
+   "q": "A party is in military service and not available for trial. What ELSE must be true?",
    "c": [
-    "Yes",
-    "No"
+    "The case is a felony",
+    "No adequate deposition is possible",
+    "The jury is waived",
+    "The clerk agrees"
    ],
-   "a": "No",
-   "h": "Is anyone serving?",
-   "w": "No. The calendar is for a party or needed witness who is in military service and unavailable.",
-   "type": "tf"
+   "a": "No adequate deposition is possible",
+   "h": "There is a third box.",
+   "w": "A deposition cannot be taken, or if taken would not provide adequate evidence."
   },
   {
    "lv": 2,
-   "q": "The defendant was discharged from the military three years ago. Is that a military-calendar case?",
+   "q": "A party sells supplies to the military. Is that, by itself, a military calendar case?",
    "c": [
-    "Yes",
-    "No"
+    "No. The party must be in military service",
+    "Yes. It involves the military",
+    "Yes. Contracts count",
+    "No. Only judges qualify"
    ],
-   "a": "No",
-   "h": "Are they serving now?",
-   "w": "No. The person must be in military service and not presently available.",
-   "type": "tf"
+   "a": "No. The party must be in military service",
+   "h": "The rule says service, not business.",
+   "w": "A party or necessary witness is in military service."
   },
   {
-   "lv": 3,
-   "q": "A needed witness is deployed overseas, but a video deposition can be taken and would provide adequate evidence. Military calendar?",
+   "lv": 2,
+   "q": "The defendant left the military three years ago. Does that make it a military calendar case?",
    "c": [
-    "No. A deposition that is adequate is available",
+    "Yes. Veterans count",
+    "Yes. Any service ever counts",
+    "No. Only plaintiffs qualify",
+    "No. They must currently be in service"
+   ],
+   "a": "No. They must currently be in service",
+   "h": "Present tense matters.",
+   "w": "Is in military service."
+  },
+  {
+   "lv": 2,
+   "q": "A needed witness is deployed but can give a full video deposition. Military calendar?",
+   "c": [
     "Yes. Deployment is enough",
-    "Yes, if the judge prefers",
+    "Yes. Any witness qualifies",
+    "No. An adequate deposition is possible",
     "No. Only parties qualify"
    ],
-   "a": "No. A deposition that is adequate is available",
-   "h": "Check all three boxes.",
-   "w": "The calendar applies only if a deposition cannot be taken or would not provide adequate evidence."
+   "a": "No. An adequate deposition is possible",
+   "h": "The third box fails.",
+   "w": "Only where a deposition cannot be taken or would not provide adequate evidence."
   },
   {
-   "lv": 3,
-   "q": "A party is on active duty, not available for trial, and no deposition could provide adequate evidence. Military calendar?",
+   "lv": 2,
+   "q": "A party is on active duty, unavailable, and no deposition can be taken. Qualifies?",
    "c": [
+    "No. Two are enough",
     "Yes. All three conditions are met",
-    "No. Only witnesses qualify",
-    "No. Parties must appear anyway",
-    "Only if the case is criminal"
+    "No. A fourth is required",
+    "Yes, but only for witnesses"
    ],
    "a": "Yes. All three conditions are met",
-   "h": "Serving · unavailable · no adequate deposition.",
-   "w": "All three conditions of 202.22(a)(7) are met."
+   "h": "Check all three.",
+   "w": "All three conditions are present."
   },
   {
    "lv": 3,
-   "q": "Why may an assigned judge establish special calendars like this under 202.22(a)?",
+   "q": "A needed witness is deployed overseas. A deposition can be taken but would NOT give adequate evidence. Qualifies?",
    "c": [
-    "For proper case management",
-    "To punish late parties",
-    "To speed up appeals",
-    "Because the jury requests it"
+    "Yes. The deposition would be inadequate",
+    "No. A deposition exists",
+    "No. Only parties qualify",
+    "Yes, but only for a month"
    ],
-   "a": "For proper case management",
-   "h": "\"…necessary or desirable for…\"",
-   "w": "Calendars may be established \"as the judge shall deem necessary or desirable for proper case management.\""
+   "a": "Yes. The deposition would be inadequate",
+   "h": "The rule says \"or, if taken, would not provide adequate evidence.\"",
+   "w": "A deposition cannot be taken, or, if taken, would not provide adequate evidence."
+  },
+  {
+   "lv": 3,
+   "q": "Why may an assigned judge establish a special calendar like this?",
+   "c": [
+    "To avoid trials",
+    "To raise fees",
+    "To move cases to another county",
+    "To manage cases properly"
+   ],
+   "a": "To manage cases properly",
+   "h": "The rule gives the purpose.",
+   "w": "Calendars the judge deems necessary or desirable for proper case management."
+  },
+  {
+   "lv": 3,
+   "q": "Serving, unavailable, no good deposition. Which three letters capture it?",
+   "c": [
+    "A-B-C: arrest, bail, charge",
+    "J-E-D: judge, entry, docket",
+    "S-U-N: serving, unavailable, no substitute",
+    "P-I-E: party, issue, evidence"
+   ],
+   "a": "S-U-N: serving, unavailable, no substitute",
+   "h": "A sunny way to remember the three boxes.",
+   "w": "Three conditions: in service, not available, no adequate deposition."
+  },
+  {
+   "lv": 3,
+   "q": "Which claim about the military calendar is FALSE?",
+   "c": [
+    "It needs a party or necessary witness",
+    "It applies to any party who ever served",
+    "It needs the person unavailable for trial",
+    "It needs no adequate deposition"
+   ],
+   "a": "It applies to any party who ever served",
+   "h": "One statement stretches the rule.",
+   "w": "In military service, not presently available, and no adequate deposition."
+  },
+  {
+   "lv": 3,
+   "q": "A judge may put a case on the military calendar only if:",
+   "c": [
+    "All three conditions are true",
+    "Any one condition is true",
+    "Two of three are true",
+    "The lawyer asks"
+   ],
+   "a": "All three conditions are true",
+   "h": "All three boxes.",
+   "w": "Uniform Rule 202.22(a)(7) lists three conditions, joined by \"and.\""
   }
  ],
  "eightback": [
   {
    "lv": 1,
-   "q": "Under CPLR 2214(b), a notice of motion and supporting affidavits must be served at least how long before the hearing?",
+   "q": "The trick: \"Eight days out.\" What goes out at least eight days before the hearing?",
    "c": [
-    "8 days",
-    "2 days",
-    "30 days",
-    "5 days"
+    "Notice of motion and supporting affidavits",
+    "Reply affidavits",
+    "Answering affidavits",
+    "The judge's order"
    ],
-   "a": "8 days",
-   "h": "Eight before…",
-   "w": "\"…at least eight days before the time at which the motion is noticed to be heard.\""
+   "a": "Notice of motion and supporting affidavits",
+   "h": "The movant's papers go first.",
+   "w": "A notice of motion and supporting affidavits are served at least eight days before the hearing."
   },
   {
    "lv": 1,
-   "q": "Under CPLR 2214(b), answering affidavits must be served at least:",
+   "q": "And what is \"Two days back\"?",
    "c": [
-    "2 days before the hearing",
-    "8 days before the hearing",
-    "1 day after the hearing",
-    "10 days before the hearing"
+    "Notice of motion, 2 days before",
+    "Reply affidavits, 2 days before",
+    "The order, 2 days before",
+    "Answering affidavits, at least 2 days before"
    ],
-   "a": "2 days before the hearing",
-   "h": "…two back.",
-   "w": "\"Answering affidavits shall be served at least two days before such time.\""
+   "a": "Answering affidavits, at least 2 days before",
+   "h": "The opponent answers.",
+   "w": "Answering affidavits shall be served at least two days before the hearing."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: Under CPLR 2214(a), a notice of motion must specify the time and place of the hearing.",
+   "q": "Eight days before the hearing is the minimum for serving the notice of motion. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "True",
-   "h": "Where and when?",
-   "w": "2214(a) requires \"the time and place of the hearing on the motion.\"",
+   "h": "\"Eight days is the floor, not the goal.\"",
+   "w": "At least eight days before the time the motion is noticed to be heard.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "A motion is noticed to be heard on the 20th. What is the last day the notice of motion may be served?",
+   "lv": 1,
+   "q": "To get answers at 7 days, how early must the notice be served, and what must it do?",
    "c": [
-    "The 12th",
-    "The 18th",
-    "The 13th",
-    "The 15th"
+    "8 days early; ask politely",
+    "16 days early; demand early answers",
+    "20 days early; no demand needed",
+    "10 days early; file in court"
    ],
-   "a": "The 12th",
-   "h": "Count back eight.",
-   "w": "At least 8 days before the 20th is the 12th."
+   "a": "16 days early; demand early answers",
+   "h": "Sixteen days and a demand.",
+   "w": "Answering affidavits at least seven days before if a notice served at least sixteen days before so demands."
   },
   {
-   "lv": 2,
-   "q": "The motion is heard on the 20th, and the answering affidavits are served on the 19th. Timely under 2214(b)?",
+   "lv": 1,
+   "q": "After a 16-day demand, replies are due at least:",
    "c": [
-    "Yes",
-    "No"
-   ],
-   "a": "No",
-   "h": "Two days before.",
-   "w": "No. Answering affidavits must be served at least 2 days before, so by the 18th.",
-   "type": "tf"
-  },
-  {
-   "lv": 2,
-   "q": "Which is NOT required in a notice of motion under 2214(a)?",
-   "c": [
-    "The judge's signature",
-    "The relief demanded",
-    "The grounds for the relief",
-    "The supporting papers relied on"
-   ],
-   "a": "The judge's signature",
-   "h": "Four things are listed.",
-   "w": "2214(a) lists time and place, supporting papers, relief demanded, and grounds. A judge's signature isn't one of them."
-  },
-  {
-   "lv": 3,
-   "q": "A notice of motion is served 16 days before the hearing and demands it. When are answering affidavits and any cross-motion due?",
-   "c": [
-    "At least 7 days before",
-    "At least 2 days before",
-    "At least 8 days before",
-    "At least 16 days before"
-   ],
-   "a": "At least 7 days before",
-   "h": "Sixteen buys seven.",
-   "w": "\"…shall be served at least seven days before such time if a notice of motion served at least sixteen days before such time so demands.\""
-  },
-  {
-   "lv": 3,
-   "q": "In that same 16-day situation, when are reply affidavits due?",
-   "c": [
-    "At least 1 day before",
-    "At least 2 days before",
-    "At least 7 days before",
+    "1 day before the hearing",
+    "7 days before",
+    "2 days before",
     "On the hearing day"
    ],
-   "a": "At least 1 day before",
-   "h": "The last step.",
-   "w": "\"…whereupon any reply or responding affidavits shall be served at least one day before such time.\""
+   "a": "1 day before the hearing",
+   "h": "Replies come last.",
+   "w": "Any reply or responding affidavits shall be served at least one day before."
+  },
+  {
+   "lv": 2,
+   "q": "Moving papers are served on the 5th for a hearing on the 13th. Enough time?",
+   "c": [
+    "No. It needed 10 days",
+    "No. It needed 14 days",
+    "Yes, but only with a demand",
+    "Yes. Exactly 8 days before"
+   ],
+   "a": "Yes. Exactly 8 days before",
+   "h": "Count from the 5th to the 13th.",
+   "w": "At least eight days before the hearing. The 13th minus 8 days is the 5th."
+  },
+  {
+   "lv": 2,
+   "q": "Answering affidavits are served on the 17th for a hearing on the 20th. Enough time?",
+   "c": [
+    "No. They needed 7 days",
+    "No. They needed 8 days",
+    "Yes. 3 days is at least 2",
+    "No. Only replies are allowed then"
+   ],
+   "a": "Yes. 3 days is at least 2",
+   "h": "The floor is two days.",
+   "w": "Answering affidavits at least two days before the hearing. The 17th is three days before the 20th."
+  },
+  {
+   "lv": 2,
+   "q": "A notice served 15 days before the hearing demands early answers. Does the 7-day rule apply?",
+   "c": [
+    "Yes. Fifteen is close enough",
+    "No. It needs service 16 or more days out",
+    "Yes. The demand alone is enough",
+    "No. Demands are never allowed"
+   ],
+   "a": "No. It needs service 16 or more days out",
+   "h": "One day short.",
+   "w": "The seven-day rule needs a notice served at least sixteen days before the hearing that so demands."
+  },
+  {
+   "lv": 2,
+   "q": "Hearing Sept 30. Notice with a demand served Sept 14. Answers and cross-motion due?",
+   "c": [
+    "September 23",
+    "September 28",
+    "September 22",
+    "September 25"
+   ],
+   "a": "September 23",
+   "h": "Sixteen days out: seven days back.",
+   "w": "Sixteen days before gives the demand effect; answering papers at least seven days before. September 30 minus 7 is September 23."
+  },
+  {
+   "lv": 2,
+   "q": "In that same case (hearing Sept 30, demand served Sept 14), replies are due by:",
+   "c": [
+    "September 23",
+    "September 28",
+    "September 30",
+    "September 29"
+   ],
+   "a": "September 29",
+   "h": "One day back.",
+   "w": "Any reply at least one day before the hearing."
   },
   {
    "lv": 3,
-   "q": "TRUE or FALSE: Serving 16 days ahead moves the answering deadline to 7 days only if the notice of motion demands it.",
+   "q": "With a valid 16-day demand, a notice of cross-motion is served at least:",
    "c": [
-    "True",
-    "False"
+    "2 days before",
+    "8 days before",
+    "7 days before the hearing",
+    "1 day before"
    ],
-   "a": "True",
-   "h": "\"…so demands.\"",
-   "w": "The 7-day rule applies only \"if a notice of motion served at least sixteen days before such time so demands.\"",
-   "type": "tf"
+   "a": "7 days before the hearing",
+   "h": "It travels with the answering papers.",
+   "w": "Answering affidavits and any notice of cross-motion shall be served at least seven days before."
+  },
+  {
+   "lv": 3,
+   "q": "Which claim about the 16-day demand is FALSE?",
+   "c": [
+    "It moves answers to 7 days before",
+    "It moves replies to 7 days before",
+    "Replies stay at 1 day before",
+    "The notice must be served 16+ days out"
+   ],
+   "a": "It moves replies to 7 days before",
+   "h": "Which deadline did the demand not change?",
+   "w": "The demand moves answering papers to seven days; replies are at least one day before."
+  },
+  {
+   "lv": 3,
+   "q": "Why do lawyers serve motion papers 16 days early?",
+   "c": [
+    "To demand answers 7 days out",
+    "To skip the hearing",
+    "To avoid affidavits",
+    "To file twice"
+   ],
+   "a": "To demand answers 7 days out",
+   "h": "It buys the movant time.",
+   "w": "A notice served at least sixteen days before may demand answering papers at least seven days before."
+  },
+  {
+   "lv": 3,
+   "q": "Hearing Dec 20. Notice and demand served Dec 4. Answers due Dec 13, served Dec 15. Late?",
+   "c": [
+    "No. Two days before is enough",
+    "No. Dec 18 was the deadline",
+    "Yes. They were due Dec 6",
+    "Yes. They were due Dec 13"
+   ],
+   "a": "Yes. They were due Dec 13",
+   "h": "Which deadline applies when the demand is valid?",
+   "w": "Dec 4 is sixteen days before Dec 20, so answering papers are due at least seven days before: Dec 13."
+  },
+  {
+   "lv": 3,
+   "q": "Which numbers match the trick \"Eight out, two back; sixteen: seven and one\"?",
+   "c": [
+    "10 and 5; with a demand: 10 and 2",
+    "8 and 2; with a demand: 5 and 3",
+    "8 and 2; with a demand: 7 and 1",
+    "2 and 8; with a demand: 1 and 7"
+   ],
+   "a": "8 and 2; with a demand: 7 and 1",
+   "h": "Eight and two, then seven and one.",
+   "w": "8 days (moving), 2 days (answering); with a 16-day demand: answers 7 days, replies 1 day."
   }
  ],
  "reargue": [
   {
    "lv": 1,
-   "q": "A motion for leave to reargue under 2221(d) is based on:",
+   "q": "A motion to reargue is based on matters the court:",
    "c": [
-    "Facts or law the court overlooked or misapprehended",
-    "New facts found after the motion",
-    "A change of judge",
-    "The other side's consent"
+    "Never heard of",
+    "Decided correctly",
+    "Will decide later",
+    "Overlooked or misapprehended"
    ],
-   "a": "Facts or law the court overlooked or misapprehended",
-   "h": "What did the court miss?",
-   "w": "\"…based upon matters of fact or law allegedly overlooked or misapprehended by the court…\""
+   "a": "Overlooked or misapprehended",
+   "h": "\"You missed it. Look again.\"",
+   "w": "Matters of fact or law allegedly overlooked or misapprehended by the court."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: A motion to reargue may include facts that were not offered on the prior motion.",
+   "q": "A motion to reargue may include facts not offered on the prior motion. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "False",
-   "h": "Not new.",
-   "w": "It \"shall not include any matters of fact not offered on the prior motion.\"",
+   "h": "The trick says no new facts.",
+   "w": "But shall not include any matters of fact not offered on the prior motion.",
    "type": "tf"
   },
   {
    "lv": 1,
-   "q": "A motion to reargue must be made within how many days after service of the order with written notice of its entry?",
+   "q": "Within what time must a motion to reargue be made?",
    "c": [
-    "30 days",
-    "10 days",
-    "60 days",
-    "120 days"
+    "10 days after the ruling",
+    "30 days after notice of entry is served",
+    "60 days after the ruling",
+    "One year after the ruling"
    ],
-   "a": "30 days",
-   "h": "A month.",
-   "w": "\"…within thirty days after service of a copy of the order … and written notice of its entry.\""
+   "a": "30 days after notice of entry is served",
+   "h": "Thirty days.",
+   "w": "Within thirty days after service of a copy of the order and written notice of its entry."
+  },
+  {
+   "lv": 1,
+   "q": "How must a motion to reargue be labeled?",
+   "c": [
+    "Identified specifically as a motion to reargue",
+    "As a notice of appeal",
+    "As a summons",
+    "As a stipulation"
+   ],
+   "a": "Identified specifically as a motion to reargue",
+   "h": "Say what it is.",
+   "w": "Shall be identified specifically as such."
+  },
+  {
+   "lv": 1,
+   "q": "\"You missed it. Look again.\" What is the party telling the court?",
+   "c": [
+    "Here is new evidence",
+    "The law just changed",
+    "The clerk made an error",
+    "You overlooked or misread something"
+   ],
+   "a": "You overlooked or misread something",
+   "h": "Same facts, sharper argument.",
+   "w": "Based on matters allegedly overlooked or misapprehended."
   },
   {
    "lv": 2,
-   "q": "A party thinks the judge misread a key contract clause. There's no new evidence. Which motion fits?",
+   "q": "The order with notice of entry was served March 1. Last day to move to reargue?",
    "c": [
-    "Reargue",
+    "March 11",
+    "March 21",
+    "March 31",
+    "April 1"
+   ],
+   "a": "March 31",
+   "h": "Thirty days from service.",
+   "w": "Thirty days after service with notice of entry. March 1 plus 30 days is March 31."
+  },
+  {
+   "lv": 2,
+   "q": "A party thinks the judge misread a key contract clause. Which motion fits?",
+   "c": [
     "Renew",
-    "Summary judgment",
-    "Notice of appeal"
+    "Reargue",
+    "An appeal as of right",
+    "A new summons"
    ],
    "a": "Reargue",
-   "h": "Same facts, overlooked.",
-   "w": "The court misapprehended the facts or law, with nothing new, so reargue."
+   "h": "The facts were before the judge already.",
+   "w": "Matters allegedly overlooked or misapprehended by the court."
   },
   {
    "lv": 2,
-   "q": "The order with notice of entry was served March 1. A motion to reargue made April 15 is:",
+   "q": "Which event starts the 30 days to reargue?",
    "c": [
-    "Timely",
-    "Late"
+    "Service of the order with notice of entry",
+    "The judge signing the order",
+    "The hearing date",
+    "Filing the motion"
    ],
-   "a": "Late",
-   "h": "Count 30 days.",
-   "w": "Late. It had to be made within 30 days of service, by about March 31.",
-   "type": "tf"
+   "a": "Service of the order with notice of entry",
+   "h": "Look for the word \"service.\"",
+   "w": "Thirty days after service of a copy of the order and written notice of its entry."
   },
   {
    "lv": 2,
-   "q": "Under 2221(d)(1), a motion to reargue must:",
+   "q": "A reargue motion attaches a witness statement never shown to the judge. What is wrong?",
    "c": [
-    "Be identified specifically as such",
-    "Be signed by the judge",
-    "Be filed with the appellate division",
-    "Include new affidavits"
+    "Nothing is wrong",
+    "It was filed too early",
+    "It lacks a jury",
+    "It adds facts not offered before"
    ],
-   "a": "Be identified specifically as such",
-   "h": "Label it.",
-   "w": "\"shall be identified specifically as such.\""
+   "a": "It adds facts not offered before",
+   "h": "No new evidence at the door.",
+   "w": "Shall not include any matters of fact not offered on the prior motion."
+  },
+  {
+   "lv": 2,
+   "q": "Does CPLR 2221(d) govern reargument of an Appellate Division decision?",
+   "c": [
+    "Yes. Same 30 days",
+    "Yes. 60 days",
+    "No. The rule excludes those decisions",
+    "No. There is no limit at all"
+   ],
+   "a": "No. The rule excludes those decisions",
+   "h": "Read the last sentence.",
+   "w": "This rule shall not apply to motions to reargue a decision made by the appellate division or the court of appeals."
   },
   {
    "lv": 3,
-   "q": "TRUE or FALSE: The 2221(d) 30-day rule applies to a motion to reargue an Appellate Division decision.",
+   "q": "Which of these misstates CPLR 2221(d)?",
+   "c": [
+    "It must be labeled",
+    "Reargue may add new evidence",
+    "It has a 30-day limit",
+    "It targets overlooked matters"
+   ],
+   "a": "Reargue may add new evidence",
+   "h": "The trick says no new facts.",
+   "w": "Reargue shall not include matters of fact not offered on the prior motion."
+  },
+  {
+   "lv": 3,
+   "q": "The ruling was March 1 but notice of entry was served March 10. When does the 30-day clock start?",
+   "c": [
+    "March 10",
+    "March 1",
+    "March 11",
+    "April 1"
+   ],
+   "a": "March 10",
+   "h": "The clock follows service.",
+   "w": "Thirty days after service of a copy of the order and written notice of its entry."
+  },
+  {
+   "lv": 3,
+   "q": "The 30-day reargue clock counts from the date of the ruling. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "False",
-   "h": "Read the last sentence.",
-   "w": "\"This rule shall not apply to motions to reargue a decision made by the appellate division or the court of appeals.\"",
+   "h": "Thirty days from notice of entry, not from the ruling.",
+   "w": "Thirty days after service with written notice of entry.",
    "type": "tf"
   },
   {
    "lv": 3,
-   "q": "A motion to reargue relies on a witness statement never shown to the court before. What's wrong with it?",
+   "q": "A reargue motion is filed 45 days after service of the order with notice of entry. Timely?",
    "c": [
-    "It adds facts not offered on the prior motion",
-    "It was made too early",
-    "Only the judge can make it",
-    "It needs a jury"
+    "Yes. 45 is fine",
+    "Yes. 60 days apply",
+    "No. The limit is 30 days",
+    "No. It must be filed in a week"
    ],
-   "a": "It adds facts not offered on the prior motion",
-   "h": "Overlooked, not new.",
-   "w": "Reargument can't include \"any matters of fact not offered on the prior motion.\" New facts belong in a motion to renew."
+   "a": "No. The limit is 30 days",
+   "h": "Count the days.",
+   "w": "Within thirty days after service with notice of entry."
   },
   {
    "lv": 3,
-   "q": "The 30-day reargument clock starts with:",
+   "q": "On what may a reargue motion rely?",
    "c": [
-    "Service of the order with written notice of entry",
-    "The judge signing the order",
-    "The hearing date",
-    "The note of issue"
+    "New facts only",
+    "Facts or law allegedly overlooked or misread",
+    "A change in the law only",
+    "Anything at all"
    ],
-   "a": "Service of the order with written notice of entry",
-   "h": "Service plus notice.",
-   "w": "\"…thirty days after service of a copy of the order … and written notice of its entry.\""
+   "a": "Facts or law allegedly overlooked or misread",
+   "h": "Both fact and law, but only what was before the court.",
+   "w": "Matters of fact or law allegedly overlooked or misapprehended by the court."
   }
  ],
  "renew": [
   {
    "lv": 1,
-   "q": "A motion for leave to renew under 2221(e) is based on:",
+   "q": "A motion to renew is based on:",
    "c": [
-    "New facts not offered on the prior motion",
-    "Facts the court overlooked",
-    "The judge's opinion",
-    "A typo in the order"
+    "Overlooked facts only",
+    "A jury's mistake",
+    "New facts or a change in the law",
+    "The clerk's delay"
    ],
-   "a": "New facts not offered on the prior motion",
-   "h": "Something new.",
-   "w": "\"…based upon new facts not offered on the prior motion that would change the prior determination…\""
+   "a": "New facts or a change in the law",
+   "h": "\"Found something new.\"",
+   "w": "New facts not offered on the prior motion, or a change in the law."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: A change in the law that would change the prior determination can support a motion to renew.",
+   "q": "A change in the law that would change the prior ruling can support a motion to renew. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "True",
-   "h": "Two roads to renew.",
-   "w": "It may \"demonstrate that there has been a change in the law that would change the prior determination.\"",
+   "h": "The rule names two bases.",
+   "w": "Or shall demonstrate that there has been a change in the law that would change the prior determination.",
    "type": "tf"
   },
   {
    "lv": 1,
-   "q": "Along with the new facts, a motion to renew must contain:",
+   "q": "Along with new facts, a motion to renew must give:",
    "c": [
-    "A reasonable justification for not presenting them before",
-    "A filing fee",
-    "The other side's signature",
-    "A jury demand"
+    "A reason they weren't offered before",
+    "A new summons",
+    "A jury demand",
+    "Proof of payment"
    ],
-   "a": "A reasonable justification for not presenting them before",
-   "h": "Why so late?",
-   "w": "\"…shall contain reasonable justification for the failure to present such facts on the prior motion.\""
+   "a": "A reason they weren't offered before",
+   "h": "\"Here's why it's late.\"",
+   "w": "Reasonable justification for the failure to present such facts on the prior motion."
+  },
+  {
+   "lv": 1,
+   "q": "How must a motion to renew be labeled?",
+   "c": [
+    "As a notice of appeal",
+    "As a summons",
+    "As a stipulation",
+    "Identified specifically as a motion to renew"
+   ],
+   "a": "Identified specifically as a motion to renew",
+   "h": "Say what it is.",
+   "w": "Shall be identified specifically as such."
+  },
+  {
+   "lv": 1,
+   "q": "\"Found something new. Here's why it's ____.\" Fill in the blank.",
+   "c": [
+    "Wrong",
+    "Signed",
+    "Late",
+    "Over"
+   ],
+   "a": "Late",
+   "h": "The explanation is for the delay.",
+   "w": "Reasonable justification for the failure to present such facts on the prior motion."
   },
   {
    "lv": 2,
-   "q": "After a motion is decided, a party finds a document that would change the result. They didn't have it earlier because the other side withheld it. Which motion fits?",
+   "q": "After a ruling, a party finds a document that would change the result. Which motion?",
    "c": [
-    "Renew",
-    "Reargue",
-    "Restraining notice",
-    "Summary judgment"
+    "Reargue, with no new facts",
+    "Renew, with a reason it wasn't offered",
+    "An appeal as of right",
+    "A new summons"
    ],
-   "a": "Renew",
-   "h": "New facts plus a reason.",
-   "w": "New facts that would change the result, with a reasonable justification, is renewal."
+   "a": "Renew, with a reason it wasn't offered",
+   "h": "New facts open the door.",
+   "w": "New facts not offered on the prior motion that would change the prior determination."
   },
   {
    "lv": 2,
-   "q": "TRUE or FALSE: New facts that would NOT change the prior determination are enough for renewal.",
+   "q": "New facts that would NOT change the result can support renewal. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "False",
-   "h": "They have to matter.",
-   "w": "The new facts must be ones \"that would change the prior determination.\"",
+   "h": "The facts must matter.",
+   "w": "New facts that would change the prior determination.",
    "type": "tf"
   },
   {
    "lv": 2,
    "q": "Reargue or renew: which one allows new facts?",
    "c": [
-    "Renew only",
-    "Reargue only",
-    "Both",
-    "Neither"
-   ],
-   "a": "Renew only",
-   "h": "Overlooked, not new.",
-   "w": "Reargument \"shall not include any matters of fact not offered,\" but renewal is \"based upon new facts.\""
-  },
-  {
-   "lv": 3,
-   "q": "A party moves to renew with new facts but gives no reason they weren't raised earlier. What's missing under 2221(e)(3)?",
-   "c": [
-    "A reasonable justification",
-    "A notice of entry",
-    "A clerk's stamp",
-    "A jury trial"
-   ],
-   "a": "A reasonable justification",
-   "h": "The \"good excuse.\"",
-   "w": "The motion \"shall contain reasonable justification for the failure to present such facts on the prior motion.\""
-  },
-  {
-   "lv": 3,
-   "q": "TRUE or FALSE: Under 2221(e)(1), a motion to renew must be identified specifically as such.",
-   "c": [
-    "True",
-    "False"
-   ],
-   "a": "True",
-   "h": "Same as reargue.",
-   "w": "\"shall be identified specifically as such.\"",
-   "type": "tf"
-  },
-  {
-   "lv": 3,
-   "q": "A higher court changes the law in a way that would change a prior ruling in your case. Which motion brings that to the court that ruled?",
-   "c": [
-    "Renew",
     "Reargue",
-    "Notice of appeal",
-    "Restraining notice"
+    "Both",
+    "Neither",
+    "Renew"
    ],
    "a": "Renew",
-   "h": "Change in the law.",
-   "w": "Renewal may \"demonstrate that there has been a change in the law that would change the prior determination.\""
+   "h": "New facts, good excuse.",
+   "w": "Renew is based on new facts; reargue (2221(d)) may not include new facts."
+  },
+  {
+   "lv": 2,
+   "q": "A renew motion has new facts but no reason they were left out before. What is missing?",
+   "c": [
+    "A jury demand",
+    "The clerk's stamp",
+    "Reasonable justification",
+    "A summons"
+   ],
+   "a": "Reasonable justification",
+   "h": "The court wants an explanation.",
+   "w": "Shall contain reasonable justification for the failure to present such facts."
+  },
+  {
+   "lv": 2,
+   "q": "Reargue: no new facts. Renew: what is allowed?",
+   "c": [
+    "Only old facts",
+    "New facts or new law",
+    "Only a new judge",
+    "Only an appeal"
+   ],
+   "a": "New facts or new law",
+   "h": "One word on the card: new.",
+   "w": "New facts or a change in the law."
+  },
+  {
+   "lv": 3,
+   "q": "A higher court changes the law in a way that would change a prior ruling. Which motion fits?",
+   "c": [
+    "Renew, based on a change in the law",
+    "Reargue, based on old facts",
+    "A new summons",
+    "A bill of particulars"
+   ],
+   "a": "Renew, based on a change in the law",
+   "h": "New law counts.",
+   "w": "A change in the law that would change the prior determination."
+  },
+  {
+   "lv": 3,
+   "q": "Which of these misstates CPLR 2221(e)?",
+   "c": [
+    "Renew can rest on new law",
+    "Renew must be labeled",
+    "Renew needs new facts that matter",
+    "Renew needs no reason for the delay"
+   ],
+   "a": "Renew needs no reason for the delay",
+   "h": "One statement drops the excuse.",
+   "w": "Renew shall contain reasonable justification for the failure to present the facts earlier."
+  },
+  {
+   "lv": 3,
+   "q": "The same facts, but the judge got it wrong. Reargue or renew?",
+   "c": [
+    "Renew",
+    "Both",
+    "Reargue",
+    "Neither"
+   ],
+   "a": "Reargue",
+   "h": "No new facts means reargue.",
+   "w": "Matters overlooked or misapprehended. CPLR 2221(e) renew: new facts or new law."
+  },
+  {
+   "lv": 3,
+   "q": "A renew motion lists new facts that would not change the result. Enough?",
+   "c": [
+    "Yes. Any new fact works",
+    "No. They must change the prior ruling",
+    "Yes, with a reason",
+    "No. New facts are banned"
+   ],
+   "a": "No. They must change the prior ruling",
+   "h": "The facts have to matter.",
+   "w": "New facts that would change the prior determination."
+  },
+  {
+   "lv": 3,
+   "q": "How many requirements does CPLR 2221(e) list for a motion to renew?",
+   "c": [
+    "Three",
+    "One",
+    "Two",
+    "Five"
+   ],
+   "a": "Three",
+   "h": "Label, basis, justification.",
+   "w": "Identified as such; based on new facts or new law; reasonable justification for not presenting the facts earlier."
   }
  ],
  "sj120": [
   {
    "lv": 1,
-   "q": "If the court sets no date, a summary judgment motion must be made no later than:",
-   "c": [
-    "120 days after the note of issue is filed",
-    "30 days after issue is joined",
-    "1 year after the summons",
-    "8 days before trial"
-   ],
-   "a": "120 days after the note of issue is filed",
-   "h": "Look at the name.",
-   "w": "\"…no later than one hundred twenty days after the filing of the note of issue…\""
-  },
-  {
-   "lv": 1,
-   "q": "A party may move for summary judgment:",
-   "c": [
-    "After issue has been joined",
-    "Before the summons is served",
-    "Only after trial",
-    "Only if the jury agrees"
-   ],
-   "a": "After issue has been joined",
-   "h": "Once the case is at issue.",
-   "w": "\"…after issue has been joined…\""
-  },
-  {
-   "lv": 1,
-   "q": "TRUE or FALSE: Only the plaintiff may move for summary judgment.",
-   "c": [
-    "True",
-    "False"
-   ],
-   "a": "False",
-   "h": "\"Any party…\"",
-   "w": "\"Any party may move for summary judgment in any action…\"",
-   "type": "tf"
-  },
-  {
-   "lv": 2,
-   "q": "The note of issue was filed January 10, and the court set no deadline. The summary judgment deadline is:",
-   "c": [
-    "120 days after January 10",
-    "30 days after January 10",
-    "8 days before trial",
-    "One year after January 10"
-   ],
-   "a": "120 days after January 10",
-   "h": "The default clock.",
-   "w": "With no court-set date, it's 120 days after the note of issue is filed."
-  },
-  {
-   "lv": 2,
-   "q": "TRUE or FALSE: A court may set its own summary judgment cutoff 15 days after the note of issue.",
-   "c": [
-    "True",
-    "False"
-   ],
-   "a": "False",
-   "h": "There's a minimum.",
-   "w": "A court-set date must be \"no earlier than thirty days after the filing of the note of issue.\"",
-   "type": "tf"
-  },
-  {
-   "lv": 2,
-   "q": "A party moves for summary judgment 150 days after the note of issue, and no date was set. What do they need?",
-   "c": [
-    "Leave of court on good cause shown",
-    "Nothing, it's timely",
-    "The clerk's consent",
-    "A new note of issue"
-   ],
-   "a": "Leave of court on good cause shown",
-   "h": "They're late.",
-   "w": "After 120 days, only \"with leave of court on good cause shown.\""
-  },
-  {
-   "lv": 3,
-   "q": "The earliest cutoff date a court may set is:",
+   "q": "If the court sets no date, a summary judgment motion is due no later than:",
    "c": [
     "30 days after the note of issue",
-    "120 days after the note",
-    "The day issue is joined",
-    "8 days after the note"
+    "60 days after the answer",
+    "One year after the complaint",
+    "120 days after the note of issue"
    ],
-   "a": "30 days after the note of issue",
-   "h": "Never sooner than…",
-   "w": "\"…no earlier than thirty days after the filing of the note of issue.\""
+   "a": "120 days after the note of issue",
+   "h": "The trick has a number.",
+   "w": "No later than one hundred twenty days after the filing of the note of issue."
   },
   {
-   "lv": 3,
-   "q": "TRUE or FALSE: If the court sets its own cutoff date, the 120-day default doesn't apply.",
+   "lv": 1,
+   "q": "Who may move for summary judgment, and when?",
    "c": [
-    "True",
-    "False"
+    "Only the plaintiff, any time",
+    "Only the defendant, any time",
+    "Any party, after issue is joined",
+    "Only the court, after trial"
+   ],
+   "a": "Any party, after issue is joined",
+   "h": "Not just plaintiffs.",
+   "w": "Any party may move for summary judgment in any action, after issue has been joined."
+  },
+  {
+   "lv": 1,
+   "q": "The 120 days run from the filing of the note of issue. True or false?",
+   "c": [
+    "False",
+    "True"
    ],
    "a": "True",
-   "h": "\"If no such date is set…\"",
-   "w": "The 120-day rule applies only \"If no such date is set by the court.\"",
+   "h": "\"Note filed. Clock's running.\"",
+   "w": "One hundred twenty days after the filing of the note of issue.",
    "type": "tf"
   },
   {
-   "lv": 3,
+   "lv": 1,
    "q": "Which filing starts the summary judgment clock?",
    "c": [
     "The note of issue",
     "The summons",
-    "The answer",
-    "The notice of appeal"
+    "The complaint",
+    "The answer"
    ],
    "a": "The note of issue",
-   "h": "The card's name.",
-   "w": "Deadlines run from \"the filing of the note of issue.\""
+   "h": "It is in the trick.",
+   "w": "The deadline runs from the filing of the note of issue."
+  },
+  {
+   "lv": 1,
+   "q": "\"Note filed. Clock's running.\" How long is the clock if the court sets no date?",
+   "c": [
+    "30 days",
+    "60 days",
+    "90 days",
+    "120 days"
+   ],
+   "a": "120 days",
+   "h": "The card title has the number.",
+   "w": "No later than one hundred twenty days after the filing of the note of issue."
+  },
+  {
+   "lv": 2,
+   "q": "Note of issue filed Jan 10, 2027. Court set no date. Last day to move?",
+   "c": [
+    "April 10, 2027",
+    "March 10, 2027",
+    "May 10, 2027",
+    "June 10, 2027"
+   ],
+   "a": "May 10, 2027",
+   "h": "Count 120 days.",
+   "w": "120 days after the note of issue. January 10 plus 120 days is May 10."
+  },
+  {
+   "lv": 2,
+   "q": "A court may set its own summary judgment cutoff date. True or false?",
+   "c": [
+    "False",
+    "True"
+   ],
+   "a": "True",
+   "h": "Read the first sentence of (a).",
+   "w": "The court may set a date after which no such motion may be made.",
+   "type": "tf"
+  },
+  {
+   "lv": 2,
+   "q": "A motion is made 150 days after the note of issue, with no court date. Timely?",
+   "c": [
+    "No, unless leave on good cause",
+    "Yes. 150 is fine",
+    "Yes. Any time works",
+    "No. It is never allowed"
+   ],
+   "a": "No, unless leave on good cause",
+   "h": "There is one exception.",
+   "w": "No later than 120 days after the note of issue, except with leave of court on good cause shown."
+  },
+  {
+   "lv": 2,
+   "q": "What does a late summary judgment motion need?",
+   "c": [
+    "The clerk's stamp",
+    "The other side's consent",
+    "A jury demand",
+    "Leave of court on good cause shown"
+   ],
+   "a": "Leave of court on good cause shown",
+   "h": "Two things.",
+   "w": "Except with leave of court on good cause shown."
+  },
+  {
+   "lv": 2,
+   "q": "Issue has not yet been joined. May a party move for summary judgment?",
+   "c": [
+    "Yes. Any time",
+    "Yes. Only the plaintiff",
+    "No. It must be after issue is joined",
+    "No. Only the court may"
+   ],
+   "a": "No. It must be after issue is joined",
+   "h": "Look at the first sentence.",
+   "w": "After issue has been joined."
+  },
+  {
+   "lv": 3,
+   "q": "What is the earliest cutoff date a court may set?",
+   "c": [
+    "10 days after the note",
+    "30 days after the note of issue",
+    "60 days after the note",
+    "120 days after the note"
+   ],
+   "a": "30 days after the note of issue",
+   "h": "Never sooner than thirty days.",
+   "w": "No earlier than thirty days after the filing of the note of issue."
+  },
+  {
+   "lv": 3,
+   "q": "If the court sets its own cutoff, the 120-day default still applies. True or false?",
+   "c": [
+    "False",
+    "True"
+   ],
+   "a": "False",
+   "h": "The default is a fallback.",
+   "w": "If no such date is set by the court, the motion shall be made no later than 120 days after the note.",
+   "type": "tf"
+  },
+  {
+   "lv": 3,
+   "q": "Court sets a cutoff 45 days after the note of issue. A motion comes on day 60. Timely?",
+   "c": [
+    "Yes. 120 days still applies",
+    "Yes. 60 is fine",
+    "No. Day 30 was required",
+    "No. It came after the court's date"
+   ],
+   "a": "No. It came after the court's date",
+   "h": "The court's date controls.",
+   "w": "The court may set a date after which no such motion may be made."
+  },
+  {
+   "lv": 3,
+   "q": "A court sets a cutoff 20 days after the note of issue. Allowed?",
+   "c": [
+    "Yes. Courts pick any date",
+    "Yes, if both sides agree",
+    "No. Not earlier than 30 days after",
+    "No. It must be 120 days"
+   ],
+   "a": "No. Not earlier than 30 days after",
+   "h": "There is a floor.",
+   "w": "Such date being no earlier than thirty days after the filing of the note of issue."
+  },
+  {
+   "lv": 3,
+   "q": "Note of issue filed March 1, 2027; no court date. Is a motion on June 25 timely?",
+   "c": [
+    "No. It was due May 31",
+    "Yes. The deadline is June 29",
+    "No. It was due June 1",
+    "Yes. There is no deadline"
+   ],
+   "a": "Yes. The deadline is June 29",
+   "h": "Count 120 days from March 1.",
+   "w": "120 days after the note of issue. March 1 plus 120 days is June 29."
   },
   {
    "lv": 4,
    "q": "A summary judgment motion must be supported by:",
    "c": [
-    "An affidavit, the pleadings, and other available proof",
-    "A jury verdict",
-    "The note of issue alone",
-    "A letter from the judge"
+    "Affidavit, pleadings, and other proof",
+    "A jury",
+    "A clerk's note",
+    "A summons"
    ],
-   "a": "An affidavit, the pleadings, and other available proof",
+   "a": "Affidavit, pleadings, and other proof",
    "h": "Three kinds of papers.",
-   "w": "\"…supported by affidavit, by a copy of the pleadings and by other available proof…\""
+   "w": "Supported by affidavit, a copy of the pleadings and other available proof, such as depositions and written admissions."
   },
   {
    "lv": 4,
-   "q": "TRUE or FALSE: The motion must be denied if any party shows facts sufficient to require a trial of any issue of fact.",
+   "q": "The motion must be denied if any party shows facts requiring a trial of an issue of fact. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "True",
-   "h": "A real dispute means trial.",
-   "w": "\"…the motion shall be denied if any party shall show facts sufficient to require a trial of any issue of fact.\"",
+   "h": "Read the end of (b).",
+   "w": "The motion shall be denied if any party shall show facts sufficient to require a trial of any issue of fact.",
    "type": "tf"
   },
   {
    "lv": 4,
-   "q": "The supporting affidavit must be made by:",
+   "q": "Who must make the supporting affidavit?",
    "c": [
-    "A person having knowledge of the facts",
     "The clerk",
-    "Any attorney",
-    "The judge"
+    "The judge",
+    "A person with knowledge of the facts",
+    "Any juror"
    ],
-   "a": "A person having knowledge of the facts",
-   "h": "Who actually knows?",
-   "w": "\"The affidavit shall be by a person having knowledge of the facts…\""
+   "a": "A person with knowledge of the facts",
+   "h": "Knowledge matters.",
+   "w": "The affidavit shall be by a person having knowledge of the facts."
   },
   {
-   "lv": 5,
-   "q": "The papers show that the NON-moving party is the one entitled to summary judgment. The court may:",
+   "lv": 4,
+   "q": "Which is \"other available proof\" named in CPLR 3212(b)?",
    "c": [
-    "Grant it to that party without a cross-motion",
-    "Only deny the motion",
-    "Order a new note of issue",
-    "Send the case up on appeal"
+    "Rumors",
+    "Depositions and written admissions",
+    "Newspaper articles",
+    "The clerk's docket"
    ],
-   "a": "Grant it to that party without a cross-motion",
-   "h": "Either side can win it.",
-   "w": "\"…the court may grant such judgment without the necessity of a cross-motion.\""
+   "a": "Depositions and written admissions",
+   "h": "Two examples.",
+   "w": "Other available proof, such as depositions and written admissions."
+  },
+  {
+   "lv": 4,
+   "q": "A real dispute of fact needs a trial. What happens to the motion?",
+   "c": [
+    "It is denied",
+    "It is granted",
+    "It is sealed",
+    "It is appealed"
+   ],
+   "a": "It is denied",
+   "h": "No trial needed only if nothing is disputed.",
+   "w": "The motion shall be denied if any party shows facts sufficient to require a trial of any issue of fact."
   },
   {
    "lv": 5,
-   "q": "TRUE or FALSE: Summary judgment is granted when the papers establish the claim or defense well enough to warrant judgment as a matter of law.",
+   "q": "The papers show the NON-moving party deserves judgment. May the court grant it without a cross-motion?",
+   "c": [
+    "No. A cross-motion is required",
+    "No. Only a jury may",
+    "Yes, but only for the plaintiff",
+    "Yes. The court may grant it"
+   ],
+   "a": "Yes. The court may grant it",
+   "h": "Read the last sentence.",
+   "w": "The court may grant such judgment without the necessity of a cross-motion."
+  },
+  {
+   "lv": 5,
+   "q": "Summary judgment is granted when the papers establish the claim as a matter of law. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "True",
-   "h": "\"…as a matter of law…\"",
-   "w": "The motion \"shall be granted if … established sufficiently to warrant the court as a matter of law in directing judgment…\"",
+   "h": "Read the standard.",
+   "w": "Granted if the cause of action or defense is established sufficiently to warrant the court as a matter of law in directing judgment.",
    "type": "tf"
   },
   {
    "lv": 5,
-   "q": "If a summary judgment motion is granted, what does the case skip?",
+   "q": "If summary judgment is granted, what does the court direct?",
    "c": [
-    "A trial",
-    "The summons",
-    "Service of papers",
-    "The note of issue"
+    "A new trial",
+    "Judgment in favor of a party",
+    "A default",
+    "Jury selection"
    ],
-   "a": "A trial",
-   "h": "No issue of fact left.",
-   "w": "The motion is denied only when facts \"require a trial,\" so granting it decides the case without one."
+   "a": "Judgment in favor of a party",
+   "h": "The case ends without trial.",
+   "w": "In directing judgment in favor of any party."
+  },
+  {
+   "lv": 5,
+   "q": "The court set a cutoff at day 50. A motion is made on day 100. Timely?",
+   "c": [
+    "No. The court's date controls",
+    "Yes. 120 days applies",
+    "Yes. 100 is fine",
+    "No. It was due on day 30"
+   ],
+   "a": "No. The court's date controls",
+   "h": "The default is a fallback.",
+   "w": "The court may set a date after which no such motion may be made. Day 100 is after day 50."
+  },
+  {
+   "lv": 5,
+   "q": "The movant shows no dispute; the opponent shows an issue of fact. Result?",
+   "c": [
+    "Granted anyway",
+    "Sealed",
+    "Sent to appeal",
+    "Denied: a trial is needed"
+   ],
+   "a": "Denied: a trial is needed",
+   "h": "Any real issue of fact blocks it.",
+   "w": "The motion shall be denied if any party shows facts sufficient to require a trial of any issue of fact."
   }
  ],
  "undodefault": [
   {
    "lv": 1,
-   "q": "Under CPLR 5015(b), who may vacate a default judgment when a stipulation of consent is filed?",
+   "q": "Who may vacate a default judgment on a filed stipulation of consent?",
    "c": [
     "The clerk of the court",
-    "Only the Appellate Division",
     "The sheriff",
-    "The jury"
+    "The county executive",
+    "Any lawyer"
    ],
    "a": "The clerk of the court",
-   "h": "It's in the card's name.",
-   "w": "\"The clerk of the court may vacate a default judgment…\""
+   "h": "\"Both sides agree? I'll undo it.\"",
+   "w": "The clerk of the court may vacate a default judgment upon the filing of a stipulation of consent."
   },
   {
    "lv": 1,
-   "q": "What must be filed for the clerk to vacate a default judgment under 5015(b)?",
+   "q": "What must be filed for the clerk to vacate a default judgment?",
    "c": [
-    "A stipulation of consent to the vacatur",
     "A notice of appeal",
-    "A restraining notice",
-    "A note of issue"
+    "A new summons",
+    "An affidavit of service",
+    "A stipulation of consent"
    ],
-   "a": "A stipulation of consent to the vacatur",
-   "h": "Both sides agree, in writing.",
-   "w": "\"…upon the filing with him of a stipulation of consent to such vacatur…\""
+   "a": "A stipulation of consent",
+   "h": "Both sides sign it.",
+   "w": "Upon the filing of a stipulation of consent to such vacatur by the parties."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: The stipulation may be signed by the parties personally or by their attorneys.",
+   "q": "The stipulation may be signed by the parties or by their attorneys. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "True",
-   "h": "Two ways to sign.",
-   "w": "\"…by the parties personally or by their attorneys.\"",
+   "h": "Read the last clause of (b).",
+   "w": "By the parties personally or by their attorneys.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "Only the defendant wants the default judgment undone, and the plaintiff won't agree. Can the clerk vacate it under 5015(b)?",
+   "lv": 1,
+   "q": "The clerk's power in CPLR 5015(b) covers which judgments?",
    "c": [
-    "Yes",
-    "No"
+    "Every judgment",
+    "Default judgments under CPLR 3215",
+    "Only jury verdicts",
+    "Only support orders"
    ],
-   "a": "No",
-   "h": "Consent means both.",
-   "w": "No. The clerk acts only on a filed stipulation of consent. Without it, the defendant must move the court under 5015(a).",
-   "type": "tf"
+   "a": "Default judgments under CPLR 3215",
+   "h": "It is a narrow power.",
+   "w": "A default judgment entered pursuant to section 3215."
   },
   {
-   "lv": 2,
-   "q": "A defendant missed court and a default judgment was entered. A motion for relief based on excusable default must be made within:",
-   "c": [
-    "1 year after service with notice of entry",
-    "30 days",
-    "120 days",
-    "10 years"
-   ],
-   "a": "1 year after service with notice of entry",
-   "h": "One year.",
-   "w": "\"…excusable default, if such motion is made within one year after service of a copy of the judgment or order with written notice of its entry…\""
-  },
-  {
-   "lv": 2,
-   "q": "Under 5015(a), which court may relieve a party from a judgment?",
+   "lv": 1,
+   "q": "Which court may relieve a party from a judgment under 5015(a)?",
    "c": [
     "The court that rendered it",
-    "Any court in the state",
-    "Only the Court of Appeals",
+    "Any court",
+    "The Court of Appeals only",
     "The clerk alone"
    ],
    "a": "The court that rendered it",
-   "h": "The one that made it.",
-   "w": "\"The court which rendered a judgment or order may relieve a party from it…\""
+   "h": "The one that entered it.",
+   "w": "The court which rendered a judgment or order may relieve a party from it."
   },
   {
-   "lv": 3,
-   "q": "Which is NOT a ground for relief listed in 5015(a)?",
+   "lv": 2,
+   "q": "Only the defendant wants a default undone. The plaintiff objects. May the clerk vacate it?",
    "c": [
-    "The judgment is too expensive",
-    "Excusable default",
-    "Fraud by an adverse party",
-    "Lack of jurisdiction"
+    "Yes. The defendant's request is enough",
+    "Yes. The clerk decides",
+    "No. Only a jury may",
+    "No. Both sides must consent"
    ],
-   "a": "The judgment is too expensive",
-   "h": "Five grounds are listed.",
-   "w": "The grounds are excusable default, newly-discovered evidence, fraud or misconduct, lack of jurisdiction, and reversal of a prior judgment. Cost isn't one."
+   "a": "No. Both sides must consent",
+   "h": "Consent is the key.",
+   "w": "Upon a stipulation of consent by the parties."
+  },
+  {
+   "lv": 2,
+   "q": "A defendant missed court and a default judgment followed. Time to move for excusable default?",
+   "c": [
+    "30 days",
+    "90 days",
+    "One year from service with notice of entry",
+    "Five years"
+   ],
+   "a": "One year from service with notice of entry",
+   "h": "The window is a year.",
+   "w": "Within one year after service of a copy of the judgment with written notice of its entry upon the moving party."
+  },
+  {
+   "lv": 2,
+   "q": "If the moving party entered the judgment itself, the one year runs from:",
+   "c": [
+    "The verdict",
+    "Entry",
+    "The default",
+    "The summons"
+   ],
+   "a": "Entry",
+   "h": "Look for the \"entered\" clause.",
+   "w": "If the moving party has entered the judgment, within one year after such entry."
+  },
+  {
+   "lv": 2,
+   "q": "Which is a ground for relief listed in CPLR 5015(a)?",
+   "c": [
+    "Fraud or misrepresentation",
+    "The judge's mood",
+    "A change in the weather",
+    "A lawyer's vacation"
+   ],
+   "a": "Fraud or misrepresentation",
+   "h": "Misconduct counts.",
+   "w": "Fraud, misrepresentation, or other misconduct of an adverse party."
+  },
+  {
+   "lv": 2,
+   "q": "A party has no stipulation. How can a default judgment be undone?",
+   "c": [
+    "The clerk may do it anyway",
+    "By mailing the sheriff",
+    "It cannot be undone",
+    "By motion to the court under 5015(a)"
+   ],
+   "a": "By motion to the court under 5015(a)",
+   "h": "Otherwise, it is up to the court.",
+   "w": "The court may relieve a party from a judgment on motion."
   },
   {
    "lv": 3,
-   "q": "Evidence found after trial that would probably have produced a different result is which ground?",
+   "q": "Which is NOT a ground for relief in CPLR 5015(a)?",
    "c": [
-    "Newly-discovered evidence",
     "Excusable default",
-    "Stipulation",
-    "Restitution"
+    "Lack of jurisdiction",
+    "The judgment is larger than expected",
+    "Newly-discovered evidence"
+   ],
+   "a": "The judgment is larger than expected",
+   "h": "Check the list of five.",
+   "w": "CPLR 5015(a) lists excusable default, newly-discovered evidence, fraud, lack of jurisdiction, and reversal of a prior judgment."
+  },
+  {
+   "lv": 3,
+   "q": "Evidence found after trial would probably have changed the result. Which ground?",
+   "c": [
+    "Excusable default",
+    "Newly-discovered evidence",
+    "Lack of jurisdiction",
+    "Fraud"
    ],
    "a": "Newly-discovered evidence",
-   "h": "Ground 2.",
-   "w": "5015(a)(2): \"newly-discovered evidence which, if introduced at the trial, would probably have produced a different result…\""
+   "h": "It is in the list.",
+   "w": "Newly-discovered evidence which would probably have produced a different result."
   },
   {
    "lv": 3,
-   "q": "TRUE or FALSE: The clerk's power under 5015(b) covers default judgments entered under section 3215.",
+   "q": "The clerk may vacate any judgment if the lawyers ask. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
-   "a": "True",
-   "h": "Check the section number.",
-   "w": "\"…a default judgment entered pursuant to section 3215…\"",
+   "a": "False",
+   "h": "The clerk's power is narrow.",
+   "w": "The clerk may vacate a default judgment entered pursuant to section 3215.",
    "type": "tf"
+  },
+  {
+   "lv": 3,
+   "q": "A judgment rests on an earlier judgment that was reversed. Which ground applies?",
+   "c": [
+    "Excusable default",
+    "Fraud",
+    "Newly-discovered evidence",
+    "Reversal of a prior judgment it rests on"
+   ],
+   "a": "Reversal of a prior judgment it rests on",
+   "h": "Look at ground five.",
+   "w": "Reversal, modification or vacatur of a prior judgment or order upon which it is based."
+  },
+  {
+   "lv": 3,
+   "q": "The court lacked jurisdiction to render the judgment. Which ground fits?",
+   "c": [
+    "Excusable default",
+    "Fraud",
+    "Lack of jurisdiction",
+    "A bad deadline"
+   ],
+   "a": "Lack of jurisdiction",
+   "h": "It is ground four.",
+   "w": "Lack of jurisdiction to render the judgment or order."
   }
  ],
  "freeze": [
   {
    "lv": 1,
-   "q": "Under CPLR 5222(a), a restraining notice may be issued by:",
+   "q": "Who may issue a restraining notice under CPLR 5222(a)?",
    "c": [
     "The clerk of the court",
-    "Only a judge",
-    "Only the sheriff",
-    "The debtor's bank"
+    "The sheriff only",
+    "The judgment debtor",
+    "A process server"
    ],
    "a": "The clerk of the court",
-   "h": "It's in the card's name.",
-   "w": "\"A restraining notice may be issued by the clerk of the court…\""
+   "h": "The trick is in the card title.",
+   "w": "A restraining notice may be issued by the clerk of the court."
   },
   {
    "lv": 1,
    "q": "Besides the clerk, who else may issue a restraining notice?",
    "c": [
-    "The judgment creditor's attorney",
-    "The judgment debtor",
-    "Any bank",
-    "The jury"
+    "The debtor's employer",
+    "A juror",
+    "The county executive",
+    "The judgment creditor's attorney"
    ],
    "a": "The judgment creditor's attorney",
    "h": "As an officer of the court.",
-   "w": "\"…or the attorney for the judgment creditor as officer of the court…\""
+   "w": "Or the attorney for the judgment creditor as officer of the court."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: A restraining notice must state that disobeying it is punishable as a contempt of court.",
+   "q": "A restraining notice must state that disobedience is punishable as contempt. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "True",
-   "h": "A warning is required.",
-   "w": "\"…it shall state that disobedience is punishable as a contempt of court…\"",
+   "h": "Read the middle of (a).",
+   "w": "It shall state that disobedience is punishable as a contempt of court.",
    "type": "tf"
   },
   {
-   "lv": 2,
-   "q": "A restraining notice may be served:",
+   "lv": 1,
+   "q": "How long may a restraining notice hold property, at most?",
    "c": [
-    "Personally like a summons, or by registered or certified mail",
-    "Only by email",
-    "By posting it on the courthouse door",
-    "Only by the judge"
+    "30 days",
+    "One year after service",
+    "Six months",
+    "Ten years"
    ],
-   "a": "Personally like a summons, or by registered or certified mail",
-   "h": "Like a summons, or by mail.",
-   "w": "\"It shall be served personally in the same manner as a summons or by registered or certified mail, return receipt requested…\""
+   "a": "One year after service",
+   "h": "Or until the judgment is satisfied or vacated.",
+   "w": "Until the expiration of one year after the notice is served, or until the judgment is satisfied or vacated, whichever first."
+  },
+  {
+   "lv": 1,
+   "q": "Which unit may also issue a restraining notice?",
+   "c": [
+    "The support collection unit",
+    "The motor vehicle unit",
+    "The jury unit",
+    "The tax unit"
+   ],
+   "a": "The support collection unit",
+   "h": "It is named in the rule.",
+   "w": "Or by the support collection unit designated by the appropriate social services district."
   },
   {
    "lv": 2,
-   "q": "TRUE or FALSE: A bank served with a restraining notice may transfer the debtor's money to anyone who asks.",
+   "q": "How may a restraining notice be served?",
+   "c": [
+    "By email only",
+    "By phone",
+    "By posting online",
+    "Personally, or by certified mail"
+   ],
+   "a": "Personally, or by certified mail",
+   "h": "The same ways as a summons, or by mail.",
+   "w": "Served personally in the same manner as a summons or by registered or certified mail, return receipt requested."
+  },
+  {
+   "lv": 2,
+   "q": "A bank served with a restraining notice may still transfer the debtor's funds. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "False",
-   "h": "Frozen means frozen.",
-   "w": "The person served is \"forbidden to make or suffer any sale, assignment or transfer of, or any interference with, any such property.\"",
+   "h": "The notice forbids it.",
+   "w": "Such a person is forbidden to make or suffer any sale, assignment or transfer of the property.",
    "type": "tf"
   },
   {
    "lv": 2,
-   "q": "When the property is the debtor's wages, who may NOT be served with a restraining notice?",
+   "q": "When the property is the debtor's wages, who may NOT be served?",
    "c": [
-    "The debtor's employer",
-    "The debtor's bank",
+    "The bank",
+    "The employer",
     "The debtor",
-    "Someone holding the debtor's property"
+    "A tenant"
    ],
-   "a": "The debtor's employer",
-   "h": "Wages come from…",
-   "w": "It may be served on anyone \"except the employer of a judgment debtor … where the property sought to be restrained consists of wages or salary.\""
+   "a": "The employer",
+   "h": "There is one exception.",
+   "w": "Any person, except the employer of a judgment debtor where the property consists of wages or salary."
+  },
+  {
+   "lv": 2,
+   "q": "A restraining notice is served Jan 10, 2027 and the judgment is unpaid. The hold ends:",
+   "c": [
+    "Jan 10, 2028",
+    "Jan 10, 2027",
+    "July 10, 2027",
+    "Never"
+   ],
+   "a": "Jan 10, 2028",
+   "h": "One year after service.",
+   "w": "Until one year after the notice is served."
+  },
+  {
+   "lv": 2,
+   "q": "The judgment is paid in full two months after the notice. What happens to the freeze?",
+   "c": [
+    "It lasts a full year",
+    "It lasts ten years",
+    "It ends on its own",
+    "It ends when the judgment is satisfied"
+   ],
+   "a": "It ends when the judgment is satisfied",
+   "h": "Whichever event comes first.",
+   "w": "Until the expiration of one year, or until the judgment or order is satisfied or vacated, whichever first."
   },
   {
    "lv": 3,
-   "q": "A restraining notice served on someone other than the debtor lasts until:",
+   "q": "A restraining notice is served on someone other than the debtor. What is that person forbidden to do?",
    "c": [
-    "1 year after service, or the judgment is paid or vacated, whichever is first",
-    "Forever",
-    "30 days",
-    "The debtor moves away"
+    "Speak to the debtor",
+    "Open a bank account",
+    "Sell, assign, transfer, or interfere",
+    "Leave the state"
    ],
-   "a": "1 year after service, or the judgment is paid or vacated, whichever is first",
-   "h": "Whichever comes first.",
-   "w": "\"…until the expiration of one year after the notice is served … or until the judgment or order is satisfied or vacated, whichever event first occurs.\""
+   "a": "Sell, assign, transfer, or interfere",
+   "h": "Think of a freeze, not a seizure.",
+   "w": "Forbidden to make or suffer any sale, assignment or transfer of, or any interference with, the property."
   },
   {
    "lv": 3,
-   "q": "TRUE or FALSE: The judgment is paid in full two months after a bank was served. The restraint on the bank ends.",
+   "q": "If the judgment is paid in full two months after service, the hold still lasts the full year. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
-   "a": "True",
-   "h": "Satisfied.",
-   "w": "The restraint lasts only until the judgment \"is satisfied or vacated,\" if that comes before the year is up.",
+   "a": "False",
+   "h": "Whichever event first.",
+   "w": "Until one year, or until the judgment is satisfied or vacated, whichever first.",
    "type": "tf"
   },
   {
    "lv": 3,
-   "q": "Which other body may also issue a restraining notice?",
+   "q": "May the creditor's lawyer issue the notice without going to the clerk?",
    "c": [
-    "A support collection unit",
-    "The Board of Elections",
-    "The Court of Appeals",
-    "The police"
+    "Yes, as an officer of the court",
+    "No. Only the clerk",
+    "No. Only a judge",
+    "Yes, but only for wages"
    ],
-   "a": "A support collection unit",
-   "h": "Support cases.",
-   "w": "\"…or by the support collection unit designated by the appropriate social services district.\""
+   "a": "Yes, as an officer of the court",
+   "h": "The rule gives the attorney the power.",
+   "w": "By the attorney for the judgment creditor as officer of the court."
+  },
+  {
+   "lv": 3,
+   "q": "A notice leaves out the contempt warning. What is missing under CPLR 5222(a)?",
+   "c": [
+    "The debtor's signature",
+    "A jury demand",
+    "A second notice",
+    "The statement that disobedience is contempt"
+   ],
+   "a": "The statement that disobedience is contempt",
+   "h": "The rule requires a warning.",
+   "w": "It shall state that disobedience is punishable as a contempt of court."
+  },
+  {
+   "lv": 3,
+   "q": "What does a restraining notice do to the property?",
+   "c": [
+    "Takes it for the creditor",
+    "Sells it",
+    "Forbids transfer; it doesn't seize it",
+    "Pays the creditor"
+   ],
+   "a": "Forbids transfer; it doesn't seize it",
+   "h": "\"The restraining notice freezes. It doesn't take.\"",
+   "w": "The person is forbidden to sell, assign, transfer or interfere with the property."
   }
  ],
  "appeal30": [
   {
    "lv": 1,
-   "q": "An appeal as of right must be taken within how many days after service of the judgment or order with notice of entry?",
+   "q": "An appeal as of right must be taken within how many days after service?",
    "c": [
-    "30 days",
     "10 days",
     "60 days",
-    "1 year"
+    "90 days",
+    "30 days"
    ],
    "a": "30 days",
-   "h": "It's in the card's name.",
-   "w": "\"An appeal as of right must be taken within thirty days after service…\""
+   "h": "Serve it, file it, thirty days.",
+   "w": "Within thirty days after service of a copy of the judgment or order and written notice of its entry."
   },
   {
    "lv": 1,
-   "q": "Under 5515(1), an appeal is taken by serving a notice of appeal on the other side and:",
+   "q": "How is an appeal taken under CPLR 5515(1)?",
    "c": [
-    "Filing it where the judgment was entered",
-    "Mailing it to the governor",
-    "Posting it in the courtroom",
-    "Reading it at trial"
+    "File a motion only",
+    "Serve a summons",
+    "Serve a notice of appeal and file it",
+    "Call the clerk"
    ],
-   "a": "Filing it where the judgment was entered",
-   "h": "Serve it, then…",
-   "w": "\"…filing it in the office where the judgment or order of the court of original instance is entered.\""
+   "a": "Serve a notice of appeal and file it",
+   "h": "Two acts.",
+   "w": "An appeal shall be taken by serving on the adverse party a notice of appeal and filing it."
   },
   {
    "lv": 1,
-   "q": "TRUE or FALSE: The notice of appeal is served on the adverse party.",
+   "q": "The notice of appeal is served on the adverse party. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "True",
-   "h": "Serve it.",
-   "w": "\"…by serving on the adverse party a notice of appeal…\"",
+   "h": "Read 5515(1).",
+   "w": "By serving on the adverse party a notice of appeal.",
    "type": "tf"
   },
   {
+   "lv": 1,
+   "q": "What starts the 30-day clock for an appeal as of right?",
+   "c": [
+    "Service of the order with notice of entry",
+    "The judge's signing",
+    "The verdict",
+    "The hearing date"
+   ],
+   "a": "Service of the order with notice of entry",
+   "h": "Service starts the clock.",
+   "w": "Thirty days after service of a copy of the judgment or order and written notice of its entry."
+  },
+  {
+   "lv": 1,
+   "q": "Where is the notice of appeal filed?",
+   "c": [
+    "At the Appellate Division clerk",
+    "At the sheriff's office",
+    "At the governor's office",
+    "Where the judgment was entered"
+   ],
+   "a": "Where the judgment was entered",
+   "h": "The office of original instance.",
+   "w": "Filing it in the office where the judgment or order of the court of original instance is entered."
+  },
+  {
    "lv": 2,
-   "q": "TRUE or FALSE: The 30-day appeal clock starts when the judge signs the order, even if no one serves it.",
+   "q": "The 30-day appeal clock starts when the judge signs the order. True or false?",
    "c": [
     "True",
     "False"
    ],
    "a": "False",
-   "h": "Service starts it.",
-   "w": "It runs from \"service … of a copy of the judgment or order … and written notice of its entry.\"",
+   "h": "Service with notice of entry starts it.",
+   "w": "Thirty days after service of a copy of the order and written notice of its entry.",
    "type": "tf"
   },
   {
    "lv": 2,
    "q": "A notice of appeal must designate all of these EXCEPT:",
    "c": [
-    "The judge's name",
     "The party taking the appeal",
-    "The judgment or part appealed from",
-    "The court the appeal goes to"
+    "The appellant's income",
+    "The order being appealed",
+    "The court appealed to"
    ],
-   "a": "The judge's name",
-   "h": "Three things are required.",
-   "w": "The notice designates the party appealing, the judgment or order (or part), and the court the appeal is taken to."
+   "a": "The appellant's income",
+   "h": "Three things are named.",
+   "w": "Designate the party taking the appeal, the judgment or order appealed from, and the court to which the appeal is taken."
   },
   {
    "lv": 2,
-   "q": "The appellant served the judgment with notice of entry on the other side on May 1. The 30 days run from:",
+   "q": "The appellant served the judgment with notice of entry on Mar 5. Last day to appeal?",
    "c": [
-    "May 1",
-    "The day the judge decided",
-    "The trial date",
-    "The note of issue"
+    "April 4",
+    "March 25",
+    "April 14",
+    "May 4"
    ],
-   "a": "May 1",
-   "h": "\"…within thirty days thereof.\"",
-   "w": "When the appellant serves it, \"the appeal must be taken within thirty days thereof.\""
+   "a": "April 4",
+   "h": "Thirty days from service.",
+   "w": "Thirty days after service. March 5 plus 30 days is April 4."
   },
   {
-   "lv": 3,
-   "q": "TRUE or FALSE: Filing the notice of appeal, without serving the other side, is enough to take the appeal.",
+   "lv": 2,
+   "q": "A notice of appeal is filed but never served on the other side. Valid?",
    "c": [
-    "True",
-    "False"
+    "Yes. Filing is enough",
+    "Yes. Service is optional",
+    "No. It needs a judge's signature",
+    "No. It must be served and filed"
    ],
-   "a": "False",
-   "h": "Serve it AND file it.",
-   "w": "An appeal is taken \"by serving on the adverse party a notice of appeal and filing it…\"",
-   "type": "tf"
+   "a": "No. It must be served and filed",
+   "h": "Serve it. File it.",
+   "w": "By serving on the adverse party a notice of appeal and filing it."
   },
   {
-   "lv": 3,
-   "q": "The judgment was entered in the Kings County Clerk's office. Where is the notice of appeal filed?",
+   "lv": 2,
+   "q": "The judgment was entered in the Kings County Clerk's office. Where is the notice filed?",
    "c": [
+    "The Appellate Division",
+    "The State Capitol",
     "The Kings County Clerk's office",
-    "The Court of Appeals",
-    "Any county clerk",
-    "The sheriff"
+    "Any county clerk"
    ],
    "a": "The Kings County Clerk's office",
    "h": "Where it was entered.",
-   "w": "It's filed \"in the office where the judgment or order … is entered.\""
+   "w": "Filing it in the office where the judgment is entered."
   },
   {
    "lv": 3,
-   "q": "What starts the 30-day appeal clock?",
+   "q": "The appellant served the judgment and notice of entry himself. What starts his clock?",
    "c": [
-    "Service of the judgment with written notice of entry",
-    "The verdict",
-    "Filing the notice of appeal",
-    "The judge's signature"
+    "The other side's reply",
+    "His own service of it",
+    "The entry alone",
+    "The verdict"
    ],
-   "a": "Service of the judgment with written notice of entry",
-   "h": "Service plus notice.",
-   "w": "\"…service … of a copy of the judgment or order appealed from and written notice of its entry…\""
+   "a": "His own service of it",
+   "h": "There is an exception for the appellant.",
+   "w": "When the appellant has served a copy and notice of entry, the appeal must be taken within thirty days thereof."
   },
   {
-   "lv": 4,
-   "q": "The other side served you with its notice of appeal. Under 5513(c), you may cross-appeal within:",
+   "lv": 3,
+   "q": "A judgment is entered Mar 1; the other party serves it with notice of entry Mar 20. The 30 days run from:",
    "c": [
-    "10 days or your own 30, whichever is longer",
-    "5 days",
-    "1 day",
-    "90 days"
+    "March 20",
+    "March 1",
+    "March 21",
+    "April 1"
    ],
-   "a": "10 days or your own 30, whichever is longer",
-   "h": "\"…whichever is longer.\"",
-   "w": "\"…within ten days after such service or within the time limited by subdivision (a) … whichever is longer.\""
+   "a": "March 20",
+   "h": "Service, not entry.",
+   "w": "Thirty days after service by a party upon the appellant of the judgment and written notice of its entry."
   },
   {
-   "lv": 4,
-   "q": "TRUE or FALSE: A party served with the other side's notice of appeal always has only 10 days to cross-appeal.",
+   "lv": 3,
+   "q": "Filing the notice of appeal without serving it is enough. True or false?",
    "c": [
-    "True",
-    "False"
+    "False",
+    "True"
    ],
    "a": "False",
-   "h": "Not always 10.",
-   "w": "It's 10 days or their original time, whichever is longer.",
+   "h": "Both acts are required.",
+   "w": "Serving and filing.",
+   "type": "tf"
+  },
+  {
+   "lv": 3,
+   "q": "A notice of appeal names the party appealing but not the court appealed to. What is missing?",
+   "c": [
+    "The judge's name",
+    "The lawyer's fee",
+    "The court to which the appeal is taken",
+    "The date of trial"
+   ],
+   "a": "The court to which the appeal is taken",
+   "h": "Three designations.",
+   "w": "The court to which the appeal is taken."
+  },
+  {
+   "lv": 3,
+   "q": "What must the notice of appeal designate?",
+   "c": [
+    "The judge",
+    "The party, the order or part, the court",
+    "The lawyer's fee",
+    "The trial date"
+   ],
+   "a": "The party, the order or part, the court",
+   "h": "Three things.",
+   "w": "The party taking the appeal, the judgment or order or specific part appealed from, and the court."
+  },
+  {
+   "lv": 4,
+   "q": "Under 5513(c), a cross-appeal may be taken within 10 days of service or the usual time, whichever is:",
+   "c": [
+    "Longer",
+    "Shorter",
+    "Fixed at 10 days",
+    "Fixed at 30 days"
+   ],
+   "a": "Longer",
+   "h": "Cross-appeals get at least ten days.",
+   "w": "Within ten days after such service or within the time limited by (a) or (b), whichever is longer."
+  },
+  {
+   "lv": 4,
+   "q": "A party served with the other side's notice of appeal always gets exactly 10 days. True or false?",
+   "c": [
+    "False",
+    "True"
+   ],
+   "a": "False",
+   "h": "Whichever is longer.",
+   "w": "Ten days or the time under (a) or (b), whichever is longer.",
    "type": "tf"
   },
   {
    "lv": 4,
-   "q": "Under 5513(b), a motion for permission to appeal must be made within:",
+   "q": "A motion for permission to appeal under 5513(b) must be made within:",
    "c": [
-    "30 days",
     "10 days",
-    "1 year",
-    "120 days"
+    "60 days",
+    "30 days",
+    "One year"
    ],
    "a": "30 days",
-   "h": "Same as an appeal.",
-   "w": "\"A motion for permission to appeal must be made within thirty days.\""
+   "h": "Same as the appeal itself.",
+   "w": "A motion for permission to appeal must be made within thirty days."
   },
   {
-   "lv": 5,
-   "q": "When an appeal is taken to the Court of Appeals, who sends a copy of the notice of appeal to the clerk of the Court of Appeals?",
+   "lv": 4,
+   "q": "Your own 30 days end Friday. The other side serves its appeal Thursday. Your cross-appeal deadline?",
    "c": [
-    "The clerk of the office where it's filed",
-    "The appellant",
-    "The sheriff",
-    "The trial judge"
+    "Friday",
+    "10 days after Thursday's service",
+    "30 days after Thursday",
+    "Thursday"
    ],
-   "a": "The clerk of the office where it's filed",
-   "h": "A clerk's job.",
-   "w": "5515(2): it \"shall be sent forthwith to the clerk of the court of appeals by the clerk of the office where the notice of appeal is required to be filed.\""
+   "a": "10 days after Thursday's service",
+   "h": "Whichever is longer.",
+   "w": "Ten days after service or the usual time, whichever is longer. Ten days after Thursday is later than Friday."
+  },
+  {
+   "lv": 4,
+   "q": "\"Cross-appeals get at least ____ days.\" Fill in the blank.",
+   "c": [
+    "Ten",
+    "Five",
+    "Fifteen",
+    "Thirty"
+   ],
+   "a": "Ten",
+   "h": "It is on the card.",
+   "w": "Within ten days after such service or within the usual time, whichever is longer."
   },
   {
    "lv": 5,
-   "q": "TRUE or FALSE: That copy must be sent \"forthwith.\"",
+   "q": "An appeal goes to the Court of Appeals. Who sends a copy of the notice to its clerk?",
    "c": [
-    "True",
-    "False"
+    "The appellant's lawyer",
+    "The sheriff",
+    "The judge",
+    "The clerk where the notice is filed"
+   ],
+   "a": "The clerk where the notice is filed",
+   "h": "It is the filing office's job.",
+   "w": "A copy shall be sent forthwith by the clerk of the office where the notice of appeal is filed."
+  },
+  {
+   "lv": 5,
+   "q": "That copy must be sent \"forthwith.\" True or false?",
+   "c": [
+    "False",
+    "True"
    ],
    "a": "True",
-   "h": "Right away.",
-   "w": "\"…shall be sent forthwith to the clerk of the court of appeals…\"",
+   "h": "One word in the rule.",
+   "w": "Sent forthwith.",
    "type": "tf"
   },
   {
    "lv": 5,
-   "q": "The Appellate Division grants permission to appeal to the Court of Appeals. Who sends the order to the Court of Appeals clerk?",
+   "q": "The Appellate Division grants permission to appeal to the Court of Appeals. Who sends the order?",
    "c": [
-    "The clerk of the Appellate Division",
-    "The winning party",
-    "The trial judge",
-    "No one"
+    "The county clerk",
+    "The Appellate Division clerk",
+    "The appellant",
+    "The sheriff"
    ],
-   "a": "The clerk of the Appellate Division",
-   "h": "Another clerk's job.",
-   "w": "5515(3): \"…a copy of the order granting such permission … shall be sent forthwith to the clerk of the court of appeals by the clerk of the appellate division.\""
+   "a": "The Appellate Division clerk",
+   "h": "The granting court's clerk.",
+   "w": "A copy of the order granting permission shall be sent forthwith by the clerk of the appellate division."
+  },
+  {
+   "lv": 5,
+   "q": "Under 5515(2), when is the copy of the notice sent to the Court of Appeals clerk?",
+   "c": [
+    "Forthwith",
+    "In 30 days",
+    "After the hearing",
+    "At year end"
+   ],
+   "a": "Forthwith",
+   "h": "It is not a deadline in days.",
+   "w": "Sent forthwith."
+  },
+  {
+   "lv": 5,
+   "q": "Under 5515(3), what is sent when leave to appeal is granted?",
+   "c": [
+    "A copy of the notice of appeal",
+    "The trial transcript",
+    "The summons",
+    "A copy of the order granting permission"
+   ],
+   "a": "A copy of the order granting permission",
+   "h": "The permission itself.",
+   "w": "A copy of the order granting such permission to appeal shall be sent forthwith."
   }
  ]
 };
