@@ -11,7 +11,7 @@ const stickerByUid = uid => stickerList().find(s => s.uid === uid);
 const allBinders = () => [...binders(), ...LESSONS];
 
 function stickerArtHTML(s, cls = '', style = ''){
-  const src = artSrc('sticker_' + s.id);
+  const src = stickerArtSrc(s.id);
   return `<span class="sk-art ${s.holo ? 'shiny' : ''} ${cls}" style="--m:url('${src}');${style}"><img src="${src}" alt="${esc(stickerInfo(s.id).name)}"></span>`;
 }
 /* the stickers on a binder's cover (drawn by coverHTML in binder.js); skip leaves one out while it's being moved */

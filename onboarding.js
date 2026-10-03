@@ -29,11 +29,12 @@ function welcomeHTML(i){
 function showWelcome(i){
   let el = document.getElementById('wl-root');
   if (!el) { el = document.createElement('div'); el.id = 'wl-root'; document.body.appendChild(el); }
+  document.getElementById('shell')?.setAttribute('aria-hidden', 'true');
   el.innerHTML = welcomeHTML(i);
 }
 let wlPreview = false;   // the admin view replays the welcome without touching the save
 function previewWelcome(){ wlPreview = true; showWelcome(0); }
-function endWelcome(){ if (wlPreview) { wlPreview = false; document.getElementById('wl-root')?.remove(); return; } onbFlag('welcomed'); const el = document.getElementById('wl-root'); if (el) el.remove(); refresh(); }
+function endWelcome(){ document.getElementById('shell')?.removeAttribute('aria-hidden'); if (wlPreview) { wlPreview = false; document.getElementById('wl-root')?.remove(); return; } onbFlag('welcomed'); const el = document.getElementById('wl-root'); if (el) el.remove(); refresh(); }
 function maybeWelcome(){ if (!onb().welcomed) showWelcome(0); }
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if (!t) return;
@@ -83,13 +84,13 @@ function checklistHTML(){
   const o = onb(); if (o.finished || o.hidden) return '';
   const n = stepsDone(), next = STEPS.find(s => !s.test());
   const shown = gsOpen ? STEPS : STEPS.filter(s => !s.test()).slice(0, 1);   // folded: just the next step
-  return `<div class="gs"><div class="gs-h"><b>Getting Started</b><small>${n} of ${STEPS.length} done</small>
+  return `<div class="gs ${gsOpen ? 'open' : 'suggestion'}"><div class="gs-h"><b>${gsOpen ? 'Getting Started' : 'Next step'}</b><small>${gsOpen ? `${n} of ${STEPS.length} complete` : 'A small way to begin'}</small>
       <button class="gs-hide" data-act="gs-hide">Hide</button></div>
-    <div class="gs-bar"><b style="width:${n / STEPS.length * 100}%"></b></div>
+    ${gsOpen ? `<div class="gs-bar"><b style="width:${n / STEPS.length * 100}%"></b></div>` : ''}
     <div class="gs-list">${shown.map(s => { const d = s.test();
       return `<button class="gs-step ${d ? 'done' : ''} ${s === next ? 'next' : ''}" data-act="gs-go" data-id="${s.id}" ${d ? 'disabled' : ''}>
         <span class="gs-tick">${d ? ICO('check') : ''}</span><span>${esc(s.label)}</span>${d ? '' : `<small>+${ONB.stepCoins} ${COIN}</small>`}</button>`; }).join('')}</div>
-    <button class="gs-more" data-act="gs-more">${gsOpen ? 'Show less' : `See all ${STEPS.length} steps`}</button></div>`;
+    <button class="gs-more" data-act="gs-more">${gsOpen ? 'Show less' : 'See all Getting Started steps'}</button></div>`;
 }
 let gsOpen = false;   // the full list, until you leave Home
 document.addEventListener('click', e => { if (e.target.closest('[data-act="gs-more"]')) { gsOpen = !gsOpen; refresh(); } });
@@ -160,14 +161,16 @@ const ONB_CSS = `
 .wl p{margin:0;max-width:340px;font:19px/1.3 "Patrick Hand";color:var(--sub)}
 .wl-dots{display:flex;gap:6px;margin:6px 0} .wl-dots i{width:8px;height:8px;border-radius:4px;background:var(--line)} .wl-dots i.on{background:var(--mustard)}
 .wl .btn-big{width:100%;max-width:360px}
-.gs{margin:0 0 14px;padding:14px;border-radius:16px;background:var(--bg2)}
+.gs{margin:0 0 14px;padding:14px;border-radius:16px;background:var(--bg2);border:.5px solid var(--line)}
+.gs.suggestion{padding:4px 2px 8px;background:transparent;border:0}
+.gs.suggestion .gs-hide{font-size:16px;color:var(--sub)}
 .gs-h{display:flex;align-items:baseline;gap:8px} .gs-h b{font:400 22px "Bangers";letter-spacing:.04em} .gs-h small{flex:1;font:13px var(--ui);color:var(--sub)}
 .gs-hide{border:0;background:none;color:var(--mustard);font:18px "Patrick Hand"}
 .gs-bar{height:6px;margin:8px 0 10px;border-radius:3px;background:var(--line);overflow:hidden} .gs-bar b{display:block;height:100%;background:var(--mustard)}
 .gs-list{display:flex;flex-direction:column;gap:6px}
 .gs-step{display:flex;align-items:center;gap:10px;min-height:44px;padding:8px 10px;border:0;border-radius:12px;background:var(--bg);color:var(--paper);font:19px/1.15 "Patrick Hand";text-align:left}
 .gs-step span:nth-child(2){flex:1} .gs-step small{color:var(--mustard);font-weight:600}
-.gs-step.next{outline:2px solid var(--mustard)} .gs-step.done{opacity:.55;text-decoration:line-through}
+.gs-step.next{outline:1.5px solid rgba(227,178,60,.72)} .gs-step.done{opacity:.55;text-decoration:line-through}
 .gs-tick{width:24px;height:24px;flex:none;border-radius:12px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center}
 .gs-tick .ico,.gs-tick img{width:16px;height:16px}
 .gs-step.done .gs-tick{border-color:#5fd47a;background:#5fd47a}

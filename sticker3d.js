@@ -2,6 +2,8 @@
    page (curl over a small roller, sticky back, shadow, matte or holo foil, crackle). Uses three.js through
    Pack3D.load() (pack3d.js). StickerPeel.mount(host, {src, holo, onPeeled}) fills host with the peel view. */
 (function(){
+  const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+  const reducedMotion = () => window.__CLERK_QUEST_REDUCE_MOTION__ === true || motionQuery.matches;
   const PEEL = `
     uniform vec2 corner; uniform vec2 dir; uniform float fold; uniform float R;
     vec3 peel(vec3 p, out vec3 n, out float s){
@@ -137,6 +139,13 @@
     /* input: drag from the sticker's edge peels it; drag elsewhere tilts */
     const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), tilt = new THREE.Vector2(), tiltTarget = new THREE.Vector2();
     let vel = 0, mode = null, grab = null, edge = null, peelD = 0, peelTarget = 0, lastD = 0, lastInput = -1e9, off = false, fadeT = 0, live = true;
+    let reduce = reducedMotion(), raf = 0;
+    const schedule = () => { if (live && !raf && !document.hidden) raf = requestAnimationFrame(frame); };
+    const motionChanged = () => { reduce = reducedMotion(); if (reduce) tiltTarget.set(0, 0); schedule(); };
+    const visibilityChanged = () => { prev = performance.now(); if (!document.hidden) schedule(); };
+    motionQuery.addEventListener?.('change', motionChanged);
+    window.addEventListener('cq-native-motion', motionChanged);
+    document.addEventListener('visibilitychange', visibilityChanged);
     function local(e){
       const r = cvs.getBoundingClientRect();
       ndc.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
@@ -152,6 +161,7 @@
       const p = local(e);
       if (p && onSticker(p.x, p.y)) { mode = 'peel'; grab = new THREE.Vector2(p.x, p.y); edge = null; peelTarget = 0; peelD = 0; vel = 0; }
       else { mode = 'tilt'; }
+      schedule();
     });
     cvs.addEventListener('pointermove', e => {
       lastInput = performance.now();
@@ -173,25 +183,29 @@
         const r = cvs.getBoundingClientRect();
         tiltTarget.set(((e.clientX - r.left) / r.width - .5) * 1.6, -((e.clientY - r.top) / r.height - .5) * 1.6);
       }
+      schedule();
     });
-    const up = () => { if (mode === 'peel' && !off) peelTarget = 0; mode = null; };
+    const up = () => { if (mode === 'peel' && !off) peelTarget = 0; mode = null; schedule(); };
     cvs.addEventListener('pointerup', up); cvs.addEventListener('pointercancel', up);
 
     function comeOff(){
       if (off) return; off = true; mode = null;
       peelTarget = 5.2;   // curl the whole sticker off the sheet, then fade it away
-      setTimeout(() => { fadeT = performance.now(); }, 450);
-      setTimeout(() => { crackle(0); opt.onPeeled && opt.onPeeled(); }, 1000);
+      setTimeout(() => { fadeT = performance.now(); schedule(); }, reduce ? 0 : 450);
+      setTimeout(() => { crackle(0); opt.onPeeled && opt.onPeeled(); }, reduce ? 120 : 1000);
+      schedule();
     }
 
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let prev = performance.now();
     function frame(now){
+      raf = 0;
       if (!live) return;
       if (!cvs.isConnected) { destroy(); return; }
       const dt = Math.min((now - prev) / 1000, .05); prev = now;
       if (!reduce && now - lastInput > 2500 && mode === null) { const k = now / 1000; tiltTarget.set(Math.sin(k * .7) * .45, Math.cos(k * .53) * .3); }
-      tilt.lerp(tiltTarget, 1 - Math.pow(.001, dt)); U.tilt.value.copy(tilt);
+      if (reduce && mode === null) tilt.set(0, 0);
+      else tilt.lerp(tiltTarget, 1 - Math.pow(.001, dt));
+      U.tilt.value.copy(tilt);
       group.rotation.y = tilt.x * .32; group.rotation.x = -tilt.y * .32;
       if (mode === 'peel' || off) { peelD += (peelTarget - peelD) * (1 - Math.pow(off ? .02 : .0005, dt)); vel = 0; }
       else { vel += (-90 * peelD - 13 * vel) * dt; peelD += vel * dt; if (Math.abs(peelD) < .002 && Math.abs(vel) < .01) { peelD = 0; vel = 0; } }
@@ -200,19 +214,23 @@
       if (fadeT) U.fade.value = Math.max(0, 1 - (now - fadeT) / 450);
       crackle(off && fadeT ? 0 : Math.abs(d - lastD) / Math.max(dt, .001) * .12 * (mode === 'peel' || off ? 1 : .4)); lastD = d;
       renderer.render(scene, camera);
-      requestAnimationFrame(frame);
+      const animating = mode !== null || Math.abs(peelTarget - peelD) > .002 || Math.abs(vel) > .01 || (fadeT && now - fadeT < 450);
+      if (!reduce || animating) schedule();
     }
     function destroy(){
-      if (!live) return; live = false; ro.disconnect();
+      if (!live) return; live = false; if (raf) cancelAnimationFrame(raf); raf = 0; ro.disconnect();
+      motionQuery.removeEventListener?.('change', motionChanged);
+      window.removeEventListener('cq-native-motion', motionChanged);
+      document.removeEventListener('visibilitychange', visibilityChanged);
       if (ac) { try { ac.close(); } catch (_) {} }
       [stickerGeo, backGeo, shGeo, stickerMat, backMat, shMat, tex].forEach(x => x.dispose());
       renderer.dispose(); try { renderer.forceContextLoss(); } catch (_) {}
     }
-    requestAnimationFrame(frame);
+    schedule();
 
     return {
       // "Peel it for me": peel from the bottom-right corner toward the top left
-      autoPeel(){ if (off) return; audio(); startPeel(new THREE.Vector2(1, -1), new THREE.Vector2(-.7071, .7071)); comeOff(); },
+      autoPeel(){ if (off) return; audio(); startPeel(new THREE.Vector2(1, -1), new THREE.Vector2(-.7071, .7071)); comeOff(); schedule(); },
       destroy,
     };
   }

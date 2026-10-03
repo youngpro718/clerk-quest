@@ -3,6 +3,8 @@
    Pack3D.attach() and drives it with peel() and finish(); if three.js can't load, the flat CSS rip is used instead. */
 (function(){
   const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+  const reducedMotion = () => window.__CLERK_QUEST_REDUCE_MOTION__ === true || motionQuery.matches;
   let loading = null;
   function load(){
     if (window.THREE) return Promise.resolve();
@@ -118,42 +120,58 @@
     scene.add(new THREE.Mesh(geo, mat));
 
     const snd = crackler();
-    let shown = false, target = 0, cur = 0, last = 0, fin = null, prev = performance.now(), live = true;
+    let shown = false, target = 0, cur = 0, last = 0, fin = null, prev = performance.now(), live = true, raf = 0;
+    let reduce = reducedMotion();
+    const schedule = () => { if (live && !raf && !document.hidden) raf = requestAnimationFrame(frame); };
+    const motionChanged = () => { reduce = reducedMotion(); schedule(); };
+    const visibilityChanged = () => { prev = performance.now(); if (!document.hidden) schedule(); };
+    motionQuery.addEventListener?.('change', motionChanged);
+    window.addEventListener('cq-native-motion', motionChanged);
+    document.addEventListener('visibilitychange', visibilityChanged);
     function show(){
       if (shown) return; shown = true; cv.style.visibility = 'visible';
       btn.querySelectorAll('.pk-rest, .pk-flap').forEach(el => el.style.visibility = 'hidden');
     }
     function setDir(d){ const r = d < 0; U.corner.value.set(r ? W : 0, 0); U.dir.value.set(r ? -1 : 1, 0); }
     function frame(now){
+      raf = 0;
       if (!live) return;
       if (!cv.isConnected) { destroy(); return; }
       const dt = Math.min((now - prev) / 1000, .05); prev = now;
-      cur += (target - cur) * (1 - Math.pow(fin ? .00001 : .0005, dt));
+      if (reduce) cur = target;
+      else cur += (target - cur) * (1 - Math.pow(fin ? .00001 : .0005, dt));
       const d = Math.max(cur, 0);
       U.fold.value = d > .5 ? d : -9;   // the fold (where the tear has reached) sits under the finger
       snd.set(Math.abs(d - last) / Math.max(dt, .001) / W * .5); last = d;
       if (fin && d >= target - 2) { const cb = fin; fin = null; snd.set(0); cb(); }
       renderer.render(scene, camera);
-      requestAnimationFrame(frame);
+      if (fin || Math.abs(target - cur) > .05) schedule();
     }
-    function destroy(){ live = false; snd.stop(); geo.dispose(); mat.dispose(); tex.dispose(); renderer.dispose(); try { renderer.forceContextLoss(); } catch (_) {} }
-    requestAnimationFrame(frame);
+    function destroy(){
+      live = false; if (raf) cancelAnimationFrame(raf); raf = 0; snd.stop();
+      motionQuery.removeEventListener?.('change', motionChanged);
+      window.removeEventListener('cq-native-motion', motionChanged);
+      document.removeEventListener('visibilitychange', visibilityChanged);
+      geo.dispose(); mat.dispose(); tex.dispose(); renderer.dispose(); try { renderer.forceContextLoss(); } catch (_) {}
+    }
+    schedule();
 
     return {
       // p: 0..1 of the way across; dir: 1 = torn from the left, -1 = from the right
-      peel(p, dir){ if (!live) return; snd.start(); setDir(dir); show(); target = p * W; },
+      peel(p, dir){ if (!live) return; snd.start(); setDir(dir); show(); target = p * W; schedule(); },
       // curl the whole strip over, fling it away, then call done
       finish(dir, done){
         if (!live) return done();
         snd.start(); setDir(dir); show(); target = W * 1.2;
         fin = () => {
-          cv.style.transition = 'transform .6s cubic-bezier(.3,.8,.4,1), opacity .45s .15s';
+          cv.style.transition = reduce ? 'none' : 'transform .6s cubic-bezier(.3,.8,.4,1), opacity .45s .15s';
           cv.style.transformOrigin = '50% 100%';
           cv.style.transform = `translate(${dir < 0 ? -30 : 30}%, -45%) rotate(${dir < 0 ? -24 : 24}deg)`;
           cv.style.opacity = '0';
-          setTimeout(destroy, 800);
+          setTimeout(destroy, reduce ? 0 : 800);
           done();
         };
+        schedule();
       },
       destroy,
     };

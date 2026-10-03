@@ -1,6 +1,5 @@
-/* Clerk Quest flair: three add-ons that sit on top of index.html without changing it.
-   1. Holo finish by rarity: a shine that follows your finger, mouse, or phone tilt.
-      Uncommon = sparkle, rare = prism, memory tricks = ripple. Commons stay matte.
+/* Clerk Quest flair: two add-ons that sit on top of index.html without changing it.
+   (The rarity holo shine was removed on 2026-10-02: the game's own foil looks better.)
    2. FILED stamp: new cards in a pack get stamped as they flip (SO ORDERED for memory tricks).
    3. Clerk ID badge: the Profile header becomes a court ID on a lanyard. Tap it to swing it.
    Remove the <script src="flair.js"> line to turn all of it off. */
@@ -9,33 +8,6 @@
 
   /* ---------------- styles ---------------- */
   const css = `
-/* 1. holo by rarity. Cards in the grid keep a still shine; cards up close follow the tilt. */
-.card{--mx:30%;--my:20%;--fi:.32}
-.zoom .card,.pk .card,.stage .card,.rcard .card{--mx:var(--gx,30%);--my:var(--gy,20%);--fi:var(--gi,.32)}
-.card:has(.r-uncommon,.r-rare,.r-epic,.r-legendary)::before{content:"";position:absolute;inset:1.3% 1.7% 1.6%;border-radius:5cqw;z-index:8;pointer-events:none;
-  opacity:var(--fi);transition:opacity .35s;mix-blend-mode:color-dodge}
-/* uncommon: sparkle dust that catches the light where you point */
-.card:has(.r-uncommon)::before{
-  background:radial-gradient(circle at var(--mx) var(--my),rgba(255,250,220,.55),transparent 38%),
-    radial-gradient(circle,rgba(255,255,255,.9) 0 .35cqw,transparent .5cqw) 0 0/4.2cqw 4.2cqw,
-    radial-gradient(circle,rgba(255,240,190,.8) 0 .25cqw,transparent .4cqw) 2.1cqw 2.1cqw/4.2cqw 4.2cqw;
-  -webkit-mask:radial-gradient(circle at var(--mx) var(--my),#000 0,rgba(0,0,0,.25) 45%,transparent 75%);
-          mask:radial-gradient(circle at var(--mx) var(--my),#000 0,rgba(0,0,0,.25) 45%,transparent 75%)}
-/* rare: a prism band that slides across as you tilt */
-.card:has(.r-rare)::before{
-  background:radial-gradient(circle at var(--mx) var(--my),rgba(255,255,255,.35),transparent 28%),
-    linear-gradient(115deg,transparent 30%,rgba(255,95,162,.55) 39%,rgba(255,212,95,.55) 44%,rgba(95,255,200,.5) 49%,rgba(95,180,255,.5) 54%,rgba(183,123,255,.5) 59%,transparent 68%);
-  background-size:100% 100%,260% 260%;background-position:0 0,var(--mx) var(--my)}
-/* epic + legendary (none yet): gold prism */
-.card:has(.r-epic,.r-legendary)::before{
-  background:radial-gradient(circle at var(--mx) var(--my),rgba(255,240,190,.6),transparent 32%),
-    linear-gradient(115deg,transparent 22%,#ffcf5a 36%,#fff3c4 46%,#ffb13d 56%,transparent 72%);
-  background-size:100% 100%,220% 220%;background-position:0 0,var(--mx) var(--my)}
-/* memory tricks: rings that ripple out from where the light hits */
-.card.special::before{content:"";background:repeating-radial-gradient(circle at var(--mx) var(--my),rgba(200,160,255,.0) 0 2.2cqw,rgba(220,190,255,.55) 2.6cqw,rgba(160,230,255,.0) 3.4cqw);
-  -webkit-mask:radial-gradient(circle at var(--mx) var(--my),#000 0,transparent 70%);mask:radial-gradient(circle at var(--mx) var(--my),#000 0,transparent 70%)}
-.card.cold::before,.card.locked::before,.stage.flipping .card::before{opacity:0!important}
-
 /* 2. FILED stamp on new pack pulls */
 .cqf-stamp{position:absolute;left:50%;top:60%;z-index:10;pointer-events:none;translate:-50% -50%;
   font:400 clamp(17px,5.2vw,30px)/1 "Luckiest Guy",sans-serif;letter-spacing:.06em;white-space:nowrap;color:var(--brick);
@@ -61,11 +33,6 @@
 .cqf-clip::after{content:"";position:absolute;left:50%;bottom:6px;translate:-50% 0;width:16px;height:8px;border-radius:4px;background:var(--desk);border:2px solid var(--ink)}
 .cqf-card{--mx:var(--gx,30%);--my:var(--gy,20%);position:relative;width:min(78vw,300px);border:3px solid var(--ink);border-radius:16px;overflow:hidden;
   background:var(--paper);color:var(--ink);box-shadow:6px 8px 0 rgba(0,0,0,.45);isolation:isolate}
-.cqf-card::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;mix-blend-mode:color-dodge;opacity:var(--gi,.3);transition:opacity .35s;
-  background:radial-gradient(circle at var(--mx) var(--my),rgba(255,255,255,.4),transparent 34%),
-    linear-gradient(115deg,transparent 30%,rgba(255,95,162,.5) 40%,rgba(255,212,95,.5) 46%,rgba(95,255,200,.45) 52%,rgba(95,180,255,.45) 58%,transparent 68%);
-  background-size:100% 100%,240% 240%;background-position:0 0,var(--mx) var(--my)}
-.cqf-card[data-rank="0"]::after{display:none}
 .cqf-top{display:flex;align-items:center;justify-content:space-between;padding:11px 14px 9px;background:var(--rank);border-bottom:3px solid var(--ink);color:var(--rank-ink)}
 .cqf-top b{font:400 22px/1 "Bangers",sans-serif;letter-spacing:.05em}
 .cqf-top small{font:400 14px/1 "Bangers",sans-serif;letter-spacing:.08em;opacity:.85}
@@ -88,49 +55,6 @@
 @media (prefers-reduced-motion:reduce){.cqf-swing.go,.cqf-stamp.on,.pk-card.cqf-thud .pk-inner{animation:none}.cqf-stamp.on{opacity:.93}}
 `;
   const style = document.createElement('style'); style.id = 'cq-flair'; style.textContent = css; document.head.appendChild(style);
-
-  /* ---------------- 1. light that follows the pointer or tilt ---------------- */
-  const root = document.documentElement;
-  let gx = 30, gy = 20, gi = .32, raf = 0;
-  const paint = () => { raf = 0; root.style.setProperty('--gx', gx.toFixed(1) + '%'); root.style.setProperty('--gy', gy.toFixed(1) + '%'); root.style.setProperty('--gi', gi); };
-  const queue = () => { if (!raf) raf = requestAnimationFrame(paint); };
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const LIT = '.zoom .card, .pk .card, .stage .card, .rcard .card, .cqf-card';
-
-  if (!reduce) {
-    document.addEventListener('pointermove', e => {
-      if (e.pointerType === 'touch' && !e.buttons) return;
-      const el = e.target.closest && e.target.closest(LIT);
-      if (!el) { if (gi !== .32 && !tilting) { gi = .32; queue(); } return; }
-      const r = el.getBoundingClientRect();
-      gx = clamp((e.clientX - r.left) / r.width * 100, 0, 100);
-      gy = clamp((e.clientY - r.top) / r.height * 100, 0, 100);
-      gi = .75; queue();
-    }, { passive:true });
-
-    // phone tilt. iPhone asks permission once, on the first tap of a pack, a close-up card, or the ID badge.
-    let tilting = false, base = null;
-    const onTilt = e => {
-      if (e.gamma == null) return;
-      if (base == null) base = e.beta;
-      tilting = true;
-      gx = clamp(50 + e.gamma * 1.6, 0, 100);
-      gy = clamp(40 + (e.beta - base) * 1.6, 0, 100);
-      gi = .7; queue();
-    };
-    const startTilt = () => { window.addEventListener('deviceorientation', onTilt, { passive:true }); };
-    const DOE = window.DeviceOrientationEvent;
-    if (DOE && typeof DOE.requestPermission === 'function') {
-      let asked = false;
-      document.addEventListener('click', e => {
-        if (asked || !e.target.closest('.pk-pack, .pk-card, .zoom, .cqf-swing')) return;
-        asked = true;
-        DOE.requestPermission().then(s => { if (s === 'granted') startTilt(); }).catch(() => {});
-      }, true);
-    } else if (DOE) startTilt();
-    // recentre when the phone settles into a new way of holding it
-    setInterval(() => { base = null; }, 12000);
-  }
 
   /* ---------------- 2. FILED stamp ---------------- */
   function stamp(card){
