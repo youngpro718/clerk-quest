@@ -77,13 +77,15 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .art-bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.9) saturate(.92)}
 .art-vig{position:absolute;inset:0;background:radial-gradient(ellipse 70% 65% at 50% 55%, transparent 55%, rgba(20,12,4,.45) 100%)}
 .art-img.cut{inset:1% 2% 12% 2%;width:96%;height:87%;object-fit:contain;z-index:1;filter:drop-shadow(0 1.2cqw 0 rgba(0,0,0,.25))}
-.framebreak-character{left:2%;top:22.5%;width:96%;height:58%;object-fit:contain;object-position:center;z-index:2;transform:scale(1.1);transform-origin:center;pointer-events:none;filter:drop-shadow(0 1.4cqw .45cqw rgba(0,0,0,.42))}
+.framebreak-character{left:2%;top:22.5%;width:96%;height:58%;object-fit:contain;object-position:center;z-index:7;transform:translate3d(0,0,0) rotate(0deg) scale(1.18);transform-origin:50% 72%;pointer-events:none;filter:drop-shadow(0 1.4cqw .45cqw rgba(0,0,0,.42));backface-visibility:hidden}
+.framebreak-character.cq-motion-active{will-change:transform}
 .framebreak-character.series2{top:27%}
 .frame-metadata{inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
 .frame-metadata.top{clip-path:inset(0 0 71.7% 0)}
 .frame-metadata.quote{clip-path:inset(70% 18% 17% 18%)}
 .frame-metadata.footer{clip-path:inset(83% 0 0 0)}
 .mn-badge.framebreak-memory{left:7.3%;top:auto;bottom:30.5%;width:18.3%;z-index:2}
+html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(0deg) scale(1.18)!important;will-change:auto}
 .art-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(ellipse at 50% 45%, #efe2c3 0%, #d9c49b 45%, #6d5b43 100%)}
 .ph-emoji{font-size:30cqw;filter:drop-shadow(0 1.2cqw 0 rgba(0,0,0,.25));transform:translateY(-4%)}
@@ -2037,6 +2039,163 @@ function cardEl(c, st, opt={}, extraClass=''){
   const rings = tier ? `<div class="ring soft"></div><div class="ring"></div>` : '';
   return `<div class="card lv${st.level} ${c.trickType?'special':''} ${cold?'cold':''} ${tier?'tier-'+tier:''} ${charged?'charged':''} ${extraClass}">${rings}${tier==='max'?'<div class="gloss"></div>':''}${frontHTML(c, st, opt)}${goingCold(st) ? `<img class="goingcold" src="art/badge_goingcold.webp" alt="Going cold">` : ''}${cold ? `<img class="stampimg coldcase" src="art/stamp_coldcase.webp" alt="Cold case">` : ''}</div>`;
 }
+
+/* Max-level frame-break characters move independently of their cards. Native iOS sends
+   cq-native-tilt with normalized {x,y} screen-axis values in the -1...1 range. */
+const BreakoutMotion = (() => {
+  const clamp = (n, lo=-1, hi=1) => Math.max(lo, Math.min(hi, n));
+  const states = new Map();
+  const finePointer = !!(window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches);
+  let inputX = 0, inputY = 0, raf = 0, lastTime = 0, nativeActive = null;
+  let orientationAuthorized = false, orientationListening = false, orientationOrigin = null;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const state = states.get(entry.target);
+      if (state) state.visible = entry.isIntersecting && entry.intersectionRatio > .04;
+    });
+    syncNative();
+    wake();
+  }, {threshold:[0,.04,.25]});
+
+  function reduced(){ return prefersReducedMotion(); }
+  function eligible(){
+    return !reduced() && document.visibilityState === 'visible' && [...states.values()].some(s => s.visible && s.el.isConnected);
+  }
+  function syncNative(force=false){
+    const active = eligible();
+    syncBrowserOrientation(active);
+    if (!force && active === nativeActive) return;
+    nativeActive = active;
+    try { window.webkit?.messageHandlers?.cqMotion?.postMessage({active}); } catch (_) {}
+  }
+  window.__CQ_BREAKOUT_REPORT_VISIBILITY__ = () => syncNative(true);
+
+  function scan(){
+    document.querySelectorAll('.framebreak-character').forEach(el => {
+      if (states.has(el)) return;
+      const state = {el, visible:false, x:0, y:0, rotation:0, scale:1.18, vx:0, vy:0, vr:0, vs:0};
+      states.set(el, state); observer.observe(el);
+    });
+    for (const [el] of states) if (!el.isConnected) { observer.unobserve(el); states.delete(el); }
+    syncNative();
+  }
+
+  function setInput(x, y){
+    x = clamp(Number(x) || 0); y = clamp(Number(y) || 0);
+    if (Math.abs(x-inputX) < .008 && Math.abs(y-inputY) < .008) return;
+    inputX = x; inputY = y; wake();
+  }
+
+  function wake(){
+    if (raf || !eligible()) return;
+    states.forEach(s => { if (s.visible) s.el.classList.add('cq-motion-active'); });
+    lastTime = performance.now(); raf = requestAnimationFrame(step);
+  }
+
+  function spring(value, velocity, target, k, damping, dt){
+    velocity = (velocity + (target-value) * k * dt) * Math.pow(damping, dt);
+    return [value + velocity * dt, velocity];
+  }
+
+  function step(now){
+    raf = 0;
+    if (!eligible()) return reset();
+    const dt = Math.min(2, Math.max(.35, (now-lastTime)/16.667)); lastTime = now;
+    const energy = Math.min(1, Math.hypot(inputX,inputY));
+    let moving = false;
+    states.forEach(s => {
+      if (!s.visible || !s.el.isConnected) return;
+      const card = s.el.closest('.card'); if (!card) return;
+      const width = card.getBoundingClientRect().width;
+      const targetX = inputX * width * .19;
+      const targetY = inputY * width * .14 - energy * width * .035;
+      const targetR = inputX * 11;
+      const targetS = 1.18 + energy * .13;
+      [s.x,s.vx] = spring(s.x,s.vx,targetX,.13,.72,dt);
+      [s.y,s.vy] = spring(s.y,s.vy,targetY,.12,.73,dt);
+      [s.rotation,s.vr] = spring(s.rotation,s.vr,targetR,.12,.72,dt);
+      [s.scale,s.vs] = spring(s.scale,s.vs,targetS,.11,.74,dt);
+      s.x = clamp(s.x,-width*.20,width*.20); s.y = clamp(s.y,-width*.18,width*.16);
+      s.el.style.transform = `translate3d(${s.x.toFixed(2)}px,${s.y.toFixed(2)}px,0) rotate(${s.rotation.toFixed(2)}deg) scale(${s.scale.toFixed(3)})`;
+      const distance = Math.abs(s.x-targetX)+Math.abs(s.y-targetY)+Math.abs(s.rotation-targetR)+Math.abs(s.scale-targetS)*100;
+      const speed = Math.abs(s.vx)+Math.abs(s.vy)+Math.abs(s.vr)+Math.abs(s.vs)*100;
+      if (distance > .22 || speed > .025) moving = true;
+    });
+    if (moving) raf = requestAnimationFrame(step);
+    else states.forEach(s => s.el.classList.remove('cq-motion-active'));
+  }
+
+  function reset(clearTransform=true){
+    if (raf) cancelAnimationFrame(raf); raf = 0;
+    inputX = inputY = 0;
+    states.forEach(s => {
+      Object.assign(s,{x:0,y:0,rotation:0,scale:1.18,vx:0,vy:0,vr:0,vs:0});
+      s.el.classList.remove('cq-motion-active');
+      if (clearTransform) s.el.style.transform = '';
+    });
+  }
+
+  function onOrientation(event){
+    if (event.gamma == null || event.beta == null) return;
+    const angle = ((screen.orientation && screen.orientation.angle) || window.orientation || 0) % 360;
+    let x = event.gamma, y = event.beta;
+    if (angle === 90 || angle === -270) [x,y] = [event.beta,-event.gamma];
+    else if (angle === -90 || angle === 270) [x,y] = [-event.beta,event.gamma];
+    else if (Math.abs(angle) === 180) [x,y] = [-event.gamma,-event.beta];
+    if (!orientationOrigin) orientationOrigin = {x,y};
+    setInput((x-orientationOrigin.x)/28, (y-orientationOrigin.y)/24);
+  }
+  function syncBrowserOrientation(active=eligible()){
+    const shouldListen = orientationAuthorized && active && !window.__CLERK_QUEST_IOS__;
+    if (shouldListen === orientationListening) return;
+    orientationOrigin = null;
+    if (shouldListen) addEventListener('deviceorientation', onOrientation, {passive:true});
+    else removeEventListener('deviceorientation', onOrientation);
+    orientationListening = shouldListen;
+  }
+  async function enableOrientation(){
+    if (orientationAuthorized || window.__CLERK_QUEST_IOS__) return;
+    try {
+      if (typeof DeviceOrientationEvent === 'undefined') return;
+      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        if (await DeviceOrientationEvent.requestPermission() !== 'granted') return;
+      }
+      orientationAuthorized = true;
+      syncBrowserOrientation();
+    } catch (_) {}
+  }
+
+  addEventListener('cq-native-tilt', event => {
+    const d = event.detail || {}; setInput(d.x,d.y);
+  });
+  addEventListener('cq-native-motion', () => {
+    if (reduced()) reset(); else wake();
+    syncNative(true);
+  });
+  document.addEventListener('pointerdown', event => {
+    if (event.target.closest('.card')?.querySelector('.framebreak-character')) enableOrientation();
+  }, {passive:true});
+  if (finePointer) {
+    document.addEventListener('pointermove', event => {
+      const card = event.target.closest('.card');
+      if (!card || !card.querySelector('.framebreak-character')) return setInput(0,0);
+      const r = card.getBoundingClientRect();
+      setInput((event.clientX-(r.left+r.width/2))/(r.width*.45), (event.clientY-(r.top+r.height/2))/(r.height*.38));
+    }, {passive:true});
+    document.addEventListener('pointerleave', () => setInput(0,0), {passive:true});
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) reset(); else wake(); syncNative(true);
+  });
+  const reduceQuery = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+  reduceQuery?.addEventListener?.('change', () => {
+    if (reduced()) reset(); else wake(); syncNative(true);
+  });
+  new MutationObserver(scan).observe(document.documentElement,{subtree:true,childList:true});
+  scan();
+  return {setInput, reset};
+})();
 function lockedCardHTML(c){
   return `<div class="card mystery"><img class="bg" src="art/mysteryback.webp" alt="" style="object-fit:cover;border-radius:6%/4%">
     <div class="lock-ov mys"><span>FIND IN PACKS</span><small>${c.trickType ? 'Memory Trick' : esc(c.num)}</small></div></div>`;
