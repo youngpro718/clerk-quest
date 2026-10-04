@@ -963,10 +963,10 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js?v=cd5fc35d"></script>
-<script src="study.js?v=e01c771c"></script>
+<script src="study.js?v=44298d89"></script>
 <script src="economy.js?v=a7261374"></script>
 <script src="store.js?v=e62a784f"></script>
-<script src="binder.js?v=41877c4c"></script>
+<script src="binder.js?v=68f6d3dc"></script>
 <script src="onboarding.js?v=42992ec0"></script>
 <script src="account.js?v=ad784f4b"></script>
 <script src="admin.js?v=fb5df08d"></script>
@@ -2232,7 +2232,7 @@ const BreakoutMotion = (() => {
 })();
 function lockedCardHTML(c){
   return `<div class="card mystery"><img class="bg" src="art/mysteryback.webp" alt="" style="object-fit:cover;border-radius:6%/4%">
-    <div class="lock-ov mys"><span>FIND IN PACKS</span><small>${c.trickType ? 'Memory Trick' : esc(c.num)}</small></div></div>`;
+    <div class="lock-ov mys"><span>FIND IN PACKS</span><small>${c && c.trickType ? 'Memory Trick' : c ? esc(c.num) : 'Unknown card'}</small></div></div>`;
 }
 
 /* ================= QUESTION GENERATORS ================= */
@@ -2408,7 +2408,8 @@ const isStandalone = () => !!(navigator.standalone || (window.matchMedia && matc
 
 /* ---------- small building blocks ---------- */
 const PLAY_ICON = '&#9654;&#xFE0E;';
-const owned = c => S.cards[c.id].owned;
+const owned = c => !!(c && S.cards && S.cards[c.id] && S.cards[c.id].owned);
+const canStudyCard = id => owned(byId(id));
 const playerLevel = () => 1 + Math.floor(S.stats.xp / 250);
 function ring(pct, label, size = 64, color = 'var(--mustard)'){
   const r = 26, C = 2 * Math.PI * r, p = Math.max(0, Math.min(1, pct));
@@ -2671,7 +2672,12 @@ const SCREENS = {
   },
 
   card(p){
-    const c = byId(p.id), st = S.cards[c.id];
+    const c = byId(p.id);
+    if (!owned(c)) return {
+      title:c ? 'Locked Card' : 'Card unavailable', hideLarge:true,
+      body:`<div class="sh-missing"><div class="sh-mcard">${lockedCardHTML(c)}</div><h3>${c ? 'Not found yet' : 'Card unavailable'}</h3><p>${c ? 'Find this card in a pack to open its art and study questions.' : 'This card could not be found.'}</p></div>`
+    };
+    const st = S.cards[c.id];
     if (c.category === 'MEMORY TRICK' && st.owned) tipOnce('trick');
     const pv = p.preview || st.level;
     const shown = pv === st.level ? st : {level:pv, xp:0, mastered:false, owned:true};
@@ -2918,8 +2924,14 @@ function refresh(){ saveScroll(); showScreen('none'); }   // re-render the curre
 
 /* ---- study session ---- */
 function startSession(id, lesson){
-  if (typeof guestWallDue === 'function' && guestWallDue()) { guestWall(); return; }   // a guest signs up before a second round
+  if (lesson) {
+    const queue = (Array.isArray(lesson.queue) ? lesson.queue : []).filter(canStudyCard);
+    if (!queue.length) { missingSheet(id); return false; }
+    lesson = { ...lesson, queue }; id = queue[0];
+  }
   const c = byId(id);
+  if (!owned(c)) { missingSheet(id); return false; }
+  if (typeof guestWallDue === 'function' && guestWallDue()) { guestWall(); return; }   // a guest signs up before a second round
   openSessionLayer();
   sess = { id, i:0, results:[], xp:0, used:new Set(), startLevel:S.cards[id].level, startXP:S.cards[id].xp, wasCold:isCold(S.cards[id]), reopened:false, lesson:lesson || null };
   if (sess.wasCold) tipOnce('cold');
@@ -3062,6 +3074,7 @@ function paintStudy(anim){
 }
 function answer(v){
   if (!sess || sess.answered) return;
+  if (!canStudyCard(sess.id)) { const id = sess.id; closeSessionLayer(); missingSheet(id); return; }
   const c = byId(sess.id), st = S.cards[sess.id];
   const ok = v === sess.q.a;
   nativeFeedback(ok ? 'correct' : 'wrong');
@@ -3092,6 +3105,7 @@ function answer(v){
   const nb = document.querySelector('#below .btn-big'); if (nb) { const r = nb.getBoundingClientRect(); if (r.bottom > innerHeight - 8) nb.scrollIntoView({block:'end', behavior:'smooth'}); }
 }
 function next(){
+  if (!sess || !canStudyCard(sess.id)) { const id = sess && sess.id; closeSessionLayer(); missingSheet(id); return; }
   if (sess.pendingLevel) { const pl = sess.pendingLevel; sess.pendingLevel = null; showLevelUp(sess.id, pl, () => { sess.display = null; advance(); }); return; }
   advance();
 }
@@ -3105,7 +3119,11 @@ function advance(){
     sess.streakCoins = payStreak(); sess.coins = (sess.coins || 0) + sess.streakCoins;
     save(); return sess.lesson ? lessonResults() : renderResults();
   }
-  if (sess.lesson) { sess.id = sess.lesson.queue[sess.i]; sess.wasCold = isCold(S.cards[sess.id]); sess.reopened = false; }   // each lesson question can be a different card
+  if (sess.lesson) {
+    const nextId = sess.lesson.queue[sess.i];
+    if (!canStudyCard(nextId)) { closeSessionLayer(); toast('That lesson card is no longer in your collection'); return; }
+    sess.id = nextId; sess.wasCold = isCold(S.cards[sess.id]); sess.reopened = false;
+  }   // each lesson question can be a different card
   const c = byId(sess.id);
   sess.q = nextQuestion(c, S.cards[sess.id].level, sess.used);
   sess.hint = false; sess.freeHint = false; sess.answered = null; sess.display = null;
@@ -3188,7 +3206,9 @@ function showSurprise(layer, stage, st){
   if (kind === 'prize') return win();
   if (kind === 'miss') return miss();
   try {
-    const c = byId(st.id), q = nextQuestion(c, (S.cards[c.id] || {}).level || 1, new Set());
+    const stickerCard = byId(st.id), c = owned(stickerCard) ? stickerCard : CARDS.find(owned);
+    if (!c) return miss();
+    const q = nextQuestion(c, S.cards[c.id].level || 1, new Set());
     const el = panel(`<div class="sur"><b>POP QUIZ!</b><p>${esc(q.q)}</p><div class="sur-opts">${q.opts.map((o, i) => `<button data-act="bstk-ans" data-i="${i}">${esc(o)}</button>`).join('')}</div></div>`);
     layer._quiz = { q, el, win, miss };
   } catch (e) { miss(); }
@@ -3481,20 +3501,25 @@ function sortSheet(){
    (it stays readable from the card's menu). Cards get an intro as each one's example is written and checked. */
 function studyCard(id){
   const c = byId(id);
-  if (c && c.intro && !(S.skipIntro && S.skipIntro[id])) introSheet(c); else startSession(id);
+  if (!owned(c)) { missingSheet(id); return false; }
+  if (c.intro && !(S.skipIntro && S.skipIntro[id])) introSheet(c); else startSession(id);
 }
 function introSheet(c, readOnly){
-  openSheet(`<div class="sh-head">${thumb(c)}<span><b>${esc(c.name)}</b><small>Read first · about 30 seconds</small></span></div>
+  if (!c || !c.intro) return;
+  const mine = owned(c);
+  readOnly = readOnly || !mine;
+  openSheet(`<div class="sh-head">${mine ? thumb(c) : `<span class="sh-mcard">${lockedCardHTML(c)}</span>`}<span><b>${esc(c.name)}</b><small>Read first · about 30 seconds</small></span></div>
     <div class="intro">
       <div class="intro-sec"><em>The idea</em><p>${esc(c.intro.idea)}</p></div>
       <div class="intro-sec ex"><em>Example</em><p>${esc(c.intro.example)}</p></div>
       <p class="intro-src">Source: ${esc(c.intro.source)}</p></div>
-    ${readOnly ? `<button class="btn-big gold" data-act="intro-go" data-id="${c.id}">${PLAY_ICON} TRY 5 QUESTIONS</button><button class="sheet-cancel" data-act="sheet-close">Close</button>`
+    ${readOnly ? `${mine ? `<button class="btn-big gold" data-act="intro-go" data-id="${c.id}">${PLAY_ICON} TRY 5 QUESTIONS</button>` : ''}<button class="sheet-cancel" data-act="sheet-close">Close</button>`
       : `<button class="btn-big gold" data-act="intro-go" data-id="${c.id}">${PLAY_ICON} TRY 5 QUESTIONS</button>
          <button class="sheet-cancel" data-act="intro-skip" data-id="${c.id}">Go straight to questions<small>Skips this intro next time</small></button>`}`);
 }
 function cardMenu(id){
-  const c = byId(id), st = S.cards[id];
+  const c = byId(id); if (!owned(c)) { missingSheet(id); return; }
+  const st = S.cards[id];
   openSheet(`<div class="sh-head">${thumb(c)}<span><b>${esc(c.name)}</b><small>${statusLine(c)}</small></span></div>
     <div class="acts">
       <button data-act="study" data-id="${id}">${PLAY_ICON} ${isCold(st) ? 'Reopen this case' : 'Study this card'}</button>
@@ -3509,7 +3534,7 @@ function cardMenu(id){
 function missingSheet(id){
   const c = byId(id);
   openSheet(`<div class="sh-missing"><div class="sh-mcard">${lockedCardHTML(c)}</div>
-      <h3>Not found yet</h3><p>This ${c.trickType ? 'Memory Trick' : 'card'} is waiting in a pack. ${S.packs ? `You have ${S.packs} pack${S.packs > 1 ? 's' : ''} to open.` : 'Finish a study round to earn a pack.'}</p></div>
+      <h3>${c ? 'Not found yet' : 'Card unavailable'}</h3><p>${c ? `This ${c.trickType ? 'Memory Trick' : 'card'} is waiting in a pack. ${S.packs ? `You have ${S.packs} pack${S.packs > 1 ? 's' : ''} to open.` : 'Finish a study round to earn a pack.'}` : 'This card could not be found.'}</p></div>
     ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN A PACK</button>` : `<button class="btn-big" data-act="quick">${PLAY_ICON} QUICK ROUND</button>`}
     <button class="sheet-cancel" data-act="sheet-close">Not now</button>`);
 }
@@ -3644,7 +3669,9 @@ document.addEventListener('click', e => {
     case 'stage': { const en = topEntry(); en.p = Object.assign({}, en.p, {preview:+t.dataset.l}); refresh(); break; }
     case 'study': closeSheet(true); studyCard(id); break;
     case 'intro-go': closeSheet(true); startSession(id); break;
-    case 'intro-skip': ((S.skipIntro = S.skipIntro || {})[id] = true); save(); closeSheet(true); startSession(id); break;
+    case 'intro-skip':
+      if (!canStudyCard(id)) { closeSheet(true); missingSheet(id); break; }
+      ((S.skipIntro = S.skipIntro || {})[id] = true); save(); closeSheet(true); startSession(id); break;
     case 'intro-read': closeSheet(true); introSheet(byId(id), true); break;
     case 'quick': closeSheet(true); quickRound(); break;
     case 'answer': closeSheet(true); answer(t.dataset.v); break;

@@ -38,16 +38,18 @@ const binderById = id => binders().find(b => b.id === id) || LESSONS.find(L => L
 const ownedCovers = () => (S.binderCovers = Array.isArray(S.binderCovers) ? S.binderCovers : ['default']);
 const lessonRec = id => ((S.lessons = S.lessons || {})[id] = S.lessons[id] || { best:0, passes:0, passedAt:0 });
 const binderCards = b => b.slots.filter(Boolean).map(byId).filter(Boolean);
+const lessonCards = b => b && b.builtin ? binderCards(b) : binderCards(b).filter(owned);
+const lessonQuizCards = b => binderCards(b).filter(owned);
 const lessonMissing = b => b.builtin ? binderCards(b).filter(c => !owned(c)) : [];
-const lessonReady = b => binderCards(b).length >= BINDER.minCards && !lessonMissing(b).length;
+const lessonReady = b => lessonQuizCards(b).length >= BINDER.minCards && !lessonMissing(b).length;
 const lessonDeckPrice = b => lessonMissing(b).reduce((n, c) => n + cardPrice(c), 0);
 const coverOf = b => COVERS.find(c => c.id === b.cover) || COVERS[0];
 function newBinder(name){
   const b = { id:'b' + Date.now().toString(36), name:name.trim().slice(0, 40) || 'My Binder', cover:'default', slots:Array(BINDER.startPages * 4).fill(null) };
   binders().push(b); save(); return b;
 }
-const lessonQuestions = b => Math.max(BINDER.minQ, Math.min(BINDER.maxQ, binderCards(b).length * BINDER.perCard));
-const lessonMinutes = b => Math.max(2, Math.round(binderCards(b).length * 0.8 + lessonQuestions(b) * 0.3));
+const lessonQuestions = b => Math.max(BINDER.minQ, Math.min(BINDER.maxQ, lessonQuizCards(b).length * BINDER.perCard));
+const lessonMinutes = b => Math.max(2, Math.round(lessonQuizCards(b).length * 0.8 + lessonQuestions(b) * 0.3));
 
 /* ---------- pieces ---------- */
 function coverHTML(b, cls = '', skipSticker, extra = ''){   // stickers.js adds the stickers stuck on it
@@ -61,6 +63,8 @@ function pageHTML(b, p, edit, sel){
     const i = p * 4 + k, id = b.slots[i], c = id && byId(id);
     const pos = `left:${pk[0]}%;top:${pk[1]}%;width:${pk[2]}%;height:${pk[3]}%`;
     if (c && b.builtin && !owned(c)) return `<button class="bd-slot empty get" style="${pos}" data-act="ls-get" data-id="${b.id}"><small>${esc(c.name)}</small><em>Get it</em></button>`;
+    if (c && !owned(c)) return `<button class="bd-slot full ${sel === i ? 'sel' : ''}" style="${pos}" data-act="${edit ? 'bd-pick' : 'missing'}" data-id="${c.id}" data-i="${i}">${lockedCardHTML(c)}
+      ${edit ? `<span class="bd-x" data-act="bd-remove" data-i="${i}" aria-label="Remove">✕</span>` : ''}</button>`;
     if (!id && b.builtin) return `<span class="bd-slot none" style="${pos}"></span>`;
     if (c) return `<button class="bd-slot full ${sel === i ? 'sel' : ''}" style="${pos}" data-act="${edit ? 'bd-pick' : 'push'}" data-s="card" data-id="${c.id}" data-i="${i}">${cardEl(c, S.cards[c.id])}
       ${edit ? `<span class="bd-x" data-act="bd-remove" data-i="${i}" aria-label="Remove">✕</span>` : ''}</button>`;
@@ -90,7 +94,7 @@ function bindersTabHTML(){
 const BINDER_SCREENS = {
   binder(p){
     const b = binderById(p.id); if (!b) return { title:'Binder', body:'<p class="empty">This binder was deleted.</p>' };
-    const pages = b.slots.length / 4, n = binderCards(b).length, r = lessonRec(b.id), edit = !!p.edit;
+    const pages = b.slots.length / 4, n = lessonQuizCards(b).length, r = lessonRec(b.id), edit = !!p.edit;
     const miss = lessonMissing(b), ready = lessonReady(b), fixed = !!b.builtin;
     const note = fixed ? (miss.length ? `Get ${miss.length} more card${miss.length === 1 ? '' : 's'} to take the quiz. You can read every rule now.` : `About ${lessonMinutes(b)} min · ${lessonQuestions(b)} questions`)
       : ready ? `About ${lessonMinutes(b)} min · ${lessonQuestions(b)} questions` : `Add ${BINDER.minCards - n} more card${BINDER.minCards - n === 1 ? '' : 's'} to take the lesson`;
@@ -115,9 +119,11 @@ const BINDER_SCREENS = {
   },
   lessonread(p){
     const b = binderById(p.id); if (!b) return { title:'Lesson', body:'' };
-    const list = binderCards(b), i = Math.min(p.i || 0, list.length - 1), c = list[i], last = i === list.length - 1;
+    const list = lessonCards(b);
+    if (!list.length) return { title:'Lesson', body:'<p class="empty">There are no available cards in this lesson.</p>' };
+    const i = Math.max(0, Math.min(p.i || 0, list.length - 1)), c = list[i], last = i === list.length - 1;
     const body = c.source ? caseFileHTML(c)
-      : `<div class="bd-readcard">${cardEl(c, S.cards[c.id])}</div>${c.hook ? `<div class="hookbox">${ICO('memory')} ${esc(c.hook)}</div>` : ''}
+      : `<div class="bd-readcard">${owned(c) ? cardEl(c, S.cards[c.id]) : lockedCardHTML(c)}</div>${c.hook ? `<div class="hookbox">${ICO('memory')} ${esc(c.hook)}</div>` : ''}
          ${c.lore ? `<p class="foot">${esc(c.lore[0])}</p>` : ''}`;
     return {
       title:`Rule ${i + 1} of ${list.length}`, cta:true,
@@ -132,10 +138,10 @@ const BINDER_SCREENS = {
 /* ---------- lesson quiz: a mixed round, two questions per card ---------- */
 function startLesson(bid){
   const b = binderById(bid); if (!b) return;
-  const cards = binderCards(b); if (!lessonReady(b)) return;
+  const cards = lessonQuizCards(b); if (!lessonReady(b)) return;
   const total = lessonQuestions(b), queue = [];
   for (let r = 0; queue.length < total && r < 10; r++) shuffle(cards.slice()).forEach(c => { if (queue.length < total) queue.push(c.id); });
-  startSession(queue[0], { bid, name:b.name, queue:shuffle(queue) });
+  const shuffled = shuffle(queue); startSession(shuffled[0], { bid, name:b.name, queue:shuffled });
 }
 function lessonResults(){
   const L = sess.lesson, b = binderById(L.bid), total = L.queue.length;

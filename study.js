@@ -274,6 +274,7 @@ const STUDY_SCREENS = {
   },
   rule(p){
     const c = byId(p.id);
+    if (!c) return { title:'Rule unavailable', body:'<p class="empty">This rule could not be found.</p>' };
     const mine = owned(c);
     return {
       title:c.name, cta:mine,
