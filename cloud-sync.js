@@ -42,6 +42,28 @@
     return (st.answered || 0) + (st.sessions || 0) * 5 + (state.packsOpened || 0) * 5 +
       Object.values(state.cards).filter(c => c && c.owned).length * 3;
   };
+  /* Whichever copy wins, nothing the player wrote or built is thrown away: the losing copy's notes, highlights,
+     saved questions, notebook pages, binders and Docket records are added to the winner. Same-id items keep the
+     winner's version, except a rule note, which keeps whichever was written last. Returns [merged, changed]. */
+  function keepBoth(win, lose) {
+    const out = JSON.parse(JSON.stringify(win)), before = JSON.stringify(out);
+    if (!lose) return [out, false];
+    const byId = (a, b) => { const have = new Set(a.map(x => x && (x.id ?? JSON.stringify(x))));
+      b.forEach(x => { const k = x && (x.id ?? JSON.stringify(x)); if (!have.has(k)) { a.push(x); have.add(k); } }); return a; };
+    const lnb = lose.notebook;
+    if (lnb && typeof lnb === 'object') {
+      const nb = out.notebook = out.notebook && typeof out.notebook === 'object' ? out.notebook : {};
+      nb.notes = nb.notes || {};
+      Object.entries(lnb.notes || {}).forEach(([k, n]) => { if (n && (!nb.notes[k] || (n.at || 0) > (nb.notes[k].at || 0))) nb.notes[k] = n; });
+      nb.hl = nb.hl || {};
+      Object.entries(lnb.hl || {}).forEach(([k, list]) => { if (Array.isArray(list)) nb.hl[k] = [...new Set([...(nb.hl[k] || []), ...list])]; });
+      if (Array.isArray(lnb.saved)) nb.saved = byId(Array.isArray(nb.saved) ? nb.saved : [], lnb.saved);
+      if (Array.isArray(lnb.pages)) nb.pages = byId(Array.isArray(nb.pages) ? nb.pages : [], lnb.pages);
+    }
+    if (Array.isArray(lose.binders)) out.binders = byId(Array.isArray(out.binders) ? out.binders : [], lose.binders);
+    if (Array.isArray(lose.dockets)) out.dockets = byId(Array.isArray(out.dockets) ? out.dockets : [], lose.dockets);
+    return [out, JSON.stringify(out) !== before];
+  }
   const emit = (status, extra = {}) =>
     window.dispatchEvent(new CustomEvent('cq-cloud', { detail: { status, user: session?.user || null, ...extra } }));
 
@@ -81,6 +103,23 @@
     timer = setTimeout(() => pushNow().catch(() => {}), 700);
   }
 
+  // The account's copy wins, with the device's learning added. If anything was added, stamp it as newest
+  // so it uploads after the reload.
+  function cloudWins(cloud, device, stamp, userId) {
+    const [merged, changed] = keepBoth(cloud, device);
+    return applyCloud(merged, changed ? new Date().toISOString() : stamp, userId);
+  }
+  // This device's copy wins, with the account's learning added. The app already has the old copy in memory,
+  // so reload when anything was added.
+  async function deviceWins(device, cloud, userId) {
+    const [merged, changed] = keepBoth(device, cloud);
+    write(OWNER, userId);
+    if (changed) write(SAVE, JSON.stringify(merged));
+    markLocalUpdated();
+    await pushNow();
+    if (changed) return reload();
+    emit('uploaded-local');
+  }
   function applyCloud(state, stamp, userId) {
     applying = true;
     try {
@@ -126,24 +165,20 @@
       return;
     }
 
-    // A guest played here, then signed in to an account that already has progress: keep whichever
-    // copy has done more (ties go to the account). No question for the player.
+    // A guest played here, then signed in to an account that already has progress: the copy that
+    // has done more wins (ties go to the account), and keeps the other copy's learning. No question for the player.
     if (!owner && JSON.stringify(device) !== JSON.stringify(cloud)) {
-      if (amount(device) <= amount(cloud)) return applyCloud(cloud, data.device_updated_at || data.updated_at, userId);
-      write(OWNER, userId);
-      markLocalUpdated();
-      await pushNow();
-      emit('uploaded-local');
-      return;
+      if (amount(device) <= amount(cloud)) return cloudWins(cloud, device, data.device_updated_at || data.updated_at, userId);
+      return deviceWins(device, cloud, userId);
     }
     const cloudTime = Date.parse(data.device_updated_at || data.updated_at || '') || 0;
     const deviceTime = Date.parse(read(MODIFIED) || '') || 0;
-    // Same account on this device: the newest copy wins.
+    // Same account on this device: the newest copy wins, and keeps the other copy's learning.
     if (cloudTime > deviceTime && JSON.stringify(device) !== JSON.stringify(cloud)) {
-      return applyCloud(cloud, data.device_updated_at || data.updated_at, userId);
+      return cloudWins(cloud, device, data.device_updated_at || data.updated_at, userId);
     }
+    if (deviceTime > cloudTime && JSON.stringify(device) !== JSON.stringify(cloud)) return deviceWins(device, cloud, userId);
     write(OWNER, userId);
-    if (deviceTime > cloudTime) await pushNow();
     emit('signed-in');
   }
 
