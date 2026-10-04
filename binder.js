@@ -19,6 +19,8 @@ const COVERS = [
 /* Built-in lessons: fixed cards, made by the app. Cards you don't own show as empty pockets with Get it,
    which sells the missing ones as a lesson deck. Reading is always open; the quiz needs every card. */
 const SERIES45_LESSONS = ((window.CQ_SERIES45 || window.SERIES45 || window.CLERK_QUEST_SERIES45 || {}).lessons || window.SERIES45_LESSONS || []);
+const CURRICULUM_PILOT_LESSONS = ((window.CQ_CURRICULUM_PILOT || {}).lessons || []);
+const LESSON_IDS = new Set();
 const LESSONS = [
   { id:'L_terms', name:'Court Terms 101', cover:'default', blurb:'The big picture of a civil case, and the words for each part.',
     cards:['caseorder', 'summons', 'svs', 'motion', 'affidavit', 'adjournment', 'judgment'] },
@@ -33,12 +35,13 @@ const LESSONS = [
   { id:'L_desk', name:"The Clerk's Desk", cover:'stickers', blurb:'Filing, checking, and scheduling at the counter.',
     cards:['gavel', 'paperjam', 'missingfile', 'lfm', 'calendarcall', 'clock6090', 'military'] },
   ...SERIES45_LESSONS,
+  ...CURRICULUM_PILOT_LESSONS,
 ].filter(L => L && Array.isArray(L.cards) && L.cards.length).map((L, i) => {
   const cards = L.cards.map(c => typeof c === 'string' ? c : c.id).filter(Boolean);
   return { ...L, id:L.id || `L_series45_${i + 1}`, name:L.name || `Quick Reference ${i + 1}`,
     cover:L.cover || (i % 2 ? 'navy' : 'redtape'), cards, builtin:true,
     slots:[...cards, ...Array((4 - cards.length % 4) % 4).fill(null)] };
-});
+}).filter(L => !LESSON_IDS.has(L.id) && LESSON_IDS.add(L.id));
 const POCKETS = [[10.5, 5.6, 40.7, 41.7], [54.1, 5.9, 42.0, 41.5], [11.0, 48.8, 40.4, 42.8], [54.1, 49.1, 42.2, 42.3]];
 
 /* ---------- data ---------- */
