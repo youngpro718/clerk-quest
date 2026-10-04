@@ -248,7 +248,6 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .mascot .ui-s3-character img{filter:none;animation:none}
 .mascot .ui-s3-character .s3-sepia{-webkit-mask-image:none;mask-image:none;filter:sepia(1) saturate(.56) contrast(1.06) brightness(.92) drop-shadow(0 1cqw 0 rgba(0,0,0,.2))}
 .mascot .ui-s3-character .s3-color{filter:drop-shadow(0 1cqw 0 rgba(0,0,0,.2))}
-.s3-frost{position:absolute;inset:0;background:linear-gradient(160deg,rgba(190,225,255,.55),rgba(120,170,220,.35));mix-blend-mode:screen}
 .t.s3.num{color:var(--ink);font-size:6cqw}
 .t.s3.xpstrip{color:#f6ecd4;gap:.8cqw}
 .t.s3.xpstrip i{width:92%;height:2cqw}
@@ -383,15 +382,19 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 @keyframes slam{0%{transform:rotate(-12deg) scale(2.4);opacity:0}100%{transform:rotate(-12deg) scale(1);opacity:.92}}
 .stampimg{position:absolute;z-index:6;pointer-events:none;filter:drop-shadow(0 .6cqw .6cqw rgba(0,0,0,.35));animation:slamimg .35s cubic-bezier(.2,1.6,.4,1) both}
 .stampimg.big{width:58%;left:21%;top:23.5%;--rot:-6deg}
-.card.cold .art-win > *{filter:saturate(.2) brightness(.92) contrast(.95)}
-.card.cold .art-win::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
-  background:linear-gradient(160deg,rgba(190,225,255,.3),rgba(120,170,220,.15) 60%,rgba(220,240,255,.35))}
-
 .mn-badge.corner{top:auto;bottom:1%;left:auto;right:0;width:17%}
 .mn-badge.low{top:auto;bottom:17%;left:1%;width:21%}
-.goingcold{position:absolute;z-index:7;width:34%;right:3%;top:38%;pointer-events:none;filter:drop-shadow(0 .6cqw .6cqw rgba(0,0,0,.4));animation:wobble 2.2s ease-in-out infinite}
-@keyframes wobble{0%,100%{transform:rotate(8deg)}50%{transform:rotate(-2deg) scale(1.06)}}
-.stampimg.coldcase{width:70%;left:15%;top:38%;--rot:-12deg;z-index:7}
+.frost{position:absolute!important;inset:0;z-index:8;overflow:hidden;border-radius:5.8%/3.9%;pointer-events:none;transition:filter .8s ease}
+.frost-glaze{position:absolute;inset:0;opacity:var(--frost-glaze-opacity);mix-blend-mode:color;
+  background:radial-gradient(ellipse 58% 49% at 50% 48%,transparent 0 42%,rgba(113,181,232,.2) 70%,rgba(77,145,211,.68) 100%),
+    linear-gradient(155deg,rgba(210,241,255,.2),rgba(64,129,207,.52));transition:opacity .8s ease}
+.frost-stencil{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;opacity:var(--frost-ice-opacity);
+  filter:drop-shadow(0 0 .7cqw rgba(215,244,255,.9));transition:opacity .8s ease;
+  -webkit-mask-image:radial-gradient(ellipse 72% 68% at 50% 48%,transparent 0 var(--frost-hole),rgba(0,0,0,.28) calc(var(--frost-hole) + 7%),#000 calc(var(--frost-hole) + 15%));
+  mask-image:radial-gradient(ellipse 72% 68% at 50% 48%,transparent 0 var(--frost-hole),rgba(0,0,0,.28) calc(var(--frost-hole) + 7%),#000 calc(var(--frost-hole) + 15%))}
+.frost-status{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.card.cold{--glow:0 0 3cqw rgba(140,200,255,.8)}
+.card.cold>.ring,.card.cold>.gloss{display:none}
 .stampimg.mastered{width:52%;right:2%;top:57%;--rot:-10deg}
 @keyframes slamimg{0%{transform:rotate(var(--rot)) scale(2.2);opacity:0}100%{transform:rotate(var(--rot)) scale(1);opacity:1}}
 .stampimg{transform:rotate(var(--rot))}
@@ -1822,8 +1825,21 @@ const maxL = c => c.maxLevel || 5;
 const DAY = 864e5;
 const COLD_DAYS = [2, 4, 7, 10, 14], COLD_DAYS_MASTERED = 21, COLD_BONUS = 15;
 const coldAfter = st => (st.mastered ? COLD_DAYS_MASTERED : COLD_DAYS[st.level-1]) * DAY;
-const isCold = st => !!(st && st.owned && st.last && Date.now() - st.last > coldAfter(st));
-const goingCold = st => !!(st && st.owned && st.last && !isCold(st) && coldAfter(st) - (Date.now() - st.last) < DAY);
+const isCold = (st, now=Date.now()) => !!(st && st.owned && Number.isFinite(+st.last) && +st.last > 0 && +st.last <= now && now - st.last > coldAfter(st));
+const frostProgressFor = (age, deadline) => {
+  if (!Number.isFinite(age) || !Number.isFinite(deadline) || age < 0 || deadline <= 0) return 0;
+  const smooth = n => { n = Math.max(0, Math.min(1, n)); return n*n*(3-2*n); };
+  const start = deadline * .45;
+  if (age <= start) return 0;
+  if (age <= deadline) return .88 * smooth((age - start) / (deadline - start));
+  return Math.min(1, .88 + .12 * smooth((age - deadline) / DAY));
+};
+/* Frost starts after 45% of the review window, reaches a clearly iced state at the
+   cold deadline, then finishes accumulating over the following day. */
+const frostProgress = (st, now=Date.now()) => {
+  if (!st || !st.owned || !Number.isFinite(+st.last) || +st.last <= 0 || +st.last > now) return 0;
+  return frostProgressFor(now - +st.last, coldAfter(st));
+};
 const daysAgo = t => Math.floor((Date.now() - t) / DAY);
 const agoText = t => { const d = daysAgo(t); return d === 0 ? 'today' : d === 1 ? 'yesterday' : `${d} days ago`; };
 const TRICK_TYPES = { chain:{label:'Chain Trick', blurb:'Teaches the order of steps.'}, who:{label:'Who Trick', blurb:'Teaches who does what.'},
@@ -2009,7 +2025,7 @@ function frontS3HTML(c, st, opt={}){
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
   const breakout = lv >= maxL(c) ? s3CharacterLayers(c, lv, 'framebreak-character s3-breakout') : '';
   return `
-    <div class="art-win s3win" style="${P(0,0,1024,1536)}">${s3ArtHTML(c, lv)}${holoHTML(c)}${isCold(st) ? '<div class="s3-frost"></div>' : ''}</div>
+    <div class="art-win s3win" style="${P(0,0,1024,1536)}">${s3ArtHTML(c, lv)}${holoHTML(c)}</div>
     <img class="frame" src="art/frame_s3.webp" alt="">
     ${breakout}
     <div class="t num s3" style="${P(60,40,215,110)}">${c.num}</div>
@@ -2032,7 +2048,7 @@ function frontHTML(c, st, opt={}){
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
   const sparks = lv >= 4 ? [[2,1],[92,2],[1,62],[93,58],[48,0],[40,93]].map((p,i)=>`<div class="spark" style="left:${p[0]}%;top:${p[1]}%;animation-delay:${i*.3}s">✦</div>`).join('') : '';
   const frameBreak = frameBreakCharacter(c, lv);
-  const frameSrc = isCold(st) ? 'art/frame_frost.webp' : styleFrame(c) || frameFor(c, lv);
+  const frameSrc = styleFrame(c) || frameFor(c, lv);
   const protectedFrame = frameBreak ? `<img class="frame-metadata top" data-frame-mask="top" src="${frameSrc}" alt=""><img class="frame-metadata quote" data-frame-mask="quote" src="${frameSrc}" alt=""><img class="frame-metadata footer" data-frame-mask="footer" src="${frameSrc}" alt="">` : '';
   const frameBreakMnemonic = frameBreak && c.trickType && !c.mnemonic ? `<img class="mn-badge framebreak-memory" src="art/icon_memory.webp" alt="Memory Trick">` : '';
   return `
@@ -2066,13 +2082,56 @@ function glowTier(c, st){
   if (max === 3 && lv === 2) return 'cyan';
   return '';
 }
+function frostStyle(progress){
+  const p = Math.max(0, Math.min(1, Number(progress) || 0));
+  const hole = 70 - p * 48;
+  return `--frost-hole:${hole.toFixed(2)}%;--frost-glaze-opacity:${(p*.46).toFixed(3)};--frost-ice-opacity:${p ? (.1+p*.88).toFixed(3) : 0}`;
+}
+function frostHTML(c, st, now=Date.now()){
+  const progress = frostProgress(st, now), status = isCold(st, now) ? 'Cold case' : progress > 0 ? 'Going cold' : '';
+  return `<div class="frost" aria-hidden="true" style="${frostStyle(progress)}"><div class="frost-glaze"></div><img class="frost-stencil" src="art/frost_stencil_v1.webp" alt=""></div><span class="frost-status">${status}</span>`;
+}
 function cardEl(c, st, opt={}, extraClass=''){
-  const cold = isCold(st);
+  const now = Date.now(), cold = isCold(st, now), deadline = coldAfter(st), last = Number.isFinite(+st.last) ? +st.last : 0;
   const tier = cold ? '' : glowTier(c, st);
   const charged = tier && tier !== 'max' && !st.mastered && st.xp / NEED[st.level-1] >= .7;
   const rings = tier ? `<div class="ring soft"></div><div class="ring"></div>` : '';
-  return `<div class="card lv${st.level} ${c.trickType?'special':''} ${cold?'cold':''} ${tier?'tier-'+tier:''} ${charged?'charged':''} ${extraClass}">${rings}${tier==='max'?'<div class="gloss"></div>':''}${frontHTML(c, st, opt)}${goingCold(st) ? `<img class="goingcold" src="art/badge_goingcold.webp" alt="Going cold">` : ''}${cold ? `<img class="stampimg coldcase" src="art/stamp_coldcase.webp" alt="Cold case">` : ''}</div>`;
+  return `<div class="card lv${st.level} ${c.trickType?'special':''} ${cold?'cold':''} ${tier?'tier-'+tier:''} ${charged?'charged':''} ${extraClass}" data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${rings}${tier==='max'?'<div class="gloss"></div>':''}${frontHTML(c, st, opt)}${frostHTML(c, st, now)}</div>`;
 }
+
+/* Open cards continue icing without rebuilding the screen. Each card carries the
+   render-time state snapshot, so previews and simulation cards are never replaced
+   with saved state merely because they share a card id. */
+const FrostClock = (() => {
+  let timer = 0;
+  function apply(card, now){
+    const last = +card.dataset.frostLast, deadline = +card.dataset.frostDeadline;
+    const valid = card.dataset.frostOwned === '1' && last > 0 && last <= now && deadline > 0;
+    const age = valid ? now-last : -1, progress = valid ? frostProgressFor(age, deadline) : 0;
+    const frost = card.querySelector(':scope > .frost');
+    if (frost) frost.style.cssText = frostStyle(progress);
+    const cold = valid && age > deadline;
+    card.classList.toggle('cold', cold);
+    const status = card.querySelector(':scope > .frost-status');
+    if (status) status.textContent = cold ? 'Cold case' : progress > 0 ? 'Going cold' : '';
+  }
+  function update(now=Date.now()){
+    document.querySelectorAll('.card[data-frost-last]').forEach(card => apply(card, now));
+  }
+  function thaw(id, last=Date.now()){
+    document.querySelectorAll('.card[data-frost-id]').forEach(card => {
+      if (card.dataset.frostId !== id) return;
+      card.dataset.frostLast = String(last); apply(card, Date.now());
+    });
+  }
+  function schedule(){
+    clearInterval(timer); timer = 0;
+    if (!document.hidden) timer = setInterval(update, 6e4);
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) update(); schedule(); });
+  schedule();
+  return {update, thaw};
+})();
 
 /* Max-level frame-break characters move independently of their cards. Native iOS sends
    cq-native-tilt with normalized {x,y} screen-axis values in the -1...1 range. */
@@ -3085,7 +3144,7 @@ function answer(v){
     S.stats.correct++; daily().correct++; if (c.trickType) daily().trick++;
     gain = Math.round(REWARD[st.level-1] * (hintCosts() ? .5 : 1)) * (doubleXPOn() ? 2 : 1);   // boosts: free hint, double XP
     if (sess.wasCold && !sess.reopened) { sess.reopened = true; sess.justReopened = true; gain += COLD_BONUS; S.stats.reopened = (S.stats.reopened || 0) + 1; }
-    st.last = Date.now();
+    st.last = Date.now(); FrostClock.thaw(sess.id, st.last);
     S.stats.xp += gain; sess.xp += gain;
     coins = earnCoins(coinsForAnswer(hintCosts()), 'Right answer', {quiet:true}); sess.answerCoins = (sess.answerCoins || 0) + coins;
     if (!st.mastered) {
@@ -3767,7 +3826,7 @@ window.addEventListener('cq-cloud', e => {
   if (nav.tab === 'profile') refresh();
 });
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.
-['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_frost.webp','art/cardback.webp','art/answer_button.webp']
+['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/answer_button.webp']
   .forEach(src => { const i = new Image(); i.src = src; if (i.decode) i.decode().catch(() => {}); });
 </script>
 </body>
