@@ -4,7 +4,9 @@
    topEntry, toast, iosAlert, ICO, COIN, artSrc, cardEl, thumb, chev, owned, byId, caseFileHTML, earnCoins, spendCoins,
    startSession, sess, app, NEED, priceTag, buySheet, statusLine, maxL). */
 
-const BINDER = { free:3, startPages:2, maxPages:6, pagePrice:50, passPct:80, firstPass:50, repeatPass:10, perCard:2, minQ:5, maxQ:15, minCards:3 };
+const BINDER = { free:3, startPages:2, maxPages:6, pagePrice:50, passPct:80, firstPass:50, repeatPass:10, perCard:2, minQ:5, maxQ:15, minCards:3, minLessonCards:2 };
+// Built-in lessons quiz from 2 cards (some authored lessons only have two); binders players make need 3
+const minCardsFor = b => b && b.builtin ? BINDER.minLessonCards : BINDER.minCards;
 /* Covers: price, and the label window on each cut-out cover (left, top, width, height in %) */
 const COVERS = [
   { id:'default', name:'Courthouse Brown', price:0, label:[21.4, 16.1, 63.4, 18.3] },
@@ -48,7 +50,7 @@ const binderCards = b => b.slots.filter(Boolean).map(byId).filter(Boolean);
 const lessonCards = b => b && b.builtin ? binderCards(b) : binderCards(b).filter(owned);
 const lessonQuizCards = b => binderCards(b).filter(owned);
 const lessonMissing = b => b.builtin ? binderCards(b).filter(c => !owned(c)) : [];
-const lessonReady = b => lessonQuizCards(b).length >= BINDER.minCards && !lessonMissing(b).length;
+const lessonReady = b => lessonQuizCards(b).length >= minCardsFor(b) && !lessonMissing(b).length;
 const lessonDeckPrice = b => lessonMissing(b).reduce((n, c) => n + cardPrice(c), 0);
 const coverOf = b => COVERS.find(c => c.id === b.cover) || COVERS[0];
 function newBinder(name){
@@ -104,7 +106,7 @@ const BINDER_SCREENS = {
     const pages = b.slots.length / 4, n = lessonQuizCards(b).length, r = lessonRec(b.id), edit = !!p.edit;
     const miss = lessonMissing(b), ready = lessonReady(b), fixed = !!b.builtin;
     const note = fixed ? (miss.length ? `Get ${miss.length} more card${miss.length === 1 ? '' : 's'} to take the quiz. You can read every rule now.` : `About ${lessonMinutes(b)} min · ${lessonQuestions(b)} questions`)
-      : ready ? `About ${lessonMinutes(b)} min · ${lessonQuestions(b)} questions` : `Add ${BINDER.minCards - n} more card${BINDER.minCards - n === 1 ? '' : 's'} to take the lesson`;
+      : ready ? `About ${lessonMinutes(b)} min · ${lessonQuestions(b)} questions` : `Add ${minCardsFor(b) - n} more card${minCardsFor(b) - n === 1 ? '' : 's'} to take the lesson`;
     return {
       title:b.name, cta:!edit,
       right:fixed ? '' : `<button class="nb-btn txt" data-act="bd-edit">${edit ? 'Done' : 'Edit'}</button><button class="nb-btn" data-act="bd-menu" data-id="${b.id}" aria-label="More">•••</button>`,
@@ -121,7 +123,7 @@ const BINDER_SCREENS = {
       after: edit ? '' : `<div class="cta-bar"><div><button class="btn-big" data-act="bd-read" data-id="${b.id}" ${ready || (fixed && n) ? '' : 'disabled'}>${ICO('read')} READ LESSON</button>
         ${ready ? `<button class="bd-skip" data-act="bd-quiz" data-id="${b.id}">Take the quiz ›</button>`
           : fixed ? `<button class="bd-skip" data-act="ls-get" data-id="${b.id}">Quiz: collect ${miss.length} more card${miss.length === 1 ? '' : 's'} first ›</button>`
-          : `<small class="bd-skip">Quiz: add ${BINDER.minCards - n} more card${BINDER.minCards - n === 1 ? '' : 's'} to this binder first</small>`}</div></div>`,
+          : `<small class="bd-skip">Quiz: add ${minCardsFor(b) - n} more card${minCardsFor(b) - n === 1 ? '' : 's'} to this binder first</small>`}</div></div>`,
     };
   },
   lessonread(p){
