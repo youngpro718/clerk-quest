@@ -1816,7 +1816,7 @@ function series45Card(raw, i){
     intro:{ idea:raw.summary || raw.topic || raw.name, example:raw.example || '', source:cite },
     quote:raw.tagline || raw.quote || raw.topic || raw.name, source,
     hook:raw.hook || raw.summary || raw.topic || '', panel:raw.panel, lore:raw.lore || [], bank:raw.bank || raw.questions || [],
-  }, raw, { series, source, art:raw.art || `series${series}_${slug}`, asset:raw.asset || `assets/series${series}/characters/${slug}.png` });
+  }, raw, { series, source, art:`series${series}_${slug}`, asset:raw.asset || `assets/series${series}/characters/${slug}.png` });
 }
 CARDS.push(...SERIES45_SOURCE_CARDS.filter(c => c && (Number(c.series) === 4 || Number(c.series) === 5)).map(series45Card));
 
