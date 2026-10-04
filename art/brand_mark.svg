@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Clerk Quest court and card emblem">
+<g stroke="#101a24" stroke-linejoin="round">
+<rect x="37" y="61" width="120" height="161" rx="13" fill="#c6382d" stroke-width="7" transform="rotate(-14 97 141)"/>
+<rect x="99" y="61" width="120" height="161" rx="13" fill="#e0b34e" stroke-width="7" transform="rotate(14 159 141)"/>
+<rect x="62" y="35" width="132" height="181" rx="14" fill="#f1e5c9" stroke-width="7"/>
+<rect x="73" y="46" width="110" height="159" rx="6" fill="#172b3c" stroke="#d6ae56" stroke-width="3"/>
+</g>
+<g fill="none" stroke="#f1e5c9" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+<path d="M128 74v89M93 95h70M100 97l-17 32h34l-17-32M156 97l-17 32h34l-17-32"/>
+<path d="M83 129q17 23 34 0M139 129q17 23 34 0" fill="#d6ae56" stroke="#d6ae56" stroke-width="4"/>
+<path d="M111 166h34M104 177h48"/>
+</g>
+<path d="m128 60 6 9-6 9-6-9z" fill="#d6ae56"/>
+<path d="m91 193 37-8 37 8-37 9z" fill="#c6382d"/>
+</svg>

@@ -44,7 +44,7 @@ function showLogin(wall){
   if (wall) el.dataset.wall = '1';
   const closable = !el.dataset.wall && !guestWallDue();
   el.innerHTML = `<div class="login">
-    <div class="home-logo">CLERK <span>QUEST</span></div>
+    ${brandHTML('small')}
     ${el.dataset.wall ? `<p class="login-wall"><b>Nice work!</b> Create your account to keep your cards and keep playing.</p>`
       : `<p class="login-tag">Study the court rules. Collect the cards.</p>`}
     ${closable ? `<button class="login-x" data-act="acct-close" aria-label="Close">Not now</button>` : ''}

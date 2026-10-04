@@ -1005,8 +1005,14 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 #splash{position:fixed;inset:0;z-index:9999;background:#211e1a;display:grid;place-items:center;padding:max(28px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom));box-sizing:border-box;overflow:hidden;transition:opacity .4s ease}
 #splash::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 52%,rgba(227,178,60,.13),transparent 62%)}
 .sp-frame{position:relative;width:min(100%,580px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:clamp(20px,4vh,40px)}
-.sp-brand{margin:0;font:400 clamp(54px,17vw,94px)/.82 "Luckiest Guy",sans-serif;letter-spacing:-.035em;color:#f1e5c9;transform:rotate(-3deg);text-shadow:3px 4px 0 #080706,0 6px 0 #ba8b2b}
-.sp-brand span{display:block;color:#d94230;margin-top:8px}
+.cq-brand{display:flex;align-items:center;justify-content:center;gap:10px;color:#f1e5c9}
+.cq-brand-mark{display:block;width:76px;height:76px;object-fit:contain;flex:none}
+.cq-brand-name{margin:0;font:400 42px/.9 "Luckiest Guy",sans-serif;letter-spacing:-.025em;text-align:left;text-shadow:2px 3px 0 #080706}
+.cq-brand-name span{display:block;color:#d94230;margin-top:5px}
+.cq-brand-start .cq-brand-mark{width:104px;height:104px}
+.cq-brand-start .cq-brand-name{font-size:clamp(42px,12vw,64px)}
+.cq-brand-small .cq-brand-mark{width:48px;height:48px}
+.cq-brand-small .cq-brand-name{font-size:25px}
 .sp-fan{position:relative;width:100%;height:clamp(225px,32vh,300px);isolation:isolate}
 .sp-card{position:absolute;top:8%;left:var(--left);width:32%;aspect-ratio:2/3;box-sizing:border-box;overflow:hidden;border:3px solid var(--edge);border-radius:10px;background:var(--cover);box-shadow:0 10px 18px rgba(0,0,0,.45);transform:translateX(-50%) rotate(var(--angle));animation:sp-deal .65s cubic-bezier(.22,.8,.2,1) both;animation-delay:var(--delay);z-index:var(--z)}
 .sp-card img{position:absolute;left:3%;top:13%;width:94%;height:76%;object-fit:contain;filter:drop-shadow(0 3px 1px rgba(0,0,0,.2))}
@@ -1028,14 +1034,14 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .sp-cap{margin:12px 0 0;font:16px/1.25 "Patrick Hand",system-ui,sans-serif;color:#c6bba5}
 #splash.out{opacity:0;pointer-events:none}
 @keyframes sp-deal{from{opacity:0;transform:translateX(-50%) translateY(24px) rotate(0deg) scale(.94)}to{opacity:1;transform:translateX(-50%) rotate(var(--angle)) scale(1)}}
-@media(max-height:640px){.sp-frame{gap:16px}.sp-brand{font-size:52px}.sp-fan{height:205px;width:min(100%,350px)}.sp-motto{font-size:20px}.sp-cap{font-size:14px}}
+@media(max-height:640px){.sp-frame{gap:16px}.cq-brand-start .cq-brand-name{font-size:40px}.cq-brand-start .cq-brand-mark{width:84px;height:84px}.sp-fan{height:205px;width:min(100%,350px)}.sp-motto{font-size:20px}.sp-cap{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.sp-card{animation:none}#splash,.sp-bar i{transition:none}}
 html.cq-reduce-motion .sp-card{animation:none}
 </style>
 </head>
 <body>
 <div id="splash" role="status" aria-label="Loading Clerk Quest"><div class="sp-frame">
-  <h1 class="sp-brand">CLERK<span>QUEST</span></h1>
+  <div class="cq-brand cq-brand-start"><img class="cq-brand-mark" src="art/brand_mark.svg" alt=""><h1 class="cq-brand-name">CLERK<span>QUEST</span></h1></div>
   <div class="sp-fan" aria-hidden="true">
     <div class="sp-card s2" style="--left:18%;--angle:-17deg;--z:1;--delay:.02s"><img src="art/character_interest_1.webp" alt=""><b>SERIES 2</b></div>
     <div class="sp-card s3" style="--left:34%;--angle:-8deg;--z:2;--delay:.08s"><img src="art/character_eightback_1.webp" alt=""><b>SERIES 3</b></div>
@@ -1058,9 +1064,9 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="study/quick-reference/quick-reference.js?v=798b706c"></script>
 <script src="study/quick-reference/series-lessons.js?v=102ec77c"></script>
 <script src="binder.js?v=8f2bfec1"></script>
-<script src="onboarding.js?v=42992ec0"></script>
-<script src="account.js?v=e5de3785"></script>
-<script src="admin.js?v=fb5df08d"></script>
+<script src="onboarding.js?v=17f874b1"></script>
+<script src="account.js?v=ccf8d0ed"></script>
+<script src="admin.js?v=a695ca84"></script>
 <script src="stickers.js?v=70340509"></script>
 <script src="dockets.js?v=9f334d84"></script>
 <script src="pack3d.js?v=175b3691"></script>
@@ -2070,6 +2076,19 @@ function probeArt(){
   return Promise.all(jobs);
 }
 
+const STARTUP_SPLASH_TEMPLATE = document.getElementById('splash')?.innerHTML || '';
+function brandHTML(size='small'){
+  return `<div class="cq-brand cq-brand-${size}"><img class="cq-brand-mark" src="art/brand_mark.svg" alt=""><div class="cq-brand-name" aria-label="Clerk Quest">CLERK<span>QUEST</span></div></div>`;
+}
+function previewStartupSplash(){
+  if (typeof ADM==='undefined' || !ADM.is) return;
+  const el=document.createElement('div');el.id='splash';el.setAttribute('role','dialog');el.setAttribute('aria-label','Startup splash preview');
+  el.innerHTML=STARTUP_SPLASH_TEMPLATE;
+  const cap=el.querySelector('.sp-cap');if(cap)cap.textContent='Startup preview';
+  const bar=el.querySelector('.sp-bar i');if(bar)bar.style.width='65%';
+  const close=document.createElement('button');close.className='sheet-cancel';close.textContent='Close preview';close.addEventListener('click',()=>el.remove());el.querySelector('.sp-frame').appendChild(close);
+  document.body.appendChild(el);
+}
 /* ================= CARD RENDERING ================= */
 function stickerHTML(s){
   if (s.rays) return `<div class="rays"></div>`;
@@ -3041,19 +3060,25 @@ const SCREENS = {
              <button class="row" data-act="cloud-signout"><span class="th emo gi">${ICO('signout')}</span><span class="row-main"><b>Sign out</b></span></button>`
           : `<button class="row" data-act="cloud-signin"><span class="th emo gi">${ICO('cloud')}</span><span class="row-main"><b>Create an account or sign in</b><small>Keep your cards on every device</small></span>${chev}</button>`}
       </div>
-      ${window.__CLERK_QUEST_IOS__ ? '' : `<div class="list">
-        <button class="row" data-act="a2hs-show"><span class="th emo gi">${ICO('install')}</span><span class="row-main"><b>Add to Home Screen</b><small>${isStandalone() ? 'Already installed' : 'Play full screen like an app'}</small></span>${chev}</button>
-        <button class="row" data-act="push" data-s="glows"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Glow tiers preview</b></span>${chev}</button>
-      </div>`}
-      ${ADM.is ? `<div class="sec-h"><span>Tester tools</span></div>
+      <div class="sec-h"><span>Appearance &amp; accessibility</span></div>
       <div class="list">
-        <button class="row" data-act="push" data-s="rewardpreview"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Reward cards</b><small>Preview the RBG card: rare, black and white, back, quiz</small></span>${chev}</button>
-        <button class="row" data-act="t-pack"><span class="th emo gi">${ICO('pack')}</span><span class="row-main"><b>Add a test pack</b></span></button>
+        <button class="row" data-act="push" data-s="store"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Card appearance</b><small>Frames, backs, and foil</small></span>${chev}</button>
+        <div class="row"><span class="th emo gi">${ICO('settings')}</span><span class="row-main"><b>Reduce Motion</b><small>Follows your device setting · ${prefersReducedMotion() ? 'On' : 'Off'}</small></span></div>
+      </div>
+      <div class="sec-h"><span>Help &amp; app</span></div>
+      <div class="list">
+        <button class="row" data-act="push" data-s="help"><span class="th emo gi">${ICO('help')}</span><span class="row-main"><b>How to Play</b><small>Cards, studying, packs, and quests</small></span>${chev}</button>
+        ${window.__CLERK_QUEST_IOS__ ? '' : `
+        <button class="row" data-act="a2hs-show"><span class="th emo gi">${ICO('install')}</span><span class="row-main"><b>Add to Home Screen</b><small>${isStandalone() ? 'Already installed' : 'Play full screen like an app'}</small></span>${chev}</button>
+        `}
+      </div>
+      <div class="sec-h"><span>Data</span></div><div class="list">
         <button class="row danger" data-act="resetall"><span class="th emo gi">${ICO('warning')}</span><span class="row-main"><b>Reset all progress</b></span></button>
-      </div>` : ''}` };
+      </div>` };
   },
 
   glows(){
+    if (!ADM.is) return { title:'Glow Tiers', body:'<p class="empty">Admins only.</p>' };
     const g = byId('gavel'), cell = (lv, xp, label) => `<div class="gl">${cardEl(g, {level:lv, xp, mastered:false, owned:true})}<small>${label}</small></div>`;
     return { title:'Glow Tiers', body:`<div class="cgrid two">${cell(2, 0, 'Level 2')}${cell(3, 0, 'Level 3 · cyan')}${cell(4, 0, 'Level 4 · magenta')}${cell(4, 250, 'Level 4 · charged')}${cell(5, 0, 'Level 5 · gold + gloss')}</div>` };
   },
@@ -3764,10 +3789,6 @@ function cardMenu(id){
       <button data-act="study" data-id="${id}">${PLAY_ICON} ${isCold(st) ? 'Reopen this case' : 'Study this card'}</button>
       ${c.intro ? `<button data-act="intro-read" data-id="${id}">${ICO('read')} Read the intro</button>` : ''}
       <button data-act="card-style" data-id="${id}">${ICO('sparkle')} Card Style</button>
-      ${ADM.is ? `<div class="acts-sep">Tester tools</div>
-      <button data-act="t-level" data-id="${id}" ${st.mastered ? 'disabled' : ''}>${ICO('almost')} Level up now</button>
-      <button data-act="t-cold" data-id="${id}">${ICO('thermo_snow')} Make it go cold</button>
-      <button data-act="t-reset" data-id="${id}" class="danger">↺ Reset this card</button>` : ''}
     </div><button class="sheet-cancel" data-act="sheet-close">Cancel</button>`);
 }
 function missingSheet(id){
@@ -3903,7 +3924,11 @@ document.addEventListener('click', e => {
   switch (act) {
     case 'tab': closeSheet(true); switchTab(t.dataset.tab); break;
     case 'back': goBack(); break;
-    case 'push': { const p = {}; if (id) p.id = id; if (t.dataset.g) p.g = t.dataset.g; closeSheet(true); push(t.dataset.s, p); break; }
+    case 'push': {
+      const target = t.dataset.s || '', restricted = /^admin/.test(target) || target === 'rewardpreview' || target === 'glows';
+      if (restricted && !ADM.is) { toast('Admins only'); break; }
+      const p = {}; if (id) p.id = id; if (t.dataset.g) p.g = t.dataset.g; closeSheet(true); push(target, p); break;
+    }
     case 'seg': { const en = topEntry(); en.p = Object.assign({}, en.p, {[t.dataset.k]:t.dataset.v}); refresh(); break; }
     case 'stage': { const en = topEntry(); en.p = Object.assign({}, en.p, {preview:+t.dataset.l}); refresh(); break; }
     case 'study': closeSheet(true); studyCard(id); break;
@@ -3958,6 +3983,7 @@ document.addEventListener('click', e => {
       break;
     case 'a2hs-close': try { localStorage.setItem('cq-a2hs', '1'); } catch(err){} closeSheet(); refresh(); break;
     case 't-level': {
+      if (!ADM.is) break;
       closeSheet(true);
       const st = S.cards[id], c = byId(id), from = st.level; if (st.mastered) break;
       let pl;
@@ -3965,9 +3991,9 @@ document.addEventListener('click', e => {
       save(); const en = topEntry(); if (en.p) delete en.p.preview;
       showLevelUp(id, pl, () => refresh()); break;
     }
-    case 't-cold': { closeSheet(true); const st = S.cards[id]; st.last = Date.now() - coldAfter(st) - DAY; save(); refresh(); toast('Card went cold', 'thermo_snow'); break; }
-    case 't-reset': { closeSheet(true); Object.assign(S.cards[id], {level:1, xp:0, mastered:false}); save(); const en = topEntry(); if (en.p) delete en.p.preview; refresh(); toast('↺ Card reset to Level 1'); break; }
-    case 't-pack': S.packs++; save(); refresh(); toast('Test pack added', 'pack'); break;
+    case 't-cold': { if (!ADM.is) break; closeSheet(true); const st = S.cards[id]; st.last = Date.now() - coldAfter(st) - DAY; save(); refresh(); toast('Card went cold', 'thermo_snow'); break; }
+    case 't-reset': { if (!ADM.is) break; closeSheet(true); Object.assign(S.cards[id], {level:1, xp:0, mastered:false}); save(); const en = topEntry(); if (en.p) delete en.p.preview; refresh(); toast('↺ Card reset to Level 1'); break; }
+    case 't-pack': if (ADM.is) { S.packs++; save(); refresh(); toast('Test pack added', 'pack'); } break;
     case 'claim': claimQuest(t.dataset.kind, t.dataset.q); break;
     case 'claim-all': { const list = readyList(); list.forEach(([k, q]) => { if (k === 'daily') { daily().claimed[q.id] = true; onbFlag('claimed'); earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`); } else { S.milestones = S.milestones || {}; S.milestones[q.id] = true; } });
       S.packs += list.length; save(); if (list.length) nativeFeedback('claim'); refresh(); toast(`+${list.length} pack${list.length > 1 ? 's' : ''} claimed`, 'pack'); break; }
