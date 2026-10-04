@@ -80,8 +80,45 @@ function caseFileHTML(c){
     <p class="cf-quote">${paraphrase ? phrasesHTML(c) : `“${phrasesHTML(c)}”`}</p><p class="hl-tip">Tap a phrase to highlight it. Tap again to clear it.</p>
     ${READ_QS[c.id] ? `<h4>Read it with these questions</h4><ol>${READ_QS[c.id].map(q => `<li>${esc(q)}</li>`).join('')}</ol>` : ''}
     <h4>When it comes up</h4><p class="ctx">${esc(c.source.context)}</p><p class="from">${paraphrase ? 'Paraphrase checked against' : 'Source'}: ${esc(c.source.from)}${paraphrase && c.source.url ? ` · <a href="${esc(c.source.url)}" target="_blank" rel="noopener">controlling text</a>` : ''}</p>
+    ${eightbackExplainerButtonHTML(c)}
     ${noteBoxHTML(c)}
     <button class="readbtn ${read ? 'done' : ''}" data-act="mark-read" data-id="${c.id}" ${read ? 'disabled' : ''}>${read ? 'Case file reviewed' : `Mark as reviewed · +${READ_XP} XP`}</button></div>`;
+}
+
+/* An optional video lesson for the timing pattern on Eight Before, Two Back: the 90-second motion deadlines
+   explainer (narrated, captions burned in). It lives in a sheet, so opening or closing it never changes card or
+   quiz state. `from` = 'intro' brings the person back to the card's intro. */
+const EIGHTBACK_VIDEOS = {
+  full: { label:'Full explainer', len:'1½ min', src:'media/motion-deadlines-explainer.mp4', poster:'media/motion-deadlines-explainer-poster.jpg',
+    transcript:[
+      'When someone asks a New York court to decide a motion, the judge sets a hearing day. And before that day arrives, the law gives each side a deadline. Deadlines that are counted backward.',
+      'Here\'s the standard rule. The moving party, the side asking for something, must serve their papers at least eight days before the hearing. Then the other side gets their turn. Their answer is due at least two days before. Eight, two. That\'s the default.',
+      'But the moving party has a choice. If they serve their notice at least sixteen days early, and demand early answers right in that notice, everything shifts. Now the other side must answer at least seven days before. And the moving party earns something new: a reply, due one day before the hearing. Sixteen, seven, one.',
+      'One catch. If the notice goes out fewer than sixteen days ahead, the demand doesn\'t count. It\'s back to eight, two.',
+      'So remember the two fuses. A short fuse: eight, two. A long fuse: sixteen, seven, one. Serve early, demand early, and you earn the last word.',
+    ] },
+};
+function eightbackExplainerButtonHTML(c, from){
+  return c && c.id === 'eightback'
+    ? `<button class="explain-watch" data-act="watch-explanation" data-id="eightback"${from ? ` data-from="${from}"` : ''}>${PLAY_ICON} Watch explanation <span>${EIGHTBACK_VIDEOS.full.len}</span></button>`
+    : '';
+}
+function openEightbackExplainer(from){
+  const v = EIGHTBACK_VIDEOS.full;
+  openSheet(`<div class="video-lesson">
+    <p class="video-kicker">CPLR 2214(b) · motion deadlines</p>
+    <h3>Eight Before, Two Back</h3>
+    <video controls playsinline preload="metadata" poster="${v.poster}" aria-describedby="eightback-video-note eightback-transcript">
+      <source src="${v.src}" type="video/mp4">
+      Your browser cannot play this video. The transcript follows below.
+    </video>
+    <p class="video-note" id="eightback-video-note">Study guide to CPLR 2214(b); service method, calendar rules, and court directions can affect actual deadlines.</p>
+    <details class="video-transcript" id="eightback-transcript"><summary>Read the transcript</summary>
+      ${v.transcript.map(p => `<p>${esc(p)}</p>`).join('')}
+    </details>
+    <p class="video-sources"><a href="https://www.nysenate.gov/legislation/laws/CVP/2214" target="_blank" rel="noopener">New York Senate statute</a> · <a href="https://www.nycourts.gov/new-york-city-civil-court/cplr-2214" target="_blank" rel="noopener">New York Courts guide</a></p>
+    ${from === 'intro' ? `<button class="sheet-cancel" data-act="intro-back" data-id="eightback">Back to the intro</button>` : `<button class="sheet-cancel" data-act="sheet-close">Close explanation</button>`}
+  </div>`);
 }
 
 function ruleRow(c, sub){
@@ -317,6 +354,17 @@ const STUDY_SCREENS = {
 };
 
 const STUDY_CSS = `
+.explain-watch{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;margin:0 0 var(--line,14px);padding:8px 14px;border:2px solid var(--ink);border-radius:12px;background:#5d7d8c;color:#fff8ea;font:700 16px var(--ui);box-shadow:0 3px 0 rgba(30,25,20,.28);cursor:pointer}
+.explain-watch:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(30,25,20,.28)}
+.explain-watch .ico{width:20px;height:20px}.explain-watch span{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;opacity:.72}
+.explain .explain-watch{width:auto;min-height:0;margin:0;padding:1.2cqw 2.8cqw;border-width:.4cqw;border-radius:1.6cqw;font:inherit;font-size:3.4cqw;box-shadow:none}
+.video-lesson .video-kicker{margin:2px 0 3px;text-align:center;color:var(--mustard);font:700 12px var(--ui);letter-spacing:.1em;text-transform:uppercase}
+.video-lesson h3{margin-bottom:12px}
+.video-lesson video{display:block;width:min(100%,360px);max-height:52dvh;margin:0 auto;border:2px solid var(--ink);border-radius:14px;background:#211f1b;box-shadow:0 5px 0 rgba(0,0,0,.28)}
+.video-note{margin:12px 3px 10px;color:var(--paper);font:14px/1.4 var(--ui)}
+.video-transcript{margin:0 3px;padding:10px 12px;border-radius:12px;background:var(--bg2);color:var(--paper);font:14px/1.45 var(--ui)}
+.video-transcript summary{min-height:24px;color:var(--mustard);font-weight:700;cursor:pointer}.video-transcript p{margin:10px 0 0}
+.video-sources{margin:10px 3px 0;color:var(--sub);font:13px/1.4 var(--ui)}.video-sources a{color:var(--mustard)}
 .srch{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;margin:0 0 14px;border-radius:12px;background:rgba(255,255,255,.08);color:var(--sub)}
 .srch svg{width:18px;height:18px;flex:none}
 .srch input{flex:1;min-width:0;height:44px;border:0;background:none;color:var(--paper);font:16px var(--ui);outline:none}

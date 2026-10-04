@@ -164,6 +164,7 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .card.tier-cyan{--n1:#1fd8ff;--n2:#8ff6ff;--glow:0 0 3cqw rgba(31,216,255,.45)}
 .card.tier-pink{--n1:#ff3df2;--n2:#b36bff;--glow:0 0 3cqw rgba(255,61,242,.45)}
 .card.tier-max{--n1:#ffc933;--n2:#fff4b8;--glow:0 0 4cqw rgba(255,200,60,.65)}
+.card.series4.tier-max{--n1:#d5322b;--n2:#fff0d4;--glow:0 0 4cqw rgba(213,50,43,.55)}
 .card.tier-max .ring{animation-duration:5s}
 .card.charged .ring{animation-duration:1.3s}
 .card.charged{--glow:0 0 4.5cqw var(--n1)}
@@ -263,6 +264,46 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .t.s3.rar,.t.s3.lvl{color:#f6ecd4}
 .t.s3.lvl .stars{color:#f6ecd4}
 .t.s3.set{color:var(--ink)}
+.s45win{overflow:hidden;background:#e8d8b4}
+.s45win .art-bgimg{filter:brightness(.88) saturate(.86)}
+.s45win .art-vig{background:radial-gradient(ellipse 72% 68% at 50% 52%,transparent 48%,rgba(17,15,18,.48) 100%)}
+.t.s45{line-height:1}
+.t.s45.num{font-size:4.2cqw;letter-spacing:.035em;white-space:nowrap}
+.t.s45.xpstrip{gap:.35cqw;font-size:2.45cqw;letter-spacing:.04em}
+.t.s45.xpstrip i{width:82%;height:1.15cqw;border-width:.18cqw}
+.t.s45.cat{font-family:"Bangers";font-size:2.55cqw;line-height:.92;letter-spacing:.035em;padding:0 .5cqw;overflow:hidden}
+.t.s45.icon svg{width:82%;height:82%}
+.t.s45.title{gap:0;align-items:stretch}
+.t.s45.title span{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:0 2cqw;overflow:hidden}
+.t.s45.quote{font-size:3.9cqw;line-height:.94;white-space:normal;text-decoration:none;padding:0 1.5cqw;overflow:hidden}
+.t.s45.rar{gap:.45cqw;font-size:2.65cqw;letter-spacing:.025em}
+.t.s45.rar .gem{width:6cqw;height:6cqw;font-size:3.5cqw;border-width:.3cqw}
+.t.s45.set{gap:.25cqw;font-size:2.7cqw;line-height:.95;padding:0 .5cqw;overflow:hidden}
+.t.s45.set small{font-size:2.2cqw}
+.t.s45.set hr{border-top-width:.22cqw;margin:.1cqw 0}
+.t.s45.lvl{gap:.5cqw;font-size:2.7cqw;white-space:nowrap}
+.t.s45.lvl .stars{font-size:3.2cqw;letter-spacing:0}
+.t.s45.meta{z-index:3}
+.t.s4{color:#171513}
+.t.s4.num{font-size:3.8cqw}
+.t.s4.xpstrip{color:#f8eed5;text-shadow:0 .22cqw 0 rgba(0,0,0,.55)}
+.t.s4.cat{color:#171513;text-shadow:none}
+.t.s4.title span{color:#171513}
+.t.s4.title .t2{color:#a62924;-webkit-text-stroke:.18cqw #171513;text-shadow:none}
+.t.s4.quote{font-family:"Patrick Hand";font-weight:700;color:#171513;transform:rotate(-1deg)}
+.t.s4.lvl{color:#f8eed5;text-shadow:0 .22cqw 0 rgba(0,0,0,.55)}
+.t.s5{color:#f8edc9;text-shadow:0 .22cqw 0 rgba(15,25,47,.75)}
+.t.s5.num{font-size:2.9cqw}
+.t.s5.num,.t.s5.xpstrip,.t.s5.icon,.t.s5.rar,.t.s5.set,.t.s5.lvl{color:#172b4b;text-shadow:none}
+.t.s5.cat{color:#f8edc9}
+.t.s5.title{padding:1cqw 3cqw}
+.t.s5.title span{height:48%;color:#172b4b;text-shadow:.22cqw .22cqw 0 rgba(255,247,212,.6)}
+.t.s5.title .t2{color:#a52c2d;-webkit-text-stroke:.22cqw #172b4b;text-shadow:.2cqw .25cqw 0 #e7c65e}
+.t.s5.quote{font-family:"Bangers";letter-spacing:.035em;color:#172b4b;text-shadow:none;transform:rotate(-1.5deg)}
+.framebreak-character.series45.series4{left:-7%;top:13%;width:114%;height:80%;transform:translate3d(0,0,0) rotate(-3deg) scale(1.05)}
+.framebreak-character.series45.series5{left:-8%;top:11%;width:116%;height:84%;transform:translate3d(0,0,0) rotate(3deg) scale(1.08)}
+.card.series4 .stampimg.mastered,.card.series5 .stampimg.mastered{z-index:8}
+html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0) rotate(0deg) scale(1.05)!important}
 .series-badge{z-index:6;object-fit:contain;transform:rotate(8deg);filter:drop-shadow(0 .5cqw .5cqw rgba(0,0,0,.45));pointer-events:none}
 .series{z-index:6;display:flex;align-items:center;justify-content:center;font-family:"Bangers";letter-spacing:.1em;font-size:3.8cqw;color:#fff5dc;
   background:linear-gradient(135deg,#d7263d,#8e1024);border:.35cqw solid var(--ink);border-radius:1.2cqw;transform:rotate(5deg);box-shadow:.4cqw .6cqw 0 rgba(0,0,0,.35);pointer-events:none}
@@ -374,6 +415,7 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .bstk-hint{margin:0;font-size:19px;color:var(--paper);text-align:center;min-height:25px;max-width:320px}
 .bstk .btn-big,.bstk .sheet-cancel{max-width:340px}
 /* surprise under the peeled sticker */
+.intro-video-tip{margin:12px 0 6px;text-align:center;color:var(--sub);font-size:16px}
 .bstk-stage .sur{position:absolute;inset:0;box-sizing:border-box;padding:14px;border:3px solid var(--ink);border-radius:18px;background:var(--paper);color:var(--ink);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;overflow:auto;animation:fadein .3s both}
 .sur b{font:400 30px/1 "Bangers";letter-spacing:.05em}
@@ -975,9 +1017,9 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js?v=cd5fc35d"></script>
-<script src="study.js?v=0e44ed8f"></script>
+<script src="study.js?v=e8ddcf37"></script>
 <script src="economy.js?v=a7261374"></script>
-<script src="store.js?v=85799f04"></script>
+<script src="store.js?v=ec0bed6b"></script>
 <script src="study/quick-reference/quick-reference.js?v=798b706c"></script>
 <script src="study/quick-reference/series-lessons.js?v=102ec77c"></script>
 <script src="binder.js?v=8f2bfec1"></script>
@@ -1765,7 +1807,8 @@ function series45Card(raw, i){
     series, num:`S${series}-${String(number).padStart(2,'0')}`, l1:title[0], l2:title[1], name:raw.name,
     category:series === 4 ? 'DOODLE QUICK REFERENCE' : 'VINTAGE QUICK REFERENCE',
     set:series === 4 ? 'CRIMINAL PROCEDURE' : 'PENAL LAW', rarity:'uncommon', icon:'court', emoji:'',
-    maxLevel:5, stickers:{}, cutout:true, canonicalCharacter:true, frameBreak:true,
+    maxLevel:3, stickers:{}, cutout:true, canonicalCharacter:true, frameBreak:true,
+    bgs:{1:`art/bg_s${series}_${slug}.webp`},
     intro:{ idea:raw.summary || raw.topic || raw.name, example:raw.example || '', source:cite },
     quote:raw.tagline || raw.quote || raw.topic || raw.name, source,
     hook:raw.hook || raw.summary || raw.topic || '', panel:raw.panel, lore:raw.lore || [], bank:raw.bank || raw.questions || [],
@@ -2029,7 +2072,7 @@ function frameBreakCharacter(c, lv){
   if (!(FRAME_BREAK_CARDS.has(c.id) || c.frameBreak) || !c.cutout || lv !== maxL(c)) return '';
   const base = resolvedArtLevel(c, lv);
   if (!base || (c.scene && c.scene[base])) return '';
-  return `<img class="framebreak-character${c.series === 2 ? ' series2' : c.series >= 4 ? ' series45' : ''}" src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`;
+  return `<img class="framebreak-character${c.series === 2 ? ' series2' : c.series >= 4 ? ` series45 series${c.series}` : ''}" src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`;
 }
 function artHTML(c, lv, opt={}){
   const foil = lv >= 3 && lv < maxL(c) ? `<div class="foil"></div>` : '';
@@ -2087,8 +2130,35 @@ function frontS3HTML(c, st, opt={}){
     <div class="t lvl s3" style="${P(676,1322,982,1458)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
 }
+function frontS45HTML(c, st, opt={}){
+  const lv = st.level, need = NEED[lv-1], s4 = c.series === 4;
+  const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
+  const frameSrc = `art/frame_s${c.series}.webp`;
+  const frameBreak = frameBreakCharacter(c, lv);
+  const artBox = s4 ? P(174,415,891,1198) : P(92,415,932,1290);
+  const art = artHTML(c, lv, {omitCharacter:!!frameBreak, omitMnemonicBadge:true});
+  const icon = c.trickType ? `<img src="art/icon_${c.trickType}.webp" alt="${TRICK_TYPES[c.trickType].label}">` : ICON[c.icon];
+  const raritySize = c.rarity.length > 6 ? 2.15 : 2.65;
+  return `
+    <div class="art-win s45win s${c.series}" style="${artBox}">${art}${holoHTML(c)}</div>
+    <img class="frame" src="${frameSrc}" alt="Series ${c.series} card frame">
+    ${frameBreak}
+    <div class="t num s45 s${c.series} meta" style="${s4 ? P(102,77,287,139) : P(51,77,174,139)}">${c.num}</div>
+    <div class="t xpstrip s45 s${c.series} meta" style="${s4 ? P(307,77,696,139) : P(205,77,707,139)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
+    <div class="t cat s45 s${c.series} meta" style="${s4 ? P(717,77,922,139) : P(748,77,881,139)}">${esc(c.category)}</div>
+    ${s4 ? '' : `<div class="t icon s45 s5 meta" style="${P(912,77,963,139)}">${icon}</div>`}
+    ${s4 ? `<div class="t title s45 s4 meta" style="${P(195,184,891,277)}"><span class="t1" data-fit="64" data-max="5.2" style="font-size:${fitTitle(c.l1,5.2,64)}cqw">${esc(c.l1)}</span></div>
+      <div class="t title s45 s4 meta" style="${P(195,307,891,369)}"><span class="t2" data-fit="64" data-max="4.7" style="font-size:${fitTitle(c.l2,4.7,64)}cqw">${esc(c.l2)}</span></div>`
+      : `<div class="t title s45 s5 meta" style="${P(164,184,860,399)}"><span class="t1" data-fit="62" data-max="5.8" style="font-size:${fitTitle(c.l1,5.8,62)}cqw">${esc(c.l1)}</span><span class="t2" data-fit="62" data-max="5.5" style="font-size:${fitTitle(c.l2,5.5,62)}cqw">${esc(c.l2)}</span></div>`}
+    <div class="t quote s45 s${c.series} meta" style="${s4 ? P(236,1183,850,1275) : P(256,1183,737,1275)}">“${esc(c.quote.replace(/\n/g, ' '))}”</div>
+    <div class="t rar s45 s${c.series} meta" style="${s4 ? P(123,1321,358,1428) : P(72,1352,338,1444)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:${raritySize}cqw">${c.rarity.toUpperCase()}</span></div>
+    <div class="t set s45 s${c.series} meta" style="${s4 ? P(430,1321,686,1428) : P(389,1352,655,1444)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
+    <div class="t lvl s45 s${c.series} meta" style="${s4 ? P(758,1321,901,1428) : P(707,1352,952,1444)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
+    ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
+}
 function frontHTML(c, st, opt={}){
   if (c.series === 3) return frontS3HTML(c, st, opt);
+  if (c.series === 4 || c.series === 5) return frontS45HTML(c, st, opt);
   const lv = st.level, need = NEED[lv-1];
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
   const sparks = lv >= 4 ? [[2,1],[92,2],[1,62],[93,58],[48,0],[40,93]].map((p,i)=>`<div class="spark" style="left:${p[0]}%;top:${p[1]}%;animation-delay:${i*.3}s">✦</div>`).join('') : '';
@@ -2142,7 +2212,7 @@ function cardEl(c, st, opt={}, extraClass=''){
   const tier = cold ? '' : glowTier(c, st);
   const charged = tier && tier !== 'max' && !st.mastered && st.xp / NEED[st.level-1] >= .7;
   const rings = tier ? `<div class="ring soft"></div><div class="ring"></div>` : '';
-  return `<div class="card lv${st.level} ${c.trickType?'special':''} ${cold?'cold':''} ${tier?'tier-'+tier:''} ${charged?'charged':''} ${extraClass}" data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${rings}${tier==='max'?'<div class="gloss"></div>':''}${frontHTML(c, st, opt)}${frostHTML(c, st, now)}</div>`;
+  return `<div class="card series${c.series || 1} lv${st.level} ${c.trickType?'special':''} ${cold?'cold':''} ${tier?'tier-'+tier:''} ${charged?'charged':''} ${extraClass}" data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${rings}${tier==='max'?'<div class="gloss"></div>':''}${frontHTML(c, st, opt)}${frostHTML(c, st, now)}</div>`;
 }
 
 /* Open cards continue icing without rebuilding the screen. Each card carries the
@@ -2612,7 +2682,7 @@ const nextPackArt = () => nextPackArtSrc();   // the wrapper of the series the n
 const hintCosts = () => !!(sess && sess.hint && !sess.freeHint);   // a free-hint boost makes the hint cost nothing
 const backSrc = () => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : 'art/cardback.webp';   // the card back in use
 /* A card's equipped style: a bought frame (Series 1/2 only) and holo foil. */
-const styleFrame = c => { const e = S.styles && S.styles.cards[c.id] && S.styles.cards[c.id].eq; return e && e.frame && c.series !== 3 ? artSrc('frame_' + e.frame) : ''; };
+const styleFrame = c => { const e = S.styles && S.styles.cards[c.id] && S.styles.cards[c.id].eq; return e && e.frame && ![3,4,5].includes(c.series) ? artSrc('frame_' + e.frame) : ''; };
 const holoHTML = c => { const e = S.styles && S.styles.cards[c.id] && S.styles.cards[c.id].eq; return e && e.foil ? `<div class="holo" style="background-image:url(${artSrc('foil_texture')})"></div><div class="foil"></div>` : ''; };
 const COIN = `<img class="ico coin" src="art/icon_coin.webp" alt="coins">`;
 const titleCase = s => s.toLowerCase().replace(/(^|[\s:&(])([a-z])/g, (m, a, b) => a + b.toUpperCase()).replace(/\bCplr\b/, 'CPLR').replace(/\bAct\b/, 'Act');
@@ -3129,7 +3199,7 @@ function paintStudy(anim){
         <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +${ans.gain} XP${ans.coins ? ` · +${ans.coins} ${COIN}` : ''}` : 'Overruled. Not quite.'}</h3>
         ${ans.ok ? '' : '<p>Keep going—this rule will be easier to spot next time.</p>'}
         ${ans.reopened ? `<p class="reopen"><img src="art/stamp_reopened.webp" alt="Case reopened"><span>Includes a +${COLD_BONUS} XP cold-case bonus.</span></p>` : ''}
-        <div class="ex-acts">${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}${saveQButtonHTML()}</div>
+        <div class="ex-acts">${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}${eightbackExplainerButtonHTML(c)}${saveQButtonHTML()}</div>
         ${ans.ok ? '' : `<p><b>Correct answer:</b> ${esc(q.a)}</p>`}
         ${q.raw ? q.w : `<p>${esc(q.w)}</p>`}
         ${c.source ? `<p class="cite">Source: ${esc(c.source.cite)}</p>` : ''}
@@ -3590,7 +3660,7 @@ function openSheet(html){
   w.innerHTML = `<div class="sheet-bg" data-act="sheet-close"></div><div class="sheet" role="dialog" aria-modal="true"><div class="grabber"></div>${html}</div>`;
   document.body.appendChild(w); lockScroll(); A11Y.hide(true);
   const sh = w.querySelector('.sheet'); sh.tabIndex = -1; sh.focus({preventScroll:true}); let y0 = null, dy = 0;        // drag the sheet down to dismiss
-  sh.addEventListener('touchstart', e => { if (sh.scrollTop > 0) return; y0 = e.touches[0].clientY; dy = 0; sh.style.transition = 'none'; }, {passive:true});
+  sh.addEventListener('touchstart', e => { if (e.target.closest('video,audio') || sh.scrollTop > 0) return; y0 = e.touches[0].clientY; dy = 0; sh.style.transition = 'none'; }, {passive:true});
   sh.addEventListener('touchmove', e => { if (y0 == null) return; dy = Math.max(0, e.touches[0].clientY - y0); sh.style.transform = `translateY(${dy}px)`; }, {passive:true});
   sh.addEventListener('touchend', () => { if (y0 == null) return; sh.style.transition = ''; if (dy > 90) closeSheet(); else sh.style.transform = ''; y0 = null; });
   return w;
@@ -3604,6 +3674,7 @@ function answerSheet(focus){
 }
 function closeSheet(instant){
   const w = document.querySelector('.sheet-wrap'); if (!w) return false;
+  w.querySelectorAll('video,audio').forEach(media => media.pause());
   const gone = () => { if (w._gone) return; w._gone = true; w.remove(); unlockScroll(); A11Y.hide(false); if (!document.querySelector('.sheet-wrap')) A11Y.restore(); };
   if (instant) { gone(); return true; }
   if (w.classList.contains('closing')) return true;
@@ -3640,7 +3711,8 @@ function introSheet(c, readOnly){
     <div class="intro">
       <div class="intro-sec"><em>The idea</em><p>${esc(c.intro.idea)}</p></div>
       <div class="intro-sec ex"><em>Example</em><p>${esc(c.intro.example)}</p></div>
-      <p class="intro-src">Source: ${esc(c.intro.source)}</p></div>
+      <p class="intro-src">Source: ${esc(c.intro.source)}</p>
+      ${c.id === 'eightback' ? `<p class="intro-video-tip">Still fuzzy on the deadlines?</p>${eightbackExplainerButtonHTML(c, 'intro')}` : ''}</div>
     ${readOnly ? `${mine ? `<button class="btn-big gold" data-act="intro-go" data-id="${c.id}">${PLAY_ICON} TRY 5 QUESTIONS</button>` : ''}<button class="sheet-cancel" data-act="sheet-close">Close</button>`
       : `<button class="btn-big gold" data-act="intro-go" data-id="${c.id}">${PLAY_ICON} TRY 5 QUESTIONS</button>
          <button class="sheet-cancel" data-act="intro-skip" data-id="${c.id}">Go straight to questions<small>Skips this intro next time</small></button>`}`);
@@ -3809,6 +3881,8 @@ document.addEventListener('click', e => {
     case 'lu-close': { const ov = t.closest('.lu'); ov && ov._done(); break; }
     case 'session-close': goBack(); if (typeof guestWall === 'function') guestWall(); break;   // a guest sees the sign-up screen after their results
     case 'read-rule': if (app.hidden) openCaseFile(id); else { afterSessionClose = () => openCaseFile(id); goBack(); } break;
+    case 'watch-explanation': openEightbackExplainer(t.dataset.from); break;
+    case 'intro-back': introSheet(byId(id)); break;
     case 'mark-read': {
       S.read = S.read || {};
       if (!S.read[id]) { S.read[id] = Date.now(); S.stats.xp += READ_XP; save(); toast(`Case file reviewed · +${READ_XP} XP`); }
@@ -3895,7 +3969,7 @@ window.addEventListener('cq-cloud', e => {
   if (nav.tab === 'profile') refresh();
 });
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.
-['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/answer_button.webp']
+['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_s4.webp','art/frame_s5.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/answer_button.webp']
   .forEach(src => { const i = new Image(); i.src = src; if (i.decode) i.decode().catch(() => {}); });
 </script>
 </body>

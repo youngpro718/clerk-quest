@@ -53,7 +53,7 @@ const BACKS = [
 ];
 const styles = () => (S.styles = S.styles || { cards:{}, backs:[], back:'' });
 const cardStyle = id => (styles().cards[id] = styles().cards[id] || { frames:[], foil:false, eq:{ frame:'', foil:false } });
-const framesAllowed = c => c.series !== 3;   // the three frames are shaped for the Series 1/2 layout
+const framesAllowed = c => ![3,4,5].includes(c.series);   // store frames are shaped for the Series 1/2 layout
 function styleSheet(id){
   const c = byId(id); if (!c || !owned(c)) return;
   const cs = cardStyle(id), coins = S.coins || 0;
@@ -69,7 +69,7 @@ function styleSheet(id){
       <div class="sty-row"><img class="sty-prev" src="${c.trickType ? artSrc('frame_trick') : artSrc('frame_base')}" alt=""><span class="row-main"><b>Standard</b><small>Changes as the card levels up</small></span>
         ${cs.eq.frame ? btn('sty-frame', 'Use', '" data-v="') : btn('sty-frame', `${ICO('check')} In use`, 'on" data-v="')}</div>
       ${FRAMES.map(frameRow).join('')}</div>`
-      : `<p class="st-note">Series 3 cards keep their film-strip frame.</p>`}
+      : `<p class="st-note">This series keeps its own signature frame.</p>`}
     <div class="sec-h"><span>Foil</span></div>
     <div class="list sty-list"><div class="sty-row"><img class="sty-prev" src="${artSrc('foil_texture')}" alt=""><span class="row-main"><b>Holo Foil</b><small>${cs.foil ? (cs.eq.foil ? 'On' : 'Off') : FOIL_PRICE + ' coins'}</small></span>
       ${cs.foil ? btn('sty-foil', cs.eq.foil ? 'Turn off' : 'Turn on') : btn('sty-buyfoil', `${COIN}${FOIL_PRICE}`, 'buy', coins >= FOIL_PRICE)}</div></div>
@@ -109,8 +109,14 @@ function storeSeries(){
   return SERIES_DEFS.map(d => { const cards = CARDS.filter(d.test), missing = cards.filter(c => !owned(c));
     return { ...d, cards, missing, deckPrice:missing.reduce((n, c) => n + cardPrice(c), 0) }; });
 }
-const seriesDeckArt = d => `<span class="st-art deck series"><img src="${artSrc(d.deck)}" alt=""><b class="st-series-tag">S${d.n}</b></span>`;
-const seriesPackImg = d => `<span class="st-art pack series"><img src="${artSrc(d.pack)}" alt=""><b class="st-series-tag">S${d.n}</b></span>`;
+function series45StoreArt(d, kind){
+  const c = d.cards[0], slug = c && (c.asset || '').match(/([^/]+)\.png$/);
+  const bg = slug ? artSrc(`bg_s${d.n}_${slug[1]}`) : '';
+  const character = c && ART[c.id] && ART[c.id][1] || c && c.asset;
+  return `<span class="st-art ${kind} series series45 s${d.n}"><span class="st45-card">${bg ? `<img class="st45-bg" src="${bg}" alt="">` : ''}${character ? `<img class="st45-char" src="${character}" alt="">` : ''}<img class="st45-frame" src="${artSrc('frame_s' + d.n)}" alt="Series ${d.n} frame"></span><b class="st-series-tag">S${d.n}</b></span>`;
+}
+const seriesDeckArt = d => d.n >= 4 ? series45StoreArt(d, 'deck') : `<span class="st-art deck series"><img src="${artSrc(d.deck)}" alt=""><b class="st-series-tag">S${d.n}</b></span>`;
+const seriesPackImg = d => d.n >= 4 ? series45StoreArt(d, 'pack') : `<span class="st-art pack series"><img src="${artSrc(d.pack)}" alt=""><b class="st-series-tag">S${d.n}</b></span>`;
 const weekKey = () => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };   // this week's Monday
 const storePacksLeft = () => { const w = S.storePacks; return !w || w.week !== weekKey() ? PRICE.packsPerWeek : Math.max(0, PRICE.packsPerWeek - w.n); };
 function storeSubjects(){
@@ -265,6 +271,16 @@ const STORE_CSS = `
 .st-art.pack{width:72%}
 .st-art.deck.series{width:86%}.st-art.deck.series img{border-radius:10px}.st-art.pack.series{width:76%}
 .st-art.series .st-series-tag{position:absolute;right:4%;bottom:5%;display:grid;place-items:center;min-width:34px;height:28px;padding:0 5px;border:2px solid #1d1b17;border-radius:6px;background:#f0c755;color:#1d1b17;font:20px/1 "Bangers";letter-spacing:.04em;transform:rotate(-5deg);box-shadow:2px 2px 0 rgba(0,0,0,.35)}
+.st-art.series45{width:56%;margin:0 auto;filter:drop-shadow(0 5px 5px rgba(0,0,0,.42))}
+.st-art.series45.deck{width:62%}
+.st45-card{position:relative;display:block;width:100%;aspect-ratio:2/3;overflow:hidden;border-radius:7%/4.5%;background:#e9dcc0}
+.st45-card img{position:absolute;display:block;border-radius:0!important}
+.st45-bg{inset:17% 10% 10%;width:80%;height:73%;object-fit:cover}
+.st45-char{left:14%;top:22%;width:72%;height:61%;object-fit:contain;z-index:1}
+.st45-frame{inset:0;width:100%;height:100%;object-fit:fill;z-index:2}
+.st-art.series45 .st-series-tag{right:-14%;bottom:5%;z-index:3;background:#f4e8c8}
+.st-art.series45.s4 .st-series-tag{background:#a62924;color:#fff5dc}
+.st-art.series45.s5 .st-series-tag{background:#e0b641;color:#172b4b}
 .st-lab{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2%;color:var(--ink);text-align:center;container-type:inline-size}
 .st-lab.deck{left:34%;top:30%;width:46%;height:56%}
 .st-lab.pack{left:18%;top:28%;width:66%;height:34%}
