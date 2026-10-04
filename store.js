@@ -100,8 +100,8 @@ const SERIES_DEFS = [
   { n:1, label:'Series 1', test:c => !c.series && !c.trickType, pack:'pack',    deck:'deck_s1' },
   { n:2, label:'Series 2', test:c => c.series === 2,           pack:'pack_s2', deck:'deck_s2' },
   { n:3, label:'Series 3', test:c => c.series === 3,           pack:'pack_s3', deck:'deck_s3' },
-  { n:4, label:'Series 4 · Doodle Files', test:c => c.series === 4, pack:'pack_blank', deck:'deck_box' },
-  { n:5, label:'Series 5 · Vintage Heroes', test:c => c.series === 5, pack:'pack_blank', deck:'deck_box' },
+  { n:4, label:'Series 4 · Doodle Files', test:c => c.series === 4, pack:'pack_s4', deck:'deck_s4' },
+  { n:5, label:'Series 5 · Vintage Heroes', test:c => c.series === 5, pack:'pack_s5', deck:'deck_s5' },
 ];
 const seriesDef = n => SERIES_DEFS.find(d => d.n === +n);
 const seriesPackArt = n => artSrc(seriesDef(n).pack);
@@ -109,14 +109,8 @@ function storeSeries(){
   return SERIES_DEFS.map(d => { const cards = CARDS.filter(d.test), missing = cards.filter(c => !owned(c));
     return { ...d, cards, missing, deckPrice:missing.reduce((n, c) => n + cardPrice(c), 0) }; });
 }
-function series45StoreArt(d, kind){
-  const c = d.cards[0], slug = c && (c.asset || '').match(/([^/]+)\.png$/);
-  const bg = slug ? artSrc(`bg_s${d.n}_${slug[1]}`) : '';
-  const character = c && ART[c.id] && ART[c.id][1] || c && c.asset;
-  return `<span class="st-art ${kind} series series45 s${d.n}"><span class="st45-card">${bg ? `<img class="st45-bg" src="${bg}" alt="">` : ''}${character ? `<img class="st45-char" src="${character}" alt="">` : ''}<img class="st45-frame" src="${artSrc('frame_s' + d.n)}" alt="Series ${d.n} frame"></span><b class="st-series-tag">S${d.n}</b></span>`;
-}
-const seriesDeckArt = d => d.n >= 4 ? series45StoreArt(d, 'deck') : `<span class="st-art deck series"><img src="${artSrc(d.deck)}" alt=""><b class="st-series-tag">S${d.n}</b></span>`;
-const seriesPackImg = d => d.n >= 4 ? series45StoreArt(d, 'pack') : `<span class="st-art pack series"><img src="${artSrc(d.pack)}" alt=""><b class="st-series-tag">S${d.n}</b></span>`;
+const seriesDeckArt = d => `<span class="st-art deck series"><img src="${artSrc(d.deck)}" alt="${esc(d.label)} complete deck box"></span>`;
+const seriesPackImg = d => `<span class="st-art pack series"><img src="${artSrc(d.pack)}" alt="${esc(d.label)} booster pack"></span>`;
 const weekKey = () => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };   // this week's Monday
 const storePacksLeft = () => { const w = S.storePacks; return !w || w.week !== weekKey() ? PRICE.packsPerWeek : Math.max(0, PRICE.packsPerWeek - w.n); };
 function storeSubjects(){
@@ -271,16 +265,6 @@ const STORE_CSS = `
 .st-art.pack{width:72%}
 .st-art.deck.series{width:86%}.st-art.deck.series img{border-radius:10px}.st-art.pack.series{width:76%}
 .st-art.series .st-series-tag{position:absolute;right:4%;bottom:5%;display:grid;place-items:center;min-width:34px;height:28px;padding:0 5px;border:2px solid #1d1b17;border-radius:6px;background:#f0c755;color:#1d1b17;font:20px/1 "Bangers";letter-spacing:.04em;transform:rotate(-5deg);box-shadow:2px 2px 0 rgba(0,0,0,.35)}
-.st-art.series45{width:56%;margin:0 auto;filter:drop-shadow(0 5px 5px rgba(0,0,0,.42))}
-.st-art.series45.deck{width:62%}
-.st45-card{position:relative;display:block;width:100%;aspect-ratio:2/3;overflow:hidden;border-radius:7%/4.5%;background:#e9dcc0}
-.st45-card img{position:absolute;display:block;border-radius:0!important}
-.st45-bg{inset:17% 10% 10%;width:80%;height:73%;object-fit:cover}
-.st45-char{left:14%;top:22%;width:72%;height:61%;object-fit:contain;z-index:1}
-.st45-frame{inset:0;width:100%;height:100%;object-fit:fill;z-index:2}
-.st-art.series45 .st-series-tag{right:-14%;bottom:5%;z-index:3;background:#f4e8c8}
-.st-art.series45.s4 .st-series-tag{background:#a62924;color:#fff5dc}
-.st-art.series45.s5 .st-series-tag{background:#e0b641;color:#172b4b}
 .st-lab{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2%;color:var(--ink);text-align:center;container-type:inline-size}
 .st-lab.deck{left:34%;top:30%;width:46%;height:56%}
 .st-lab.pack{left:18%;top:28%;width:66%;height:34%}

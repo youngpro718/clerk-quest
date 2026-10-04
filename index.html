@@ -1023,7 +1023,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="cloud-sync.js?v=cd5fc35d"></script>
 <script src="study.js?v=1ddad722"></script>
 <script src="economy.js?v=a7261374"></script>
-<script src="store.js?v=ec0bed6b"></script>
+<script src="store.js?v=67a1c728"></script>
 <script src="study/quick-reference/quick-reference.js?v=798b706c"></script>
 <script src="study/quick-reference/series-lessons.js?v=102ec77c"></script>
 <script src="binder.js?v=8f2bfec1"></script>
@@ -2681,7 +2681,7 @@ const ICO = (name, cls = '') => `<img class="ico ${cls}" src="art/icon_${name}.w
 const artSrc = name => `art/${name}.webp`;
 const stickerArtSrc = id => ['summons','motion'].includes(id) ? artSrc('character_' + id + '_1') : artSrc('sticker_' + id);
 /* Pack art follows the newest series inside: Series 3, then Series 2, then the original pack */
-const packArtFor = cards => cards.some(c => c && c.series >= 3) ? 'art/pack_s3.webp' : cards.some(c => c && c.series === 2) ? 'art/pack_s2.webp' : 'art/pack.webp';
+const packArtFor = cards => { const series = Math.max(1, ...cards.map(c => c && Number(c.series) || 1)); return artSrc(series === 1 ? 'pack' : `pack_s${series}`); };
 const nextPackArt = () => nextPackArtSrc();   // the wrapper of the series the next free pack comes from
 const hintCosts = () => !!(sess && sess.hint && !sess.freeHint);   // a free-hint boost makes the hint cost nothing
 const backSrc = () => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : 'art/cardback.webp';   // the card back in use
@@ -3550,7 +3550,7 @@ function openPack(opts = {}){
   save();
   const packImg = opts.img || (pulls.series ? seriesPackArt(pulls.series) : packArtFor(pulls.map(p => p.c)));
   const packSeries = Number(pulls.series || opts.series || 0);
-  const packLabel = opts.label || (packSeries >= 4 ? seriesDef(packSeries).label : '');
+  const packLabel = opts.label || '';
   const label = packLabel ? `<span class="pk-label ${packSeries >= 4 ? `series45 s${packSeries}` : ''}">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(packLabel)}</b></span>` : '';
   lockScroll(); history.pushState({cq:'pack'}, '');
   const ov = document.createElement('div'); ov.className = 'pk';
