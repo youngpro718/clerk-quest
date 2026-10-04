@@ -749,6 +749,7 @@ body{overflow:hidden;background:var(--bg)}
 #app[hidden]{display:none}
 #app.opening{animation:layerup .28s cubic-bezier(.2,.9,.2,1)}
 @keyframes layerup{from{transform:translateY(100%)}}
+.topbar .x.help{display:inline-flex;align-items:center;justify-content:center;padding:0}.topbar .x.help .ico{width:22px;height:22px}
 .topbar .x{min-width:44px;min-height:44px;border-radius:22px;border:0;background:rgba(255,255,255,.09);color:var(--paper);font:600 18px var(--ui)}
 
 /* common building blocks */
@@ -1020,7 +1021,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js?v=cd5fc35d"></script>
-<script src="study.js?v=4b5bb462"></script>
+<script src="study.js?v=1ddad722"></script>
 <script src="economy.js?v=a7261374"></script>
 <script src="store.js?v=ec0bed6b"></script>
 <script src="study/quick-reference/quick-reference.js?v=798b706c"></script>
@@ -2877,7 +2878,7 @@ const SCREENS = {
         </div>
         ${isCold(st) ? `<div class="coldnote"><img src="art/icon_thermo_snow.webp" alt=""> <b>Cold case.</b> One correct answer reopens it (+${COLD_BONUS} XP).</div>`
           : st.last ? `<p class="foot">Goes cold if not studied for ${Math.round(coldAfter(st) / DAY)} days.</p>` : ''}
-        ${c.hook ? `<div class="hookbox">${ICO('memory')} ${esc(c.hook)}</div>` : ''}`;
+        ${c.hook ? `<div class="hookbox">${ICO('memory')} ${esc(c.hook)}</div>` : ''}${studyKitHTML(c)}`;
     } else if (tab === 'rule') {
       panel = `${c.source ? caseFileHTML(c) : ''}
         ${c.diff ? `<div class="sec-h"><span>How to tell them apart</span></div><div class="diffbox">${['a', 'b'].map(k => `<div class="dcol ${k}"><b>${esc(c.diff[k].name)}</b><i>“${esc(c.diff[k].hook)}”</i><ul>${c.diff[k].points.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>`).join('<div class="dvs">VS</div>')}</div>` : ''}
@@ -2885,7 +2886,7 @@ const SCREENS = {
           <ol class="mnlist">${c.mnemonic.letters.map((L, i) => `<li><b>${L}</b>${esc(c.mnemonic.words[i])} → <strong>${esc(c.mnemonic.means[i])}</strong></li>`).join('')}</ol>
           <p class="mntip">${esc(c.mnemonic.tip)}</p></div>` : ''}`;
     } else {
-      panel = `<ul class="lore">${c.lore.map(t => `<li>${esc(t)}</li>`).join('')}</ul>`;
+      panel = `<ul class="lore">${c.lore.map(t => `<li>${esc(t)}</li>`).join('')}</ul>${studyKitHTML(c)}`;
     }
     return {
       title:c.name, hideLarge:true, cta:true,
@@ -3125,7 +3126,7 @@ function startSession(id, lesson){
   view = { name:'study' };
   const st = S.cards[id];
   app.innerHTML = `
-    <div class="topbar"><button class="x" data-act="session-close" aria-label="Close">✕</button><div class="dots" id="dots"></div><span class="chip ${doubleXPOn() ? 'dbl' : ''}" id="sxp">+0 XP</span></div>
+    <div class="topbar"><button class="x" data-act="session-close" aria-label="Close">✕</button><div class="dots" id="dots"></div><button class="x help" data-act="study-help" data-id="${id}" aria-label="Study help">${ICO('read')}</button><span class="chip ${doubleXPOn() ? 'dbl' : ''}" id="sxp">+0 XP</span></div>
     <div class="stage" id="stage"><div class="lifter"><div class="flip" id="flip">
       <div class="face front">${cardEl(c, st)}</div>
       <div class="face back"><div class="card" id="back"></div></div>
@@ -3888,6 +3889,8 @@ document.addEventListener('click', e => {
     case 'lu-close': { const ov = t.closest('.lu'); ov && ov._done(); break; }
     case 'session-close': goBack(); if (typeof guestWall === 'function') guestWall(); break;   // a guest sees the sign-up screen after their results
     case 'read-rule': if (app.hidden) openCaseFile(id); else { afterSessionClose = () => openCaseFile(id); goBack(); } break;
+    case 'study-help': studyHelpSheet(id); break;
+    case 'sheet-close-jump': closeSheet(true); if (topEntry().s === 'card' && topEntry().p.id === id) { const en = topEntry(); en.p = Object.assign({}, en.p, {tab:'rule'}); refresh(); requestAnimationFrame(() => { const panels = document.querySelectorAll('.cd-panel'); const el = panels[panels.length - 1]; el && el.scrollIntoView({behavior:'smooth', block:'start'}); }); } else openCaseFile(id); break;
     case 'cd-jump': {   // switch to the rule tab and scroll down to it
       const en = topEntry(); en.p = Object.assign({}, en.p, {tab:'rule'}); refresh();
       requestAnimationFrame(() => { const panels = document.querySelectorAll('.cd-panel'); const el = panels[panels.length - 1]; el && el.scrollIntoView({behavior:'smooth', block:'start'}); });

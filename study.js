@@ -144,6 +144,32 @@ function openLessonVideo(key, from, cardId){
   </div>`);
 }
 
+/* Study help: everything that explains a card in one sheet (its video, its rule, its study tips), reachable from
+   the card's tabs and from inside a study round. In a round it never leaves the question. */
+function studyKitHTML(c){
+  const vid = cardVideoButtonHTML(c), hasRule = c.source || c.diff || c.mnemonic;
+  if (!vid && !hasRule) return '';
+  return `<div class="studykit"><b>Stuck on this card?</b>${vid}
+    ${hasRule ? `<button class="sk-btn" data-act="cd-jump" data-id="${c.id}">${ICO('read')} ${c.source ? 'Read the Case File' : 'See the trick'}</button>` : ''}</div>`;
+}
+function studyHelpSheet(id){
+  const c = byId(id); if (!c) return;
+  const inRound = typeof app !== 'undefined' && !app.hidden;
+  const rule = c.source
+    ? `<div class="sh-rule"><em>${esc(c.source.cite)}</em><p>${c.source.paraphrase ? '' : '“'}${esc(c.source.quote)}${c.source.paraphrase ? '' : '”'}</p></div>`
+    : c.mnemonic ? `<div class="sh-rule"><em>How to remember it</em><p>“${esc(c.mnemonic.sentence)}”</p><p>${esc(c.mnemonic.tip)}</p></div>`
+    : c.diff ? `<div class="sh-rule"><em>How to tell them apart</em>${['a', 'b'].map(k => `<p><b>${esc(c.diff[k].name)}:</b> ${esc(c.diff[k].hook)}</p>`).join('')}</div>` : '';
+  openSheet(`<div class="studyhelp">
+    <div class="sh-head">${thumb(c)}<span><b>${esc(c.name)}</b><small>Study help</small></span></div>
+    ${cardVideoButtonHTML(c)}
+    ${c.intro ? `<div class="sh-sec"><h4>The idea</h4><p>${esc(c.intro.idea)}</p>${c.intro.example ? `<p><b>Example:</b> ${esc(c.intro.example)}</p>` : ''}${!c.source && c.intro.source ? `<p class="sh-src">Source: ${esc(c.intro.source)}</p>` : ''}</div>` : ''}
+    ${rule ? `<div class="sh-sec"><h4>${c.source ? 'The rule' : 'The trick'}</h4>${rule}</div>` : ''}
+    ${(c.lore || []).length ? `<div class="sh-sec"><h4>Study tips</h4><ul>${c.lore.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>` : ''}
+    ${!inRound && (c.source || c.diff || c.mnemonic) ? `<button class="sk-btn" data-act="sheet-close-jump" data-id="${c.id}">${ICO('read')} Open the full Case File</button>` : ''}
+    <button class="sheet-cancel" data-act="sheet-close">${inRound ? 'Back to the question' : 'Close'}</button>
+  </div>`);
+}
+
 function ruleRow(c, sub){
   return `<button class="row" data-act="push" data-s="rule" data-id="${c.id}">${thumb(c)}
     <span class="row-main"><b>${esc(c.name)}</b><small>${sub || esc(c.source.cite)}</small>
@@ -381,6 +407,18 @@ const STUDY_CSS = `
 .explain-watch:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(30,25,20,.28)}
 .explain-watch .ico{width:20px;height:20px}.explain-watch span{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;opacity:.72}
 .explain .explain-watch{width:auto;min-height:0;margin:0;padding:1.2cqw 2.8cqw;border-width:.4cqw;border-radius:1.6cqw;font:inherit;font-size:3.4cqw;box-shadow:none}
+.studykit{display:flex;flex-direction:column;gap:8px;margin:16px 0 4px;padding:12px;border-radius:14px;background:var(--bg2)}
+.studykit b{font:400 18px/1 "Bangers";letter-spacing:.05em;color:var(--mustard)}
+.studykit .explain-watch{margin:0}
+.sk-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:46px;border:2px solid var(--ink);border-radius:12px;background:#f3d27a;color:var(--ink);font:700 16px var(--ui);cursor:pointer}
+.sk-btn .ico{width:20px;height:20px}
+.studyhelp .explain-watch{margin:4px 0 12px}
+.studyhelp .sh-sec{margin:0 0 12px;padding:10px 12px;border-radius:12px;background:var(--bg2);color:var(--paper);font:15px/1.4 var(--ui)}
+.studyhelp .sh-sec h4{margin:0 0 6px;font:400 17px/1 "Bangers";letter-spacing:.05em;color:var(--mustard)}
+.studyhelp .sh-sec p{margin:4px 0 0}.studyhelp .sh-sec ul{margin:0;padding-left:18px}
+.studyhelp .sh-rule em{display:block;font-style:normal;font-weight:700;color:var(--sub)}
+.studyhelp .sk-btn{margin-bottom:8px}
+.studyhelp .sh-src{color:var(--sub);font-size:13px}
 .video-lesson .video-kicker{margin:2px 0 3px;text-align:center;color:var(--mustard);font:700 12px var(--ui);letter-spacing:.1em;text-transform:uppercase}
 .video-lesson h3{margin-bottom:12px}
 .video-lesson video{display:block;width:min(100%,360px);max-height:52dvh;margin:0 auto;border:2px solid var(--ink);border-radius:14px;background:#211f1b;box-shadow:0 5px 0 rgba(0,0,0,.28)}
