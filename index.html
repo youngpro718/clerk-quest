@@ -415,6 +415,9 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .bstk-hint{margin:0;font-size:19px;color:var(--paper);text-align:center;min-height:25px;max-width:320px}
 .bstk .btn-big,.bstk .sheet-cancel{max-width:340px}
 /* surprise under the peeled sticker */
+.cd-quick{display:flex;gap:8px;justify-content:center;margin:2px 0 12px}
+.cd-qbtn{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border:2px solid var(--ink);border-radius:20px;background:#f3d27a;color:var(--ink);font:700 15px var(--ui);cursor:pointer}
+.cd-qbtn .ico{width:18px;height:18px}.cd-qbtn.vid{background:#5d7d8c;color:#fff8ea}.cd-qbtn span{font-size:11px;opacity:.8;text-transform:uppercase;letter-spacing:.04em}
 .intro-video-tip{margin:12px 0 6px;text-align:center;color:var(--sub);font-size:16px}
 .bstk-stage .sur{position:absolute;inset:0;box-sizing:border-box;padding:14px;border:3px solid var(--ink);border-radius:18px;background:var(--paper);color:var(--ink);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;overflow:auto;animation:fadein .3s both}
@@ -1017,7 +1020,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js?v=cd5fc35d"></script>
-<script src="study.js?v=2a2f5f4b"></script>
+<script src="study.js?v=4b5bb462"></script>
 <script src="economy.js?v=a7261374"></script>
 <script src="store.js?v=ec0bed6b"></script>
 <script src="study/quick-reference/quick-reference.js?v=798b706c"></script>
@@ -1027,7 +1030,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="account.js?v=e5de3785"></script>
 <script src="admin.js?v=fb5df08d"></script>
 <script src="stickers.js?v=70340509"></script>
-<script src="dockets.js?v=6c007863"></script>
+<script src="dockets.js?v=9f334d84"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="sticker3d.js?v=9a43370e"></script>
 <script src="questions.js?v=f5b5ed28"></script>
@@ -2860,7 +2863,7 @@ const SCREENS = {
     const pv = p.preview || st.level;
     const shown = pv === st.level ? st : {level:pv, xp:0, mastered:false, owned:true};
     const hasRule = c.source || c.diff || c.mnemonic;
-    const tab = p.tab || 'overview';
+    const tab = p.tab || (hasRule ? 'rule' : 'overview');   // open on the rule, so the Case File and its video are right there
     const tabs = [['overview', 'Overview']].concat(hasRule ? [['rule', c.source ? 'Case File' : 'Trick']] : []).concat([['lore', 'Study Tips']]);
     let panel = '';
     if (tab === 'overview') {
@@ -2888,6 +2891,10 @@ const SCREENS = {
       title:c.name, hideLarge:true, cta:true,
       right:`<button class="nb-btn" data-act="card-menu" data-id="${c.id}" aria-label="More">•••</button>`,
       body:`
+        ${hasRule || cardVideo(c) ? `<div class="cd-quick">
+          ${hasRule ? `<button class="cd-qbtn" data-act="cd-jump" data-id="${c.id}">${ICO('read')} ${c.source ? 'Case File' : 'The Trick'}</button>` : ''}
+          ${cardVideoButtonHTML(c) ? videoButtonHTML(cardVideo(c), '', c.id, 'cd-qbtn vid', 'Watch') : ''}
+        </div>` : ''}
         <div class="cd-top"><div class="cd-card" data-act="cd-flip" aria-label="Tap to flip the card">${cardEl(c, shown)}<div class="cd-back"><img src="${backSrc()}" alt="Card back"></div></div>
           <div class="stage-dots">${Array.from({length:maxL(c)}, (_, i) => i + 1).map(l => `<button data-act="stage" data-l="${l}" class="${l === pv ? 'cur' : ''} ${l > st.level ? 'lk' : ''}" ${l > st.level ? 'disabled aria-label="Locked"' : `aria-label="Level ${l} art"`}>${l > st.level ? ICO('lock') : l}</button>`).join('')}</div>
           ${pv !== st.level ? `<p class="preview-note">Previewing Level ${pv} art</p>` : ''}
@@ -3199,7 +3206,7 @@ function paintStudy(anim){
         <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +${ans.gain} XP${ans.coins ? ` · +${ans.coins} ${COIN}` : ''}` : 'Overruled. Not quite.'}</h3>
         ${ans.ok ? '' : '<p>Keep going—this rule will be easier to spot next time.</p>'}
         ${ans.reopened ? `<p class="reopen"><img src="art/stamp_reopened.webp" alt="Case reopened"><span>Includes a +${COLD_BONUS} XP cold-case bonus.</span></p>` : ''}
-        <div class="ex-acts">${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}${eightbackExplainerButtonHTML(c)}${saveQButtonHTML()}</div>
+        <div class="ex-acts">${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}${cardVideoButtonHTML(c)}${saveQButtonHTML()}</div>
         ${ans.ok ? '' : `<p><b>Correct answer:</b> ${esc(q.a)}</p>`}
         ${q.raw ? q.w : `<p>${esc(q.w)}</p>`}
         ${c.source ? `<p class="cite">Source: ${esc(c.source.cite)}</p>` : ''}
@@ -3712,7 +3719,7 @@ function introSheet(c, readOnly){
       <div class="intro-sec"><em>The idea</em><p>${esc(c.intro.idea)}</p></div>
       <div class="intro-sec ex"><em>Example</em><p>${esc(c.intro.example)}</p></div>
       <p class="intro-src">Source: ${esc(c.intro.source)}</p>
-      ${c.id === 'eightback' ? `<p class="intro-video-tip">Still fuzzy on the deadlines?</p>${eightbackExplainerButtonHTML(c, 'intro')}` : ''}</div>
+      ${cardVideo(c) ? `<p class="intro-video-tip">Still fuzzy on this rule?</p>${cardVideoButtonHTML(c, 'intro')}` : ''}</div>
     ${readOnly ? `${mine ? `<button class="btn-big gold" data-act="intro-go" data-id="${c.id}">${PLAY_ICON} TRY 5 QUESTIONS</button>` : ''}<button class="sheet-cancel" data-act="sheet-close">Close</button>`
       : `<button class="btn-big gold" data-act="intro-go" data-id="${c.id}">${PLAY_ICON} TRY 5 QUESTIONS</button>
          <button class="sheet-cancel" data-act="intro-skip" data-id="${c.id}">Go straight to questions<small>Skips this intro next time</small></button>`}`);
@@ -3881,7 +3888,11 @@ document.addEventListener('click', e => {
     case 'lu-close': { const ov = t.closest('.lu'); ov && ov._done(); break; }
     case 'session-close': goBack(); if (typeof guestWall === 'function') guestWall(); break;   // a guest sees the sign-up screen after their results
     case 'read-rule': if (app.hidden) openCaseFile(id); else { afterSessionClose = () => openCaseFile(id); goBack(); } break;
-    case 'watch-explanation': openEightbackExplainer(t.dataset.from); break;
+    case 'cd-jump': {   // switch to the rule tab and scroll down to it
+      const en = topEntry(); en.p = Object.assign({}, en.p, {tab:'rule'}); refresh();
+      requestAnimationFrame(() => { const panels = document.querySelectorAll('.cd-panel'); const el = panels[panels.length - 1]; el && el.scrollIntoView({behavior:'smooth', block:'start'}); });
+      break; }
+    case 'watch-explanation': openLessonVideo(id || 'eightback', t.dataset.from, t.dataset.card); break;
     case 'intro-back': introSheet(byId(id)); break;
     case 'mark-read': {
       S.read = S.read || {};

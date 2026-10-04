@@ -26,11 +26,11 @@ const HOT_DOCKETS = [{
   id:'CQ-D001', title:'The Record Is Not the Ruling', caseName:'Wharflight Records LLC v Stonebridge Imaging Inc.',
   checked:'Rules checked September 2026', reward:'rbg', opens:'2026-09-30', days:7,
   levels:[{
-    name:'Open the order', chapter:'The costs order',
+    name:'Open the order', chapter:'The costs order', video:'docket-four-dates',
     learn:[
       { h:'Your assignment', p:['You are reviewing a civil case file in the clerk\'s office. Identify which event, filing requirement, or processing category the published rule supports.',
         'In New York County, judgment entry and docketing are County Clerk functions. The Court Clerk and County Clerk are not interchangeable labels.'] },
-      { h:'Four dates', p:['Signing, entry, docketing, and service describe different events. Read the document and its stamp before choosing a date.'] },
+      { h:'Four dates', p:['Signing, entry, docketing, and service describe different events. Read the document and its stamp before choosing a date.'], video:'docket-four-dates' },
       { h:'Which interest date?', p:['A money judgment bears interest from entry. An order directing payment, docketed as a judgment, bears interest from docketing.',
         'A party can request docketing of a payment order, including motion costs.'] },
       { h:'Which email?', p:['The entry stamp controls when an order is uploaded later. The court\'s entry email is not party service of notice of entry.',
@@ -302,6 +302,9 @@ function polaroidHTML(tab){
 const stampImg = (name, cls = '') => `<img class="sf-stampimg ${cls}" src="${artSrc('dk_stamp_' + name)}" alt="${name === 'completed' ? 'Completed' : ''}">`;
 const noteHTML = (color, pos, inner, cls = '') => `<div class="sf-note ${cls}" style="${pos};background-image:url('${artSrc('dk_note_' + color)}')"><div class="sf-note-in sf-fit">${inner}</div></div>`;
 
+/* a small paper-style button that opens a lesson video (LESSON_VIDEOS in study.js) */
+const dkWatchHTML = key => typeof videoButtonHTML === 'function' ? videoButtonHTML(key, '', '', 'sf-watch', 'Watch the lesson') : '';
+
 function sheetInner(tab, sh, d, r, n, p, sheets){
   const L = d.levels[n - 1], x = lvRec(r, n), done = x.done[tab], slam = p.justStamped === tab ? 'slam' : '';
   if (sh.cover) {
@@ -318,7 +321,7 @@ function sheetInner(tab, sh, d, r, n, p, sheets){
       <div class="sf-area sf-fit" style="${sfBox(9, 49, 81, 9)}"><p>Each explanation is ours; the rule itself is at the link on its sheet.</p></div>
       ${noteHTML('blue', sfBox(9, 59, 42, 19.4), `<b>${esc(d.checked)}</b><p>As of September 29, 2026 · next review due December 29, 2026.</p>`, 'tilt-r')}`;
   }
-  if (sh.card) return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 60)}"><h4>${esc(sh.card.h)}</h4>${(sh.card.p || []).map(t => `<p>${esc(t)}</p>`).join('')}${sh.card.list ? `<ul>${sh.card.list.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}</div>`;
+  if (sh.card) return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 60)}"><h4>${esc(sh.card.h)}</h4>${(sh.card.p || []).map(t => `<p>${esc(t)}</p>`).join('')}${sh.card.list ? `<ul>${sh.card.list.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}${sh.card.video ? dkWatchHTML(sh.card.video) : ''}</div>`;
   if (sh.entries) {
     const C = d.levels[sh.chapter - 1], evIdx = id => sheets.findIndex(s => s.ev && (s.ev.id === id || (s.ev.also || []).includes(id)));
     return `<div class="sf-area sf-fit" style="${sfBox(9, 23.6, 81, 60)}"><h4>Level ${sh.chapter} · ${esc(sh.name)}${sh.chapter === n && n > 1 ? ' <span class="sf-new">Added in Level ' + n + '</span>' : ''}</h4>
@@ -337,7 +340,7 @@ function sheetInner(tab, sh, d, r, n, p, sheets){
       <p class="sf-q">${esc(q.q)}</p>
       <div class="sf-choices" role="group" aria-label="Answers">${q.c.map((t, k) => `<button type="button" class="sf-choice ${sel === k ? 'sel' : ''} ${answered && k === q.a ? 'right' : ''} ${answered && k === ans && ans !== q.a ? 'wrong' : ''}" aria-pressed="${sel === k}" ${answered ? 'aria-disabled="true" tabindex="-1"' : `data-act="dk-pick" data-k="${k}"`}><b>${'ABCD'[k]}</b><span>${esc(t)}</span></button>`).join('')}</div></div>
     ${answered && p.memo !== false ? `<div class="sf-memo ${p.memoIn ? 'in' : ''}" style="${sfBox(6.5, 40, 87, 31)};background-image:url('${artSrc('dk_note_ivory')}')">
-        <div class="sf-note-in sf-fit"><h4 class="${ans === q.a ? 'ok' : 'no'}">${ans === q.a ? 'Correct' : 'Not quite'} · the answer is ${'ABCD'[q.a]}</h4><p>${esc(q.why)}</p><p class="sf-cite">Source: ${esc(q.cite)}</p></div>
+        <div class="sf-note-in sf-fit"><h4 class="${ans === q.a ? 'ok' : 'no'}">${ans === q.a ? 'Correct' : 'Not quite'} · the answer is ${'ABCD'[q.a]}</h4><p>${esc(q.why)}</p><p class="sf-cite">Source: ${esc(q.cite)}</p>${L.video ? dkWatchHTML(L.video) : ''}</div>
         <button class="sf-memo-x" data-act="dk-memo">Hide note</button></div>` : ''}`;
 }
 function resultsInner(d, r, n, p){
@@ -534,7 +537,7 @@ function missScreen(d, r, p){
         <p class="sf-q">${esc(q.q)}</p>
         <div class="sf-choices" role="group" aria-label="Answers">${q.c.map((t, k) => `<button type="button" class="sf-choice ${sel === k ? 'sel' : ''} ${answered && k === q.a ? 'right' : ''} ${answered && k === m.picked && m.picked !== q.a ? 'wrong' : ''}" aria-pressed="${sel === k}" ${answered ? 'aria-disabled="true" tabindex="-1"' : `data-act="dm-pick" data-k="${k}"`}><b>${'ABCD'[k]}</b><span>${esc(t)}</span></button>`).join('')}</div></div>
       ${answered && p.memo !== false ? `<div class="sf-memo in" style="${sfBox(6.5, 40, 87, 31)};background-image:url('${artSrc('dk_note_ivory')}')">
-        <div class="sf-note-in sf-fit"><h4 class="${m.picked === q.a ? 'ok' : 'no'}">${m.picked === q.a ? 'Right' : 'Not quite'} · the answer is ${'ABCD'[q.a]}</h4><p>${esc(q.why)}</p><p class="sf-cite">Source: ${esc(q.cite)}</p></div>
+        <div class="sf-note-in sf-fit"><h4 class="${m.picked === q.a ? 'ok' : 'no'}">${m.picked === q.a ? 'Right' : 'Not quite'} · the answer is ${'ABCD'[q.a]}</h4><p>${esc(q.why)}</p><p class="sf-cite">Source: ${esc(q.cite)}</p>${(d.levels[it.lv - 1] || {}).video ? dkWatchHTML(d.levels[it.lv - 1].video) : ''}</div>
         <button class="sf-memo-x" data-act="dk-memo">Hide note</button></div>` : ''}`;
     bar = `<button class="sf-btn" data-act="dm-exit">‹ Exit</button><span class="sf-count">Free practice</span>
       ${!answered ? `<button class="sf-btn go" data-act="dm-check" ${m.sel == null ? 'disabled' : ''}>Check ✓</button>`
@@ -695,6 +698,8 @@ const DOCKET_CSS = `
 .sf-ab.sel{border-color:#2b3a55;background:rgba(43,58,85,.16)} .sf-ab.sel b{background:#2b3a55;color:#f6ecd6}
 .sf-ab.right b{background:#2f6b3a;color:#fff}
 .sf-ab[disabled]{cursor:default}
+.sf-watch{display:inline-flex;align-items:center;gap:1.2cqw;margin-top:1.6cqw;padding:1cqw 2.4cqw;border:.35cqw solid var(--ink);border-radius:1.6cqw;background:#5d7d8c;color:#fff8ea;font:700 3.3cqw/1.1 var(--ui);cursor:pointer}
+.sf-watch .ico{width:3.6cqw;height:3.6cqw}.sf-watch span{font-size:2.6cqw;opacity:.8;text-transform:uppercase;letter-spacing:.04em}
 .sf-memo{position:absolute;z-index:5;background:no-repeat center/100% 100%;transform:rotate(-1.2deg);filter:drop-shadow(0 1.6cqw 2.6cqw rgba(0,0,0,.35))}
 .sf-memo .sf-note-in{left:7%;right:7%;top:14%;bottom:17%}
 .sf-memo.in{animation:memoin .38s cubic-bezier(.2,1.2,.4,1) both}

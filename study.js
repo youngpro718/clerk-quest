@@ -80,44 +80,67 @@ function caseFileHTML(c){
     <p class="cf-quote">${paraphrase ? phrasesHTML(c) : `“${phrasesHTML(c)}”`}</p><p class="hl-tip">Tap a phrase to highlight it. Tap again to clear it.</p>
     ${READ_QS[c.id] ? `<h4>Read it with these questions</h4><ol>${READ_QS[c.id].map(q => `<li>${esc(q)}</li>`).join('')}</ol>` : ''}
     <h4>When it comes up</h4><p class="ctx">${esc(c.source.context)}</p><p class="from">${paraphrase ? 'Paraphrase checked against' : 'Source'}: ${esc(c.source.from)}${paraphrase && c.source.url ? ` · <a href="${esc(c.source.url)}" target="_blank" rel="noopener">controlling text</a>` : ''}</p>
-    ${eightbackExplainerButtonHTML(c)}
+    ${cardVideoButtonHTML(c)}
     ${noteBoxHTML(c)}
     <button class="readbtn ${read ? 'done' : ''}" data-act="mark-read" data-id="${c.id}" ${read ? 'disabled' : ''}>${read ? 'Case file reviewed' : `Mark as reviewed · +${READ_XP} XP`}</button></div>`;
 }
 
-/* An optional video lesson for the timing pattern on Eight Before, Two Back: the 60-second motion deadlines
-   explainer (about a minute, narrated, captions burned in). It lives in a sheet, so opening or closing it never changes card or
-   quiz state. `from` = 'intro' brings the person back to the card's intro. */
-const EIGHTBACK_VIDEOS = {
-  full: { label:'Full explainer', len:'1 min', src:'media/motion-deadlines-explainer.mp4?v=60s', poster:'media/motion-deadlines-explainer-poster.jpg?v=60s',
+/* Optional video lessons. Each one opens in a sheet, so watching never changes card, quiz or docket state.
+   Add a lesson here, then point a card at it in CARD_VIDEOS (or a docket sheet at it with `video:`). */
+const LESSON_VIDEOS = {
+  eightback: {
+    kicker:'CPLR 2214(b) · motion deadlines', title:'Eight Before, Two Back', len:'1 min',
+    src:'media/motion-deadlines-explainer.mp4?v=60s', poster:'media/motion-deadlines-explainer-poster.jpg?v=60s',
+    note:'Study guide to CPLR 2214(b); service method, calendar rules, and court directions can affect actual deadlines.',
     transcript:[
       'When someone asks a New York court to decide a motion, the judge sets a hearing day. And before that day arrives, the law gives each side a deadline. Deadlines that are counted backward.',
       'Here\'s the standard rule. The moving party, the side asking for something, must serve their papers at least eight days before the hearing. Then the other side gets their turn. Their answer is due at least two days before. Eight, two. That\'s the default.',
       'But the moving party has a choice. If they serve their notice at least sixteen days early, and demand early answers right in that notice, everything shifts. Now the other side must answer at least seven days before. And the moving party earns something new: a reply, due one day before the hearing. Sixteen, seven, one.',
       'One catch. If the notice goes out fewer than sixteen days ahead, the demand doesn\'t count. It\'s back to eight, two.',
       'So remember the two fuses. A short fuse: eight, two. A long fuse: sixteen, seven, one. Serve early, demand early, and you earn the last word.',
-    ] },
+    ],
+    links:[['New York Senate statute', 'https://www.nysenate.gov/legislation/laws/CVP/2214'], ['New York Courts guide', 'https://www.nycourts.gov/new-york-city-civil-court/cplr-2214']],
+  },
+  'docket-four-dates': {
+    kicker:'Hot Docket CQ-D001 · Level 1', title:'One Order, Four Dates', len:'1 min',
+    src:'media/docket-four-dates.mp4?v=1', poster:'media/docket-four-dates-poster.jpg?v=1',
+    note:'Study guide to CPLR 5003, CPLR 2222 and 22 NYCRR 202.5-b(h). The case and dates are fictional.',
+    transcript:[
+      'One order. Four dates. And the rules care which is which.',
+      'November second. The judge signs a twelve-hundred-dollar costs order. That\'s the ruling. But the dates that matter come later.',
+      'November fourth. The County Clerk stamps it entered. That stamp is the entry date, even if the order is uploaded the next day.',
+      'November sixth. A party asks, and the clerk dockets the order as a judgment. For an order like this, interest runs from docketing, not from entry.',
+      'Then the court sends an email. It looks official. But it is not service.',
+      'November tenth. A party serves the order with written notice of entry. That\'s service. Uploading the proof later doesn\'t serve it again.',
+      'The ruling is the order. The record is everything that happens to it. Signed. Stamped. Docketed. Served.',
+    ],
+    links:[['CPLR 5003', 'https://www.nysenate.gov/legislation/laws/CVP/5003'], ['CPLR 2222', 'https://www.nysenate.gov/legislation/laws/CVP/2222'], ['Rule 202.5-b', 'https://www.nycourts.gov/rules/rule/section-2025-b-electronic-filing-supreme-court-consensual-program']],
+  },
 };
-function eightbackExplainerButtonHTML(c, from){
-  return c && c.id === 'eightback'
-    ? `<button class="explain-watch" data-act="watch-explanation" data-id="eightback"${from ? ` data-from="${from}"` : ''}>${PLAY_ICON} Watch explanation <span>${EIGHTBACK_VIDEOS.full.len}</span></button>`
-    : '';
+const CARD_VIDEOS = { eightback:'eightback' };   // card id -> lesson
+const cardVideo = c => (c && CARD_VIDEOS[c.id]) || null;
+
+/* The "Watch" button. `from` = 'intro' (with the card id) brings the person back to that card's intro. */
+function videoButtonHTML(key, from, cardId, cls = 'explain-watch', label = 'Watch explanation'){
+  const v = LESSON_VIDEOS[key]; if (!v) return '';
+  return `<button class="${cls}" data-act="watch-explanation" data-id="${key}"${from ? ` data-from="${from}"` : ''}${cardId ? ` data-card="${cardId}"` : ''}>${PLAY_ICON} ${label} <span>${v.len}</span></button>`;
 }
-function openEightbackExplainer(from){
-  const v = EIGHTBACK_VIDEOS.full;
+function cardVideoButtonHTML(c, from){ const k = cardVideo(c); return k ? videoButtonHTML(k, from, c.id) : ''; }
+function openLessonVideo(key, from, cardId){
+  const v = LESSON_VIDEOS[key]; if (!v) return;
   openSheet(`<div class="video-lesson">
-    <p class="video-kicker">CPLR 2214(b) · motion deadlines</p>
-    <h3>Eight Before, Two Back</h3>
-    <video controls playsinline preload="metadata" poster="${v.poster}" aria-describedby="eightback-video-note eightback-transcript">
+    <p class="video-kicker">${esc(v.kicker)}</p>
+    <h3>${esc(v.title)}</h3>
+    <video controls playsinline preload="metadata" poster="${v.poster}" aria-describedby="lesson-video-note lesson-transcript">
       <source src="${v.src}" type="video/mp4">
       Your browser cannot play this video. The transcript follows below.
     </video>
-    <p class="video-note" id="eightback-video-note">Study guide to CPLR 2214(b); service method, calendar rules, and court directions can affect actual deadlines.</p>
-    <details class="video-transcript" id="eightback-transcript"><summary>Read the transcript</summary>
+    <p class="video-note" id="lesson-video-note">${esc(v.note)}</p>
+    <details class="video-transcript" id="lesson-transcript"><summary>Read the transcript</summary>
       ${v.transcript.map(p => `<p>${esc(p)}</p>`).join('')}
     </details>
-    <p class="video-sources"><a href="https://www.nysenate.gov/legislation/laws/CVP/2214" target="_blank" rel="noopener">New York Senate statute</a> · <a href="https://www.nycourts.gov/new-york-city-civil-court/cplr-2214" target="_blank" rel="noopener">New York Courts guide</a></p>
-    ${from === 'intro' ? `<button class="sheet-cancel" data-act="intro-back" data-id="eightback">Back to the intro</button>` : `<button class="sheet-cancel" data-act="sheet-close">Close explanation</button>`}
+    <p class="video-sources">${v.links.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(' · ')}</p>
+    ${from === 'intro' && cardId ? `<button class="sheet-cancel" data-act="intro-back" data-id="${cardId}">Back to the intro</button>` : `<button class="sheet-cancel" data-act="sheet-close">Close</button>`}
   </div>`);
 }
 
