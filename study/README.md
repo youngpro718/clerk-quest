@@ -39,3 +39,7 @@ The NY Courts guide index links to the following PDFs, but its PDF server return
 
 Commercial prep books and courses are fine for practice, but check anything that becomes a card
 against the official guide or the statute.
+
+## Expanded quick references (2026-10-03)
+
+The owner supplied 63 CPL entries and 6 Penal Law entries in `quick-reference/`. The original notes are retained as inputs. Verified, paraphrased summaries are being prepared separately; see `quick-reference/verification.md` for statute links and corrections. New card names, art, and quiz integration remain unpublished drafts pending design review. Exam-frequency claims and unconfirmed sample-question tags are not treated as verified facts.

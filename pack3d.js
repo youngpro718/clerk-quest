@@ -2,18 +2,21 @@
    Sticker Peel Test page). Uses three.js, loaded only for packs. The pack screen (openPack in index.html) calls
    Pack3D.attach() and drives it with peel() and finish(); if three.js can't load, the flat CSS rip is used instead. */
 (function(){
-  const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  const THREE_URLS = ['three.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'];   // the bundled copy first, so it works offline
   const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
   const reducedMotion = () => window.__CLERK_QUEST_REDUCE_MOTION__ === true || motionQuery.matches;
   let loading = null;
-  function load(){
-    if (window.THREE) return Promise.resolve();
-    if (!loading) loading = new Promise((ok, no) => {
-      const s = document.createElement('script'); s.src = THREE_URL; s.async = true;
+  function loadOne(url){
+    return new Promise((ok, no) => {
+      const s = document.createElement('script'); s.src = url; s.async = true;
       s.onload = () => window.THREE ? ok() : no(new Error('no THREE'));
-      s.onerror = () => { loading = null; no(new Error('three.js failed to load')); };
+      s.onerror = () => { s.remove(); no(new Error('three.js failed to load')); };
       document.head.appendChild(s);
     });
+  }
+  function load(){
+    if (window.THREE) return Promise.resolve();
+    if (!loading) loading = THREE_URLS.reduce((p, url) => p.catch(() => loadOne(url)), Promise.reject()).catch(e => { loading = null; throw e; });
     return loading;
   }
   setTimeout(() => load().catch(() => {}), 4000);   // warm up after startup, so the first pack is ready

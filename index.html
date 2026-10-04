@@ -74,6 +74,10 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .art-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .art-back{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%, #f6ead0 0%, #e2cc9f 45%, #9c8360 100%)}
 .art-back::after{content:"";position:absolute;left:0;right:0;bottom:0;height:30%;background:linear-gradient(#7a5a3a,#5e4329);border-top:.5cqw solid #3b2a1a;opacity:.55}
+.art-back.series4{background-color:#faf4e5;background-image:linear-gradient(rgba(67,118,170,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(67,118,170,.09) 1px,transparent 1px);background-size:7% 7%;box-shadow:inset 0 0 12cqw rgba(120,87,42,.2)}
+.art-back.series4::after{height:16%;background:repeating-linear-gradient(-8deg,transparent 0 9%,rgba(207,59,42,.5) 10% 12%);border:0;opacity:.65}
+.art-back.series5{background:radial-gradient(circle at 50% 38%,#f0c755 0 17%,#b33a32 18% 36%,#243b5c 37% 58%,#d9c08a 59% 100%)}
+.art-back.series5::after{inset:0;height:auto;border:0;background:repeating-conic-gradient(from 4deg at 50% 38%,rgba(255,244,204,.16) 0 5deg,transparent 5deg 12deg);opacity:.8}
 .art-bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.9) saturate(.92)}
 .art-vig{position:absolute;inset:0;background:radial-gradient(ellipse 70% 65% at 50% 55%, transparent 55%, rgba(20,12,4,.45) 100%)}
 .art-img.cut{inset:1% 2% 12% 2%;width:96%;height:87%;object-fit:contain;z-index:1;filter:drop-shadow(0 1.2cqw 0 rgba(0,0,0,.25))}
@@ -341,6 +345,10 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .zoom-card{width:min(88vw,420px,calc((100dvh - 90px) / 1.5));animation:zoomin .32s cubic-bezier(.2,1.3,.4,1) both}
 .zoom p{margin:0;color:var(--paper);opacity:.75}
 @keyframes zoomin{from{transform:scale(.6);opacity:0}}
+.pk-label.series45{left:15%;top:28%;width:70%;height:34%;display:grid;place-items:center;padding:8%;box-sizing:border-box;border:3px solid #1d1b17;color:#1d1b17;text-align:center;transform:rotate(-4deg);box-shadow:3px 4px 0 rgba(0,0,0,.35)}
+.pk-label.series45 b{font:clamp(19px,5vw,29px)/.9 "Bangers";letter-spacing:.04em}
+.pk-label.series45.s4{background:#fbf6e8;border-radius:48% 52% 46% 54%;text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#cf3b2a;text-underline-offset:5px}
+.pk-label.series45.s5{background:linear-gradient(135deg,#f0c755 0 48%,#c23a35 49% 100%);clip-path:polygon(50% 0,61% 19%,82% 8%,78% 31%,100% 36%,80% 50%,96% 67%,73% 68%,72% 93%,53% 78%,38% 100%,32% 76%,7% 88%,20% 62%,0 51%,22% 42%,5% 21%,31% 25%);padding:13%}
 .pk-hint{margin:0;font-size:20px;color:var(--paper);z-index:3;text-align:center;min-height:26px}
 .pk-auto{z-index:3;max-width:340px;color:var(--paper)}
 .pk.out .pk-auto,.pk.all .pk-auto{display:none}
@@ -658,7 +666,7 @@ body{overflow:hidden;background:var(--bg)}
 .screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;
   background:radial-gradient(ellipse at 50% -10%,rgba(255,220,160,.08),transparent 55%),var(--bg)}
 .navbar{flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;min-height:44px;
-  padding:env(safe-area-inset-top) 8px 0;background:rgba(29,26,22,.82);-webkit-backdrop-filter:saturate(1.5) blur(16px);backdrop-filter:saturate(1.5) blur(16px);
+  padding:env(safe-area-inset-top) 14px 0 10px;background:rgba(29,26,22,.82);-webkit-backdrop-filter:saturate(1.5) blur(16px);backdrop-filter:saturate(1.5) blur(16px);
   border-bottom:.5px solid transparent;transition:border-color .2s;position:relative;z-index:3}
 .screen.scrolled .navbar{border-bottom-color:var(--line)}
 .nb-left{justify-self:start;min-width:0}
@@ -742,7 +750,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .seg{display:flex;padding:3px;border-radius:12px;background:rgba(255,255,255,.08);margin:0 0 16px}
 .seg button{flex:1;min-height:36px;border:0;border-radius:9px;background:none;color:var(--sub);font:600 14px var(--ui)}
 .seg button.on{background:#4a4238;color:var(--paper);box-shadow:0 2px 6px rgba(0,0,0,.35)}
-.carousel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:4px 16px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.carousel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;margin:0 -16px;padding:4px 16px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .carousel::-webkit-scrollbar{display:none}
 .mini{flex:none;width:118px;scroll-snap-align:start;background:none;border:0;padding:0;color:var(--paper);text-align:center}
 .mini-cap{display:block;margin-top:6px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -966,20 +974,22 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js?v=cd5fc35d"></script>
-<script src="study.js?v=44298d89"></script>
+<script src="study.js?v=0e44ed8f"></script>
 <script src="economy.js?v=a7261374"></script>
-<script src="store.js?v=e62a784f"></script>
-<script src="binder.js?v=68f6d3dc"></script>
+<script src="store.js?v=85799f04"></script>
+<script src="study/quick-reference/quick-reference.js?v=798b706c"></script>
+<script src="study/quick-reference/series-lessons.js?v=9ec420fa"></script>
+<script src="binder.js?v=8f2bfec1"></script>
 <script src="onboarding.js?v=42992ec0"></script>
-<script src="account.js?v=ad784f4b"></script>
+<script src="account.js?v=e5de3785"></script>
 <script src="admin.js?v=fb5df08d"></script>
 <script src="stickers.js?v=70340509"></script>
 <script src="dockets.js?v=6c007863"></script>
-<script src="pack3d.js?v=b80572ea"></script>
-<script src="sticker3d.js?v=8c0216aa"></script>
+<script src="pack3d.js?v=175b3691"></script>
+<script src="sticker3d.js?v=9a43370e"></script>
 <script src="questions.js?v=f5b5ed28"></script>
 <script src="flair.js?v=b1cf746c"></script>
-<script>window.ART_MANIFEST = {"amendonce": {"1": "art/amendonce_1.webp"}, "character_acd": {"1": "art/character_acd_1.webp"}, "character_adjournment": {"1": "art/character_adjournment_1.webp"}, "character_affidavit": {"1": "art/character_affidavit_1.webp"}, "character_appeal30": {"1": "art/character_appeal30_1.webp"}, "character_bail": {"1": "art/character_bail_1.webp"}, "character_calendarcall": {"1": "art/character_calendarcall_1.webp"}, "character_eightback": {"1": "art/character_eightback_1.webp"}, "character_freeze": {"1": "art/character_freeze_1.webp"}, "character_interest": {"1": "art/character_interest_1.webp"}, "character_judgment": {"1": "art/character_judgment_1.webp"}, "character_jurywaiver": {"1": "art/character_jurywaiver_1.webp"}, "character_military": {"1": "art/character_military_1.webp"}, "character_motion": {"1": "art/character_motion_1.webp"}, "character_newtrial": {"1": "art/character_newtrial_1.webp"}, "character_quash": {"1": "art/character_quash_1.webp"}, "character_reargue": {"1": "art/character_reargue_1.webp"}, "character_renew": {"1": "art/character_renew_1.webp"}, "character_schoolnotice": {"1": "art/character_schoolnotice_1.webp"}, "character_sj120": {"1": "art/character_sj120_1.webp"}, "character_summons": {"1": "art/character_summons_1.webp"}, "character_undodefault": {"1": "art/character_undodefault_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
+<script>window.ART_MANIFEST = {"series4_case-starter": {"1": "art/series4_case-starter.webp"}, "s4_case_starter": {"1": "art/series4_case-starter.webp"}, "series4_clock-dodger": {"1": "art/series4_clock-dodger.webp"}, "s4_clock_dodger": {"1": "art/series4_clock-dodger.webp"}, "series4_exam-duo": {"1": "art/series4_exam-duo.webp"}, "s4_exam_duo": {"1": "art/series4_exam-duo.webp"}, "series4_jurisdiction-jet": {"1": "art/series4_jurisdiction-jet.webp"}, "s4_jurisdiction_jet": {"1": "art/series4_jurisdiction-jet.webp"}, "series4_jury-juggler": {"1": "art/series4_jury-juggler.webp"}, "s4_jury_juggler": {"1": "art/series4_jury-juggler.webp"}, "series4_note-ninja": {"1": "art/series4_note-ninja.webp"}, "s4_note_ninja": {"1": "art/series4_note-ninja.webp"}, "series4_plea-piper": {"1": "art/series4_plea-piper.webp"}, "s4_plea_piper": {"1": "art/series4_plea-piper.webp"}, "series4_proof-polly": {"1": "art/series4_proof-polly.webp"}, "s4_proof_polly": {"1": "art/series4_proof-polly.webp"}, "series4_sentence-sprint": {"1": "art/series4_sentence-sprint.webp"}, "s4_sentence_sprint": {"1": "art/series4_sentence-sprint.webp"}, "series4_trial-track": {"1": "art/series4_trial-track.webp"}, "s4_trial_track": {"1": "art/series4_trial-track.webp"}, "series4_verdict-vex": {"1": "art/series4_verdict-vex.webp"}, "s4_verdict_vex": {"1": "art/series4_verdict-vex.webp"}, "series4_warrant-walt": {"1": "art/series4_warrant-walt.webp"}, "s4_warrant_walt": {"1": "art/series4_warrant-walt.webp"}, "series5_captain-classify": {"1": "art/series5_captain-classify.webp"}, "s5_captain_classify": {"1": "art/series5_captain-classify.webp"}, "series5_class-shift": {"1": "art/series5_class-shift.webp"}, "s5_class_shift": {"1": "art/series5_class-shift.webp"}, "series5_double-gain": {"1": "art/series5_double-gain.webp"}, "s5_double_gain": {"1": "art/series5_double-gain.webp"}, "series5_felony-titan": {"1": "art/series5_felony-titan.webp"}, "s5_felony_titan": {"1": "art/series5_felony-titan.webp"}, "series5_minor-mischief": {"1": "art/series5_minor-mischief.webp"}, "s5_minor_mischief": {"1": "art/series5_minor-mischief.webp"}, "series5_offense-oracle": {"1": "art/series5_offense-oracle.webp"}, "s5_offense_oracle": {"1": "art/series5_offense-oracle.webp"}, "series5_split-verdict": {"1": "art/series5_split-verdict.webp"}, "s5_split_verdict": {"1": "art/series5_split-verdict.webp"}, "series5_the-aces": {"1": "art/series5_the-aces.webp"}, "s5_the_aces": {"1": "art/series5_the-aces.webp"}, "series5_the-fine-collector": {"1": "art/series5_the-fine-collector.webp"}, "s5_the_fine_collector": {"1": "art/series5_the-fine-collector.webp"}, "series5_the-many": {"1": "art/series5_the-many.webp"}, "s5_the_many": {"1": "art/series5_the-many.webp"}, "series5_triple-take": {"1": "art/series5_triple-take.webp"}, "s5_triple_take": {"1": "art/series5_triple-take.webp"}, "series5_vault-voltage": {"1": "art/series5_vault-voltage.webp"}, "s5_vault_voltage": {"1": "art/series5_vault-voltage.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "character_acd": {"1": "art/character_acd_1.webp"}, "character_adjournment": {"1": "art/character_adjournment_1.webp"}, "character_affidavit": {"1": "art/character_affidavit_1.webp"}, "character_appeal30": {"1": "art/character_appeal30_1.webp"}, "character_bail": {"1": "art/character_bail_1.webp"}, "character_calendarcall": {"1": "art/character_calendarcall_1.webp"}, "character_eightback": {"1": "art/character_eightback_1.webp"}, "character_freeze": {"1": "art/character_freeze_1.webp"}, "character_interest": {"1": "art/character_interest_1.webp"}, "character_judgment": {"1": "art/character_judgment_1.webp"}, "character_jurywaiver": {"1": "art/character_jurywaiver_1.webp"}, "character_military": {"1": "art/character_military_1.webp"}, "character_motion": {"1": "art/character_motion_1.webp"}, "character_newtrial": {"1": "art/character_newtrial_1.webp"}, "character_quash": {"1": "art/character_quash_1.webp"}, "character_reargue": {"1": "art/character_reargue_1.webp"}, "character_renew": {"1": "art/character_renew_1.webp"}, "character_schoolnotice": {"1": "art/character_schoolnotice_1.webp"}, "character_sj120": {"1": "art/character_sj120_1.webp"}, "character_summons": {"1": "art/character_summons_1.webp"}, "character_undodefault": {"1": "art/character_undodefault_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
 const REWARD = [25, 35, 50, 75, 100];     // XP per correct answer at each level
@@ -1733,6 +1743,35 @@ CARDS.push(
   Object.assign({}, S3, {"id": "freeze", "art": "character_freeze", "num": "★26", "l1": "THE CLERK CAN", "l2": "FREEZE IT", "name": "The Clerk Can Freeze It", "intro": {"idea": "A restraining notice can be issued by the clerk of the court, the judgment creditor's attorney, or a support collection unit. It stops a third party from transferring the debtor's property for up to one year.", "example": "The creditor's attorney serves a restraining notice on the debtor's bank. The bank cannot transfer that money for up to one year, or until the judgment is paid or vacated.", "source": "CPLR § 5222(a)–(b)"}, "emoji": "", "trickType": "who", "rarity": "uncommon", "maxLevel": 3, "quote": "Nobody moves\nthat money.", "source": {"cite": "CPLR 5222(a)–(b)", "quote": "(a) A restraining notice may be issued by the clerk of the court or the attorney for the judgment creditor as officer of the court, or by the support collection unit designated by the appropriate social services district. It may be served upon any person, except the employer of a judgment debtor or obligor where the property sought to be restrained consists of wages or salary due or to become due to the judgment debtor or obligor. It shall be served personally in the same manner as a summons or by registered or certified mail, return receipt requested … it shall state that disobedience is punishable as a contempt of court … (b) … Such a person is forbidden to make or suffer any sale, assignment or transfer of, or any interference with, any such property … until the expiration of one year after the notice is served upon him or her, or until the judgment or order is satisfied or vacated, whichever event first occurs.", "from": "NYSenate.gov Open Legislation, checked 2026-09-28", "context": "Enforcing a money judgment by freezing the debtor's property or money owed to the debtor."}, "hook": "WHO issues a restraining notice: the CLERK OF THE COURT · the judgment creditor's ATTORNEY (as officer of the court) · a SUPPORT COLLECTION UNIT. It must warn that disobeying is CONTEMPT. It holds a third party up to 1 YEAR, or until the judgment is paid or vacated.", "lore": ["A judgment is only paper until it's collected.", "The restraining notice freezes. It doesn't take.", "Break it, and it's contempt."], "bank": [{"lv": 1, "q": "Under CPLR 5222(a), a restraining notice may be issued by:", "c": ["The clerk of the court", "Only a judge", "Only the sheriff", "The debtor's bank"], "a": "The clerk of the court", "h": "It's in the card's name.", "w": "\"A restraining notice may be issued by the clerk of the court…\""}, {"lv": 1, "q": "Besides the clerk, who else may issue a restraining notice?", "c": ["The judgment creditor's attorney", "The judgment debtor", "Any bank", "The jury"], "a": "The judgment creditor's attorney", "h": "As an officer of the court.", "w": "\"…or the attorney for the judgment creditor as officer of the court…\""}, {"lv": 1, "type": "tf", "q": "TRUE or FALSE: A restraining notice must state that disobeying it is punishable as a contempt of court.", "c": ["True", "False"], "a": "True", "h": "A warning is required.", "w": "\"…it shall state that disobedience is punishable as a contempt of court…\""}, {"lv": 2, "q": "A restraining notice may be served:", "c": ["Personally like a summons, or by registered or certified mail", "Only by email", "By posting it on the courthouse door", "Only by the judge"], "a": "Personally like a summons, or by registered or certified mail", "h": "Like a summons, or by mail.", "w": "\"It shall be served personally in the same manner as a summons or by registered or certified mail, return receipt requested…\""}, {"lv": 2, "type": "tf", "q": "TRUE or FALSE: A bank served with a restraining notice may transfer the debtor's money to anyone who asks.", "c": ["True", "False"], "a": "False", "h": "Frozen means frozen.", "w": "The person served is \"forbidden to make or suffer any sale, assignment or transfer of, or any interference with, any such property.\""}, {"lv": 2, "q": "When the property is the debtor's wages, who may NOT be served with a restraining notice?", "c": ["The debtor's employer", "The debtor's bank", "The debtor", "Someone holding the debtor's property"], "a": "The debtor's employer", "h": "Wages come from…", "w": "It may be served on anyone \"except the employer of a judgment debtor … where the property sought to be restrained consists of wages or salary.\""}, {"lv": 3, "q": "A restraining notice served on someone other than the debtor lasts until:", "c": ["1 year after service, or the judgment is paid or vacated, whichever is first", "Forever", "30 days", "The debtor moves away"], "a": "1 year after service, or the judgment is paid or vacated, whichever is first", "h": "Whichever comes first.", "w": "\"…until the expiration of one year after the notice is served … or until the judgment or order is satisfied or vacated, whichever event first occurs.\""}, {"lv": 3, "type": "tf", "q": "TRUE or FALSE: The judgment is paid in full two months after a bank was served. The restraint on the bank ends.", "c": ["True", "False"], "a": "True", "h": "Satisfied.", "w": "The restraint lasts only until the judgment \"is satisfied or vacated,\" if that comes before the year is up."}, {"lv": 3, "q": "Which other body may also issue a restraining notice?", "c": ["A support collection unit", "The Board of Elections", "The Court of Appeals", "The police"], "a": "A support collection unit", "h": "Support cases.", "w": "\"…or by the support collection unit designated by the appropriate social services district.\""}]}),
   Object.assign({}, S3, {"id": "appeal30", "art": "character_appeal30", "num": "★27", "l1": "SERVE IT, FILE IT,", "l2": "30 DAYS", "name": "Serve It, File It, 30 Days", "intro": {"idea": "To appeal as of right, serve a notice of appeal on the other side and file it where the judgment was entered, within 30 days after being served with the judgment and notice of entry.", "example": "The winning side serves the judgment with notice of entry on June 1. The losing side must serve and file the notice of appeal by July 1.", "source": "CPLR §§ 5513(a), 5515(1)"}, "emoji": "", "trickType": "clock", "rarity": "rare", "maxLevel": 5, "quote": "Serve it. File it.\nThirty days.", "source": {"cite": "CPLR 5513, 5515", "quote": "5513(a) An appeal as of right must be taken within thirty days after service by a party upon the appellant of a copy of the judgment or order appealed from and written notice of its entry, except that when the appellant has served a copy of the judgment or order and written notice of its entry, the appeal must be taken within thirty days thereof. (b) … A motion for permission to appeal must be made within thirty days. (c) A party upon whom the adverse party has served a notice of appeal or motion papers on a motion for permission to appeal may take an appeal or make a motion for permission to appeal within ten days after such service or within the time limited by subdivision (a) or (b) of this section, whichever is longer … 5515(1) An appeal shall be taken by serving on the adverse party a notice of appeal and filing it in the office where the judgment or order of the court of original instance is entered … A notice shall designate the party taking the appeal, the judgment or order or specific part of the judgment or order appealed from and the court to which the appeal is taken. (2) Whenever an appeal is taken to the court of appeals, a copy of the notice of appeal shall be sent forthwith to the clerk of the court of appeals by the clerk of the office where the notice of appeal is required to be filed pursuant to this section. (3) Where leave to appeal to the court of appeals is granted by permission of the appellate division, a copy of the order granting such permission to appeal shall be sent forthwith to the clerk of the court of appeals by the clerk of the appellate division.", "from": "NYSenate.gov Open Legislation, checked 2026-09-28", "context": "Taking an appeal from a civil judgment or order."}, "hook": "To APPEAL: SERVE a notice of appeal on the other side · FILE it where the judgment was ENTERED · within 30 DAYS of service of the judgment or order with NOTICE OF ENTRY.", "lore": ["Losing isn't the end.", "Serve the other side. File with the clerk.", "Thirty days, and service starts the clock.", "Cross-appeals get at least ten days.", "Going to the Court of Appeals? The clerk sends a copy."], "bank": [{"lv": 1, "q": "An appeal as of right must be taken within how many days after service of the judgment or order with notice of entry?", "c": ["30 days", "10 days", "60 days", "1 year"], "a": "30 days", "h": "It's in the card's name.", "w": "\"An appeal as of right must be taken within thirty days after service…\""}, {"lv": 1, "q": "Under 5515(1), an appeal is taken by serving a notice of appeal on the other side and:", "c": ["Filing it where the judgment was entered", "Mailing it to the governor", "Posting it in the courtroom", "Reading it at trial"], "a": "Filing it where the judgment was entered", "h": "Serve it, then…", "w": "\"…filing it in the office where the judgment or order of the court of original instance is entered.\""}, {"lv": 1, "type": "tf", "q": "TRUE or FALSE: The notice of appeal is served on the adverse party.", "c": ["True", "False"], "a": "True", "h": "Serve it.", "w": "\"…by serving on the adverse party a notice of appeal…\""}, {"lv": 2, "type": "tf", "q": "TRUE or FALSE: The 30-day appeal clock starts when the judge signs the order, even if no one serves it.", "c": ["True", "False"], "a": "False", "h": "Service starts it.", "w": "It runs from \"service … of a copy of the judgment or order … and written notice of its entry.\""}, {"lv": 2, "q": "A notice of appeal must designate all of these EXCEPT:", "c": ["The judge's name", "The party taking the appeal", "The judgment or part appealed from", "The court the appeal goes to"], "a": "The judge's name", "h": "Three things are required.", "w": "The notice designates the party appealing, the judgment or order (or part), and the court the appeal is taken to."}, {"lv": 2, "q": "The appellant served the judgment with notice of entry on the other side on May 1. The 30 days run from:", "c": ["May 1", "The day the judge decided", "The trial date", "The note of issue"], "a": "May 1", "h": "\"…within thirty days thereof.\"", "w": "When the appellant serves it, \"the appeal must be taken within thirty days thereof.\""}, {"lv": 3, "type": "tf", "q": "TRUE or FALSE: Filing the notice of appeal, without serving the other side, is enough to take the appeal.", "c": ["True", "False"], "a": "False", "h": "Serve it AND file it.", "w": "An appeal is taken \"by serving on the adverse party a notice of appeal and filing it…\""}, {"lv": 3, "q": "The judgment was entered in the Kings County Clerk's office. Where is the notice of appeal filed?", "c": ["The Kings County Clerk's office", "The Court of Appeals", "Any county clerk", "The sheriff"], "a": "The Kings County Clerk's office", "h": "Where it was entered.", "w": "It's filed \"in the office where the judgment or order … is entered.\""}, {"lv": 3, "q": "What starts the 30-day appeal clock?", "c": ["Service of the judgment with written notice of entry", "The verdict", "Filing the notice of appeal", "The judge's signature"], "a": "Service of the judgment with written notice of entry", "h": "Service plus notice.", "w": "\"…service … of a copy of the judgment or order appealed from and written notice of its entry…\""}, {"lv": 4, "q": "The other side served you with its notice of appeal. Under 5513(c), you may cross-appeal within:", "c": ["10 days or your own 30, whichever is longer", "5 days", "1 day", "90 days"], "a": "10 days or your own 30, whichever is longer", "h": "\"…whichever is longer.\"", "w": "\"…within ten days after such service or within the time limited by subdivision (a) … whichever is longer.\""}, {"lv": 4, "type": "tf", "q": "TRUE or FALSE: A party served with the other side's notice of appeal always has only 10 days to cross-appeal.", "c": ["True", "False"], "a": "False", "h": "Not always 10.", "w": "It's 10 days or their original time, whichever is longer."}, {"lv": 4, "q": "Under 5513(b), a motion for permission to appeal must be made within:", "c": ["30 days", "10 days", "1 year", "120 days"], "a": "30 days", "h": "Same as an appeal.", "w": "\"A motion for permission to appeal must be made within thirty days.\""}, {"lv": 5, "q": "When an appeal is taken to the Court of Appeals, who sends a copy of the notice of appeal to the clerk of the Court of Appeals?", "c": ["The clerk of the office where it's filed", "The appellant", "The sheriff", "The trial judge"], "a": "The clerk of the office where it's filed", "h": "A clerk's job.", "w": "5515(2): it \"shall be sent forthwith to the clerk of the court of appeals by the clerk of the office where the notice of appeal is required to be filed.\""}, {"lv": 5, "type": "tf", "q": "TRUE or FALSE: That copy must be sent \"forthwith.\"", "c": ["True", "False"], "a": "True", "h": "Right away.", "w": "\"…shall be sent forthwith to the clerk of the court of appeals…\""}, {"lv": 5, "q": "The Appellate Division grants permission to appeal to the Court of Appeals. Who sends the order to the Court of Appeals clerk?", "c": ["The clerk of the Appellate Division", "The winning party", "The trial judge", "No one"], "a": "The clerk of the Appellate Division", "h": "Another clerk's job.", "w": "5515(3): \"…a copy of the order granting such permission … shall be sent forthwith to the clerk of the court of appeals by the clerk of the appellate division.\""}]}),
 );
+/* Series 4/5 are maintained in the verified quick-reference module. Keep the adapter
+   deliberately small: content stays in that module, while every normal app path still
+   consumes the same CARDS objects as the original three series. */
+const SERIES45_DATA = window.CQ_SERIES45 || window.SERIES45 || window.CLERK_QUEST_SERIES45 || {};
+const SERIES45_SOURCE_CARDS = Array.isArray(SERIES45_DATA) ? SERIES45_DATA
+  : (SERIES45_DATA.cards || window.SERIES45_CARDS || []);
+const series45Slug = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+function series45Title(name){
+  const words = String(name || '').toUpperCase().split(/\s+/), cut = Math.max(1, Math.ceil(words.length / 2));
+  return [words.slice(0, cut).join(' '), words.slice(cut).join(' ') || words.slice(0, cut).join(' ')];
+}
+function series45Card(raw, i){
+  const series = Number(raw.series), number = Number(raw.number || (i % 12) + 1);
+  const slug = raw.slug || series45Slug(raw.name), title = series45Title(raw.name), cite = raw.cite || (raw.source && raw.source.cite) || '';
+  const source = raw.source || (raw.sourceQuote || raw.rule ? { cite, quote:raw.sourceQuote || raw.rule,
+    from:raw.sourceFrom || 'Verified quick-reference source notes', context:raw.context || raw.topic || '' } : null);
+  return Object.assign({
+    id:raw.id || `s${series}_${slug}`, art:`series${series}_${slug}`, asset:`assets/series${series}/characters/${slug}.png`,
+    series, num:`S${series}-${String(number).padStart(2,'0')}`, l1:title[0], l2:title[1], name:raw.name,
+    category:series === 4 ? 'DOODLE QUICK REFERENCE' : 'VINTAGE QUICK REFERENCE',
+    set:series === 4 ? 'CRIMINAL PROCEDURE' : 'PENAL LAW', rarity:'uncommon', icon:'court', emoji:'',
+    maxLevel:5, stickers:{}, cutout:true, canonicalCharacter:true, frameBreak:true,
+    intro:{ idea:raw.summary || raw.topic || raw.name, example:raw.example || '', source:cite },
+    quote:raw.tagline || raw.quote || raw.topic || raw.name, source,
+    hook:raw.hook || raw.summary || raw.topic || '', panel:raw.panel, lore:raw.lore || [], bank:raw.bank || raw.questions || [],
+  }, raw, { series, source, art:raw.art || `series${series}_${slug}`, asset:raw.asset || `assets/series${series}/characters/${slug}.png` });
+}
+CARDS.push(...SERIES45_SOURCE_CARDS.filter(c => c && (Number(c.series) === 4 || Number(c.series) === 5)).map(series45Card));
+
 const SERIES3_IDS = new Set(['eightback','reargue','renew','sj120','undodefault','freeze','appeal30']);
 const SERIES3_BACKGROUNDS = {
   eightback:'art/bg_calendarcall_1.webp', reargue:'art/bg_judgment_1.webp', renew:'art/bg_records.webp',
@@ -1934,6 +1973,11 @@ function probeArt(){
   const jobs = [];
   CARDS.forEach(c => {
     ART[c.id] = {};
+    if (c.asset) jobs.push(new Promise(res => {
+      const img = new Image(); const done = () => res();
+      img.onload = () => { ART[c.id][1] = c.asset; done(); };
+      img.onerror = done; setTimeout(done, 2500); img.src = c.asset;
+    }));
     const levels = c.series === 3 ? [1] : [1,2,3,4,5];
     for (const l of levels) for (const ext of ['png','jpg','webp']) {
       jobs.push(new Promise(res => {
@@ -1981,7 +2025,7 @@ function resolvedArtLevel(c, lv){
   return 0;
 }
 function frameBreakCharacter(c, lv){
-  if (!FRAME_BREAK_CARDS.has(c.id) || !c.cutout || lv !== maxL(c)) return '';
+  if (!(FRAME_BREAK_CARDS.has(c.id) || c.frameBreak) || !c.cutout || lv !== maxL(c)) return '';
   const base = resolvedArtLevel(c, lv);
   if (!base || (c.scene && c.scene[base])) return '';
   return `<img class="framebreak-character${c.series === 2 ? ' series2' : ''}" src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`;
@@ -1994,7 +2038,7 @@ function artHTML(c, lv, opt={}){
   const cut = c.cutout && !(c.scene && c.scene[base]);  // some levels are full scenes even on cut-out cards
   let h = (c.trickType && !c.mnemonic && !opt.omitMnemonicBadge) ? `<img class="mn-badge low" src="art/icon_memory.webp" alt="Memory Trick">` : '';
   h += base
-    ? (cut ? (bgFor(c, lv) ? `<img class="art-bgimg" src="${bgFor(c, lv)}" alt=""><div class="art-vig"></div>` : `<div class="art-back"></div>`) : '') + (opt.omitCharacter && cut ? '' : `<img class="art-img ${cut?'cut':''}" src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`)
+    ? (cut ? (bgFor(c, lv) ? `<img class="art-bgimg" src="${bgFor(c, lv)}" alt=""><div class="art-vig"></div>` : `<div class="art-back series${c.series || 1}"></div>`) : '') + (opt.omitCharacter && cut ? '' : `<img class="art-img ${cut?'cut':''}" src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`)
     : `<div class="art-ph"><span class="ph-tag">ART COMING SOON</span><div class="ph-emoji">${c.emoji}</div></div>`;
   for (let l = Math.max(base+1, 2); l <= lv; l++) (c.stickers[l]||[]).forEach(s => h += stickerHTML(s));
   h += foil;
@@ -2070,7 +2114,8 @@ function frontHTML(c, st, opt={}){
     <div class="t set" style="${P(334,1294,706,1446)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl" style="${P(728,1290,944,1448)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${sparks}
-    ${c.series ? `<img class="series-badge" src="art/series${c.series}_badge.webp" alt="Series ${c.series}" style="${P(806,392,952,538)}">` : ''}
+    ${c.series ? (c.series <= 3 ? `<img class="series-badge" src="art/series${c.series}_badge.webp" alt="Series ${c.series}" style="${P(806,392,952,538)}">`
+      : `<span class="series" aria-label="Series ${c.series}" style="${P(806,410,952,514)}">SERIES ${c.series}</span>`) : ''}
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
 }
 /* Glow tiers: neon ring on the levels just below the top, gold ring + gloss at the top. */
@@ -2543,11 +2588,14 @@ const SERIES = [
   {g:'s1', label:'Series 1', icon:'series1'},
   {g:'s2', label:'Series 2', icon:'series2'},
   {g:'s3', label:'Series 3', icon:'series3'},
+  {g:'s4', label:'Series 4', icon:'cards'},
+  {g:'s5', label:'Series 5', icon:'cards'},
   {g:'tricks', label:'All Memory Tricks', icon:'memory'},
 ];
 function groupTest(g){
   if (g.startsWith('set:')) { const n = g.slice(4); return c => c.set === n; }
-  return ({all:() => true, s1:c => !c.series && !c.trickType, s2:c => c.series === 2, s3:c => c.series === 3, tricks:c => !!c.trickType})[g] || (() => true);
+  return ({all:() => true, s1:c => !c.series && !c.trickType, s2:c => c.series === 2, s3:c => c.series === 3,
+    s4:c => c.series === 4, s5:c => c.series === 5, tricks:c => !!c.trickType})[g] || (() => true);
 }
 function groupLabel(g){
   if (g.startsWith('set:')) return titleCase(g.slice(4));
@@ -2558,7 +2606,7 @@ const ICO = (name, cls = '') => `<img class="ico ${cls}" src="art/icon_${name}.w
 const artSrc = name => `art/${name}.webp`;
 const stickerArtSrc = id => ['summons','motion'].includes(id) ? artSrc('character_' + id + '_1') : artSrc('sticker_' + id);
 /* Pack art follows the newest series inside: Series 3, then Series 2, then the original pack */
-const packArtFor = cards => cards.some(c => c && c.series === 3) ? 'art/pack_s3.webp' : cards.some(c => c && c.series === 2) ? 'art/pack_s2.webp' : 'art/pack.webp';
+const packArtFor = cards => cards.some(c => c && c.series >= 3) ? 'art/pack_s3.webp' : cards.some(c => c && c.series === 2) ? 'art/pack_s2.webp' : 'art/pack.webp';
 const nextPackArt = () => nextPackArtSrc();   // the wrapper of the series the next free pack comes from
 const hintCosts = () => !!(sess && sess.hint && !sess.freeHint);   // a free-hint boost makes the hint cost nothing
 const backSrc = () => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : 'art/cardback.webp';   // the card back in use
@@ -2883,10 +2931,10 @@ const SCREENS = {
              <button class="row" data-act="cloud-signout"><span class="th emo gi">${ICO('signout')}</span><span class="row-main"><b>Sign out</b></span></button>`
           : `<button class="row" data-act="cloud-signin"><span class="th emo gi">${ICO('cloud')}</span><span class="row-main"><b>Create an account or sign in</b><small>Keep your cards on every device</small></span>${chev}</button>`}
       </div>
-      <div class="list">
+      ${window.__CLERK_QUEST_IOS__ ? '' : `<div class="list">
         <button class="row" data-act="a2hs-show"><span class="th emo gi">${ICO('install')}</span><span class="row-main"><b>Add to Home Screen</b><small>${isStandalone() ? 'Already installed' : 'Play full screen like an app'}</small></span>${chev}</button>
         <button class="row" data-act="push" data-s="glows"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Glow tiers preview</b></span>${chev}</button>
-      </div>
+      </div>`}
       ${ADM.is ? `<div class="sec-h"><span>Tester tools</span></div>
       <div class="list">
         <button class="row" data-act="push" data-s="rewardpreview"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Reward cards</b><small>Preview the RBG card: rare, black and white, back, quiz</small></span>${chev}</button>
@@ -3257,18 +3305,33 @@ function surprisePrize(){
   const n = 20 + rnd(41); earnCoins(n, 'Sticker surprise', { save:true });
   return { big:`+${n} COINS`, note:'Tucked under the sticker.' };
 }
-function showSurprise(layer, stage, st){
-  const panel = html => { const d = document.createElement('div'); d.innerHTML = html; const el = d.firstElementChild; stage.style.touchAction = 'auto'; stage.appendChild(el); return el; };
-  const win = () => { S.stickerMiss = 0; const p = surprisePrize(); return panel(`<div class="sur win"><b>LUCKY PEEL!</b><span class="sur-big">${esc(p.big)}</span><p>${esc(p.note)}</p></div>`); };
-  const miss = (extra = '') => { S.stickerMiss = (S.stickerMiss || 0) + 1; save(); return panel(`<div class="sur"><b>${extra ? 'SO CLOSE!' : 'NOTHING THIS TIME'}</b><p>${extra || esc(pick(SUR_MISS))}</p></div>`); };
+/* What is under the sticker is decided the moment the peel starts, and printed on the backing inside the sticker's shape
+   (StickerPeel's setMessage). Only the pop quiz needs real buttons, so it still opens as a panel once the sticker is off. */
+function surpriseMiss(extra = ''){ S.stickerMiss = (S.stickerMiss || 0) + 1; save(); return { title:extra ? 'SO CLOSE!' : 'NOTHING THIS TIME', note:extra || pick(SUR_MISS) }; }
+function surpriseWin(){ S.stickerMiss = 0; const p = surprisePrize(); return { win:true, title:'LUCKY PEEL!', big:p.big, note:p.note }; }
+function surpriseOutcome(){
   const kind = rollSurprise();
-  if (kind === 'prize') return win();
-  if (kind === 'miss') return miss();
+  return kind === 'prize' ? surpriseWin() : kind === 'miss' ? surpriseMiss() : 'quiz';
+}
+function showSurprise(layer, stage, st){
+  const ctl = layer._ctl;
+  // no 3D peel (flat fallback): the message goes in a card instead
+  const show = m => {
+    if (ctl && ctl.setMessage) return ctl.setMessage(m);
+    const d = document.createElement('div');
+    d.innerHTML = `<div class="sur ${m.win ? 'win' : ''}"><b>${esc(m.title)}</b>${m.big ? `<span class="sur-big">${esc(m.big)}</span>` : ''}<p>${esc(m.note)}</p></div>`;
+    stage.style.touchAction = 'auto'; stage.appendChild(d.firstElementChild);
+  };
+  const o = layer._outcome || (layer._outcome = surpriseOutcome());
+  if (o !== 'quiz') { if (!layer._printed) show(o); return; }
+  const win = () => show(surpriseWin()), miss = extra => show(surpriseMiss(extra));
   try {
     const stickerCard = byId(st.id), c = owned(stickerCard) ? stickerCard : CARDS.find(owned);
     if (!c) return miss();
     const q = nextQuestion(c, S.cards[c.id].level || 1, new Set());
-    const el = panel(`<div class="sur"><b>POP QUIZ!</b><p>${esc(q.q)}</p><div class="sur-opts">${q.opts.map((o, i) => `<button data-act="bstk-ans" data-i="${i}">${esc(o)}</button>`).join('')}</div></div>`);
+    const d = document.createElement('div');
+    d.innerHTML = `<div class="sur"><b>POP QUIZ!</b><p>${esc(q.q)}</p><div class="sur-opts">${q.opts.map((o, i) => `<button data-act="bstk-ans" data-i="${i}">${esc(o)}</button>`).join('')}</div></div>`;
+    const el = d.firstElementChild; stage.style.touchAction = 'auto'; stage.appendChild(el);
     layer._quiz = { q, el, win, miss };
   } catch (e) { miss(); }
 }
@@ -3291,11 +3354,14 @@ function openSticker(ov){
     btn.disabled = false; btn.className = 'btn-big gold'; btn.dataset.act = 'bstk-stick'; btn.textContent = 'STICK IT ON A BINDER';
     btn.insertAdjacentHTML('afterend', '<button class="sheet-cancel" data-act="bstk-done">Save it for later</button>');
     ov.querySelector('.pk-done').textContent = 'COLLECT →'; ov.querySelector('.pk-done').dataset.act = 'pk-done';
+    const pkHint = ov.querySelector('.pk-hint'); if (pkHint) pkHint.textContent = 'Nice pull! Tap a card to see it up close.';
     showSurprise(layer, stage, st);
   };
   const flat = () => { stage.innerHTML = `<img src="${src}" alt="${esc(info.name)}">`; btn.dataset.act = 'bstk-take'; btn.textContent = 'TAKE IT'; hint.textContent = ''; layer._peeled = peeled; };
   if (!window.StickerPeel) return flat();
-  StickerPeel.mount(stage, { src, holo:st.holo, onPeeled:peeled, onHint:() => { hint.textContent = 'Start right at the edge of the sticker.'; } })
+  StickerPeel.mount(stage, { src, holo:st.holo, onPeeled:peeled,
+    onStart:api => { const o = layer._outcome || (layer._outcome = surpriseOutcome()); if (o !== 'quiz') { api.setMessage(o); layer._printed = true; } },
+    onHint:() => { hint.textContent = 'Start right at the edge of the sticker.'; } })
     .then(ctl => { layer._ctl = ctl; }).catch(flat);
 }
 
@@ -3404,7 +3470,9 @@ function openPack(opts = {}){
   if (coin) S.continuances = (S.continuances || 0) + 1;
   save();
   const packImg = opts.img || (pulls.series ? seriesPackArt(pulls.series) : packArtFor(pulls.map(p => p.c)));
-  const label = opts.label ? `<span class="pk-label">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(opts.label)}</b></span>` : '';
+  const packSeries = Number(pulls.series || opts.series || 0);
+  const packLabel = opts.label || (packSeries >= 4 ? seriesDef(packSeries).label : '');
+  const label = packLabel ? `<span class="pk-label ${packSeries >= 4 ? `series45 s${packSeries}` : ''}">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(packLabel)}</b></span>` : '';
   lockScroll(); history.pushState({cq:'pack'}, '');
   const ov = document.createElement('div'); ov.className = 'pk';
   const line = tearLine();
@@ -3423,7 +3491,7 @@ function openPack(opts = {}){
       </button>`).join('')}</div>
     </div>
     ${coin ? `<div class="pk-coin"><img src="${artSrc('continuance_coin')}" alt=""><span><b>+1 CONTINUANCE</b><small>Reopens a missed Hot Docket</small></span></div>` : ''}
-    <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Swipe across the top to rip it open.' : packImg.includes('s3') ? 'A Series 3 pack! Swipe across the top to rip it open.' : packImg.includes('s2') ? 'A Series 2 pack! Swipe across the top to rip it open.' : 'Swipe across the top to rip it open.'}</p>
+    <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Swipe across the top to rip it open.' : packSeries ? `A Series ${packSeries} pack! Swipe across the top to rip it open.` : 'Swipe across the top to rip it open.'}</p>
     <button class="sheet-cancel pk-auto" data-act="pk-auto">Open for me</button>
     <button class="btn-big gold pk-done" data-act="${bonus ? 'pk-sticker' : 'pk-done'}">${bonus ? 'OPEN YOUR BONUS STICKER' : 'COLLECT →'}</button>`;
   document.body.appendChild(ov);

@@ -8,6 +8,16 @@ function ruleSubjects(){
   const sets = [...new Set(ruleCards().map(c => c.set))];
   return sets.map(set => ({ set, label:titleCase(set), cards:ruleCards().filter(c => c.set === set) }));
 }
+function quickReferenceEntries(){ return Array.isArray(window.CQ_QUICK_REFERENCE) ? window.CQ_QUICK_REFERENCE : []; }
+function quickReferenceSubjects(){
+  return [...new Set(quickReferenceEntries().map(r => r.law))].map(law => ({ law, label:`${law} Quick Reference`, entries:quickReferenceEntries().filter(r => r.law === law) }));
+}
+function quickReferenceRow(r, words=[]){
+  const title = words.length ? markWords(r.title, words) : esc(r.title), cite = words.length ? markWords(r.cite, words) : esc(r.cite);
+  const summary = words.length ? markWords(r.summary, words) : esc(r.summary);
+  return `<button class="row" data-act="push" data-s="reference" data-id="${esc(r.id)}"><span class="th emo gi">${ICO('read')}</span>
+    <span class="row-main"><b>${title}</b><small>${cite}</small>${words.length ? `<span class="snip">${summary}</span>` : ''}</span>${chev}</button>`;
+}
 
 /* ---------- notebook storage (in the main save, so cloud save carries it) ---------- */
 function nb(){
@@ -65,10 +75,11 @@ document.addEventListener('click', e => {
 function caseFileHTML(c){
   if (!onb().read) onbFlag('read');   // Getting Started: "Read a rule"
   const read = !!(S.read || {})[c.id];
-  return `<div class="casefile"><h4>The source rule</h4><div class="cite">${esc(c.source.cite)}</div>
-    <p class="cf-quote">“${phrasesHTML(c)}”</p><p class="hl-tip">Tap a phrase to highlight it. Tap again to clear it.</p>
+  const paraphrase = !!c.source.paraphrase;
+  return `<div class="casefile"><h4>${paraphrase ? 'Verified study summary' : 'The source rule'}</h4><div class="cite">${esc(c.source.cite)}</div>
+    <p class="cf-quote">${paraphrase ? phrasesHTML(c) : `“${phrasesHTML(c)}”`}</p><p class="hl-tip">Tap a phrase to highlight it. Tap again to clear it.</p>
     ${READ_QS[c.id] ? `<h4>Read it with these questions</h4><ol>${READ_QS[c.id].map(q => `<li>${esc(q)}</li>`).join('')}</ol>` : ''}
-    <h4>When it comes up</h4><p class="ctx">${esc(c.source.context)}</p><p class="from">Source: ${esc(c.source.from)}</p>
+    <h4>When it comes up</h4><p class="ctx">${esc(c.source.context)}</p><p class="from">${paraphrase ? 'Paraphrase checked against' : 'Source'}: ${esc(c.source.from)}${paraphrase && c.source.url ? ` · <a href="${esc(c.source.url)}" target="_blank" rel="noopener">controlling text</a>` : ''}</p>
     ${noteBoxHTML(c)}
     <button class="readbtn ${read ? 'done' : ''}" data-act="mark-read" data-id="${c.id}" ${read ? 'disabled' : ''}>${read ? 'Case file reviewed' : `Mark as reviewed · +${READ_XP} XP`}</button></div>`;
 }
@@ -88,6 +99,10 @@ function searchRules(query){
     return words.every(w => hay.includes(w));
   });
 }
+function searchQuickReference(query){
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  return quickReferenceEntries().filter(r => words.every(w => [r.title,r.cite,r.summary,r.context,r.hook,...(r.tags || [])].join(' ').toLowerCase().includes(w)));
+}
 function markWords(text, words){
   // One pass over the raw text, so a search word can never match inside an inserted <mark> tag
   const re = new RegExp(words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'gi');
@@ -105,13 +120,15 @@ function snippet(c, words){
 function readResultsHTML(query){
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!words.length) {
-    return `<div class="list">${ruleSubjects().map(s => `<button class="row" data-act="push" data-s="readset" data-g="${esc(s.set)}">
+    return `<div class="list">${quickReferenceSubjects().map(s => `<button class="row" data-act="push" data-s="referenceset" data-g="${esc(s.law)}">
+      <span class="th emo gi">${ICO('read')}</span><span class="row-main"><b>${esc(s.label)}</b><small>${s.entries.length} verified summaries</small></span>${chev}</button>`).join('')}
+      ${ruleSubjects().map(s => `<button class="row" data-act="push" data-s="readset" data-g="${esc(s.set)}">
       <span class="th emo gi">${ICO('read')}</span><span class="row-main"><b>${esc(s.label)}</b><small>${s.cards.length} rule${s.cards.length === 1 ? '' : 's'}</small></span>${chev}</button>`).join('')}</div>
-      <p class="foot">Every rule here is quoted from its official source. You can read rules for cards you haven't collected yet.</p>`;
+      <p class="foot">Quick Reference entries are checked summaries for study; follow the official-source link for controlling text. Card rules and study summaries stay readable before collection.</p>`;
   }
-  const hits = searchRules(query);
-  if (!hits.length) return `<p class="empty">No rules match “${esc(query)}”. Try a single word, like <b>summons</b> or <b>days</b>.</p>`;
-  return `<div class="list results">${hits.map(c => `<button class="row" data-act="push" data-s="rule" data-id="${c.id}">${thumb(c)}
+  const hits = searchRules(query), refs = searchQuickReference(query);
+  if (!hits.length && !refs.length) return `<p class="empty">No rules match “${esc(query)}”. Try a single word, like <b>summons</b> or <b>days</b>.</p>`;
+  return `<div class="list results">${refs.map(r => quickReferenceRow(r, words)).join('')}${hits.map(c => `<button class="row" data-act="push" data-s="rule" data-id="${c.id}">${thumb(c)}
     <span class="row-main"><b>${markWords(c.name, words)}</b><small>${markWords(c.source.cite, words)}</small><span class="snip">${snippet(c, words)}</span>
     ${owned(c) ? '' : '<span class="notyet">Not in your collection yet</span>'}</span>${chev}</button>`).join('')}</div>`;
 }
@@ -257,6 +274,19 @@ new MutationObserver(() => document.querySelectorAll('textarea.cf-note,textarea.
 
 /* ---------- screens ---------- */
 const STUDY_SCREENS = {
+  referenceset(p){
+    const s = quickReferenceSubjects().find(x => x.law === p.g) || {label:'Quick Reference', entries:[]};
+    return { title:s.label, body:`<div class="list">${s.entries.map(r => quickReferenceRow(r)).join('')}</div>` };
+  },
+  reference(p){
+    const r = quickReferenceEntries().find(x => x.id === p.id);
+    if (!r) return { title:'Reference unavailable', body:'<p class="empty">This reference could not be found.</p>' };
+    return { title:r.title, body:`<p class="rule-sub">${esc(r.cite)} · checked ${esc(r.verified || '')}</p>
+      <div class="casefile qr-file"><h4>Verified summary</h4><p>${esc(r.summary)}</p>
+      <h4>When it comes up</h4><p>${esc(r.context)}</p>${r.example ? `<h4>Example</h4><p>${esc(r.example)}</p>` : ''}
+      ${r.hook ? `<h4>Memory hook</h4><p>${esc(r.hook)}</p>` : ''}</div>
+      ${r.url ? `<p class="foot"><a href="${esc(r.url)}" target="_blank" rel="noopener">Read the controlling text at NYSenate.gov</a>. This study summary is not a substitute for the statute.</p>` : ''}` };
+  },
   readset(p){
     const s = ruleSubjects().find(x => x.set === p.g) || {label:'Rules', cards:[]};
     return { title:s.label, body:`<div class="list">${s.cards.map(c => ruleRow(c)).join('')}</div>` };

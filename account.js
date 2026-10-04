@@ -146,7 +146,7 @@ window.addEventListener('cq-cloud', e => {
 
 const ACCOUNT_CSS = `
 #login-root{position:fixed;inset:0;z-index:950;background:var(--bg);overflow-y:auto;color:var(--paper)}
-.login{max-width:420px;margin:0 auto;padding:calc(40px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom))}
+.login{max-width:420px;margin:0 auto;padding:calc(64px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom))}
 .login .home-logo{text-align:center;margin:0 0 6px}
 .login-tag{margin:0 0 22px;text-align:center;font:19px "Patrick Hand";color:var(--sub)}
 .login-x{position:absolute;top:calc(12px + env(safe-area-inset-top));right:14px;min-height:40px;padding:0 14px;border:0;border-radius:20px;background:var(--bg2);color:var(--mustard);font:18px "Patrick Hand"}

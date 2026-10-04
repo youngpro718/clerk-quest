@@ -94,12 +94,14 @@ const EMBLEM = {
 const emblemSrc = set => artSrc('emblem_' + (EMBLEM[set] || 'courtterms'));
 
 const cardPrice = c => c.rarity === 'common' ? PRICE.deckCommon : c.rarity === 'uncommon' ? PRICE.deckUncommon : PRICE.deckRare;
-/* Three series, each with its own pack wrapper and its own Complete Deck. A pack only draws from the series on its wrapper.
+/* Each series has its own pack entry and Complete Deck. A pack only draws from the series on its wrapper.
    The 12 trick cards that belong to no series are sprinkled into every series pack (see drawPack in index.html). */
 const SERIES_DEFS = [
   { n:1, label:'Series 1', test:c => !c.series && !c.trickType, pack:'pack',    deck:'deck_s1' },
   { n:2, label:'Series 2', test:c => c.series === 2,           pack:'pack_s2', deck:'deck_s2' },
   { n:3, label:'Series 3', test:c => c.series === 3,           pack:'pack_s3', deck:'deck_s3' },
+  { n:4, label:'Series 4 · Doodle Files', test:c => c.series === 4, pack:'pack_blank', deck:'deck_box' },
+  { n:5, label:'Series 5 · Vintage Heroes', test:c => c.series === 5, pack:'pack_blank', deck:'deck_box' },
 ];
 const seriesDef = n => SERIES_DEFS.find(d => d.n === +n);
 const seriesPackArt = n => artSrc(seriesDef(n).pack);
@@ -107,8 +109,8 @@ function storeSeries(){
   return SERIES_DEFS.map(d => { const cards = CARDS.filter(d.test), missing = cards.filter(c => !owned(c));
     return { ...d, cards, missing, deckPrice:missing.reduce((n, c) => n + cardPrice(c), 0) }; });
 }
-const seriesDeckArt = d => `<span class="st-art deck series"><img src="${artSrc(d.deck)}" alt=""></span>`;
-const seriesPackImg = d => `<span class="st-art pack series"><img src="${artSrc(d.pack)}" alt=""></span>`;
+const seriesDeckArt = d => `<span class="st-art deck series"><img src="${artSrc(d.deck)}" alt=""><b class="st-series-tag">S${d.n}</b></span>`;
+const seriesPackImg = d => `<span class="st-art pack series"><img src="${artSrc(d.pack)}" alt=""><b class="st-series-tag">S${d.n}</b></span>`;
 const weekKey = () => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };   // this week's Monday
 const storePacksLeft = () => { const w = S.storePacks; return !w || w.week !== weekKey() ? PRICE.packsPerWeek : Math.max(0, PRICE.packsPerWeek - w.n); };
 function storeSubjects(){
@@ -262,6 +264,7 @@ const STORE_CSS = `
 .st-art>img{display:block;width:100%;height:auto}
 .st-art.pack{width:72%}
 .st-art.deck.series{width:86%}.st-art.deck.series img{border-radius:10px}.st-art.pack.series{width:76%}
+.st-art.series .st-series-tag{position:absolute;right:4%;bottom:5%;display:grid;place-items:center;min-width:34px;height:28px;padding:0 5px;border:2px solid #1d1b17;border-radius:6px;background:#f0c755;color:#1d1b17;font:20px/1 "Bangers";letter-spacing:.04em;transform:rotate(-5deg);box-shadow:2px 2px 0 rgba(0,0,0,.35)}
 .st-lab{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2%;color:var(--ink);text-align:center;container-type:inline-size}
 .st-lab.deck{left:34%;top:30%;width:46%;height:56%}
 .st-lab.pack{left:18%;top:28%;width:66%;height:34%}

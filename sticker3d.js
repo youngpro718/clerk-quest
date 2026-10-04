@@ -32,7 +32,7 @@
       return px >= 0 && py >= 0 && px < 128 && py < 128 && hits[(py * 128 + px) * 4 + 3] > 100;
     };
 
-    const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+    const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, preserveDrawingBuffer:true });
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
     const cvs = renderer.domElement; cvs.style.cssText = 'display:block;width:100%;height:100%;touch-action:none';
     host.appendChild(cvs);
@@ -41,7 +41,11 @@
 
     const tex = new THREE.Texture(img); tex.needsUpdate = true; tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
     const U = { map:{ value:tex }, tilt:{ value:new THREE.Vector2() }, corner:{ value:new THREE.Vector2(9, 9) },
-      dir:{ value:new THREE.Vector2(1, 0) }, fold:{ value:-9 }, R:{ value:.16 }, finish:{ value:opt.holo ? 2 : 0 }, fade:{ value:1 } };
+      dir:{ value:new THREE.Vector2(1, 0) }, fold:{ value:-9 }, R:{ value:.16 }, finish:{ value:opt.holo ? 2 : 0 }, fade:{ value:1 }, msg:{ value:null } };
+
+    const blank = document.createElement('canvas'); blank.width = blank.height = 1;
+    const blankTex = new THREE.CanvasTexture(blank); U.msg.value = blankTex;
+    let msgTex = null;
 
     const stickerMat = new THREE.ShaderMaterial({
       uniforms:U, transparent:true, side:THREE.DoubleSide, extensions:{ derivatives:true },
@@ -89,13 +93,15 @@
       uniforms:U, extensions:{ derivatives:true },
       vertexShader: `varying vec2 vP; void main(){ vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }`,
       fragmentShader: `
-        uniform sampler2D map; uniform vec2 tilt; uniform vec2 corner; uniform vec2 dir; uniform float fold; uniform float fade;
+        uniform sampler2D map; uniform sampler2D msg; uniform vec2 tilt; uniform vec2 corner; uniform vec2 dir; uniform float fold; uniform float fade;
         varying vec2 vP;
         void main(){
           vec2 suv = (vP + 1.) * .5;
           float a = (suv.x > 0. && suv.x < 1. && suv.y > 0. && suv.y < 1.) ? texture2D(map, suv).a : 0.;
           vec3 paper = vec3(.95, .91, .82) * (.97 + fract(sin(dot(floor(vP * 260.), vec2(12.9898, 78.233))) * 43758.5453) * .03);
           vec3 liner = vec3(.91, .93, .95) + exp(-pow((dot(vP, vec2(.7, -.5)) - tilt.x + tilt.y) / .5, 2.)) * .08;
+          vec4 m = texture2D(msg, clamp(suv, 0., 1.));
+          liner = mix(liner, m.rgb, m.a);   // the surprise is printed on the liner, so it only shows inside the sticker's shape
           vec3 col = mix(paper, liner, smoothstep(.45, .55, a));
           col *= 1. - (1. - smoothstep(0., fwidth(a) * 1.6 + .001, abs(a - .5))) * .35;   // die-cut line
           if (fold > -8.) col *= 1. - .3 * fade * smoothstep(.3, .6, a) * exp(-abs(fold - dot(vP - corner, dir)) / .22);
@@ -153,9 +159,60 @@
       const pl = new THREE.Plane().setFromNormalAndCoplanarPoint(new THREE.Vector3(0, 0, 1).applyQuaternion(group.quaternion), group.position);
       const p = new THREE.Vector3(); return ray.ray.intersectPlane(pl, p) ? group.worldToLocal(p) : null;
     }
+    let started = false;
     function startPeel(from, dir){   // peel from an edge point in a direction (sticker units)
       edge = from.clone(); U.corner.value.copy(edge); U.dir.value.copy(dir);
+      if (!started) { started = true; opt.onStart && opt.onStart(api); }   // the game decides what is under the sticker as the peel begins
     }
+
+    /* the biggest wide rectangle that sits completely inside the sticker's shape (from the small alpha copy),
+       found with a summed-area table; fractions of the sticker's square */
+    function innerBox(){
+      const N = 128, W = N + 1, sat = new Int32Array(W * W);
+      for (let y = 0; y < N; y++) for (let x = 0; x < N; x++)
+        sat[(y + 1) * W + x + 1] = (hits[(y * N + x) * 4 + 3] > 100 ? 1 : 0) + sat[y * W + x + 1] + sat[(y + 1) * W + x] - sat[y * W + x];
+      const full = (x0, y0, x1, y1) => sat[y1 * W + x1] - sat[y0 * W + x1] - sat[y1 * W + x0] + sat[y0 * W + x0] === (x1 - x0) * (y1 - y0);
+      let best = { a:0, x:44, y:48, w:40, h:32 };
+      for (let h = 12; h <= N; h += 2) for (let w = Math.ceil(h * 1.3); w <= Math.min(N, h * 3.2); w += 2) {
+        if (w * h <= best.a) continue;
+        for (let y0 = 0; y0 + h <= N; y0 += 2) for (let x0 = 0; x0 + w <= N; x0 += 2)
+          if (full(x0, y0, x0 + w, y0 + h)) { best = { a:w * h, x:x0, y:y0, w, h }; y0 = N; break; }
+      }
+      return { cx:(best.x + best.w / 2) / N, cy:(best.y + best.h / 2) / N, w:best.w / N, h:best.h / N };
+    }
+
+    /* print a message on the liner: {title, big, note, win}, drawn inside the sticker's shape */
+    function setMessage(m){
+      const S = 512, c = document.createElement('canvas'); c.width = c.height = S;
+      const g = c.getContext('2d'), b = innerBox(), bw = b.w * S * .96, bh = b.h * S * .96, cx = b.cx * S, cy = b.cy * S;
+      const lines = [];
+      const wrap = (txt, font, size, color, max) => {
+        g.font = `${size}px ${font}`; let cur = '';
+        txt.split(' ').forEach(w => { const t = cur ? cur + ' ' + w : w; if (g.measureText(t).width > max && cur) { lines.push({ t:cur, font, size, color }); cur = w; } else cur = t; });
+        if (cur) lines.push({ t:cur, font, size, color });
+      };
+      const u = Math.min(bw, bh * 1.8);   // type scales with the smaller side of the box
+      if (m.title) lines.push({ t:m.title, font:'"Bangers"', size:u * .2, color:m.win ? '#b3261e' : '#2a231b' });   // these stay on one line (squeezed if needed)
+      if (m.big) lines.push({ t:m.big, font:'"Luckiest Guy"', size:u * .24, color:'#1f1a14' });
+      if (m.note) wrap(m.note, '"Patrick Hand"', u * .125, '#2a231b', bw);
+      const lh = l => l.size * 1.12;
+      let total = lines.reduce((a, l) => a + lh(l), 0), k = Math.min(1, bh / total);
+      // squeeze any line that is still wider than the box
+      lines.forEach(l => { g.font = `${l.size * k}px ${l.font}`; const w = g.measureText(l.t).width; if (w > bw) l.k = bw / w; });
+      total = lines.reduce((a, l) => a + lh(l) * k * (l.k || 1), 0);
+      let y = cy - total / 2;
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      lines.forEach(l => { const sz = l.size * k * (l.k || 1); g.font = `${sz}px ${l.font}`; g.fillStyle = l.color; y += sz * .56; g.fillText(l.t, cx, y); y += sz * .56; });
+      if (msgTex) msgTex.dispose();
+      msgTex = new THREE.CanvasTexture(c); msgTex.anisotropy = renderer.capabilities.getMaxAnisotropy(); U.msg.value = msgTex;
+      schedule();
+    }
+    const api = {
+      // "Peel it for me": peel from the bottom-right corner toward the top left
+      autoPeel(){ if (off) return; audio(); startPeel(new THREE.Vector2(1, -1), new THREE.Vector2(-.7071, .7071)); comeOff(); schedule(); },
+      setMessage,
+      destroy,
+    };
     cvs.addEventListener('pointerdown', e => {
       if (off) return; audio(); try { cvs.setPointerCapture(e.pointerId); } catch (_) {} lastInput = performance.now();
       const p = local(e);
@@ -223,16 +280,12 @@
       window.removeEventListener('cq-native-motion', motionChanged);
       document.removeEventListener('visibilitychange', visibilityChanged);
       if (ac) { try { ac.close(); } catch (_) {} }
-      [stickerGeo, backGeo, shGeo, stickerMat, backMat, shMat, tex].forEach(x => x.dispose());
+      [stickerGeo, backGeo, shGeo, stickerMat, backMat, shMat, tex, blankTex, msgTex].forEach(x => x && x.dispose());
       renderer.dispose(); try { renderer.forceContextLoss(); } catch (_) {}
     }
     schedule();
 
-    return {
-      // "Peel it for me": peel from the bottom-right corner toward the top left
-      autoPeel(){ if (off) return; audio(); startPeel(new THREE.Vector2(1, -1), new THREE.Vector2(-.7071, .7071)); comeOff(); schedule(); },
-      destroy,
-    };
+    return api;
   }
 
   window.StickerPeel = { mount };
