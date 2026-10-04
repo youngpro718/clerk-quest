@@ -49,7 +49,7 @@ window.addEventListener('cq-cloud', e => {
 
 /* Profile: the Admin row, for admins only */
 const profileAdminRow = () => ADM.is ? `<button class="row" data-act="push" data-s="admin"><span class="th emo gi">${ICO('stats')}</span>
-  <span class="row-main"><b>Admin</b><small>Players and game check</small></span>${chev}</button>` : '';
+  <span class="row-main"><b>Admin</b><small>Sign-ups, game check, and tester tools</small></span>${chev}</button>` : '';
 
 /* ---------- reading a player's save ---------- */
 function summary(p){
@@ -78,7 +78,13 @@ const ADMIN_SCREENS = {
   admin(){
     if (!ADM.is) return adminDenied();
     if (!ADM.players && !ADM.err) loadPlayers();
-    const list = ADM.players || [];
+    // Newest sign-ups first, with counts for today, this week and all time
+    const joined = p => Date.parse(p.joined_at) || 0;
+    const list = (ADM.players || []).slice().sort((a, b) => joined(b) - joined(a));
+    const DAYMS = 864e5, now = Date.now(), dayStart = new Date().setHours(0, 0, 0, 0);
+    const today = list.filter(p => joined(p) >= dayStart).length, week = list.filter(p => joined(p) >= now - 7 * DAYMS).length;
+    const signups = ADM.players ? `<div class="stat4"><div><b>${today}</b><small>Today</small></div><div><b>${week}</b><small>This week</small></div>
+      <div><b>${list.length}</b><small>All players</small></div><div><b>${list.filter(p => summary(p).has).length}</b><small>Have played</small></div></div>` : '';
     const rows = list.map(p => { const x = summary(p);
       return `<button class="row adm-row" data-act="push" data-s="adminplayer" data-id="${esc(p.user_id)}">
         <span class="row-main"><b>${esc(p.email || '(no email)')}</b>
@@ -86,8 +92,9 @@ const ADMIN_SCREENS = {
         <small>Joined ${fmtDate(Date.parse(p.joined_at))} · ${lastText(x.last)}</small></span>${chev}</button>`; }).join('');
     return { title:'Admin', right:`<button class="nb-btn txt" data-act="adm-reload">Refresh</button>`, body:`
       <div class="adm-hero"><span>${ICO('stats')}</span><div><b>Clerk Quest Admin</b><small>Server-authorized tools for review and testing</small></div></div>
-      <div class="sec-h"><span>Player support</span>${ADM.players ? `<span class="adm-count">${list.length}</span>` : ''}</div>
-      <p class="st-note">Player records are read-only. Nothing here changes another player's progress.</p>
+      <div class="sec-h"><span>Sign-ups</span>${ADM.players ? `<span class="adm-count">${list.length}</span>` : ''}</div>
+      ${signups}
+      <p class="st-note">Newest first. Tap a player to see their progress. Nothing here changes another player's progress.</p>
       ${ADM.err ? `<p class="acct-err">${ICO('warning')} ${esc(ADM.err)}</p>` : ''}
       ${ADM.players ? `<div class="list">${rows || '<p class="empty">No players yet.</p>'}</div>` : '<p class="empty">Loading players…</p>'}
       <div class="sec-h"><span>Content review</span></div>

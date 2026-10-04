@@ -1,4 +1,6 @@
-/* Clerk Quest cloud saves. The existing localStorage save remains the offline cache. */
+/* Clerk Quest account saves. Each signed-in player's progress is stored in their account and saved
+   quietly in the background; the localStorage save is the offline copy. Players are never asked to pick
+   between copies: the rules in pullAndResolve choose automatically. */
 (function () {
   'use strict';
   const URL = 'https://yfryuuqaznhjcqrotkjt.supabase.co';
@@ -21,8 +23,25 @@
     (state.stats && (state.stats.answered || state.stats.sessions || state.stats.xp)) ||
     state.packsOpened || (state.packs != null && state.packs !== 1) ||
     Object.values(state.cards).some(card => card && (card.level > 1 || card.xp > 0 || card.mastered)) ||
-    Object.keys(state.milestones || {}).length
+    Object.keys(state.milestones || {}).length ||
+    // Reading and organizing are real progress even before the first quiz or pack.
+    // Empty containers are initialized by the UI; they must not create a conflict by themselves.
+    (state.notebook && (
+      Object.values(state.notebook.hl || {}).some(phrases => Array.isArray(phrases) && phrases.length) ||
+      Object.keys(state.notebook.notes || {}).length ||
+      (Array.isArray(state.notebook.saved) && state.notebook.saved.length) ||
+      (Array.isArray(state.notebook.pages) && state.notebook.pages.length)
+    )) ||
+    (Array.isArray(state.binders) && state.binders.length) ||
+    (Array.isArray(state.dockets) && state.dockets.length)
   ));
+  // How much a save has done, to pick the bigger one when a guest signs in to an account that already has progress
+  const amount = state => {
+    if (!state || !state.cards) return 0;
+    const st = state.stats || {};
+    return (st.answered || 0) + (st.sessions || 0) * 5 + (state.packsOpened || 0) * 5 +
+      Object.values(state.cards).filter(c => c && c.owned).length * 3;
+  };
   const emit = (status, extra = {}) =>
     window.dispatchEvent(new CustomEvent('cq-cloud', { detail: { status, user: session?.user || null, ...extra } }));
 
@@ -107,11 +126,10 @@
       return;
     }
 
-    // Existing account on this device: use its newest copy. A guest cache
-    // with real progress asks before replacing either copy.
+    // A guest played here, then signed in to an account that already has progress: keep whichever
+    // copy has done more (ties go to the account). No question for the player.
     if (!owner && JSON.stringify(device) !== JSON.stringify(cloud)) {
-      const useDevice = window.confirm('This device and your account both have progress. Keep this device\'s progress? (Cancel loads your account\'s progress.)');
-      if (!useDevice) return applyCloud(cloud, data.device_updated_at || data.updated_at, userId);
+      if (amount(device) <= amount(cloud)) return applyCloud(cloud, data.device_updated_at || data.updated_at, userId);
       write(OWNER, userId);
       markLocalUpdated();
       await pushNow();
@@ -120,13 +138,9 @@
     }
     const cloudTime = Date.parse(data.device_updated_at || data.updated_at || '') || 0;
     const deviceTime = Date.parse(read(MODIFIED) || '') || 0;
+    // Same account on this device: the newest copy wins.
     if (cloudTime > deviceTime && JSON.stringify(device) !== JSON.stringify(cloud)) {
-      const useCloud = window.confirm('Your account has newer progress from another device. Load it here? (Cancel keeps this device\'s progress.)');
-      if (useCloud) return applyCloud(cloud, data.device_updated_at || data.updated_at, userId);
-      markLocalUpdated();
-      await pushNow();
-      emit('uploaded-local');
-      return;
+      return applyCloud(cloud, data.device_updated_at || data.updated_at, userId);
     }
     write(OWNER, userId);
     if (deviceTime > cloudTime) await pushNow();

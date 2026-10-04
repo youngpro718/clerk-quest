@@ -1057,7 +1057,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <div class="flash" id="flash"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
-<script src="cloud-sync.js?v=cd5fc35d"></script>
+<script src="cloud-sync.js?v=b24df9f1"></script>
 <script src="study.js?v=1ddad722"></script>
 <script src="economy.js?v=a7261374"></script>
 <script src="store.js?v=037a6033"></script>
@@ -1065,8 +1065,8 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="study/quick-reference/series-lessons.js?v=102ec77c"></script>
 <script src="binder.js?v=8f2bfec1"></script>
 <script src="onboarding.js?v=17f874b1"></script>
-<script src="account.js?v=ccf8d0ed"></script>
-<script src="admin.js?v=a695ca84"></script>
+<script src="account.js?v=b0a8a100"></script>
+<script src="admin.js?v=99f61f88"></script>
 <script src="stickers.js?v=70340509"></script>
 <script src="dockets.js?v=9f334d84"></script>
 <script src="pack3d.js?v=175b3691"></script>
@@ -2042,9 +2042,18 @@ function normalize(s){
 }
 let S;
 try { S = normalize(JSON.parse(localStorage.getItem(KEY))); } catch(e){ S = normalize(null); }
+/* If the browser refuses to store progress (storage full, private mode), say so once instead of pretending
+   it saved, and don't send the account the old copy marked as new. */
+let saveFailed = false;
 function save(){
-  if (window.CQCloud && CQCloud.isReloading && CQCloud.isReloading()) return;   // the cloud just replaced this save; don't write the old one back
-  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){}
+  if (window.CQCloud && CQCloud.isReloading && CQCloud.isReloading()) return;   // the account copy just replaced this save; don't write the old one back
+  try { localStorage.setItem(KEY, JSON.stringify(S)); saveFailed = false; }
+  catch(e){
+    if (!saveFailed && typeof iosAlert === 'function' && document.body) iosAlert({ title:"Progress isn't saving",
+      msg:"This browser won't store your progress. Your phone's storage may be full, or private browsing may be on. Anything you do now could be lost when you close the app.",
+      buttons:[{ label:'OK', value:true }] });
+    saveFailed = true; return;
+  }
   if (window.CQCloud) { CQCloud.markLocalUpdated(); CQCloud.queuePush(); }
 }
 
@@ -3052,13 +3061,12 @@ const SCREENS = {
   settings(){
     const cloudUser = window.CQCloud?.getUser();
     return { title:'Settings', body:`
-      <div class="sec-h"><span>Account & cloud save</span></div>
+      <div class="sec-h"><span>Account</span></div>
       <div class="list">
         ${cloudUser
           ? `<button class="row" data-act="push" data-s="account"><span class="th emo gi">${ICO('cloud')}</span><span class="row-main"><b>Account</b><small>${esc(cloudUser.email || 'Signed in')}</small></span>${chev}</button>
-             <button class="row" data-act="cloud-sync"><span class="th emo gi">${ICO('sync')}</span><span class="row-main"><b>Sync now</b></span></button>
              <button class="row" data-act="cloud-signout"><span class="th emo gi">${ICO('signout')}</span><span class="row-main"><b>Sign out</b></span></button>`
-          : `<button class="row" data-act="cloud-signin"><span class="th emo gi">${ICO('cloud')}</span><span class="row-main"><b>Create an account or sign in</b><small>Keep your cards on every device</small></span>${chev}</button>`}
+          : `<button class="row" data-act="cloud-signin"><span class="th emo gi">${ICO('cloud')}</span><span class="row-main"><b>Create an account or sign in</b><small>Your progress is stored in your account</small></span>${chev}</button>`}
       </div>
       <div class="sec-h"><span>Appearance &amp; accessibility</span></div>
       <div class="list">
@@ -3977,10 +3985,6 @@ document.addEventListener('click', e => {
     case 'cloud-signin': closeSheet(true); openSignIn(t.dataset.tab || 'signin'); break;
     case 'cloud-signout':
       CQCloud.signOut().catch(err => toast(err.message || 'Could not sign out')); break;
-    case 'cloud-sync':
-      CQCloud.pushNow().then(() => toast('Progress synced', 'cloud'))
-        .catch(err => toast(err.message || 'Sync failed. Progress is saved on this device.'));
-      break;
     case 'a2hs-close': try { localStorage.setItem('cq-a2hs', '1'); } catch(err){} closeSheet(); refresh(); break;
     case 't-level': {
       if (!ADM.is) break;
@@ -4036,7 +4040,6 @@ probeArt().then(async () => {
   hideSplash();
 });
 window.addEventListener('cq-cloud', e => {
-  if (e.detail.status === 'error') toast('Cloud sync paused. Progress is saved on this device.');
   if (nav.tab === 'profile') refresh();
 });
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.

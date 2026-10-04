@@ -1,5 +1,7 @@
 # Clerk Quest card audit
 
+> **Superseded counts (2026-10-04):** this audit covers the first 29 cards. For current status of all cards against the official subject list, see `docs/coverage/coverage-matrix.md` / `.xlsx` (regenerate with `python3 tools/coverage_matrix.py`).
+
 Audit of the 29 cards defined in `../index.html` on 2026-09-28. “Questions” counts authored entries in each card's `bank`; cards marked **generated** create questions in code and therefore have zero authored bank entries.
 
 | Card | Name | Series | Set | Type | Source/status | Questions |

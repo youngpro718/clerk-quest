@@ -73,7 +73,6 @@ const ACCOUNT_SCREENS = {
       <p class="st-note">Your progress saves to your account automatically. Sign in on any phone or computer to pick up where you left off.</p>
       ${acctNotes()}
       <div class="list">
-        <button class="row" data-act="acct-sync"><span class="th emo gi">${ICO('sync')}</span><span class="row-main"><b>Sync now</b></span></button>
         <button class="row" data-act="acct-changepw"><span class="th emo gi">${ICO('lock')}</span><span class="row-main"><b>Change password</b></span>${chev}</button>
         <button class="row" data-act="acct-signout"><span class="th emo gi">${ICO('signout')}</span><span class="row-main"><b>Sign out</b></span></button>
       </div>
@@ -120,7 +119,6 @@ document.addEventListener('click', e => {
     case 'acct-show': acctSet({ show:!acct.show }); break;
     case 'acct-retry': location.reload(); break;
     case 'acct-changepw': Object.assign(acct, { pw:'', err:'', info:'' }); push('account', { tab:'newpw' }); break;
-    case 'acct-sync': acctRun(() => CQCloud.pushNow(), () => acctSet({ info:'Synced just now.' })); break;
     case 'acct-signout':
       iosAlert({ title:'Sign out?', msg:'Your progress stays in your account. Sign back in any time to keep playing.',
         buttons:[{ label:'Cancel', value:false, style:'bold' }, { label:'Sign Out', value:true, style:'destructive' }] })
