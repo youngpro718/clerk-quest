@@ -267,10 +267,13 @@ function docketsTabHTML(){
     ${won.length ? `<div class="sec-h"><span>Reward cards</span></div><div class="dk-rewards">${won.map(r => rewardThumb(r)).join('')}</div>` : ''}
     <p class="foot">A new Hot Docket arrives on your Home screen about once a week and stays open for a week. Finished ones stay in this folder as your record.</p>`;
 }
+/* How a won reward card looks: acing the one-chance quiz makes it the Super Rare (full color, holo), even from black and white */
+const rwLook = r => r.superRare ? 'rare super' : r.reward;
+const rwLabel = r => r.superRare ? 'Super Rare' : r.reward === 'rare' ? 'Rare · full color' : 'Black and white';
 function rewardThumb(r){
   const d = docketDef(r.id), rw = DOCKET_REWARDS[d.reward];
-  return `<button class="dk-rw ${r.reward}" data-act="dk-reward" data-id="${r.id}"><span class="rw-card ${r.reward}"><img src="${artSrc(rw.front)}" alt="${esc(rw.name)}"></span>
-    <small>${r.reward === 'rare' ? 'Rare · full color' : 'Black and white'}</small></button>`;
+  return `<button class="dk-rw ${rwLook(r)}" data-act="dk-reward" data-id="${r.id}"><span class="rw-card ${rwLook(r)}"><img src="${artSrc(rw.front)}" alt="${esc(rw.name)}">${r.superRare ? '<i class="rw-holo"></i>' : ''}</span>
+    <small>${rwLabel(r)}</small></button>`;
 }
 
 /* ---------- the Study File: fixed sheets ----------
@@ -406,8 +409,8 @@ function rewardCardHTML(r, back){
   const d = docketDef(r.id), rw = DOCKET_REWARDS[d.reward];
   const [bl, bt, bw, bh] = rw.btn;
   return `<div class="rw-flip ${back ? 'back' : ''}" data-act="rw-flip">
-    <div class="rw-face front"><span class="rw-card ${r.reward}"><img src="${artSrc(rw.front)}" alt="${esc(rw.name)}">${r.reward === 'rare' ? '<i class="rw-holo"></i>' : ''}</span>${r.reward === 'rare' ? '<em class="rw-tag">RARE</em>' : ''}</div>
-    <div class="rw-face backside"><span class="rw-card ${r.reward}"><img src="${artSrc(rw.back)}" alt="${esc(rw.name)}, card back">
+    <div class="rw-face front"><span class="rw-card ${rwLook(r)}"><img src="${artSrc(rw.front)}" alt="${esc(rw.name)}">${r.reward === 'rare' || r.superRare ? '<i class="rw-holo"></i>' : ''}</span>${r.superRare ? '<em class="rw-tag super">SUPER RARE</em>' : r.reward === 'rare' ? '<em class="rw-tag">RARE</em>' : ''}</div>
+    <div class="rw-face backside"><span class="rw-card ${rwLook(r)}"><img src="${artSrc(rw.back)}" alt="${esc(rw.name)}, card back">
       <button class="rw-quizbtn" style="${sfBox(bl, bt, bw, bh)}" data-act="rw-quiz" data-id="${r.id}">${esc(quizButtonLabel(r))}</button></span></div></div>`;
 }
 /* Admin preview (Settings → Reward cards): shows a reward card as a player sees it, using a throwaway record,
@@ -420,7 +423,7 @@ function openReward(id, reveal){
   const t = r.preview ? null : docketTotals(d, r), ov = document.createElement('div'); ov.className = 'rw-ov'; ov.dataset.id = id;
   ov.innerHTML = `${reveal ? `<h2 class="rw-h">DOCKET COMPLETE</h2>` : ''}
     <p class="rw-sub">${r.preview ? `Admin preview · ${r.reward === 'rare' ? 'rare, full color (90%+)' : 'black and white (80–89%, or any retry)'} · nothing is saved`
-      : r.reward === 'rare' ? `Rare reward · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%)` : `Reward · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%) · 90% earns full color`}</p>
+      : r.superRare ? `★ Super Rare · you aced the one-chance RBG quiz` : r.reward === 'rare' ? `Rare reward · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%)` : `Reward · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%) · 90% earns full color`}</p>
     <div class="rw-stage ${reveal ? 'reveal' : ''}">${rewardCardHTML(r)}</div>
     <p class="rw-hint">Tap the card to flip it.</p>
     <button class="btn-big ${r.reward === 'rare' ? 'gold' : ''}" data-act="rw-close">${reveal ? 'ADD TO MY DOCKET FOLDER' : 'DONE'}</button>`;
@@ -428,7 +431,7 @@ function openReward(id, reveal){
 }
 /* The quiz behind the card's back button: one question per sticky note (yellow, green, blue, then the wide ivory one).
    One chance only: each answer is saved the moment it's tapped and can't be redone. All four right unlocks a super rare
-   prize (r.superRare; what the prize is will be decided later). Progress lives in r.quiz = { a:[picked per question] }. */
+   prize: the RBG card itself becomes the Super Rare (r.superRare; see rwLook). Progress lives in r.quiz = { a:[picked per question] }. */
 const RWQ_NOTES = ['yellow', 'green', 'blue', 'ivory'];
 const quizScore = (rw, r) => rw.quiz.filter((q, k) => (r.quiz && r.quiz.a[k]) === q.a).length;
 const quizDone = (rw, r) => !!r.quiz && rw.quiz.every((q, k) => r.quiz.a[k] != null);
@@ -443,7 +446,7 @@ function rewardQuiz(id, show){
     const score = quizScore(rw, r), perfect = score === n;
     ov.innerHTML = `<h2 class="rw-h">RBG QUIZ</h2><div class="rwq-done"><b>${score} of ${n}</b><span>right</span>
         <img class="rwq-stamp" src="${artSrc('dk_stamp_completed')}" alt="Completed"></div>
-      ${perfect ? `<p class="rwq-super">★ SUPER RARE PRIZE UNLOCKED ★</p><p class="rw-sub">All four on your one chance. Your prize will be revealed soon.</p>`
+      ${perfect ? `<p class="rwq-super">★ SUPER RARE PRIZE UNLOCKED ★</p><p class="rw-sub">All four on your one chance. Your RBG card is now the Super Rare: full color, holo, and gold.</p>`
         : `<p class="rw-sub">The quiz was one chance only. Every answer is on the back of your card for next time you study.</p>`}
       <button class="btn-big ${perfect ? 'gold' : 'alt'}" data-act="rwq-close">BACK TO THE CARD</button>`;
     return;
@@ -498,7 +501,7 @@ const DOCKET_SCREENS = {
     let banner = '';
     if (levelDone && n < 3) banner = `<div class="sf-banner"><span>${ICO('mastered')} Level ${n} complete! Level ${n + 1} adds new filings to the same case.</span><button class="sf-btn go gold" data-act="dk-level">Start Level ${n + 1}</button></div>`;
     else if (levelDone && n === 3) banner = r.reward
-      ? `<div class="sf-banner"><span>${ICO('mastered')} Docket complete! You earned the ${r.reward === 'rare' ? 'rare full-color' : 'black-and-white'} reward card.</span><button class="sf-btn go gold" data-act="dk-reward" data-id="${d.id}">See card</button></div>`
+      ? `<div class="sf-banner"><span>${ICO('mastered')} Docket complete! You earned the ${r.superRare ? 'Super Rare' : r.reward === 'rare' ? 'rare full-color' : 'black-and-white'} reward card.</span><button class="sf-btn go gold" data-act="dk-reward" data-id="${d.id}">See card</button></div>`
       : `<div class="sf-banner"><span>Docket complete, ${docketTotals(d, r).right} of 15 right. A reward card needs 12 (80%).
           ${continuances() ? `Spend a Continuance to answer the 15 questions again (you have ${continuances()}).` : 'Continuance coins come in some packs. One lets you answer the 15 questions again.'}</span>
           ${continuances() ? `<button class="sf-btn go gold" data-act="dk-continue">Use a Continuance</button>` : ''}</div>`;
@@ -757,6 +760,9 @@ button.sf-count{background:none;border:0;padding:6px 4px;min-height:44px;text-de
   background:linear-gradient(115deg,transparent 20%,rgba(255,120,200,.7) 35%,rgba(120,220,255,.7) 48%,rgba(190,255,140,.7) 60%,transparent 76%);background-size:300% 100%;animation:rwshine 3.4s linear infinite}
 @keyframes rwshine{from{background-position:120% 0}to{background-position:-180% 0}}
 .rw-face.front{position:relative}
+.rw-card.super{box-shadow:0 0 0 2px #fff6c8,0 0 0 4px #e3b23c,0 0 34px 10px rgba(255,190,90,.6),0 0 60px 18px rgba(170,120,255,.35),0 10px 24px rgba(0,0,0,.5)}
+.rw-card.super>img{filter:none}
+.rw-tag.super{background:linear-gradient(135deg,#ffe8f6,#fff3b0 35%,#b9f3ff 70%,#e3c4ff);letter-spacing:.1em}
 .rw-tag{position:absolute;top:-3.2%;left:50%;translate:-50% 0;z-index:2;padding:.25em .6em;border-radius:1em;background:linear-gradient(135deg,#fff3b0,#e3b23c);color:#1d1b17;font:400 clamp(12px,3.4vw,16px)/1 "Bangers";letter-spacing:.08em;font-style:normal;box-shadow:0 2px 6px rgba(0,0,0,.4)}
 .dk-rw .rw-card{width:100%}
 .rw-ov{position:fixed;inset:0;z-index:84;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;

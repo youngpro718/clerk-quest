@@ -244,13 +244,15 @@ function noteBoxHTML(c){
 }
 const growArea = ta => { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; };
 let saveTimer = null;
-const saveSoon = () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 400); };
+// After the save runs, correct any note label that said "Saved" if this device refused to store it
+const saveSoon = () => { clearTimeout(saveTimer); saveTimer = setTimeout(() => { save();
+  if (saveFailed) document.querySelectorAll('[data-note-at]').forEach(el => { if (el.textContent) el.textContent = 'Not saved on this device'; }); }, 400); };
 document.addEventListener('input', e => {
   const ta = e.target.closest('[data-note]'); if (!ta) return;
   const id = ta.dataset.note, n = nb();
   if (ta.value.trim()) n.notes[id] = { text:ta.value, at:Date.now() }; else delete n.notes[id];
   growArea(ta); saveSoon();
-  const at = document.querySelector(`[data-note-at="${id}"]`); if (at) at.textContent = n.notes[id] ? 'Saved' : '';
+  const at = document.querySelector(`[data-note-at="${id}"]`); if (at) at.textContent = n.notes[id] ? (saveFailed ? 'Not saved on this device' : 'Saved') : '';
 });
 window.addEventListener('pagehide', () => { clearTimeout(saveTimer); save(); });
 

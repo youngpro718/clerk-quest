@@ -6,7 +6,7 @@ Start with the official NY Courts **Exam Study Guides** and **Exam Study Guides 
 
 The Court Officer-Trainee (NYSCOT) sample is for a different exam and is useful only as a question-format example. Treat Empire Court Prep and old Quizlet cards as leads to verify, not card sources.
 
-The Court Clerk PDFs are copied here from the project root. `Court_Clerk_Exam_Questions.pdf` supplies the cited excerpts for cards ★04–★20; see [card-audit.md](card-audit.md).
+The Court Clerk PDFs are copied here from the project root. `Court_Clerk_Exam_Questions.pdf` supplies the cited excerpts for cards ★04–★20; see the card audit in `docs/coverage/` (kept private).
 
 ## Source log
 

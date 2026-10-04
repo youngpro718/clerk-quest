@@ -172,7 +172,7 @@ function lessonResults(){
           ${c.source ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}</div>`).join('')}</div>` : ''}
       <div class="stack">
         ${pass ? '' : `<button class="btn-big" data-act="bd-quiz" data-id="${L.bid}">TRY THE QUIZ AGAIN</button>`}
-        <button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN YOUR PACK</button>
+        ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN YOUR PACK</button>` : ''}
         <button class="btn-big alt" data-act="session-close">Done</button>
       </div>
     </div>`;

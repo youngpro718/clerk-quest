@@ -1058,17 +1058,17 @@ html.cq-reduce-motion .sp-card{animation:none}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js?v=b24df9f1"></script>
-<script src="study.js?v=1ddad722"></script>
+<script src="study.js?v=a765c51c"></script>
 <script src="economy.js?v=a7261374"></script>
 <script src="store.js?v=037a6033"></script>
 <script src="study/quick-reference/quick-reference.js?v=798b706c"></script>
 <script src="study/quick-reference/series-lessons.js?v=102ec77c"></script>
-<script src="binder.js?v=8f2bfec1"></script>
+<script src="binder.js?v=c8c2e5eb"></script>
 <script src="onboarding.js?v=17f874b1"></script>
 <script src="account.js?v=b0a8a100"></script>
 <script src="admin.js?v=99f61f88"></script>
 <script src="stickers.js?v=70340509"></script>
-<script src="dockets.js?v=9f334d84"></script>
+<script src="dockets.js?v=da920b66"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="sticker3d.js?v=9a43370e"></script>
 <script src="questions.js?v=f5b5ed28"></script>
@@ -3608,8 +3608,8 @@ function openPack(opts = {}){
   if (!opts.pulls) S.packs--;
   const first = S.packsOpened === 0; S.packsOpened++;
   const pulls = opts.pulls || drawPack();
-  const bonus = opts.pulls ? null : rollSticker();
-  const coin = !opts.pulls && !first && Math.random() < 1 / 5;   // a Continuance: about 1 in 5 packs (never the first); reopens a missed Hot Docket
+  const bonus = rollSticker();   // every pack can hold a bonus sticker, bought ones too
+  const coin = !first && Math.random() < 1 / 5;   // a Continuance: about 1 in 5 packs, bought ones too (never the first); reopens a missed Hot Docket
   if (coin) S.continuances = (S.continuances || 0) + 1;
   save();
   const packImg = opts.img || (pulls.series ? seriesPackArt(pulls.series) : packArtFor(pulls.map(p => p.c)));
