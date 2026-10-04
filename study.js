@@ -85,11 +85,11 @@ function caseFileHTML(c){
     <button class="readbtn ${read ? 'done' : ''}" data-act="mark-read" data-id="${c.id}" ${read ? 'disabled' : ''}>${read ? 'Case file reviewed' : `Mark as reviewed · +${READ_XP} XP`}</button></div>`;
 }
 
-/* An optional video lesson for the timing pattern on Eight Before, Two Back: the 90-second motion deadlines
-   explainer (narrated, captions burned in). It lives in a sheet, so opening or closing it never changes card or
+/* An optional video lesson for the timing pattern on Eight Before, Two Back: the 60-second motion deadlines
+   explainer (about a minute, narrated, captions burned in). It lives in a sheet, so opening or closing it never changes card or
    quiz state. `from` = 'intro' brings the person back to the card's intro. */
 const EIGHTBACK_VIDEOS = {
-  full: { label:'Full explainer', len:'1½ min', src:'media/motion-deadlines-explainer.mp4', poster:'media/motion-deadlines-explainer-poster.jpg',
+  full: { label:'Full explainer', len:'1 min', src:'media/motion-deadlines-explainer.mp4?v=60s', poster:'media/motion-deadlines-explainer-poster.jpg?v=60s',
     transcript:[
       'When someone asks a New York court to decide a motion, the judge sets a hearing day. And before that day arrives, the law gives each side a deadline. Deadlines that are counted backward.',
       'Here\'s the standard rule. The moving party, the side asking for something, must serve their papers at least eight days before the hearing. Then the other side gets their turn. Their answer is due at least two days before. Eight, two. That\'s the default.',
