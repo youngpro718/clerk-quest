@@ -84,6 +84,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .framebreak-character{left:2%;top:22.5%;width:96%;height:58%;object-fit:contain;object-position:center;z-index:7;transform:translate3d(0,0,0) rotate(0deg) scale(1.18);transform-origin:50% 72%;pointer-events:none;filter:drop-shadow(0 1.4cqw .45cqw rgba(0,0,0,.42));backface-visibility:hidden}
 .framebreak-character.cq-motion-active{will-change:transform}
 .framebreak-character.series2{top:27%}
+.framebreak-character.series45{left:-8%;top:10%;width:116%;height:86%}
 .frame-metadata{inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
 .frame-metadata.top{clip-path:inset(0 0 71.7% 0)}
 .frame-metadata.quote{clip-path:inset(70% 18% 17% 18%)}
@@ -978,7 +979,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 <script src="economy.js?v=a7261374"></script>
 <script src="store.js?v=85799f04"></script>
 <script src="study/quick-reference/quick-reference.js?v=798b706c"></script>
-<script src="study/quick-reference/series-lessons.js?v=9ec420fa"></script>
+<script src="study/quick-reference/series-lessons.js?v=102ec77c"></script>
 <script src="binder.js?v=8f2bfec1"></script>
 <script src="onboarding.js?v=42992ec0"></script>
 <script src="account.js?v=e5de3785"></script>
@@ -2028,7 +2029,7 @@ function frameBreakCharacter(c, lv){
   if (!(FRAME_BREAK_CARDS.has(c.id) || c.frameBreak) || !c.cutout || lv !== maxL(c)) return '';
   const base = resolvedArtLevel(c, lv);
   if (!base || (c.scene && c.scene[base])) return '';
-  return `<img class="framebreak-character${c.series === 2 ? ' series2' : ''}" src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`;
+  return `<img class="framebreak-character${c.series === 2 ? ' series2' : c.series >= 4 ? ' series45' : ''}" src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`;
 }
 function artHTML(c, lv, opt={}){
   const foil = lv >= 3 && lv < maxL(c) ? `<div class="foil"></div>` : '';

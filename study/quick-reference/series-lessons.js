@@ -31,7 +31,7 @@
       series: o.series,
       seriesNumber: o.number,
       category: o.category,
-      set: o.category,
+      set: o.series === 4 ? 'CRIMINAL PROCEDURE' : 'PENAL LAW',
       rarity: 'common',
       icon: 'court',
       emoji: o.emoji,
@@ -371,6 +371,157 @@
       ]
     })
   ];
+
+  // Related rules extend the core character lesson without expanding the collection.
+  const relatedRules = {
+  "qr_cpl_001_criminal_action": {
+    "cite": "CPL § 1.20",
+    "notes": [
+      "A criminal proceeding is broader than a criminal action: it may relate to a prospective, pending, or completed action.",
+      "A judgment consists of the conviction and the sentence imposed on it."
+    ],
+    "qs": [
+      [
+        2,
+        "Which term can include a court matter relating to a prospective criminal action?",
+        [
+          "Criminal proceeding",
+          "Completed judgment",
+          "Sentence only",
+          "Conviction only"
+        ],
+        "Criminal proceeding",
+        "Proceeding is the wider circle.",
+        "CPL § 1.20 includes proceedings relating to prospective, pending, or completed criminal actions."
+      ],
+      [
+        3,
+        "A verdict has been returned, but no sentence imposed. What is still needed for the statutory judgment?",
+        [
+          "The sentence imposed on the conviction",
+          "A second accusatory instrument",
+          "A new grand jury",
+          "A separate arrest"
+        ],
+        "The sentence imposed on the conviction",
+        "Judgment combines conviction and sentence.",
+        "CPL § 1.20 defines judgment as the conviction and the sentence imposed on it."
+      ]
+    ]
+  },
+  "qr_cpl_013_limitations": {
+    "cite": "CPL §§ 30.10, 30.30",
+    "notes": [
+      "Section 30.10 limits commencement; section 30.30 addresses prosecutorial readiness after commencement. Different exceptions and exclusions apply.",
+      "The general section 30.30(1) readiness periods are six months for a felony, ninety days for a misdemeanor punishable by more than three months, sixty days for a misdemeanor punishable by no more than three months, and thirty days for a violation, subject to the charge combinations and statutory exceptions."
+    ],
+    "qs": [
+      [
+        2,
+        "Which distinction correctly separates CPL §§ 30.10 and 30.30?",
+        [
+          "Commencement limitation versus prosecutorial readiness",
+          "Both impose an identical deadline for sentence",
+          "Both govern only the time to appeal",
+          "Grand-jury quorum versus juror concurrence"
+        ],
+        "Commencement limitation versus prosecutorial readiness",
+        "One clock starts the case; the other concerns readiness.",
+        "Section 30.10 concerns timely commencement, while section 30.30 concerns the People’s readiness under its statutory rules."
+      ],
+      [
+        3,
+        "Under the general CPL § 30.30(1)(a) rule, what readiness period applies when at least one charged offense is a felony?",
+        [
+          "Six months",
+          "Five years",
+          "Ninety days in every case",
+          "Thirty days"
+        ],
+        "Six months",
+        "Do not substitute the limitation period.",
+        "The general felony readiness period is six months, subject to the statute’s exceptions and exclusions."
+      ]
+    ]
+  },
+  "qr_cpl_045_sentence_timing": {
+    "cite": "CPL §§ 380.30, 380.50, 390.20",
+    "notes": [
+      "Before pronouncing sentence, the court must ask whether the defendant wishes to make a personal statement; defense counsel also has an opportunity to speak.",
+      "A felony generally requires a written pre-sentence report. For misdemeanors, specified sentences trigger the report requirement, including imprisonment over 180 days or consecutive terms totaling more than 90 days. Probation also generally triggers it. Statutory waiver provisions and exceptions must be checked."
+    ],
+    "qs": [
+      [
+        2,
+        "Before pronouncing sentence, what must the court ask the defendant under CPL § 380.50(1)?",
+        [
+          "Whether the defendant wishes to make a personal statement",
+          "Whether the defendant wants a new grand jury",
+          "Whether the verdict should be counted again",
+          "Whether all sentencing rules can be waived unilaterally"
+        ],
+        "Whether the defendant wishes to make a personal statement",
+        "Counsel speaking does not replace the personal opportunity.",
+        "The defendant has a personal right to speak, and the court must ask before pronouncing sentence."
+      ],
+      [
+        3,
+        "Absent an applicable statutory waiver, a misdemeanor sentence of 200 days requires which step under CPL § 390.20?",
+        [
+          "Receipt of a written pre-sentence investigation report",
+          "A new indictment",
+          "Automatic transfer to superior court",
+          "Only the defendant’s oral statement"
+        ],
+        "Receipt of a written pre-sentence investigation report",
+        "Compare 200 days with the 180-day threshold.",
+        "Imprisonment exceeding 180 days triggers the misdemeanor report requirement, subject to the statute’s waiver and exception provisions."
+      ]
+    ]
+  },
+  "qr_cpl_063_order_examination": {
+    "cite": "CPL §§ 730.10, 730.30",
+    "notes": [
+      "An incapacitated person lacks capacity, because of mental disease or defect, to understand the proceedings or assist in the defense. These are alternatives; both deficits are not required.",
+      "The order-of-examination rule has specific procedural windows: after arraignment on an instrument other than a felony complaint and before sentence, or after arraignment on a felony complaint and before being held for grand-jury action."
+    ],
+    "qs": [
+      [
+        2,
+        "Because of mental disease or defect, a defendant cannot assist in the defense but understands the proceedings. Does the definition potentially apply?",
+        [
+          "Yes; either statutory capacity deficit can qualify",
+          "No; both deficits are always required",
+          "No; only lack of understanding matters",
+          "Only after sentence is imposed"
+        ],
+        "Yes; either statutory capacity deficit can qualify",
+        "The definition uses “or.”",
+        "CPL § 730.10(1) includes lack of capacity to understand proceedings or to assist in the defense."
+      ],
+      [
+        3,
+        "For a defendant arraigned on a felony complaint, which window appears in CPL § 730.30(1)?",
+        [
+          "Before being held for grand-jury action",
+          "Only after conviction",
+          "Only after sentence",
+          "Only after an appeal is filed"
+        ],
+        "Before being held for grand-jury action",
+        "The felony-complaint window differs.",
+        "The statute describes the period after arraignment on the felony complaint and before the defendant is held for grand-jury action."
+      ]
+    ]
+  }
+};
+  cards.forEach(c => {
+    const extra = relatedRules[c.id]; if (!extra) return;
+    c.source.cite = extra.cite; c.intro.source = extra.cite;
+    c.source.context += " " + extra.notes.join(" ");
+    c.lore.push(...extra.notes);
+    c.bank.push(...extra.qs.map(args => q(...args)));
+  });
 
   const lessons = [
     {id:'s4_case_launch',series:4,name:'Launching the Case',cover:'redtape',blurb:'Filing, forum, deadlines, instruments, warrants, and grand-jury action.',cards:['qr_cpl_001_criminal_action','qr_cpl_011_superior_jurisdiction','qr_cpl_013_limitations','qr_cpl_016_facial_sufficiency','qr_cpl_020_arrest_warrant_issue','qr_cpl_028_grand_jury_numbers']},
