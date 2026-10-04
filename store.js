@@ -109,8 +109,8 @@ function storeSeries(){
   return SERIES_DEFS.map(d => { const cards = CARDS.filter(d.test), missing = cards.filter(c => !owned(c));
     return { ...d, cards, missing, deckPrice:missing.reduce((n, c) => n + cardPrice(c), 0) }; });
 }
-const seriesDeckArt = d => `<span class="st-art deck series"><img src="${artSrc(d.deck)}" alt="${esc(d.label)} complete deck box"></span>`;
-const seriesPackImg = d => `<span class="st-art pack series"><img src="${artSrc(d.pack)}" alt="${esc(d.label)} booster pack"></span>`;
+const seriesDeckArt = d => `<span class="st-art deck series-product"><img src="${artSrc(d.deck)}" alt="${esc(d.label)} complete deck box"></span>`;
+const seriesPackImg = d => `<span class="st-art pack series-product"><img src="${artSrc(d.pack)}" alt="${esc(d.label)} booster pack"></span>`;
 const weekKey = () => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };   // this week's Monday
 const storePacksLeft = () => { const w = S.storePacks; return !w || w.week !== weekKey() ? PRICE.packsPerWeek : Math.max(0, PRICE.packsPerWeek - w.n); };
 function storeSubjects(){
@@ -263,8 +263,8 @@ const STORE_CSS = `
 .st-art{position:relative;display:block;width:100%}
 .st-art>img{display:block;width:100%;height:auto}
 .st-art.pack{width:72%}
-.st-art.deck.series{width:86%}.st-art.deck.series img{border-radius:10px}.st-art.pack.series{width:76%}
-.st-art.series .st-series-tag{position:absolute;right:4%;bottom:5%;display:grid;place-items:center;min-width:34px;height:28px;padding:0 5px;border:2px solid #1d1b17;border-radius:6px;background:#f0c755;color:#1d1b17;font:20px/1 "Bangers";letter-spacing:.04em;transform:rotate(-5deg);box-shadow:2px 2px 0 rgba(0,0,0,.35)}
+.st-art.deck.series-product{width:86%}.st-art.deck.series-product img{border-radius:10px}.st-art.pack.series-product{width:76%}
+.st-art.series-product .st-series-tag{position:absolute;right:4%;bottom:5%;display:grid;place-items:center;min-width:34px;height:28px;padding:0 5px;border:2px solid #1d1b17;border-radius:6px;background:#f0c755;color:#1d1b17;font:20px/1 "Bangers";letter-spacing:.04em;transform:rotate(-5deg);box-shadow:2px 2px 0 rgba(0,0,0,.35)}
 .st-lab{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2%;color:var(--ink);text-align:center;container-type:inline-size}
 .st-lab.deck{left:34%;top:30%;width:46%;height:56%}
 .st-lab.pack{left:18%;top:28%;width:66%;height:34%}
