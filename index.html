@@ -3593,8 +3593,8 @@ function cardMenu(id){
 function missingSheet(id){
   const c = byId(id);
   openSheet(`<div class="sh-missing"><div class="sh-mcard">${lockedCardHTML(c)}</div>
-      <h3>${c ? 'Not found yet' : 'Card unavailable'}</h3><p>${c ? `This ${c.trickType ? 'Memory Trick' : 'card'} is waiting in a pack. ${S.packs ? `You have ${S.packs} pack${S.packs > 1 ? 's' : ''} to open.` : 'Finish a study round to earn a pack.'}` : 'This card could not be found.'}</p></div>
-    ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN A PACK</button>` : `<button class="btn-big" data-act="quick">${PLAY_ICON} QUICK ROUND</button>`}
+      <h3>${c ? 'Not found yet' : 'Card unavailable'}</h3><p>${c ? `This ${c.trickType ? 'Memory Trick' : 'card'} is waiting in a pack. ${S.packs ? `You have ${S.packs} pack${S.packs > 1 ? 's' : ''} to open.` : 'Study a card you own to earn a pack. This card stays locked until you collect it.'}` : 'This card could not be found.'}</p></div>
+    ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN A PACK</button>` : `<button class="btn-big" data-act="tab" data-tab="study">${PLAY_ICON} STUDY YOUR OWNED CARDS</button>`}
     <button class="sheet-cancel" data-act="sheet-close">Not now</button>`);
 }
 function a2hsSheet(){
