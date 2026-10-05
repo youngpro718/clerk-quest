@@ -326,6 +326,10 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .t.s45.title span{height:auto;padding:0;overflow:visible}
 .t.s5.title{gap:.7cqw;padding:0 0 1cqw}
 .t.s5.title span{height:auto}
+.t.s5.title:has(.title-print){padding:0;gap:0;align-items:center;justify-content:center}
+.title-print{position:relative;flex:none;pointer-events:none}
+.title-fallback{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;gap:.7cqw}
+.title-print img{position:absolute;max-width:none;object-fit:fill}
 .t.quote{white-space:pre-line;line-height:1.08}
 .t.s45.quote,.t.s3.quote{white-space:pre-line;line-height:1.04}
 /* CARD LABEL LETTERING: decided by the owner 2026-10-04 (owned by Claude Code; please don't remove).
@@ -1160,6 +1164,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="study/quick-reference/series-lessons.js?v=691837ab"></script>
 <script src="curriculum-pilot.js?v=9e0d75af"></script>
 <script src="card-typography.js?v=53a87104"></script>
+<script src="card-title-art.js?v=e81d0c7d"></script>
 <script src="binder.js?v=dcc2617f"></script>
 <script src="onboarding.js?v=22f27a83"></script>
 <script src="account.js?v=5042effc"></script>
@@ -2128,6 +2133,22 @@ function titleLine(c, line, width, cap){
   const tracking = p[first ? 'firstLetterSpacing' : 'secondLetterSpacing'] || '.035em';
   return `<span class="t${line}" data-fit="${width}" data-max="${size}" style="font-size:${size}cqw;font-family:'${font}';letter-spacing:${tracking}">${esc(first ? c.l1 : c.l2)}</span>`;
 }
+// Printed titles are authored separately; saved progression and character layers stay independent.
+function printedTitleHTML(c){
+  const t = window.CQ_TITLE_ART?.[c.id];
+  if (!t) return `${titleLine(c, 1, 62, 7.8)}${titleLine(c, 2, 62, 8)}`;
+  const [x,y,w,h] = t.ink, [iw,ih] = t.size, boxRatio = 770/232, ratio = w/h;
+  const width = ratio >= boxRatio ? 100 : ratio/boxRatio*100;
+  const height = ratio >= boxRatio ? boxRatio/ratio*100 : 100;
+  return `<div class="title-fallback" aria-hidden="true">${titleLine(c, 1, 62, 7.8)}${titleLine(c, 2, 62, 8)}</div><div class="title-print" style="width:${width}%;height:${height}%" role="img" aria-label="${esc(c.name)}"><img src="${artSrc(t.asset)}" alt="" decoding="async" style="width:${iw/w*100}%;height:${ih/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%"></div>`;
+}
+document.addEventListener('error', e => {
+  const image = e.target, print = image.closest?.('.title-print');
+  if (!print) return;
+  const parent = print.parentElement, fallback = parent.querySelector('.title-fallback');
+  print.remove();
+  if (fallback) { fallback.style.display = 'flex'; fallback.removeAttribute('aria-hidden'); fitTitles(parent); }
+}, true);
 function quoteText(c){ return esc((window.CQ_CARD_TYPOGRAPHY?.[c.id]?.quoteLines || [c.quote]).join('\n')); }
 function quoteStyle(c){ return `font-size:${window.CQ_CARD_TYPOGRAPHY?.[c.id]?.quoteSize || 4}cqw`; }
 function fitTitles(root){
@@ -2342,7 +2363,7 @@ function frontS45HTML(c, st, opt={}){
     ${s4 ? '' : `<div class="t icon s45 s5 meta" style="${P(912,77,963,139)}">${icon}</div>`}
     ${s4 ? `<div class="t title s45 s4 meta" style="${P(195,184,891,277)}">${titleLine(c, 1, 64, 7.2)}</div>
       <div class="t title s45 s4 meta" style="${P(195,307,891,369)}">${titleLine(c, 2, 64, 5.5)}</div>`
-      : `<div class="t title s45 s5 meta" style="${P(164,184,860,399)}">${titleLine(c, 1, 62, 7.8)}${titleLine(c, 2, 62, 8)}</div>`}
+      : `<div class="t title s45 s5 meta" style="${P(130,174,900,406)}">${printedTitleHTML(c)}</div>`}
     <div class="t quote s45 s${c.series} meta" style="${s4 ? P(236,1183,850,1275) : P(256,1183,737,1275)};${quoteStyle(c)}">“${quoteText(c)}”</div>
     <div class="t rar s45 s${c.series} meta" style="${s4 ? P(123,1321,358,1428) : P(72,1352,338,1444)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:calc(${raritySize}cqw*var(--fit,1))">${c.rarity.toUpperCase()}</span></div>
     <div class="t set s45 s${c.series} meta" style="${s4 ? P(430,1321,686,1428) : P(389,1352,655,1444)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
