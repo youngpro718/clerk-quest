@@ -43,7 +43,7 @@
       Object.values(state.cards).filter(c => c && c.owned).length * 3;
   };
   /* Whichever copy wins, nothing the player wrote or built is thrown away: the losing copy's notes, highlights,
-     saved questions, notebook pages, binders and Docket records are added to the winner. Same-id items keep the
+     saved questions, notebook pages, binders, Docket records and Readiness history are added to the winner. Same-id items keep the
      winner's version, except a rule note, which keeps whichever was written last. Returns [merged, changed]. */
   function keepBoth(win, lose) {
     const out = JSON.parse(JSON.stringify(win)), before = JSON.stringify(out);
@@ -62,6 +62,11 @@
     }
     if (Array.isArray(lose.binders)) out.binders = byId(Array.isArray(out.binders) ? out.binders : [], lose.binders);
     if (Array.isArray(lose.dockets)) out.dockets = byId(Array.isArray(out.dockets) ? out.dockets : [], lose.dockets);
+    // Readiness evidence: per card, keep whichever copy answered it most recently
+    if (lose.recall && typeof lose.recall === 'object') {
+      out.recall = out.recall && typeof out.recall === 'object' ? out.recall : {};
+      Object.entries(lose.recall).forEach(([k, r]) => { if (r && (!out.recall[k] || (r.last || 0) > (out.recall[k].last || 0))) out.recall[k] = r; });
+    }
     return [out, JSON.stringify(out) !== before];
   }
   const emit = (status, extra = {}) =>

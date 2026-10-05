@@ -951,6 +951,20 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .cd-top{display:flex;flex-direction:column;align-items:center;padding-top:6px}
 .cd-card{width:min(62vw,300px,calc((100dvh - 330px) / 1.5))}
 .stage-dots{display:flex;gap:8px;margin-top:12px}
+/* Readiness (separate from XP): Profile panel and a card's recall dots */
+.rd-panel{margin:0 0 16px;padding:14px 16px;border-radius:16px;background:var(--bg2);border:1.5px solid var(--line)}
+.rd-top{display:flex;align-items:baseline;justify-content:space-between}
+.rd-top b{font:400 20px/1 "Bangers",sans-serif;letter-spacing:.04em}
+.rd-top span{font:400 30px/1 "Luckiest Guy",sans-serif;color:var(--mustard)}
+.rd-bar{height:10px;margin:10px 0 8px;border-radius:5px;background:rgba(255,255,255,.1);overflow:hidden}
+.rd-bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#7fb98a,#e3b23c)}
+.rd-panel small{display:block;color:var(--sub);font-size:14px;line-height:1.3}
+.rc-row{display:flex;align-items:center;gap:10px;margin:8px 0 4px;font-size:15px}
+.rc-row > span:first-child{color:var(--sub)}
+.rc-row small{margin-left:auto;color:var(--sub);font-size:14px}
+.rc-pips{display:inline-flex;gap:4px}
+.rc-pips i{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--sub);opacity:.6}
+.rc-pips i.on{background:#7fb98a;border-color:#7fb98a;opacity:1}
 .stage-dots button{width:34px;height:34px;border-radius:17px;border:1.5px solid var(--line);background:rgba(255,255,255,.06);color:var(--paper);font-family:"Luckiest Guy";font-size:14px}
 .stage-dots button.cur{background:var(--mustard);color:var(--ink);border-color:var(--ink)}
 .stage-dots button.lk{font-size:12px;opacity:.45}
@@ -1135,7 +1149,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <div class="flash" id="flash"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
-<script src="cloud-sync.js?v=25246a67"></script>
+<script src="cloud-sync.js?v=b8aec09d"></script>
 <script src="study.js?v=bf7c9345"></script>
 <script src="economy.js?v=a7261374"></script>
 <script src="store.js?v=037a6033"></script>
@@ -3131,6 +3145,7 @@ const SCREENS = {
         </div>
         <h2 class="cd-name">${esc(c.name)}</h2>
         <div class="cd-level"><span>${st.mastered ? ICO('mastered') + ' Mastered' : 'Level ' + st.level}</span><span>${st.mastered ? 'Max' : st.xp + ' / ' + NEED[st.level-1] + ' XP'}</span></div>${pbar(cardProgress(c))}
+        ${c.bank && c.bank.length ? `<div class="rc-row"><span>Recall</span>${Recall.pips(c.id)}<small>${Recall.dueText(c.id)}</small></div>` : ''}
         ${seg('tab', tab, tabs)}
         <div class="cd-panel">${panel}</div>`,
       after:`<div class="cta-bar"><div><button class="btn-big ${isCold(st) ? 'coldbtn' : ''}" data-act="study" data-id="${c.id}">${PLAY_ICON} ${isCold(st) ? 'REOPEN THIS CASE' : tab === 'rule' && c.source ? 'QUIZ THIS CARD' : 'STUDY THIS CARD'}</button></div></div>`,
@@ -3179,6 +3194,7 @@ const SCREENS = {
       <div class="stat4 ${showAccuracy ? '' : 'three'}">
         ${showAccuracy ? `<div><b>${acc}</b><small>Accuracy</small></div>` : ''}<div><b>${S.stats.sessions || '—'}</b><small>Rounds</small></div>
         <div><b>${CARDS.filter(owned).length}</b><small>Cards</small></div><div><b>${mastered || '—'}</b><small>Mastered</small></div></div>
+      ${readinessPanel()}
       <div class="list">
         ${profileAdminRow()}
         ${profileOnbRow()}
@@ -3492,6 +3508,50 @@ function paintStudy(anim){
   const ex = back.querySelector('.explain');
   if (ex) { shrinkToFit(ex, 3.8); ex.classList.toggle('more', ex.scrollHeight > ex.clientHeight + 2); }
 }
+function readinessPanel(){
+  const pct = Math.round(Recall.readiness() * 100), list = Recall.examCards();
+  return `<div class="rd-panel"><div class="rd-top"><b>Exam readiness</b><span>${pct}%</span></div>
+    <div class="rd-bar"><i style="width:${pct}%"></i></div>
+    <small>${Recall.strong()} of ${list.length} rule cards strong in memory. Only right answers without hints raise it, and it fades if you stop reviewing. XP and boosts don't count.</small></div>`;
+}
+/* ---- Readiness: what you actually remember, kept apart from XP ----
+   Each card has a recall box 0-5. A right answer without a hint moves it up one (once a day per card, so
+   cramming can't max it out); a hinted right answer changes nothing; a wrong answer moves it down one.
+   Each box has a review gap; after the gap, the card's strength fades. XP, boosts, coins and prizes never
+   touch it. Exam readiness = average strength over cards that have real questions (generated skill games
+   don't count), owned or not. Stored in S.recall[cardId] = {box, due, last, up, right, wrong}. */
+const Recall = (() => {
+  const DAYMS = 864e5, GAP = [0, 1, 3, 7, 14, 30];   // days until review, by box
+  const all = () => (S.recall = S.recall && typeof S.recall === 'object' ? S.recall : {});
+  const rec = id => all()[id] || { box:0, due:0, last:0, up:0, right:0, wrong:0 };
+  function record(id, ok, hinted){
+    const r = { ...rec(id) }, now = Date.now();
+    if (ok) { r.right++; if (!hinted && now - r.up > 20 * 36e5) { r.box = Math.min(5, r.box + 1); r.up = now; } }
+    else { r.wrong++; r.box = Math.max(0, r.box - 1); }
+    r.last = now; r.due = now + GAP[r.box] * DAYMS;
+    all()[id] = r;
+  }
+  // 0..1: the box's share, fading by half for every review gap that has passed unreviewed
+  function strength(id, now = Date.now()){
+    const r = rec(id); if (!r.box) return 0;
+    const over = Math.max(0, now - r.due) / (GAP[r.box] * DAYMS);
+    return r.box / 5 * Math.pow(.5, over);
+  }
+  const examCards = () => CARDS.filter(c => c.bank && c.bank.length);
+  function readiness(){
+    const list = examCards(); if (!list.length) return 0;
+    return list.reduce((n, c) => n + strength(c.id), 0) / list.length;
+  }
+  const strong = () => examCards().filter(c => strength(c.id) >= .6).length;
+  function dueText(id){
+    const r = rec(id); if (!r.box) return r.wrong || r.right ? 'Keep practicing to build recall' : 'Not studied yet';
+    const d = Math.ceil((r.due - Date.now()) / DAYMS);
+    return d <= 0 ? 'Review due now' : d === 1 ? 'Review due tomorrow' : `Review due in ${d} days`;
+  }
+  // five dots, filled to the card's current (faded) strength
+  const pips = id => { const n = Math.round(strength(id) * 5); return `<span class="rc-pips" aria-label="Recall ${n} of 5">${[1,2,3,4,5].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span>`; };
+  return { record, strength, readiness, strong, examCards, dueText, pips };
+})();
 function answer(v){
   if (!sess || sess.answered) return;
   if (!canStudyCard(sess.id)) { const id = sess.id; closeSessionLayer(); missingSheet(id); return; }
@@ -3501,6 +3561,7 @@ function answer(v){
   const lvBefore = st.level;
   let gain = 0, coins = 0;
   S.stats.answered++; sess.results[sess.i] = ok;
+  Recall.record(sess.id, ok, !!sess.hint);
   if (ok) {
     S.stats.correct++; daily().correct++; if (c.trickType) daily().trick++;
     gain = Math.round(REWARD[st.level-1] * (hintCosts() ? .5 : 1)) * (doubleXPOn() ? 2 : 1);   // boosts: free hint, double XP
