@@ -8,8 +8,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Becoming a Clerk">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=deck3">
+<link rel="icon" type="image/png" href="favicon.png?v=deck3">
 <title>Becoming a Clerk</title>
 <meta name="description" content="Prepare for the New York court clerk exam with rule cards, lessons and practice questions.">
 <!-- Link previews (iMessage, Facebook, Slack, etc.). Previews need full web addresses. -->
@@ -1133,7 +1133,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 </head>
 <body>
 <div id="splash" role="status" aria-label="Loading Becoming a Clerk"><div class="sp-frame">
-  <div class="cq-brand cq-brand-start"><img class="cq-brand-mark" src="art/brand_mark.svg" alt=""><h1 class="cq-brand-name">BECOMING <span>A CLERK</span></h1></div>
+  <div class="cq-brand cq-brand-start"><img class="cq-brand-mark" src="art/brand_deck.webp" alt=""><h1 class="cq-brand-name">BECOMING <span>A CLERK</span></h1></div>
   <div class="sp-fan" aria-hidden="true">
     <div class="sp-card s2" style="--left:18%;--angle:-17deg;--z:1;--delay:.02s"><img src="art/character_interest_1.webp" alt=""><b>SERIES 2</b></div>
     <div class="sp-card s3" style="--left:34%;--angle:-8deg;--z:2;--delay:.08s"><img src="art/character_eightback_1.webp" alt=""><b>SERIES 3</b></div>
@@ -2201,7 +2201,7 @@ function probeArt(){
 
 const STARTUP_SPLASH_TEMPLATE = document.getElementById('splash')?.innerHTML || '';
 function brandHTML(size='small'){
-  return `<div class="cq-brand cq-brand-${size}"><img class="cq-brand-mark" src="art/brand_mark.svg" alt=""><div class="cq-brand-name" aria-label="Becoming a Clerk">BECOMING <span>A CLERK</span></div></div>`;
+  return `<div class="cq-brand cq-brand-${size}"><img class="cq-brand-mark" src="art/brand_deck.webp" alt=""><div class="cq-brand-name" aria-label="Becoming a Clerk">BECOMING <span>A CLERK</span></div></div>`;
 }
 function previewStartupSplash(){
   if (typeof ADM==='undefined' || !ADM.is) return;
