@@ -1,0 +1,34 @@
+{
+  "requested": 64,
+  "fullyCollected": 63,
+  "partiallyCollected": 1,
+  "partialSections": [
+    {
+      "rule": "202.70",
+      "reason": "Cornell's version-2 page links only through Rule 202.70.36; Appendix A is image-only. Preamble and 55 linked items were saved, but the section is not represented as complete/current official text.",
+      "linkedRulesMarkdown": "./section-202.70-commercial-division-linked-rules-v2-cornell-secondary.md",
+      "linkedRulesJSON": "./22-nycrr-202.70-v2-linked-rules.json"
+    }
+  ],
+  "unavailable": [],
+  "criticalVersionWarnings": [
+    {
+      "rule": "205.43",
+      "warning": "Cornell displays superseded 30/30/60-day timing; the amendment effective January 5, 2026 changed it to 60/60/90 days."
+    }
+  ],
+  "completeSectionCaptures": 63,
+  "partialSectionCaptures": [
+    {
+      "rule": "202.70",
+      "reason": "PARTIAL SECTION: this captured Cornell version ends after the Commercial Division preamble. The practice rules referenced as set forth below are not included. Do not treat this as complete section 202.70."
+    }
+  ],
+  "versionVerifiedForExam": false,
+  "knownVersionDifferences": [
+    {
+      "rule": "205.43",
+      "warning": "KNOWN OUTDATED VERSION: the Cornell text below has older 30/30/60-day deadlines. The official amendment effective January 5, 2026 changes them to 60/60/90 days. Consult ../nys-register-2025-12-10.pdf and ../205.43-amendment-2025-12-10-excerpt.md. This copy is not exam-ready."
+    }
+  ]
+}

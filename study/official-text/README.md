@@ -11,7 +11,7 @@ All Senate PDFs and extracted Markdown were retrieved on **October 5, 2026**. Th
 | Family Court Act | Articles 1 (Parts 1, 5, 6, 7), 2 (Parts 1, 2, 4, 5, 6), 3 (Parts 1, 2, 4, 5, 6, 7, 8), 4, 5, 5-B, 6, 7, 8, 10, 11 | `Family-Court-Act-exam-scope.md` | 517 in `fca-sections/` | Complete against the official Senate article/part tables of contents used for enumeration; exam-cutoff review pending |
 | Real Property Actions and Proceedings Law | Article 7 | `RPAPL-Article-7.md` | 32 in `rpapl7-sections/` | Complete against the official Senate Article 7 table of contents; exam-cutoff review pending |
 | Vehicle and Traffic Law | Sections 511, 1192, 1193 | `VTL-511-1192-1193.md` | 3 at this directory level | All three requested sections collected; exam-cutoff review pending |
-| Mental Hygiene Law | Articles 9, 10, 81 | `Mental-Hygiene-Law-Articles-9-10-81.md` | 93 in `mhl-sections/` | 93 section texts collected from the official Senate tables of contents. Section 9.61 is listed by the Article 9 table of contents, but its section PDF endpoint returned the whole-law table of contents rather than section text; it is excluded and unresolved. Exam-cutoff review pending |
+| Mental Hygiene Law | Articles 9, 10, 81 | `Mental-Hygiene-Law-Articles-9-10-81.md` | 93 in `mhl-sections/` | 93 section texts collected. The Article 9 table of contents lists “9.61 Involuntary outpatient treatment,” but its section endpoint returns the whole-law table of contents. The official § 9.63 PDF also prints a different, future transportation provision renumbered § 9.61 effective June 30, 2027, after the exam cutoff. See `MHL-9.61-source-note.md`; no inferred text was added. Exam-cutoff review pending |
 
 The Senate section-PDF URL pattern is:
 
@@ -38,7 +38,7 @@ The `uniform-rules/` directory therefore contains only clearly labeled partial o
 - `part-205-indexed-fragments.md`: incomplete fragments from the indexed official Part 205 page; omissions and discontinuities remain.
 - `nys-register-2025-12-10.pdf` and `205.43-amendment-2025-12-10-excerpt.md`: an official Department of State publication and excerpt for the amendment to section 205.43, effective January 5, 2026. This is an amendment publication, not a complete consolidated rule.
 
-Part 200 and all Uniform Rules sections not explicitly identified above remain uncollected. The partial material must not be treated as a complete statement of the exam-scope rules.
+The materials listed above remain partial official-source captures. A separate secondary-reference collection is described below; it does not replace official-source verification.
 
 ## Validation notes
 
@@ -48,3 +48,15 @@ Part 200 and all Uniform Rules sections not explicitly identified above remain u
 - No credentials, private data, developer audit material, or secondary-source statutory text is included.
 
 Whole-law contents-only PDFs are retained in `tables-of-contents/`, with explicit filenames.
+
+## Additional retrieval routes (2026-10-05)
+
+### MHL 9.61
+
+See `MHL-9.61-source-note.md`. The official retained `mhl-sections/MHY9.63.pdf` already includes future transportation text numbered 9.61, effective June 30, 2027. That future numbering does not apply at the exam cutoff. The separate Article 9 contents entry titled “Involuntary outpatient treatment” remains unresolved; no text was inferred for it.
+
+### Uniform Rules secondary reference copies
+
+The accessible Cornell Legal Information Institute mirror has been collected separately under `uniform-rules/reference-copies/`. These files are **secondary reference copies, not official court-site downloads or approved exam-version text**. Consult `collection-summary.json` and the individual section metadata for retrieval status and source URLs. The three part-level Markdown files make the collected sections readable.
+
+**Known version difference:** Cornell section 205.43 contains older 30/30/60-day deadlines. The official amendment effective January 5, 2026 changes these to 60/60/90 days; the official amendment PDF and excerpt are retained in the parent folder. Review all other amendments and effective dates before using the reference text in cards or exam questions. Section 202.70 requires checking its split versions and Commercial Division practice rules; a preamble alone is not full coverage.
