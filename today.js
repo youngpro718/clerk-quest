@@ -7,6 +7,7 @@
    push, switchTab, spotlight, payOnboarding, nearestGoal). */
 
 const TODAY_MAX = 4;
+const REVIEW_MAX = 6;   // a mixed review round: one question per card
 const dayKeyOf = ts => { const d = new Date(+ts); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
 const onToday = ts => !!ts && dayKeyOf(ts) === todayKey();
 
@@ -40,7 +41,7 @@ function buildTodayItems(now = Date.now()){
   const gs = !o.finished && !o.hidden && STEPS.find(s => !s.test());
   if (gs) items.push({ kind:'gs', id:gs.id });
   const pile = reviewPile(now);
-  if (pile.length) items.push({ kind:'review', id:pile[0] });
+  if (pile.length) items.push({ kind:'review', id:pile[0], ids:pile.slice(0, REVIEW_MAX) });
   const next = nextCard();
   if (next) items.push({ kind:'next', id:next });
   else if (S.packs > 0) items.push({ kind:'pack', base:S.packsOpened || 0 });
@@ -58,10 +59,12 @@ function todayPlan(){
   return S.today;
 }
 
+const multiReview = it => it.kind === 'review' && Array.isArray(it.ids) && it.ids.length > 1;
+
 function itemDone(it){
   switch (it.kind) {
     case 'gs': { const s = STEPS.find(x => x.id === it.id); return !s || s.test(); }
-    case 'review': return onToday(((S.recall || {})[it.id] || {}).last);
+    case 'review': return multiReview(it) ? !!(S.today && S.today.reviewDone) : onToday(((S.recall || {})[it.id] || {}).last);
     case 'next': return onToday((S.cards[it.id] || {}).last);
     case 'pack': return (S.packsOpened || 0) > (it.base || 0);
     case 'docket': return docketProgress(it.id) > (it.base || 0);
@@ -75,7 +78,8 @@ function todayRow(it){
   const c = it.id && byId(it.id);
   switch (it.kind) {
     case 'gs': { const s = STEPS.find(x => x.id === it.id); return { t:s ? s.label : 'Getting Started', sub:'Getting Started · +' + ONB.stepCoins + ' coins' }; }
-    case 'review': return { t:'Review: ' + c.name, sub:'5 questions · about 2 min' };
+    case 'review': return multiReview(it) ? { t:'Review: ' + it.ids.length + ' cards', sub:'Due or shaky · about ' + Math.max(1, Math.round(it.ids.length / 2)) + ' min' }
+      : { t:'Review: ' + c.name, sub:'5 questions · about 2 min' };
     case 'next': { const k = CARD_VIDEOS[it.id], v = k && LESSON_VIDEOS[k];
       return v ? { t:'Watch, then practice: ' + c.name, sub:'Video ' + v.len + ' · then 5 questions' } : { t:'Next: ' + c.name, sub:'New card · 5 questions' }; }
     case 'pack': return { t:'Open a pack for new cards', sub:'New cards to study' };
@@ -104,6 +108,11 @@ function todayHero(it, i, done, total){
   if (!it) {
     label = total ? 'ALL DONE' : 'NOTHING DUE'; title = 'Done for today ✓'; cls = 'done';
     what = card ? 'Want more? Keep practicing ' + card.name + '.' : 'Come back tomorrow for a new plan.'; cta = 'KEEP PRACTICING';
+  } else if (it.kind === 'review' && multiReview(it)) {
+    const names = it.ids.map(byId).filter(Boolean).map(x => x.name);
+    label = 'READY FOR A REFRESHER'; title = 'Review ' + names.length + ' cards'; cls = 'cold';
+    what = names.slice(0, 2).join(', ') + (names.length > 2 ? ' and ' + (names.length - 2) + ' more' : '') + '. One question each.';
+    cta = 'START REVIEW';
   } else if (it.kind === 'review') {
     label = 'READY FOR A REFRESHER'; title = heroTopicTitle(card); what = heroTopic(card); cta = 'STUDY 5 QUESTIONS'; cls = 'cold';
   } else if (it.kind === 'next') {
@@ -152,7 +161,7 @@ function todayGo(it){
   if (!it) return;
   switch (it.kind) {
     case 'gs': { const s = STEPS.find(x => x.id === it.id); if (s) { s.go(); spotlight(s.spot, s.caption); } return; }
-    case 'review': startSession(it.id); return;   // a card you know: straight to questions
+    case 'review': if (multiReview(it)) startReview(it); else startSession(it.id); return;   // cards you know: straight to questions
     case 'next': { const k = CARD_VIDEOS[it.id]; if (k && LESSON_VIDEOS[k]) openLessonVideo(k, 'intro', it.id); else studyCard(it.id); return; }
     case 'pack': if (S.packs) openPack(); else push('packs'); return;
     case 'docket': push('docket', { id:it.id }); return;
@@ -162,6 +171,36 @@ function todayGo(it){
 }
 /* after everything is done: the card the old hero card would have offered */
 function todayMore(){ const c = heroCard(); if (c) studyCard(c.id); else switchTab('study'); }
+/* the mixed review: one question per card, on the lesson-round machinery (sessLen() is the queue length) */
+function startReview(it){
+  const queue = (it.ids || []).filter(canStudyCard);
+  if (queue.length < 2) return startSession(queue[0] || it.id);
+  startSession(queue[0], { review:true, name:'Review', queue });
+}
+/* results: score, rewards, and each card's recall dots after the round. No pass or fail. */
+function reviewResults(){
+  const L = sess.lesson, total = L.queue.length, correct = sess.results.filter(Boolean).length;
+  if (S.today) S.today.reviewDone = true;
+  save();
+  view = { name:'results' };
+  const rows = L.queue.map((id, i) => { const c = byId(id); return c ? `<div class="rv-row"><span class="rv-mark ${sess.results[i] ? 'ok' : 'miss'}">${ICO(sess.results[i] ? 'check' : 'thermo_snow')}</span>
+    <span class="rv-main"><b>${esc(c.name)}</b><small>${esc(Recall.dueText(id))}</small></span>${Recall.pips(id)}</div>` : ''; }).join('');
+  app.innerHTML = `
+    <div class="results lesson review">
+      <h1>REVIEW DONE</h1>
+      <div class="score">${correct} of ${total}</div>
+      <div class="sub">right · your recall dots are updated</div>
+      <div class="rchips"><span class="chip">+${sess.xp} XP</span>${sess.coins ? `<span class="chip coin">+${sess.coins} ${COIN}</span>` : ''}
+        ${sess.packGiven ? `<span class="chip">${ICO('pack')} +1 DAILY PACK</span>` : ''}</div>
+      <div class="panel rv-list">${rows}</div>
+      <div class="stack">
+        ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN YOUR PACK</button>` : ''}
+        <button class="btn-big alt" data-act="session-close">Done</button>
+      </div>
+    </div>`;
+  app.scrollTo({ top:0 });
+  refresh();
+}
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act="today-go"],[data-act="today-more"]'); if (!t) return;
   if (t.dataset.act === 'today-more') return todayMore();
@@ -192,5 +231,15 @@ const TODAY_CSS = `
 .td-tick{width:24px;height:24px;flex:none;border-radius:12px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center}
 .td-tick .ico,.td-tick img{width:16px;height:16px}
 .td-tile.done .td-tick{border-color:#5fd47a;background:#5fd47a}
+.rv-list{display:flex;flex-direction:column;gap:8px}
+.rv-row{display:flex;align-items:center;gap:10px}
+.rv-mark{width:28px;height:28px;flex:none;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08)}
+.rv-mark .ico,.rv-mark img{width:18px;height:18px}
+.rv-mark.ok{background:#5fd47a}
+.rv-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.rv-main b{font:19px/1.15 "Patrick Hand";font-weight:400}
+.rv-main small{font:15px/1.15 "Patrick Hand";opacity:.7}
+.rv-list .rc-pips i{border-color:rgba(29,27,23,.5);opacity:1}
+.rv-list .rc-pips i.on{background:#3f9a54;border-color:#3f9a54}
 `;
 document.head.insertAdjacentHTML('beforeend', `<style>${TODAY_CSS}</style>`);

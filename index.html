@@ -1163,7 +1163,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="admin.js?v=0c2f65ed"></script>
 <script src="stickers.js?v=70340509"></script>
 <script src="dockets.js?v=da920b66"></script>
-<script src="today.js?v=f5169dda"></script>
+<script src="today.js?v=8dfb2c73"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="sticker3d.js?v=9a43370e"></script>
 <script src="questions.js?v=844f8f6b"></script>
@@ -3587,9 +3587,9 @@ function advance(){
     S.stats.sessions++; daily().sessions++;
     sess.packGiven = daily().sessions === 1;   // one pack a day: the first finished round; extra rounds earn coins and XP
     if (sess.packGiven) S.packs++;
-    logCoins(sess.answerCoins || 0, sess.lesson ? `Lesson: ${sess.lesson.name}` : `Study round: ${byId(sess.id).name}`);
+    logCoins(sess.answerCoins || 0, sess.lesson ? (sess.lesson.review ? 'Review round' : `Lesson: ${sess.lesson.name}`) : `Study round: ${byId(sess.id).name}`);
     sess.streakCoins = payStreak(); sess.coins = (sess.coins || 0) + sess.streakCoins;
-    save(); return sess.lesson ? lessonResults() : renderResults();
+    save(); return sess.lesson ? (sess.lesson.review ? reviewResults() : lessonResults()) : renderResults();
   }
   if (sess.lesson) {
     const nextId = sess.lesson.queue[sess.i];
