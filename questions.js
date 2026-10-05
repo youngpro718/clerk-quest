@@ -147,16 +147,16 @@ window.QBANK = {
   },
   {
    "lv": 2,
-   "q": "A defendant is handed a summons in New York on May 4. By when must she appear?",
+   "q": "A defendant is handed a summons in New York on Monday, May 4, 2026. By when must she appear?",
    "c": [
     "May 14",
     "May 24",
-    "June 3",
-    "May 4"
+    "May 26",
+    "June 3"
    ],
-   "a": "May 24",
-   "h": "Twenty days from service.",
-   "w": "CPLR 320(a): within 20 days after service."
+   "a": "May 26",
+   "h": "Twenty days, then skip the weekend and the holiday.",
+   "w": "CPLR 320(a): day 20 is Sunday, May 24, and May 25 is Memorial Day, so the deadline moves to Tuesday, May 26."
   },
   {
    "lv": 3,
@@ -212,7 +212,7 @@ window.QBANK = {
   },
   {
    "lv": 3,
-   "q": "A motion is returnable April 10. The lawyers sign one written 14-day stipulation and send it to the judge. New date?",
+   "q": "A motion is returnable April 10, 2026. The lawyers sign one written 14-day stipulation and send it to the judge. New date?",
    "c": [
     "April 24",
     "April 10",
@@ -396,7 +396,7 @@ window.QBANK = {
   },
   {
    "lv": 1,
-   "q": "Dana is handed a summons and complaint in New York on March 3. She must appear by:",
+   "q": "Dana is handed a summons and complaint in New York on Tuesday, March 3, 2026. She must appear by:",
    "c": [
     "March 13",
     "March 23",
@@ -405,7 +405,7 @@ window.QBANK = {
    ],
    "a": "March 23",
    "h": "Count from service, not from filing.",
-   "w": "CPLR 320(a): appearance is due within 20 days after service of the summons. March 3 plus 20 days is March 23."
+   "w": "CPLR 320(a): appearance is due within 20 days after service of the summons. March 3 plus 20 days is Monday, March 23."
   },
   {
    "lv": 1,
@@ -512,16 +512,16 @@ window.QBANK = {
   },
   {
    "lv": 3,
-   "q": "Papers left with an adult at Ray's home Mar 1, copy mailed Mar 4, proof filed Mar 10. Last day for Ray to appear?",
+   "q": "Papers left with an adult at Ray's home Mar 1, 2026, mailed Mar 4, proof filed Mar 10. Last day for Ray to appear?",
    "c": [
+    "April 20",
     "April 19",
-    "March 21",
     "March 31",
     "April 9"
    ],
-   "a": "April 19",
-   "h": "Service completes before the 30 days start.",
-   "w": "CPLR 308(2): service is complete ten days after filing, so March 20. CPLR 320(a): 30 days after service is complete gives April 19."
+   "a": "April 20",
+   "h": "Service completes first. Then check the weekday.",
+   "w": "Service is complete March 20 (308(2)). Day 30 is Sunday, April 19, so the deadline moves to Monday, April 20."
   },
   {
    "lv": 3,
@@ -2051,7 +2051,7 @@ window.QBANK = {
   },
   {
    "lv": 2,
-   "q": "Summons date May 1. Latest day to start the hearing?",
+   "q": "Summons date May 1, 2026. Latest day to start the hearing?",
    "c": [
     "June 30",
     "June 1",
@@ -2064,7 +2064,7 @@ window.QBANK = {
   },
   {
    "lv": 2,
-   "q": "The hearing starts June 30. Latest day to finish it?",
+   "q": "The hearing starts June 30, 2026. Latest day to finish it?",
    "c": [
     "August 29",
     "September 30",
@@ -5357,7 +5357,7 @@ window.QBANK = {
   },
   {
    "lv": 2,
-   "q": "The order with notice of entry was served March 1. Last day to move to reargue?",
+   "q": "The order with notice of entry was served March 1, 2026. Last day to move to reargue?",
    "c": [
     "March 11",
     "March 21",
@@ -6483,16 +6483,16 @@ window.QBANK = {
   },
   {
    "lv": 2,
-   "q": "The appellant served the judgment with notice of entry on Mar 5. Last day to appeal?",
+   "q": "The appellant served the judgment with notice of entry on Mar 5, 2026. Last day to appeal?",
    "c": [
+    "April 6",
     "April 4",
     "March 25",
-    "April 14",
-    "May 4"
+    "April 14"
    ],
-   "a": "April 4",
-   "h": "Thirty days from service.",
-   "w": "Thirty days after service. March 5 plus 30 days is April 4."
+   "a": "April 6",
+   "h": "Thirty days from service, then check the weekday.",
+   "w": "Thirty days after service is Saturday, April 4, 2026, so the deadline moves to Monday, April 6."
   },
   {
    "lv": 2,

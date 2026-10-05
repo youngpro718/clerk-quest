@@ -14,7 +14,7 @@ function onbFlag(k){ const o = onb(); if (o[k]) return; o[k] = Date.now(); save(
 
 /* ---------- welcome: 3 screens, shown once ---------- */
 const WELCOME = [
-  { art:'welcome_1', h:'Study it. Collect it. Master it.', p:'Rule cards quote the official NYS court clerk sample questions. Memory Tricks are our own study aids.' },
+  { art:'welcome_1', h:'Prepare for the court clerk exam.', p:'Study New York law with rule cards, lessons and practice questions. Source details appear with each rule; Memory Tricks help you remember.' },
   { art:'welcome_2', h:'Cards grow as you learn.', p:'Right answers earn XP. Discover new color and characters that break out of their frames. Return to study before frost settles in.' },
   { art:'welcome_3', h:'Read it. Mark it. Keep it.', p:'Read each rule, highlight what matters, write notes, and save questions for later.' },
 ];

@@ -7,21 +7,21 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Clerk Quest">
+<meta name="apple-mobile-web-app-title" content="Becoming a Clerk">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="favicon.png">
-<title>Clerk Quest</title>
-<meta name="description" content="Study it. Collect it. Master it. A collectible card game for New York court clerk exam prep.">
+<title>Becoming a Clerk</title>
+<meta name="description" content="Prepare for the New York court clerk exam with rule cards, lessons and practice questions.">
 <!-- Link previews (iMessage, Facebook, Slack, etc.). Previews need full web addresses. -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Clerk Quest">
-<meta property="og:title" content="Clerk Quest">
-<meta property="og:description" content="Study it. Collect it. Master it. A collectible card game for New York court clerk exam prep.">
+<meta property="og:site_name" content="Becoming a Clerk">
+<meta property="og:title" content="Becoming a Clerk">
+<meta property="og:description" content="Prepare for the New York court clerk exam with rule cards, lessons and practice questions.">
 <meta property="og:url" content="https://youngpro718.github.io/clerk-quest/">
 <meta property="og:image" content="https://youngpro718.github.io/clerk-quest/share-cover.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="1200">
-<meta property="og:image:alt" content="Clerk Quest: a smiling paper clerk runs up the courthouse steps with Docket, Filing, Hearing and Order cards">
+<meta property="og:image:alt" content="Becoming a Clerk: a smiling paper clerk runs up the courthouse steps with Docket, Filing, Hearing and Order cards">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://youngpro718.github.io/clerk-quest/share-cover.jpg">
 <!-- The game's fonts ship with the app, so they always load (no Google Fonts download) -->
@@ -81,16 +81,31 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .art-bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.9) saturate(.92)}
 .art-vig{position:absolute;inset:0;background:radial-gradient(ellipse 70% 65% at 50% 55%, transparent 55%, rgba(20,12,4,.45) 100%)}
 .art-img.cut{inset:1% 2% 12% 2%;width:96%;height:87%;object-fit:contain;z-index:1;filter:drop-shadow(0 1.2cqw 0 rgba(0,0,0,.25))}
-.framebreak-character{left:2%;top:22.5%;width:96%;height:58%;object-fit:contain;object-position:center;z-index:7;transform:translate3d(0,0,0) rotate(0deg) scale(1.18);transform-origin:50% 72%;pointer-events:none;filter:drop-shadow(0 1.4cqw .45cqw rgba(0,0,0,.42));backface-visibility:hidden}
+/* Marvel Snap-style breakout: the character's feet stay in the picture window and only its head, arms and props
+   break past the frame. The card's lettering sits on top of it, and its shadow falls opposite the tilt. */
+.framebreak-character{left:4%;top:13%;width:92%;height:67.5%;object-fit:contain;object-position:50% 100%;z-index:7;transform:translate3d(0,0,0) rotate(0deg) scale(1);transform-origin:50% 100%;pointer-events:none;
+  filter:drop-shadow(calc(var(--mx,0)*-1.6cqw) calc(1.2cqw + var(--my,0)*-1.2cqw) .6cqw rgba(0,0,0,.5));backface-visibility:hidden}
+.card:has(> .framebreak-character) > .t{z-index:8!important}   /* lettering stays on top of a breakout character */
+.card:has(> .framebreak-character) > .t.title span{-webkit-text-stroke:.7cqw #fff8e6;paint-order:stroke fill}   /* readable where it crosses the character */
 .framebreak-character.cq-motion-active{will-change:transform}
-.framebreak-character.series2{top:27%}
-.framebreak-character.series45{left:-8%;top:10%;width:116%;height:86%}
+/* Big single cards tilt in 3D with the phone, Marvel Snap style: the card turns, the scenery drifts the other
+   way, the character drifts with the tilt, and a light glare and holo band slide across. BreakoutMotion sets
+   --rx/--ry (degrees) and --mx/--my (-1..1). */
+.card.tilt3d{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transform-style:preserve-3d}
+.card.tilt3d.cq-motion-active{will-change:transform}
+.card.tilt3d .art-bgimg{scale:1.08;translate:calc(var(--mx,0)*-3%) calc(var(--my,0)*-3%)}
+.card.tilt3d .art-img.cut{translate:calc(var(--mx,0)*2.2%) calc(var(--my,0)*1.6%)}
+.tilt-glare{position:absolute;inset:1.3% 1.7% 1.6%;z-index:6;pointer-events:none;border-radius:5cqw;mix-blend-mode:overlay;opacity:var(--glare,0);
+  background:radial-gradient(circle at calc(50% + var(--mx,0)*48%) calc(42% + var(--my,0)*48%),rgba(255,255,255,.75),rgba(255,255,255,0) 46%),
+    linear-gradient(115deg,transparent calc(38% + var(--mx,0)*30%),rgba(255,255,255,.35) calc(48% + var(--mx,0)*30%),rgba(170,220,255,.25) calc(53% + var(--mx,0)*30%),transparent calc(62% + var(--mx,0)*30%))}
+.framebreak-character.series2{top:16%;height:64.5%}
+.framebreak-character.series45{left:6%;top:12%;width:88%;height:74%}
 .frame-metadata{inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
 .frame-metadata.top{clip-path:inset(0 0 71.7% 0)}
 .frame-metadata.quote{clip-path:inset(70% 18% 17% 18%)}
 .frame-metadata.footer{clip-path:inset(83% 0 0 0)}
 .mn-badge.framebreak-memory{left:7.3%;top:auto;bottom:30.5%;width:18.3%;z-index:2}
-html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(0deg) scale(1.18)!important;will-change:auto}
+html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(0deg) scale(1)!important;will-change:auto}
 .art-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(ellipse at 50% 45%, #efe2c3 0%, #d9c49b 45%, #6d5b43 100%)}
 .ph-emoji{font-size:30cqw;filter:drop-shadow(0 1.2cqw 0 rgba(0,0,0,.25));transform:translateY(-4%)}
@@ -268,24 +283,27 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .s45win .art-bgimg{filter:brightness(.88) saturate(.86)}
 .s45win .art-vig{background:radial-gradient(ellipse 72% 68% at 50% 52%,transparent 48%,rgba(17,15,18,.48) 100%)}
 .t.s45{line-height:1}
-.t.s45.num{font-size:4.2cqw;letter-spacing:.035em;white-space:nowrap}
-.t.s45.xpstrip{gap:.35cqw;font-size:2.45cqw;letter-spacing:.04em}
-.t.s45.xpstrip i{width:82%;height:1.15cqw;border-width:.18cqw}
-.t.s45.cat{font-family:"Bangers";font-size:2.55cqw;line-height:.92;letter-spacing:.035em;padding:0 .5cqw;overflow:hidden}
+/* Luckiest Guy draws its capitals at the top of the line box (about 30% of the em sits empty below), so
+   nudge those labels down to look centred in their painted boxes */
+.t.s45.num,.t.s45.xpstrip,.t.s45.rar,.t.s45.set,.t.s45.lvl{transform:translateY(.14em)}
+.t.s45.num{font-size:calc(4.2cqw*var(--fit,1));letter-spacing:.035em;white-space:nowrap}
+.t.s45.xpstrip{gap:.35cqw;font-size:calc(2.45cqw*var(--fit,1));letter-spacing:.04em}
+.t.s45.xpstrip i{width:82%;height:calc(1.15cqw*var(--fit,1));border-width:calc(.18cqw*var(--fit,1))}
+.t.s45.cat{font-family:"Bangers";font-size:calc(2.55cqw*var(--fit,1));line-height:.92;letter-spacing:.035em;padding:0 .5cqw;overflow:hidden}
 .t.s45.icon svg{width:82%;height:82%}
 .t.s45.title{gap:0;align-items:stretch}
 .t.s45.title span{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:0 2cqw;overflow:hidden}
-.t.s45.quote{font-size:3.9cqw;line-height:.94;white-space:normal;text-decoration:none;padding:0 1.5cqw;overflow:hidden}
-.t.s45.rar{gap:.45cqw;font-size:2.65cqw;letter-spacing:.025em}
-.t.s45.rar .gem{width:6cqw;height:6cqw;font-size:3.5cqw;border-width:.3cqw}
-.t.s45.set{gap:.25cqw;font-size:2.7cqw;line-height:.95;padding:0 .5cqw;overflow:hidden}
-.t.s45.set small{font-size:2.2cqw}
-.t.s45.set hr{border-top-width:.22cqw;margin:.1cqw 0}
-.t.s45.lvl{gap:.5cqw;font-size:2.7cqw;white-space:nowrap}
-.t.s45.lvl .stars{font-size:3.2cqw;letter-spacing:0}
+.t.s45.quote{font-size:calc(3.9cqw*var(--fit,1));line-height:.94;white-space:normal;text-decoration:none;padding:0 1.5cqw;overflow:hidden}
+.t.s45.rar{gap:.45cqw;font-size:calc(2.65cqw*var(--fit,1));letter-spacing:.025em}
+.t.s45.rar .gem{width:calc(6cqw*var(--fit,1));height:calc(6cqw*var(--fit,1));font-size:calc(3.5cqw*var(--fit,1));border-width:calc(.3cqw*var(--fit,1))}
+.t.s45.set{gap:.25cqw;font-size:calc(2.7cqw*var(--fit,1));line-height:.95;padding:0 .5cqw;overflow:hidden}
+.t.s45.set small{font-size:calc(2.2cqw*var(--fit,1))}
+.t.s45.set hr{border-top-width:calc(.22cqw*var(--fit,1));margin:.1cqw 0}
+.t.s45.lvl{gap:.5cqw;font-size:calc(2.7cqw*var(--fit,1));white-space:nowrap}
+.t.s45.lvl .stars{font-size:calc(3.2cqw*var(--fit,1));letter-spacing:0}
 .t.s45.meta{z-index:3}
 .t.s4{color:#171513}
-.t.s4.num{font-size:3.8cqw}
+.t.s4.num{font-size:calc(3.8cqw*var(--fit,1))}
 .t.s4.xpstrip{color:#f8eed5;text-shadow:0 .22cqw 0 rgba(0,0,0,.55)}
 .t.s4.cat{color:#171513;text-shadow:none}
 .t.s4.title span{color:#171513}
@@ -293,17 +311,43 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .t.s4.quote{font-family:"Patrick Hand";font-weight:700;color:#171513;transform:rotate(-1deg)}
 .t.s4.lvl{color:#f8eed5;text-shadow:0 .22cqw 0 rgba(0,0,0,.55)}
 .t.s5{color:#f8edc9;text-shadow:0 .22cqw 0 rgba(15,25,47,.75)}
-.t.s5.num{font-size:2.9cqw}
+.t.s5.num{font-size:calc(2.9cqw*var(--fit,1))}
 .t.s5.num,.t.s5.xpstrip,.t.s5.icon,.t.s5.rar,.t.s5.set,.t.s5.lvl{color:#172b4b;text-shadow:none}
 .t.s5.cat{color:#f8edc9}
 .t.s5.title{padding:1cqw 3cqw}
 .t.s5.title span{height:48%;color:#172b4b;text-shadow:.22cqw .22cqw 0 rgba(255,247,212,.6)}
 .t.s5.title .t2{color:#a52c2d;-webkit-text-stroke:.22cqw #172b4b;text-shadow:.2cqw .25cqw 0 #e7c65e}
 .t.s5.quote{font-family:"Bangers";letter-spacing:.035em;color:#172b4b;text-shadow:none;transform:rotate(-1.5deg)}
-.framebreak-character.series45.series4{left:-7%;top:13%;width:114%;height:80%;transform:translate3d(0,0,0) rotate(-3deg) scale(1.05)}
-.framebreak-character.series45.series5{left:-8%;top:11%;width:116%;height:84%;transform:translate3d(0,0,0) rotate(3deg) scale(1.08)}
+/* Printed labels stay within their frame; title emphasis is authored per card. */
+.t.s45.cat{font-size:calc(3.1cqw*var(--fit,1));line-height:1.05}
+.t.s45.set{font-size:calc(3.1cqw*var(--fit,1));line-height:1.05}
+.t.s45.set small,.t.s45.set hr{display:none}
+.t.title span{flex-shrink:0;transform:translateY(.08em)}
+.t.s45.title span{height:auto;padding:0;overflow:visible}
+.t.s5.title{gap:.7cqw;padding:0 0 1cqw}
+.t.s5.title span{height:auto}
+.t.quote{white-space:pre-line;line-height:1.08}
+.t.s45.quote,.t.s3.quote{white-space:pre-line;line-height:1.04}
+/* CARD LABEL LETTERING: decided by the owner 2026-10-04 (owned by Claude Code; please don't remove).
+   Letters must be big, exaggerated and readable. Headline labels (number, rarity, level) are large outlined
+   comic lettering that may spill past their painted bracket. Bracket labels (XP, category, set) fill their
+   bracket but never shrink below a legible floor (LabelFit). Title and quote sizes come from card-typography.js. */
+.t.s45.num,.t.s45.rar,.t.s45.lvl{color:#fff8e6;-webkit-text-stroke:.9cqw #171513;paint-order:stroke fill;text-shadow:.45cqw .55cqw 0 rgba(0,0,0,.5);overflow:visible;white-space:nowrap;z-index:4}
+.t.s45.num{font-size:6.4cqw;letter-spacing:.04em;transform:translateY(.14em) rotate(-3deg)}
+.t.s45.rar{gap:.8cqw;font-size:4.6cqw}
+.t.s45.rar .gem{width:7cqw;height:7cqw;font-size:4.2cqw;-webkit-text-stroke:0;text-shadow:none}
+.t.s45.rar span[style]{font-size:4.6cqw!important}
+.t.s45.lvl{flex-direction:column;gap:.2cqw;font-size:4.4cqw}
+.t.s45.lvl .stars{font-size:5cqw;-webkit-text-stroke:.6cqw #171513}
+.t.s45.quote{font-size:5.4cqw!important;overflow:visible;-webkit-text-stroke:.8cqw #fff8e6;paint-order:stroke fill;z-index:4}   /* big; a long quote may spill past its banner */
+.t.s45.cat,.t.s45.set{overflow:visible}
+.t.s4.cat,.t.s4.set,.t.s5.set{-webkit-text-stroke:.55cqw #fff8e6;paint-order:stroke fill}   /* readable if it spills onto the dark frame */
+.t.s5.cat{-webkit-text-stroke:.55cqw #172b4b;paint-order:stroke fill}
+.t.s5.xpstrip{-webkit-text-stroke:.55cqw #fff8e6;paint-order:stroke fill}
+.framebreak-character.series45.series4{left:13%;top:14%;width:74%;height:66%;transform:translate3d(0,0,0) rotate(-3deg) scale(1)}
+.framebreak-character.series45.series5{left:6%;top:12%;width:88%;height:74%;transform:translate3d(0,0,0) rotate(3deg) scale(1)}
 .card.series4 .stampimg.mastered,.card.series5 .stampimg.mastered{z-index:8}
-html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0) rotate(0deg) scale(1.05)!important}
+html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0) rotate(0deg) scale(1)!important}
 .series-badge{z-index:6;object-fit:contain;transform:rotate(8deg);filter:drop-shadow(0 .5cqw .5cqw rgba(0,0,0,.45));pointer-events:none}
 .series{z-index:6;display:flex;align-items:center;justify-content:center;font-family:"Bangers";letter-spacing:.1em;font-size:3.8cqw;color:#fff5dc;
   background:linear-gradient(135deg,#d7263d,#8e1024);border:.35cqw solid var(--ink);border-radius:1.2cqw;transform:rotate(5deg);box-shadow:.4cqw .6cqw 0 rgba(0,0,0,.35);pointer-events:none}
@@ -694,6 +738,40 @@ summary{cursor:pointer;font-family:"Bangers";letter-spacing:.08em;font-size:18px
 .lu.done h2{animation:titlepop .6s cubic-bezier(.2,1.8,.4,1) both}
 .lu.done p{opacity:.9;transition:opacity .4s .2s}
 .lu.done .btn-big{opacity:1;transition:opacity .3s .5s}
+/* Snap-style upgrade: charge, burst, punch, shine, slam */
+.lu .lucard.charge{animation:luCharge 1.25s cubic-bezier(.5,0,1,1) both}
+@keyframes luCharge{
+  0%{transform:none;filter:brightness(1)}
+  20%{transform:translate(-1px,1px) rotate(-.6deg)} 25%{transform:translate(1px,-1px) rotate(.6deg)}
+  45%{transform:translate(-3px,2px) rotate(-1.4deg) scale(1.01)} 50%{transform:translate(3px,-2px) rotate(1.4deg) scale(1.01)}
+  65%{transform:translate(-5px,3px) rotate(-2.2deg) scale(1.03)} 70%{transform:translate(5px,-3px) rotate(2.2deg) scale(1.03)}
+  80%{transform:translate(-7px,4px) rotate(-3deg) scale(.96)} 85%{transform:translate(7px,-4px) rotate(3deg) scale(.95)}
+  90%{transform:translate(-8px,2px) rotate(-3deg) scale(.93)} 95%{transform:translate(8px,-2px) rotate(3deg) scale(.92)}
+  100%{transform:scale(.9);filter:brightness(1.9) saturate(1.3)}}
+.lu .lucard.charge::after{content:"";position:absolute;inset:-6%;border-radius:8%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,236,160,.9),rgba(255,190,60,.35) 60%,transparent);mix-blend-mode:screen;animation:luGlow 1.25s ease-in both}
+@keyframes luGlow{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1.08)}}
+.lu.charging .rays2{opacity:.55;transition:opacity 1s;animation-duration:3s}
+.lu-spark{position:fixed;width:3.4vmin;height:.7vmin;margin:-.35vmin 0 0 -1.7vmin;border-radius:1vmin;pointer-events:none;z-index:2;
+  background:linear-gradient(90deg,rgba(255,240,180,0),#fff6c8 60%,#ffd25a);box-shadow:0 0 1.5vmin #ffc94a;
+  rotate:var(--ang);opacity:0;animation:luPull .5s cubic-bezier(.6,0,.9,.6) both}
+@keyframes luPull{from{translate:var(--sx) var(--sy);opacity:0}25%{opacity:1}to{translate:0 0;opacity:0}}
+.lu .lucard.punch{animation:luPunch .75s cubic-bezier(.15,1.6,.35,1) both}
+@keyframes luPunch{0%{transform:scale(.85)}35%{transform:scale(1.22)}70%{transform:scale(.97)}100%{transform:scale(1)}}
+.lu .lucard.shine::before{content:"";position:absolute;inset:0;z-index:20;pointer-events:none;border-radius:5%;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.85) 47%,rgba(255,230,150,.6) 53%,transparent 70%);background-size:300% 100%;
+  mix-blend-mode:overlay;animation:luShine .9s .25s ease-in-out both}
+@keyframes luShine{from{background-position:150% 0}to{background-position:-60% 0}}
+.lu-shock{position:absolute;left:50%;top:42%;width:40vmin;height:40vmin;margin:-20vmin 0 0 -20vmin;border-radius:50%;pointer-events:none;
+  border:2vmin solid rgba(255,236,170,.9);box-shadow:0 0 6vmin rgba(255,200,80,.8),inset 0 0 6vmin rgba(255,200,80,.6);opacity:0}
+.lu.burst .lu-shock{animation:luShock .7s cubic-bezier(.1,.7,.3,1) both}
+@keyframes luShock{from{transform:scale(.3);opacity:1}to{transform:scale(3.4);opacity:0;border-width:.3vmin}}
+.lu-slam{position:absolute;left:50%;top:40%;z-index:5;pointer-events:none;white-space:nowrap;translate:-50% -50%;opacity:0;
+  font:400 clamp(44px,14vw,84px)/1 "Luckiest Guy";letter-spacing:.04em;color:#fff3c4;-webkit-text-stroke:3px #171513;paint-order:stroke fill;
+  text-shadow:0 6px 0 #171513,0 0 30px rgba(255,190,60,.9);rotate:-6deg}
+.lu.slam .lu-slam{animation:luSlam 1.1s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes luSlam{0%{transform:scale(3.2);opacity:0}22%{transform:scale(.92);opacity:1}32%{transform:scale(1.04)}75%{transform:scale(1);opacity:1}100%{transform:scale(1.05) translateY(-8px);opacity:0}}
+
 @keyframes titlepop{from{transform:scale(0) rotate(-10deg);opacity:0}to{opacity:1}}
 .confetti{position:absolute;top:-20px;width:10px;height:14px;z-index:55;pointer-events:none;border:1px solid rgba(0,0,0,.4);animation:fall linear forwards}
 @keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--rot))}}
@@ -807,10 +885,10 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 
 /* home dashboard */
 .home-logo{font-family:"Luckiest Guy";font-size:clamp(34px,10vw,48px);line-height:1;color:var(--paper);-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 var(--ink);transform:rotate(-2deg);margin:0 0 14px 2px;letter-spacing:.03em}
-.home-logo span{color:var(--brick)}
+.home-logo span{display:block;color:var(--brick)}
 .navbar.homebar{min-height:52px}
-.navbar.homebar .nb-title{opacity:1;max-width:none;font:400 23px/1 "Luckiest Guy";letter-spacing:.035em;-webkit-text-stroke:1px var(--ink);paint-order:stroke fill;text-shadow:0 2px 0 var(--ink);transform:rotate(-1deg)}
-.navbar.homebar .nb-title span{color:var(--brick)}
+.navbar.homebar .nb-title{opacity:1;max-width:none;font:400 clamp(17px,4.5vw,23px)/1 "Luckiest Guy";letter-spacing:.035em;-webkit-text-stroke:1px var(--ink);paint-order:stroke fill;text-shadow:0 2px 0 var(--ink);transform:rotate(-1deg)}
+.navbar.homebar .nb-title span{display:block;margin-top:3px;color:var(--brick)}
 .navbar.homebar .nb-left,.navbar.homebar .nb-right{min-width:74px}
 .navbar.homebar .nb-right{justify-content:flex-end}
 .a2hs-mini{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;margin:0 0 12px;padding:8px 12px;border-radius:12px;border:1px solid rgba(143,179,209,.4);background:rgba(143,179,209,.12);color:var(--paper);font:14px var(--ui);text-align:left}
@@ -1007,12 +1085,12 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .sp-frame{position:relative;width:min(100%,580px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:clamp(20px,4vh,40px)}
 .cq-brand{display:flex;align-items:center;justify-content:center;gap:10px;color:#f1e5c9}
 .cq-brand-mark{display:block;width:76px;height:76px;object-fit:contain;flex:none}
-.cq-brand-name{margin:0;font:400 42px/.9 "Luckiest Guy",sans-serif;letter-spacing:-.025em;text-align:left;text-shadow:2px 3px 0 #080706}
+.cq-brand-name{margin:0;font:400 42px/.9 "Luckiest Guy",sans-serif;letter-spacing:-.025em;text-align:left;white-space:nowrap;text-shadow:2px 3px 0 #080706}
 .cq-brand-name span{display:block;color:#d94230;margin-top:5px}
 .cq-brand-start .cq-brand-mark{width:104px;height:104px}
-.cq-brand-start .cq-brand-name{font-size:clamp(42px,12vw,64px)}
+.cq-brand-start .cq-brand-name{font-size:clamp(28px,8vw,54px)}
 .cq-brand-small .cq-brand-mark{width:48px;height:48px}
-.cq-brand-small .cq-brand-name{font-size:25px}
+.cq-brand-small .cq-brand-name{font-size:22px}
 .sp-fan{position:relative;width:100%;height:clamp(225px,32vh,300px);isolation:isolate}
 .sp-card{position:absolute;top:8%;left:var(--left);width:32%;aspect-ratio:2/3;box-sizing:border-box;overflow:hidden;border:3px solid var(--edge);border-radius:10px;background:var(--cover);box-shadow:0 10px 18px rgba(0,0,0,.45);transform:translateX(-50%) rotate(var(--angle));animation:sp-deal .65s cubic-bezier(.22,.8,.2,1) both;animation-delay:var(--delay);z-index:var(--z)}
 .sp-card img{position:absolute;left:3%;top:13%;width:94%;height:76%;object-fit:contain;filter:drop-shadow(0 3px 1px rgba(0,0,0,.2))}
@@ -1034,14 +1112,14 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .sp-cap{margin:12px 0 0;font:16px/1.25 "Patrick Hand",system-ui,sans-serif;color:#c6bba5}
 #splash.out{opacity:0;pointer-events:none}
 @keyframes sp-deal{from{opacity:0;transform:translateX(-50%) translateY(24px) rotate(0deg) scale(.94)}to{opacity:1;transform:translateX(-50%) rotate(var(--angle)) scale(1)}}
-@media(max-height:640px){.sp-frame{gap:16px}.cq-brand-start .cq-brand-name{font-size:40px}.cq-brand-start .cq-brand-mark{width:84px;height:84px}.sp-fan{height:205px;width:min(100%,350px)}.sp-motto{font-size:20px}.sp-cap{font-size:14px}}
+@media(max-height:640px){.sp-frame{gap:16px}.cq-brand-start .cq-brand-name{font-size:clamp(28px,8vw,40px)}.cq-brand-start .cq-brand-mark{width:84px;height:84px}.sp-fan{height:205px;width:min(100%,350px)}.sp-motto{font-size:20px}.sp-cap{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.sp-card{animation:none}#splash,.sp-bar i{transition:none}}
 html.cq-reduce-motion .sp-card{animation:none}
 </style>
 </head>
 <body>
-<div id="splash" role="status" aria-label="Loading Clerk Quest"><div class="sp-frame">
-  <div class="cq-brand cq-brand-start"><img class="cq-brand-mark" src="art/brand_mark.svg" alt=""><h1 class="cq-brand-name">CLERK<span>QUEST</span></h1></div>
+<div id="splash" role="status" aria-label="Loading Becoming a Clerk"><div class="sp-frame">
+  <div class="cq-brand cq-brand-start"><img class="cq-brand-mark" src="art/brand_mark.svg" alt=""><h1 class="cq-brand-name">BECOMING <span>A CLERK</span></h1></div>
   <div class="sp-fan" aria-hidden="true">
     <div class="sp-card s2" style="--left:18%;--angle:-17deg;--z:1;--delay:.02s"><img src="art/character_interest_1.webp" alt=""><b>SERIES 2</b></div>
     <div class="sp-card s3" style="--left:34%;--angle:-8deg;--z:2;--delay:.08s"><img src="art/character_eightback_1.webp" alt=""><b>SERIES 3</b></div>
@@ -1049,7 +1127,7 @@ html.cq-reduce-motion .sp-card{animation:none}
     <div class="sp-card s4" style="--left:66%;--angle:8deg;--z:2;--delay:.2s"><img src="art/series4_case-starter.webp" alt=""><b>SERIES 4</b></div>
     <div class="sp-card s1" style="--left:50%;--angle:-2deg;--z:3;--delay:.26s"><img src="art/gavel_1.webp" alt=""><b>SERIES 1</b></div>
   </div>
-  <p class="sp-motto">Study it. Collect it. Master it.</p>
+  <p class="sp-motto">Study for the New York court clerk exam.</p>
   <div class="sp-loading"><div class="sp-bar"><i></i></div><p class="sp-cap">Getting your deck ready…</p></div>
 </div></div>
 <div id="shell"><div id="screens"></div><nav id="tabbar" aria-label="Main"></nav></div>
@@ -1064,16 +1142,17 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="study/quick-reference/quick-reference.js?v=798b706c"></script>
 <script src="study/quick-reference/series-lessons.js?v=102ec77c"></script>
 <script src="curriculum-pilot.js?v=9e0d75af"></script>
+<script src="card-typography.js?v=53a87104"></script>
 <script src="binder.js?v=dcc2617f"></script>
-<script src="onboarding.js?v=17f874b1"></script>
-<script src="account.js?v=b0a8a100"></script>
-<script src="admin.js?v=99f61f88"></script>
+<script src="onboarding.js?v=22f27a83"></script>
+<script src="account.js?v=5042effc"></script>
+<script src="admin.js?v=0c2f65ed"></script>
 <script src="stickers.js?v=70340509"></script>
 <script src="dockets.js?v=da920b66"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="sticker3d.js?v=9a43370e"></script>
-<script src="questions.js?v=f5b5ed28"></script>
-<script src="flair.js?v=b1cf746c"></script>
+<script src="questions.js?v=844f8f6b"></script>
+<script src="flair.js?v=7d93e03a"></script>
 <script>window.ART_MANIFEST = {"series4_case-starter": {"1": "art/series4_case-starter.webp"}, "s4_case_starter": {"1": "art/series4_case-starter.webp"}, "series4_clock-dodger": {"1": "art/series4_clock-dodger.webp"}, "s4_clock_dodger": {"1": "art/series4_clock-dodger.webp"}, "series4_exam-duo": {"1": "art/series4_exam-duo.webp"}, "s4_exam_duo": {"1": "art/series4_exam-duo.webp"}, "series4_jurisdiction-jet": {"1": "art/series4_jurisdiction-jet.webp"}, "s4_jurisdiction_jet": {"1": "art/series4_jurisdiction-jet.webp"}, "series4_jury-juggler": {"1": "art/series4_jury-juggler.webp"}, "s4_jury_juggler": {"1": "art/series4_jury-juggler.webp"}, "series4_note-ninja": {"1": "art/series4_note-ninja.webp"}, "s4_note_ninja": {"1": "art/series4_note-ninja.webp"}, "series4_plea-piper": {"1": "art/series4_plea-piper.webp"}, "s4_plea_piper": {"1": "art/series4_plea-piper.webp"}, "series4_proof-polly": {"1": "art/series4_proof-polly.webp"}, "s4_proof_polly": {"1": "art/series4_proof-polly.webp"}, "series4_sentence-sprint": {"1": "art/series4_sentence-sprint.webp"}, "s4_sentence_sprint": {"1": "art/series4_sentence-sprint.webp"}, "series4_trial-track": {"1": "art/series4_trial-track.webp"}, "s4_trial_track": {"1": "art/series4_trial-track.webp"}, "series4_verdict-vex": {"1": "art/series4_verdict-vex.webp"}, "s4_verdict_vex": {"1": "art/series4_verdict-vex.webp"}, "series4_warrant-walt": {"1": "art/series4_warrant-walt.webp"}, "s4_warrant_walt": {"1": "art/series4_warrant-walt.webp"}, "series5_captain-classify": {"1": "art/series5_captain-classify.webp"}, "s5_captain_classify": {"1": "art/series5_captain-classify.webp"}, "series5_class-shift": {"1": "art/series5_class-shift.webp"}, "s5_class_shift": {"1": "art/series5_class-shift.webp"}, "series5_double-gain": {"1": "art/series5_double-gain.webp"}, "s5_double_gain": {"1": "art/series5_double-gain.webp"}, "series5_felony-titan": {"1": "art/series5_felony-titan.webp"}, "s5_felony_titan": {"1": "art/series5_felony-titan.webp"}, "series5_minor-mischief": {"1": "art/series5_minor-mischief.webp"}, "s5_minor_mischief": {"1": "art/series5_minor-mischief.webp"}, "series5_offense-oracle": {"1": "art/series5_offense-oracle.webp"}, "s5_offense_oracle": {"1": "art/series5_offense-oracle.webp"}, "series5_split-verdict": {"1": "art/series5_split-verdict.webp"}, "s5_split_verdict": {"1": "art/series5_split-verdict.webp"}, "series5_the-aces": {"1": "art/series5_the-aces.webp"}, "s5_the_aces": {"1": "art/series5_the-aces.webp"}, "series5_the-fine-collector": {"1": "art/series5_the-fine-collector.webp"}, "s5_the_fine_collector": {"1": "art/series5_the-fine-collector.webp"}, "series5_the-many": {"1": "art/series5_the-many.webp"}, "s5_the_many": {"1": "art/series5_the-many.webp"}, "series5_triple-take": {"1": "art/series5_triple-take.webp"}, "s5_triple_take": {"1": "art/series5_triple-take.webp"}, "series5_vault-voltage": {"1": "art/series5_vault-voltage.webp"}, "s5_vault_voltage": {"1": "art/series5_vault-voltage.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "character_acd": {"1": "art/character_acd_1.webp"}, "character_adjournment": {"1": "art/character_adjournment_1.webp"}, "character_affidavit": {"1": "art/character_affidavit_1.webp"}, "character_appeal30": {"1": "art/character_appeal30_1.webp"}, "character_bail": {"1": "art/character_bail_1.webp"}, "character_calendarcall": {"1": "art/character_calendarcall_1.webp"}, "character_eightback": {"1": "art/character_eightback_1.webp"}, "character_freeze": {"1": "art/character_freeze_1.webp"}, "character_interest": {"1": "art/character_interest_1.webp"}, "character_judgment": {"1": "art/character_judgment_1.webp"}, "character_jurywaiver": {"1": "art/character_jurywaiver_1.webp"}, "character_military": {"1": "art/character_military_1.webp"}, "character_motion": {"1": "art/character_motion_1.webp"}, "character_newtrial": {"1": "art/character_newtrial_1.webp"}, "character_quash": {"1": "art/character_quash_1.webp"}, "character_reargue": {"1": "art/character_reargue_1.webp"}, "character_renew": {"1": "art/character_renew_1.webp"}, "character_schoolnotice": {"1": "art/character_schoolnotice_1.webp"}, "character_sj120": {"1": "art/character_sj120_1.webp"}, "character_summons": {"1": "art/character_summons_1.webp"}, "character_undodefault": {"1": "art/character_undodefault_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
@@ -2009,24 +2088,40 @@ function frameFor(c, lv){
   return 'art/frame_base.webp';
 }
 const bgFor = (c, lv) => { if (!c.bgs) return null; let b = null; for (let l=1; l<=lv; l++) if (c.bgs[l]) b = c.bgs[l]; return b; };
-// First guess at a title's size; fitTitles() below then measures the real text on screen and shrinks it to fit.
-const fitTitle = (txt, max, width) => Math.min(max, width / (txt.length * 0.86)).toFixed(2);
-/* Every title line carries data-fit (the % of card width it may use). Line 2 must stay between the banner's squiggles. */
+// Measure the lettering, rather than the stretched flex container. Authored sizes
+// are restored before each fit so a temporary narrow view cannot permanently shrink a title.
+const fitTitle = (txt, max, width) => max;
+function titleLine(c, line, width, cap){
+  const p = window.CQ_CARD_TYPOGRAPHY?.[c.id] || {}, first = line === 1;
+  const size = Math.min(cap, p[first ? 'firstSize' : 'secondSize'] || cap);
+  const font = p[first ? 'fontFirst' : 'fontSecond'] || 'Luckiest Guy';
+  const tracking = p[first ? 'firstLetterSpacing' : 'secondLetterSpacing'] || '.035em';
+  return `<span class="t${line}" data-fit="${width}" data-max="${size}" style="font-size:${size}cqw;font-family:'${font}';letter-spacing:${tracking}">${esc(first ? c.l1 : c.l2)}</span>`;
+}
+function quoteText(c){ return esc((window.CQ_CARD_TYPOGRAPHY?.[c.id]?.quoteLines || [c.quote]).join('\n')); }
+function quoteStyle(c){ return `font-size:${window.CQ_CARD_TYPOGRAPHY?.[c.id]?.quoteSize || 4}cqw`; }
 function fitTitles(root){
-  (root.querySelectorAll ? root : document).querySelectorAll('.title span[data-fit]').forEach(sp => {
-    const card = sp.closest('.card'); if (!card) return;
-    const cw = card.clientWidth; if (!cw) return;
-    const target = cw * (+sp.dataset.fit) / 100, w = sp.scrollWidth;
-    if (!w) return;
-    const cur = parseFloat(sp.style.fontSize);
-    if (w > target) sp.style.fontSize = (cur * target / w * 0.98).toFixed(2) + 'cqw';
+  const selector = '.title span[data-fit]';
+  const spans = root.matches?.(selector) ? [root] : (root.querySelectorAll ? root : document).querySelectorAll(selector);
+  spans.forEach(sp => {
+    const card = sp.closest('.card'); if (!card || !card.clientWidth) return;
+    const cw = card.clientWidth, parent = sp.parentElement;
+    sp.style.fontSize = sp.dataset.max + 'cqw';
+    const range = document.createRange(); range.selectNodeContents(sp);
+    const r = range.getBoundingClientRect();
+    const available = Math.min(cw * (+sp.dataset.fit) / 100, parent.clientWidth);
+    const rows = parent.querySelectorAll('span[data-fit]').length;
+    const height = (parent.clientHeight - (rows-1)*parseFloat(getComputedStyle(parent).rowGap || 0)) / rows;
+    const scale = Math.min(1, available*.97 / Math.max(1,r.width), height*.94 / Math.max(1,r.height));
+    sp.style.fontSize = (+sp.dataset.max * scale).toFixed(2) + 'cqw';
     sp.dataset.fitted = '1';
   });
 }
 new MutationObserver(muts => {
-  for (const m of muts) for (const n of m.addedNodes) if (n.nodeType === 1 && (n.matches('.title span[data-fit]') || n.querySelector('.title span[data-fit]'))) { requestAnimationFrame(() => fitTitles(n)); }
+  for (const m of muts) for (const n of m.addedNodes) if (n.nodeType === 1 && (n.matches('.title span[data-fit]') || n.querySelector('.title span[data-fit]'))) requestAnimationFrame(() => fitTitles(n));
 }).observe(document.documentElement, {childList:true, subtree:true});
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { document.querySelectorAll('.title span[data-fit]').forEach(sp => { sp.style.fontSize = sp.dataset.max + 'cqw'; }); fitTitles(document); });
+if (document.fonts?.ready) document.fonts.ready.then(() => fitTitles(document));
+window.addEventListener('resize', () => requestAnimationFrame(() => fitTitles(document)));
 
 /* ================= SAVE STATE ================= */
 const KEY = 'clerkquest-v2';   // new slot at launch: everyone starts fresh (old key left alone)
@@ -2092,7 +2187,7 @@ function probeArt(){
 
 const STARTUP_SPLASH_TEMPLATE = document.getElementById('splash')?.innerHTML || '';
 function brandHTML(size='small'){
-  return `<div class="cq-brand cq-brand-${size}"><img class="cq-brand-mark" src="art/brand_mark.svg" alt=""><div class="cq-brand-name" aria-label="Clerk Quest">CLERK<span>QUEST</span></div></div>`;
+  return `<div class="cq-brand cq-brand-${size}"><img class="cq-brand-mark" src="art/brand_mark.svg" alt=""><div class="cq-brand-name" aria-label="Becoming a Clerk">BECOMING <span>A CLERK</span></div></div>`;
 }
 function previewStartupSplash(){
   if (typeof ADM==='undefined' || !ADM.is) return;
@@ -2189,10 +2284,10 @@ function frontS3HTML(c, st, opt={}){
     <div class="t cat s3" style="${P(690,32,880,118)}">${esc(c.category)}</div>
     <div class="t icon s3" style="${P(880,36,966,114)}"><img src="art/icon_${c.trickType}.webp" alt="${TRICK_TYPES[c.trickType].label}"></div>
     <div class="t title s3" style="${P(92,148,936,278)}">
-      <span class="t1" data-fit="76" data-max="${fitTitle(c.l1,5.4,76)}" style="font-size:${fitTitle(c.l1,5.4,76)}cqw">${esc(c.l1)}</span>
-      <span class="t2" data-fit="78" data-max="${fitTitle(c.l2,6,78)}" style="font-size:${fitTitle(c.l2,6,78)}cqw">${esc(c.l2)}</span>
+      ${titleLine(c, 1, 76, 5.4)}
+      ${titleLine(c, 2, 78, 6.2)}
     </div>
-    <div class="t quote s3 ${c.quote.length > 27 ? 'long' : ''}" style="${P(250,1206,782,1292)}">“${esc(c.quote.replace(/\n/g, ' '))}”</div>
+    <div class="t quote s3 ${c.quote.length > 27 ? 'long' : ''}" style="${P(250,1206,782,1292)};${quoteStyle(c)}">“${quoteText(c)}”</div>
     <div class="t rar s3" style="${P(44,1322,346,1458)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:${c.rarity.length > 6 ? 3.3 : 4.2}cqw">${c.rarity.toUpperCase()}</span></div>
     <div class="t set s3" style="${P(362,1326,662,1456)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl s3" style="${P(676,1322,982,1458)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
@@ -2215,11 +2310,11 @@ function frontS45HTML(c, st, opt={}){
     <div class="t xpstrip s45 s${c.series} meta" style="${s4 ? P(307,77,696,139) : P(205,77,707,139)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
     <div class="t cat s45 s${c.series} meta" style="${s4 ? P(717,77,922,139) : P(748,77,881,139)}">${esc(c.category)}</div>
     ${s4 ? '' : `<div class="t icon s45 s5 meta" style="${P(912,77,963,139)}">${icon}</div>`}
-    ${s4 ? `<div class="t title s45 s4 meta" style="${P(195,184,891,277)}"><span class="t1" data-fit="64" data-max="5.2" style="font-size:${fitTitle(c.l1,5.2,64)}cqw">${esc(c.l1)}</span></div>
-      <div class="t title s45 s4 meta" style="${P(195,307,891,369)}"><span class="t2" data-fit="64" data-max="4.7" style="font-size:${fitTitle(c.l2,4.7,64)}cqw">${esc(c.l2)}</span></div>`
-      : `<div class="t title s45 s5 meta" style="${P(164,184,860,399)}"><span class="t1" data-fit="62" data-max="5.8" style="font-size:${fitTitle(c.l1,5.8,62)}cqw">${esc(c.l1)}</span><span class="t2" data-fit="62" data-max="5.5" style="font-size:${fitTitle(c.l2,5.5,62)}cqw">${esc(c.l2)}</span></div>`}
-    <div class="t quote s45 s${c.series} meta" style="${s4 ? P(236,1183,850,1275) : P(256,1183,737,1275)}">“${esc(c.quote.replace(/\n/g, ' '))}”</div>
-    <div class="t rar s45 s${c.series} meta" style="${s4 ? P(123,1321,358,1428) : P(72,1352,338,1444)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:${raritySize}cqw">${c.rarity.toUpperCase()}</span></div>
+    ${s4 ? `<div class="t title s45 s4 meta" style="${P(195,184,891,277)}">${titleLine(c, 1, 64, 7.2)}</div>
+      <div class="t title s45 s4 meta" style="${P(195,307,891,369)}">${titleLine(c, 2, 64, 5.5)}</div>`
+      : `<div class="t title s45 s5 meta" style="${P(164,184,860,399)}">${titleLine(c, 1, 62, 7.8)}${titleLine(c, 2, 62, 8)}</div>`}
+    <div class="t quote s45 s${c.series} meta" style="${s4 ? P(236,1183,850,1275) : P(256,1183,737,1275)};${quoteStyle(c)}">“${quoteText(c)}”</div>
+    <div class="t rar s45 s${c.series} meta" style="${s4 ? P(123,1321,358,1428) : P(72,1352,338,1444)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:calc(${raritySize}cqw*var(--fit,1))">${c.rarity.toUpperCase()}</span></div>
     <div class="t set s45 s${c.series} meta" style="${s4 ? P(430,1321,686,1428) : P(389,1352,655,1444)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl s45 s${c.series} meta" style="${s4 ? P(758,1321,901,1428) : P(707,1352,952,1444)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
@@ -2245,10 +2340,10 @@ function frontHTML(c, st, opt={}){
     <div class="t cat" style="${P(502,62,856,144)}">${esc(c.category)}</div>
     <div class="t icon" style="${P(862,62,958,156)}">${c.trickType ? `<img src="art/icon_${c.trickType}.webp" alt="${TRICK_TYPES[c.trickType].label}">` : ICON[c.icon]}</div>
     <div class="t title" style="${P(104,176,922,434)}">
-      <span class="t1" data-fit="74" data-max="${fitTitle(c.l1,12,74)}" style="font-size:${fitTitle(c.l1,12,74)}cqw">${esc(c.l1)}</span>
-      <span class="t2" data-fit="52" data-max="${fitTitle(c.l2,12.5,60)}" style="font-size:${fitTitle(c.l2,12.5,60)}cqw">${esc(c.l2)}</span>
+      ${titleLine(c, 1, 74, 12.5)}
+      ${titleLine(c, 2, 52, 12.5)}
     </div>
-    <div class="t quote" style="${P(246,1092,782,1262)}">“${esc(c.quote)}”</div>
+    <div class="t quote" style="${P(246,1092,782,1262)};${quoteStyle(c)}">“${quoteText(c)}”</div>
     <div class="t rar" style="${P(82,1290,312,1448)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:${c.rarity.length > 6 ? 3.3 : 4.2}cqw">${c.rarity.toUpperCase()}</span></div>
     <div class="t set" style="${P(334,1294,706,1446)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl" style="${P(728,1290,944,1448)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
@@ -2282,6 +2377,48 @@ function cardEl(c, st, opt={}, extraClass=''){
   const rings = tier ? `<div class="ring soft"></div><div class="ring"></div>` : '';
   return `<div class="card series${c.series || 1} lv${st.level} ${c.trickType?'special':''} ${cold?'cold':''} ${tier?'tier-'+tier:''} ${charged?'charged':''} ${extraClass}" data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${rings}${tier==='max'?'<div class="gloss"></div>':''}${frontHTML(c, st, opt)}${frostHTML(c, st, now)}</div>`;
 }
+
+/* The bracket labels (XP, category, card set) are grown to the largest size that fits their painted bracket,
+   but never below a legible floor: --fit multiplies their font sizes. Headline labels are sized in CSS.
+   Sizes are in cqw, so one measurement on a hidden 300px card holds at every card size; results are cached
+   by series + label + text. Runs as cards are added, before they paint. */
+const LabelFit = (() => {
+  const SEL = '.t.meta.s45.xpstrip, .t.meta.s45.cat, .t.meta.s45.set', FLOOR = 3.6, MAX = 2.4, cache = new Map();   // FLOOR: smallest legible size, in cqw
+  let stage = null;
+  // The text itself (not just its line boxes) must fill no more than 95% of the box width and 90% of its height.
+  const range = document.createRange();
+  const fits = el => { range.selectNodeContents(el); const r = range.getBoundingClientRect();
+    return el.scrollWidth <= el.clientWidth + .5 && el.scrollHeight <= el.clientHeight + .5
+      && r.width <= el.clientWidth * .95 && r.height <= el.clientHeight * .9; };
+  function measure(el, cardClass){
+    if (!stage) { stage = document.createElement('div'); stage.setAttribute('aria-hidden', 'true');
+      stage.style.cssText = 'position:fixed;left:-2000px;top:0;width:300px;visibility:hidden;pointer-events:none'; document.body.appendChild(stage); }
+    stage.innerHTML = `<div class="${cardClass}"></div>`;
+    const t = el.cloneNode(true); stage.firstChild.appendChild(t);
+    t.style.setProperty('--fit', 1);
+    const base = parseFloat(getComputedStyle(t).fontSize) / 3;   // its normal size in cqw (the stage card is 300px)
+    let lo = Math.max(.6, FLOOR / base), hi = Math.max(lo, MAX);   // never below the legible floor
+    t.style.setProperty('--fit', hi); if (fits(t)) return hi;
+    for (let i = 0; i < 9; i++) { const mid = (lo + hi) / 2; t.style.setProperty('--fit', mid); if (fits(t)) lo = mid; else hi = mid; }
+    return Math.floor(lo * 100) / 100;
+  }
+  function apply(root){
+    const els = root.matches && root.matches(SEL) ? [root] : root.querySelectorAll ? root.querySelectorAll(SEL) : [];
+    els.forEach(el => {
+      const card = el.closest('.card'); if (!card) return;
+      const series = (card.className.match(/\bseries\d\b/) || ['series1'])[0];
+      const key = series + '|' + el.className + '|' + el.textContent;
+      if (!cache.has(key)) cache.set(key, measure(el, `card ${series}`));
+      el.style.setProperty('--fit', cache.get(key));
+    });
+  }
+  new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType === 1) apply(n); })))
+    .observe(document.documentElement, { childList:true, subtree:true });
+  // A label measured before its font arrived was sized with a fallback font: measure everything again
+  const redo = () => { cache.clear(); apply(document); };
+  if (document.fonts) { document.fonts.ready.then(redo); document.fonts.addEventListener('loadingdone', redo); }
+  return { apply };
+})();
 
 /* Open cards continue icing without rebuilding the screen. Each card carries the
    render-time state snapshot, so previews and simulation cards are never replaced
@@ -2348,11 +2485,19 @@ const BreakoutMotion = (() => {
   }
   window.__CQ_BREAKOUT_REPORT_VISIBILITY__ = () => syncNative(true);
 
+  // Big single cards (card screen, zoom, level-up, round results) also tilt as a whole
+  const TILT_CARDS = '.cd-card > .card, .zoom .card, .lucard > .card, .rcard > .card';
   function scan(){
     document.querySelectorAll('.framebreak-character').forEach(el => {
       if (states.has(el)) return;
-      const state = {el, visible:false, x:0, y:0, rotation:0, scale:1.18, vx:0, vy:0, vr:0, vs:0};
+      const state = {el, visible:false, x:0, y:0, rotation:0, scale:1, vx:0, vy:0, vr:0, vs:0};
       states.set(el, state); observer.observe(el);
+    });
+    document.querySelectorAll(TILT_CARDS).forEach(el => {
+      if (states.has(el) || el.classList.contains('mystery')) return;
+      el.classList.add('tilt3d');
+      if (!el.querySelector(':scope > .tilt-glare')) el.insertAdjacentHTML('beforeend', '<i class="tilt-glare"></i>');
+      states.set(el, {el, kind:'card', visible:false, rx:0, ry:0, vrx:0, vry:0, g:0, vg:0}); observer.observe(el);
     });
     for (const [el] of states) if (!el.isConnected) { observer.unobserve(el); states.delete(el); }
     syncNative();
@@ -2383,17 +2528,31 @@ const BreakoutMotion = (() => {
     let moving = false;
     states.forEach(s => {
       if (!s.visible || !s.el.isConnected) return;
+      if (s.kind === 'card') {
+        // up to 13 degrees each way; the glare brightens the further it turns
+        const tRx = -inputY * 11, tRy = inputX * 13, tG = Math.min(1, energy * 1.4);
+        [s.rx,s.vrx] = spring(s.rx,s.vrx,tRx,.12,.74,dt);
+        [s.ry,s.vry] = spring(s.ry,s.vry,tRy,.12,.74,dt);
+        [s.g,s.vg] = spring(s.g,s.vg,tG,.1,.76,dt);
+        const st = s.el.style;
+        st.setProperty('--rx', s.rx.toFixed(2) + 'deg'); st.setProperty('--ry', s.ry.toFixed(2) + 'deg');
+        st.setProperty('--mx', (s.ry / 13).toFixed(3)); st.setProperty('--my', (-s.rx / 11).toFixed(3));
+        st.setProperty('--glare', s.g.toFixed(3));
+        if (Math.abs(s.rx-tRx) + Math.abs(s.ry-tRy) + Math.abs(s.g-tG) > .05 || Math.abs(s.vrx) + Math.abs(s.vry) > .01) moving = true;
+        return;
+      }
       const card = s.el.closest('.card'); if (!card) return;
       const width = card.getBoundingClientRect().width;
-      const targetX = inputX * width * .19;
-      const targetY = inputY * width * .14 - energy * width * .035;
-      const targetR = inputX * 11;
-      const targetS = 1.18 + energy * .13;
+      // it leans out further than the card turns, so it reads as standing in front of it
+      const targetX = inputX * width * .09;
+      const targetY = inputY * width * .06 - energy * width * .03;
+      const targetR = inputX * 6;
+      const targetS = 1 + energy * .07;
       [s.x,s.vx] = spring(s.x,s.vx,targetX,.13,.72,dt);
       [s.y,s.vy] = spring(s.y,s.vy,targetY,.12,.73,dt);
       [s.rotation,s.vr] = spring(s.rotation,s.vr,targetR,.12,.72,dt);
       [s.scale,s.vs] = spring(s.scale,s.vs,targetS,.11,.74,dt);
-      s.x = clamp(s.x,-width*.20,width*.20); s.y = clamp(s.y,-width*.18,width*.16);
+      s.x = clamp(s.x,-width*.12,width*.12); s.y = clamp(s.y,-width*.10,width*.08);
       s.el.style.transform = `translate3d(${s.x.toFixed(2)}px,${s.y.toFixed(2)}px,0) rotate(${s.rotation.toFixed(2)}deg) scale(${s.scale.toFixed(3)})`;
       const distance = Math.abs(s.x-targetX)+Math.abs(s.y-targetY)+Math.abs(s.rotation-targetR)+Math.abs(s.scale-targetS)*100;
       const speed = Math.abs(s.vx)+Math.abs(s.vy)+Math.abs(s.vr)+Math.abs(s.vs)*100;
@@ -2407,8 +2566,13 @@ const BreakoutMotion = (() => {
     if (raf) cancelAnimationFrame(raf); raf = 0;
     inputX = inputY = 0;
     states.forEach(s => {
-      Object.assign(s,{x:0,y:0,rotation:0,scale:1.18,vx:0,vy:0,vr:0,vs:0});
       s.el.classList.remove('cq-motion-active');
+      if (s.kind === 'card') {
+        Object.assign(s,{rx:0,ry:0,vrx:0,vry:0,g:0,vg:0});
+        if (clearTransform) ['--rx','--ry','--mx','--my','--glare'].forEach(v => s.el.style.removeProperty(v));
+        return;
+      }
+      Object.assign(s,{x:0,y:0,rotation:0,scale:1,vx:0,vy:0,vr:0,vs:0});
       if (clearTransform) s.el.style.transform = '';
     });
   }
@@ -2451,12 +2615,13 @@ const BreakoutMotion = (() => {
     syncNative(true);
   });
   document.addEventListener('pointerdown', event => {
-    if (event.target.closest('.card')?.querySelector('.framebreak-character')) enableOrientation();
+    const card = event.target.closest('.card');
+    if (card && (card.classList.contains('tilt3d') || card.querySelector('.framebreak-character'))) enableOrientation();
   }, {passive:true});
   if (finePointer) {
     document.addEventListener('pointermove', event => {
       const card = event.target.closest('.card');
-      if (!card || !card.querySelector('.framebreak-character')) return setInput(0,0);
+      if (!card || !(card.classList.contains('tilt3d') || card.querySelector('.framebreak-character'))) return setInput(0,0);
       const r = card.getBoundingClientRect();
       setInput((event.clientX-(r.left+r.width/2))/(r.width*.45), (event.clientY-(r.top+r.height/2))/(r.height*.38));
     }, {passive:true});
@@ -2830,7 +2995,7 @@ const SCREENS = {
     const car = recent.length ? recent : CARDS.filter(owned).slice(-8).reverse();
     const weekly = typeof docketHomeHTML === 'function' ? docketHomeHTML().replace(/<i class="[^"]*">[^<]*<\/i>/, '<i>Weekly</i>') : '';
     return {
-      title:'Clerk Quest', navTitle:'CLERK <span>QUEST</span>', homebar:true, hideLarge:true, titleOnScroll:true,
+      title:'Becoming a Clerk', navTitle:'BECOMING <span>A CLERK</span>', homebar:true, hideLarge:true, titleOnScroll:true,
       right:`<button class="nb-avatar" data-act="tab" data-tab="profile" aria-label="Profile, level ${playerLevel()}">${ring((S.stats.xp % 250) / 250, 'L' + playerLevel(), 40)}</button>`,
       body:`
         ${target ? `<button class="hero ${isCold(tst) ? 'cold' : ''}" data-act="study" data-id="${target.id}">
@@ -2850,7 +3015,7 @@ const SCREENS = {
         <div class="sec-h"><span>${recent.length ? 'Recently Studied' : 'Your Cards'}</span><button data-act="tab" data-tab="collection">See All</button></div>
         <div class="carousel">${car.map(c => miniCard(c)).join('')}</div>
         ${typeof cloudUser === 'function' && !cloudUser() ? `<button class="guest-bar home-save" data-act="cloud-signin" data-tab="signin"><b>Save your progress</b> · Sign in</button>` : ''}
-        ${showInstallTip() ? `<button class="a2hs-mini" data-act="a2hs-show">${ICO('install')} Add Clerk Quest to your Home Screen ${chev}</button>` : ''}`,
+        ${showInstallTip() ? `<button class="a2hs-mini" data-act="a2hs-show">${ICO('install')} Add Becoming a Clerk to your Home Screen ${chev}</button>` : ''}`,
     };
   },
 
@@ -2975,7 +3140,7 @@ const SCREENS = {
   packs(){
     const nextSeries = nextPackSeries();
     return { title:'Packs', body:`
-      <div class="packs-hero"><img src="${nextPackArt()}" alt="Clerk Quest card pack" class="${S.packs ? 'bob' : 'dim'}">
+      <div class="packs-hero"><img src="${nextPackArt()}" alt="Becoming a Clerk card pack" class="${S.packs ? 'bob' : 'dim'}">
         <b>${S.packs ? S.packs + ' pack' + (S.packs > 1 ? 's' : '') + ' ready' : 'No packs right now'}</b>
         <small>${S.packs ? `Your next pack is a Series ${nextSeries} pack: 3 cards, and sometimes a trick card or a sticker.` : 'Your first finished round each day earns a pack. Quests can earn more.'}</small></div>
       ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN A PACK</button>` : `<button class="btn-big" data-act="tab" data-tab="study">${PLAY_ICON} STUDY TO EARN A PACK</button>`}
@@ -3255,8 +3420,8 @@ function paintStudy(anim){
     <div class="t bnum" style="${PB(62,62,228,152)}">${c.num}</div>
     <div class="t brar" style="${PB(72,158,228,220)}">${c.rarity.toUpperCase()}</div>
     <div class="t title" style="${PB(262,72,772,262)}">
-      <span class="t1" data-fit="46" data-max="${fitTitle(c.l1,8.2,46)}" style="font-size:${fitTitle(c.l1,8.2,46)}cqw">${esc(c.l1)}</span>
-      <span class="t2" data-fit="33" data-max="${fitTitle(c.l2,8.6,38)}" style="font-size:${fitTitle(c.l2,8.6,38)}cqw">${esc(c.l2)}</span></div>
+      ${titleLine(c, 1, 46, 8.2)}
+      ${titleLine(c, 2, 33, 8.6)}</div>
     <div class="t bcat" style="${PB(794,60,968,168)}">${esc(c.category)}</div>
     <div class="t icon" style="${PB(836,168,950,270)}">${ICON[c.icon]}</div>
     <div class="t lvtag" style="${PB(66,284,328,392)}">LEVEL ${lv}</div>
@@ -3390,7 +3555,7 @@ function advance(){
 
 /* ---- level up ---- */
 function showLevelUp(id, pl, done){
-  const c = byId(id), st = S.cards[id]; nativeFeedback('levelup');
+  const c = byId(id), st = S.cards[id];
   const before = {level:pl.from, xp:NEED[pl.from-1], mastered:false};
   const ov = document.createElement('div');
   ov.className = 'lu'; lockScroll();
@@ -3400,14 +3565,40 @@ function showLevelUp(id, pl, done){
     <button class="btn-big gold" data-act="lu-close">KEEP GOING →</button>`;
   document.body.appendChild(ov);
   const lc = ov.querySelector('#lucard');
-  setTimeout(() => lc.classList.add('shake'), 550);
-  setTimeout(softFlash, 1050);
-  setTimeout(() => {
-    lc.classList.remove('shake');
-    lc.innerHTML = cardEl(c, st, {newStar: pl.mastered ? 0 : pl.to});
-    lc.classList.add('pop'); ov.classList.add('done'); confetti(ov);
-  }, 1150);
-  ov._done = () => { ov.remove(); unlockScroll(); done && done(); };
+  const after = () => cardEl(c, st, {newStar: pl.mastered ? 0 : pl.to});
+  const timers = [], at = (ms, fn) => timers.push(setTimeout(fn, ms));
+  ov._done = () => { timers.forEach(clearTimeout); ov.remove(); unlockScroll(); done && done(); };
+  if (prefersReducedMotion()) {   // no shaking or flashing: a plain swap
+    nativeFeedback('levelup');
+    at(500, () => { lc.innerHTML = after(); ov.classList.add('done'); });
+    return;
+  }
+  /* Marvel Snap-style upgrade: the card charges up (shaking harder, glowing, energy pulled in), bursts with a
+     flash and shockwave, punches toward the screen as the new level, a shine sweeps across it, then the
+     level slams down. */
+  ov.insertAdjacentHTML('beforeend', `<div class="lu-shock"></div><div class="lu-slam">${pl.mastered ? 'MASTERED' : 'LEVEL ' + pl.to}</div>`);
+  at(450, () => { lc.classList.add('charge'); ov.classList.add('charging'); luSparks(ov, lc); });
+  at(1700, () => {
+    nativeFeedback('levelup'); softFlash();
+    lc.classList.remove('charge'); ov.classList.remove('charging');
+    lc.innerHTML = after();
+    lc.classList.add('punch', 'shine'); ov.classList.add('burst'); confetti(ov);
+  });
+  at(2250, () => ov.classList.add('slam'));
+  at(2700, () => ov.classList.add('done'));
+}
+/* energy streaks pulled from the edges of the screen into the card while it charges */
+function luSparks(host, target){
+  const r = target.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  for (let i = 0; i < 26; i++) {
+    const d = document.createElement('i'); d.className = 'lu-spark';
+    const a = Math.random() * Math.PI * 2, dist = Math.max(innerWidth, innerHeight) * (.45 + Math.random() * .25);
+    d.style.left = cx + 'px'; d.style.top = cy + 'px';
+    d.style.setProperty('--sx', Math.cos(a) * dist + 'px'); d.style.setProperty('--sy', Math.sin(a) * dist + 'px');
+    d.style.setProperty('--ang', (a * 180 / Math.PI) + 'deg');
+    d.style.animationDelay = (Math.random() * 1.0).toFixed(2) + 's';
+    host.appendChild(d); setTimeout(() => d.remove(), 1500);
+  }
 }
 function confetti(host){
   if (prefersReducedMotion()) return;
@@ -3813,7 +4004,7 @@ function missingSheet(id){
 }
 function a2hsSheet(){
   openSheet(`<h3>Add to Home Screen</h3>
-    <ol class="steps"><li><span>1</span>Open Clerk Quest in <b>Safari</b></li><li><span>2</span>Tap <b>Share</b> <i class="shareico">⬆︎</i></li>
+    <ol class="steps"><li><span>1</span>Open Becoming a Clerk in <b>Safari</b></li><li><span>2</span>Tap <b>Share</b> <i class="shareico">⬆︎</i></li>
       <li><span>3</span>Choose <b>Add to Home Screen</b></li><li><span>4</span>Open it from your Home Screen. It runs full screen, like an app.</li></ol>
     <p class="foot">Your progress stays saved in Safari on this phone.</p>
     <button class="sheet-cancel" data-act="a2hs-close">Got it</button>`);
