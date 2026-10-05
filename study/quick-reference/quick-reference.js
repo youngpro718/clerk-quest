@@ -136,7 +136,7 @@
     const options = [correct, ...wrong.slice(0, 3)];
     const shift = seed % options.length;
     const c = options.slice(shift).concat(options.slice(0, shift));
-    return { c, a: (options.length - shift) % options.length };
+    return { c, a: c[(options.length - shift) % options.length] };   // the answer as text, as the live game grades it
   };
 
   const peersFor = (entry, index) => {
@@ -151,19 +151,24 @@
 
   const makeBank = (entry, index) => {
     const peers = peersFor(entry, index);
-    const citeChoices = peers.slice(0, 3).map((peer) => peer.cite);
+    // wrong citations come from other sections: never a subsection of the answer (10.10 vs 10.10(2)) or of each other
+    const base = (cite) => cite.split('(')[0];
+    const citeChoices = [];
+    raw.filter((candidate) => candidate.law === entry.law).sort((x, y) => (y.article === entry.article) - (x.article === entry.article))
+      .forEach((candidate) => {
+        if (citeChoices.length < 3 && base(candidate.cite) !== base(entry.cite) && !citeChoices.some((c) => base(c) === base(candidate.cite))) citeChoices.push(candidate.cite);
+      });
     const summaryChoices = peers.slice(0, 3).map((peer) => peer.summary);
     const stepChoices = peers.slice(0, 3).map((peer) => peer.steps[0]);
-    const q1 = rotateAnswer(entry.cite, citeChoices, index);
     const q2 = rotateAnswer(entry.summary, summaryChoices, index + 1);
     const q4 = rotateAnswer(entry.steps[0], stepChoices, index + 2);
     const q5 = rotateAnswer(entry.cite, [...citeChoices].reverse(), index + 3);
+    // Generated and NOT reviewed (reviewed:false): raw material for clerk review, never used as-is. The always-true
+    // true/false item and the bare "which citation covers" item were removed on 2026-10-04 (owner's decision).
     return [
-      { lv: 1, q: `Which citation covers ${entry.title.toLowerCase()}?`, c: q1.c, a: q1.a, h: `Look in ${entry.law} article ${entry.article}.`, w: `${entry.cite} is the linked provision.`, type: 'mc' },
-      { lv: 2, q: `Which statement correctly summarizes ${entry.cite}?`, c: q2.c, a: q2.a, h: entry.hook, w: entry.summary, type: 'mc' },
-      { lv: 1, q: `True or false: ${entry.context}`, c: ['True', 'False'], a: 0, h: entry.hook, w: entry.context, type: 'tf' },
-      { lv: 2, q: `Which detail belongs to ${entry.cite}?`, c: q4.c, a: q4.a, h: `Focus on ${entry.title.toLowerCase()}.`, w: entry.steps.join(' '), type: 'mc' },
-      { lv: 3, q: `${entry.example} Which provision is the best match?`, c: q5.c, a: q5.a, h: `Article ${entry.article} controls.`, w: `${entry.cite}: ${entry.summary}`, type: 'mc' }
+      { lv: 2, q: `Which statement correctly summarizes ${entry.cite}?`, c: q2.c, a: q2.a, h: entry.hook, w: entry.summary, type: 'mc', reviewed: false },
+      { lv: 2, q: `Which detail belongs to ${entry.cite}?`, c: q4.c, a: q4.a, h: `Focus on ${entry.title.toLowerCase()}.`, w: entry.steps.join(' '), type: 'mc', reviewed: false },
+      { lv: 3, q: `${entry.example} Which provision is the best match?`, c: q5.c, a: q5.a, h: `Article ${entry.article} controls.`, w: `${entry.cite}: ${entry.summary}`, type: 'mc', reviewed: false }
     ];
   };
 

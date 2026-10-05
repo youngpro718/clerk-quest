@@ -1490,7 +1490,7 @@ window.QBANK = {
    ],
    "a": "A summons",
    "h": "\"You're IN the case.\"",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "A case begins by filing a summons and complaint (CPLR 304(a)). A subpoena is for testimony or records (2301)."
   },
   {
    "lv": 1,
@@ -1503,7 +1503,7 @@ window.QBANK = {
    ],
    "a": "A subpoena",
    "h": "\"You're NEEDED for the case.\"",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "A subpoena requires the attendance of a person to give testimony (CPLR 2301)."
   },
   {
    "lv": 1,
@@ -1516,7 +1516,7 @@ window.QBANK = {
    ],
    "a": "A summons",
    "h": "In means a party.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "IN the case: filing the summons starts the action against the defendant (CPLR 304(a))."
   },
   {
    "lv": 1,
@@ -1529,7 +1529,7 @@ window.QBANK = {
    ],
    "a": "A subpoena",
    "h": "Needed means a witness or records.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "NEEDED for the case: a subpoena requires testimony, and a subpoena duces tecum requires records (CPLR 2301)."
   },
   {
    "lv": 1,
@@ -1540,7 +1540,7 @@ window.QBANK = {
    ],
    "a": "True",
    "h": "\"You're IN.\"",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS.",
+   "w": "True. A summons starts the action against the defendant (CPLR 304(a)); not appearing risks default (3215(a)).",
    "type": "tf"
   },
   {
@@ -1554,7 +1554,7 @@ window.QBANK = {
    ],
    "a": "A subpoena duces tecum",
    "h": "Records, not a defendant.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "A subpoena duces tecum requires production of books, papers and other things (CPLR 2301)."
   },
   {
    "lv": 2,
@@ -1567,7 +1567,7 @@ window.QBANK = {
    ],
    "a": "Bring records or documents",
    "h": "Duces tecum means bring with you.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "It requires production of books, papers and other things (CPLR 2301). Latin for \"bring with you.\""
   },
   {
    "lv": 2,
@@ -1580,7 +1580,7 @@ window.QBANK = {
    ],
    "a": "A subpoena",
    "h": "They are needed, not sued.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "The neighbor is a witness, not a party. A subpoena requires a person's attendance to testify (CPLR 2301)."
   },
   {
    "lv": 2,
@@ -1593,7 +1593,7 @@ window.QBANK = {
    ],
    "a": "A summons",
    "h": "The tenant is IN the case.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "The tenant is the defendant. The landlord starts the action by filing a summons and complaint (CPLR 304(a))."
   },
   {
    "lv": 2,
@@ -1604,7 +1604,7 @@ window.QBANK = {
    ],
    "a": "False",
    "h": "It is often for a witness.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS.",
+   "w": "False. A subpoena requires the attendance of \"a person\" (CPLR 2301), including witnesses who aren't parties.",
    "type": "tf"
   },
   {
@@ -1618,7 +1618,7 @@ window.QBANK = {
    ],
    "a": "A subpoena duces tecum",
    "h": "Needed, not sued.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "The hospital isn't sued, so no summons. Its records come in by subpoena duces tecum (CPLR 2301)."
   },
   {
    "lv": 3,
@@ -1631,7 +1631,7 @@ window.QBANK = {
    ],
    "a": "A summons is for the party being sued",
    "h": "Which person is IN the case?",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "A summons starts an action against a defendant (CPLR 304(a)). Someone who only holds records gets a subpoena."
   },
   {
    "lv": 3,
@@ -1644,7 +1644,7 @@ window.QBANK = {
    ],
    "a": "A default judgment",
    "h": "Ignore the summons, lose by default.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "A defendant who fails to appear can face a default judgment (CPLR 3215(a))."
   },
   {
    "lv": 3,
@@ -1657,7 +1657,7 @@ window.QBANK = {
    ],
    "a": "Contempt of court",
    "h": "Ignore the subpoena, risk contempt.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "Not obeying a subpoena issued by a judge, clerk or court officer is punishable as contempt (CPLR 2308(a))."
   },
   {
    "lv": 3,
@@ -1670,7 +1670,7 @@ window.QBANK = {
    ],
    "a": "A subpoena starts the lawsuit",
    "h": "One paper starts the case. Which?",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "False: the summons and complaint start the action (CPLR 304(a)), not a subpoena. The other three are true."
   },
   {
    "lv": 4,
@@ -1683,7 +1683,7 @@ window.QBANK = {
    ],
    "a": "Summons to the company; subpoena to the clerk",
    "h": "IN for the company, NEEDED for the clerk.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "The company is the defendant: summons (CPLR 304(a)). The clerk is a witness: subpoena to testify (2301)."
   },
   {
    "lv": 4,
@@ -1696,7 +1696,7 @@ window.QBANK = {
    ],
    "a": "A subpoena duces tecum",
    "h": "Records from someone not in the case.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "A diary is a paper or thing. A non-party must produce it under a subpoena duces tecum (CPLR 2301)."
   },
   {
    "lv": 4,
@@ -1709,7 +1709,7 @@ window.QBANK = {
    ],
    "a": "A summons to a witness who isn't a party",
    "h": "The paper doesn't match the person.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "A summons is for the defendant (CPLR 304(a)). A witness who isn't a party is brought in by subpoena (2301)."
   },
   {
    "lv": 4,
@@ -1722,7 +1722,7 @@ window.QBANK = {
    ],
    "a": "What the case needs",
    "h": "Testimony or records.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "Testimony or records: a subpoena requires testimony, and a duces tecum requires papers (CPLR 2301)."
   },
   {
    "lv": 4,
@@ -1735,7 +1735,7 @@ window.QBANK = {
    ],
    "a": "A summons",
    "h": "Default follows the summons.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "A defendant who fails to appear after the summons faces a default judgment (CPLR 3215(a))."
   },
   {
    "lv": 5,
@@ -1748,7 +1748,7 @@ window.QBANK = {
    ],
    "a": "A summons",
    "h": "The complaint and the notice go together.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "The rule pairs them: an action is commenced by filing a summons and complaint (CPLR 304(a))."
   },
   {
    "lv": 5,
@@ -1761,7 +1761,7 @@ window.QBANK = {
    ],
    "a": "default; contempt",
    "h": "Default for IN, contempt for NEEDED.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "Ignored summons: default judgment (CPLR 3215(a)). Ignored court subpoena: contempt of court (2308(a))."
   },
   {
    "lv": 5,
@@ -1774,7 +1774,7 @@ window.QBANK = {
    ],
    "a": "Summons in its own case; subpoena in the other",
    "h": "One company, two roles.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "As defendant it gets a summons (CPLR 304(a)). For records in the other case: subpoena duces tecum (2301)."
   },
   {
    "lv": 5,
@@ -1787,7 +1787,7 @@ window.QBANK = {
    ],
    "a": "A party from a person or record needed",
    "h": "Who is in the case, and who is needed for it.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "IN: the party sued, by summons (CPLR 304(a)). NEEDED: a person or records, by subpoena (2301)."
   },
   {
    "lv": 5,
@@ -1800,7 +1800,7 @@ window.QBANK = {
    ],
    "a": "IN: summons. NEEDED: subpoena.",
    "h": "Hooks and papers, in order.",
-   "w": "Per the card: a summons brings a defendant INTO the case; a subpoena brings what the case NEEDS."
+   "w": "The summons starts the case against a party (CPLR 304(a)); a subpoena requires testimony or records (2301)."
   }
  ],
  "whosigns": [
