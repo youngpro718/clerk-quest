@@ -348,6 +348,14 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .t.s4.cat,.t.s4.set,.t.s5.set{-webkit-text-stroke:.55cqw #fff8e6;paint-order:stroke fill}   /* readable if it spills onto the dark frame */
 .t.s5.cat{-webkit-text-stroke:.55cqw #172b4b;paint-order:stroke fill}
 .t.s5.xpstrip{-webkit-text-stroke:.55cqw #fff8e6;paint-order:stroke fill}
+/* Series 5 cover panels now carry their lettering with clear inset margins. */
+.card.series5 .t.num{color:#172b3c;font-size:5.3cqw;letter-spacing:.015em;transform:none;-webkit-text-stroke:.18cqw #fff8e6;text-shadow:.12cqw .16cqw 0 rgba(23,43,60,.2)}
+.card.series5 .t.cat{color:#172b3c;-webkit-text-stroke:0;text-shadow:none;overflow:hidden;line-height:1.02;padding:0 .7cqw}
+.card.series5 .t.xpstrip{-webkit-text-stroke:0;text-shadow:none;color:#172b3c;gap:.5cqw}
+.card.series5 .t.quote{font-size:5.2cqw!important;line-height:1.04;-webkit-text-stroke:0;text-shadow:none;overflow:hidden;transform:none;padding:.5cqw 1cqw;white-space:pre-line}
+.card.series5 .t.rar,.card.series5 .t.lvl{-webkit-text-stroke:.4cqw #172b3c;text-shadow:.2cqw .25cqw 0 #172b3c;transform:none}
+.card.series5 .t.rar .gem{width:5.5cqw;height:5.5cqw;font-size:3.8cqw}
+.card.series5 .t.set{-webkit-text-stroke:0;text-shadow:none}
 .framebreak-character.series45.series4{left:13%;top:14%;width:74%;height:66%;transform:translate3d(0,0,0) rotate(-3deg) scale(1)}
 .framebreak-character.series45.series5{left:6%;top:12%;width:88%;height:74%;transform:translate3d(0,0,0) rotate(3deg) scale(1)}
 .card.series4 .stampimg.mastered,.card.series5 .stampimg.mastered{z-index:8}
@@ -2137,7 +2145,7 @@ function titleLine(c, line, width, cap){
 function printedTitleHTML(c){
   const t = window.CQ_TITLE_ART?.[c.id];
   if (!t) return `${titleLine(c, 1, 62, 7.8)}${titleLine(c, 2, 62, 8)}`;
-  const [x,y,w,h] = t.ink, [iw,ih] = t.size, boxRatio = 770/232, ratio = w/h;
+  const [x,y,w,h] = t.ink, [iw,ih] = t.size, boxRatio = 750/220, ratio = w/h;
   const width = ratio >= boxRatio ? 100 : ratio/boxRatio*100;
   const height = ratio >= boxRatio ? boxRatio/ratio*100 : 100;
   return `<div class="title-fallback" aria-hidden="true">${titleLine(c, 1, 62, 7.8)}${titleLine(c, 2, 62, 8)}</div><div class="title-print" style="width:${width}%;height:${height}%" role="img" aria-label="${esc(c.name)}"><img src="${artSrc(t.asset)}" alt="" decoding="async" style="width:${iw/w*100}%;height:${ih/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%"></div>`;
@@ -2347,9 +2355,9 @@ function frontS3HTML(c, st, opt={}){
 function frontS45HTML(c, st, opt={}){
   const lv = st.level, need = NEED[lv-1], s4 = c.series === 4;
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
-  const frameSrc = `art/frame_s${c.series}.webp`;
+  const frameSrc = s4 ? 'art/frame_s4.webp' : 'art/frame_s5_v2.webp';
   const frameBreak = frameBreakCharacter(c, lv);
-  const artBox = s4 ? P(174,415,891,1198) : P(92,415,932,1290);
+  const artBox = s4 ? P(174,415,891,1198) : P(88,480,936,1310);
   const art = artHTML(c, lv, {omitCharacter:!!frameBreak, omitMnemonicBadge:true});
   const icon = c.trickType ? `<img src="art/icon_${c.trickType}.webp" alt="${TRICK_TYPES[c.trickType].label}">` : ICON[c.icon];
   const raritySize = c.rarity.length > 6 ? 2.15 : 2.65;
@@ -2357,14 +2365,14 @@ function frontS45HTML(c, st, opt={}){
     <div class="art-win s45win s${c.series}" style="${artBox}">${art}${holoHTML(c)}</div>
     <img class="frame" src="${frameSrc}" alt="Series ${c.series} card frame">
     ${frameBreak}
-    <div class="t num s45 s${c.series} meta" style="${s4 ? P(102,77,287,139) : P(51,77,174,139)}">${c.num}</div>
-    <div class="t xpstrip s45 s${c.series} meta" style="${s4 ? P(307,77,696,139) : P(205,77,707,139)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
-    <div class="t cat s45 s${c.series} meta" style="${s4 ? P(717,77,922,139) : P(748,77,881,139)}">${esc(c.category)}</div>
-    ${s4 ? '' : `<div class="t icon s45 s5 meta" style="${P(912,77,963,139)}">${icon}</div>`}
+    <div class="t num s45 s${c.series} meta" style="${s4 ? P(102,77,287,139) : P(65,79,235,148)}">${c.num}</div>
+    <div class="t xpstrip s45 s${c.series} meta" style="${s4 ? P(307,77,696,139) : P(285,79,640,148)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
+    <div class="t cat s45 s${c.series} meta" style="${s4 ? P(717,77,922,139) : P(686,79,946,148)}">${esc(c.category)}</div>
+    
     ${s4 ? `<div class="t title s45 s4 meta" style="${P(195,184,891,277)}">${titleLine(c, 1, 64, 7.2)}</div>
       <div class="t title s45 s4 meta" style="${P(195,307,891,369)}">${titleLine(c, 2, 64, 5.5)}</div>`
-      : `<div class="t title s45 s5 meta" style="${P(130,174,900,406)}">${printedTitleHTML(c)}</div>`}
-    <div class="t quote s45 s${c.series} meta" style="${s4 ? P(236,1183,850,1275) : P(256,1183,737,1275)};${quoteStyle(c)}">“${quoteText(c)}”</div>
+      : `<div class="t title s45 s5 meta" style="${P(140,203,890,423)}">${printedTitleHTML(c)}</div>`}
+    <div class="t quote s45 s${c.series} meta" style="${s4 ? P(236,1183,850,1275) : P(192,1156,854,1280)};${quoteStyle(c)}">“${quoteText(c)}”</div>
     <div class="t rar s45 s${c.series} meta" style="${s4 ? P(123,1321,358,1428) : P(72,1352,338,1444)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:calc(${raritySize}cqw*var(--fit,1))">${c.rarity.toUpperCase()}</span></div>
     <div class="t set s45 s${c.series} meta" style="${s4 ? P(430,1321,686,1428) : P(389,1352,655,1444)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl s45 s${c.series} meta" style="${s4 ? P(758,1321,901,1428) : P(707,1352,952,1444)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
@@ -4335,7 +4343,7 @@ window.addEventListener('cq-cloud', e => {
   if (nav.tab === 'profile') refresh();
 });
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.
-['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_s4.webp','art/frame_s5.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/answer_button.webp']
+['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_s4.webp','art/frame_s5_v2.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/answer_button.webp']
   .forEach(src => { const i = new Image(); i.src = src; if (i.decode) i.decode().catch(() => {}); });
 </script>
 </body>
