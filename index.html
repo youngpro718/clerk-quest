@@ -1046,6 +1046,9 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .sh-missing{display:flex;flex-direction:column;align-items:center;text-align:center}
 .sh-mcard{width:120px;margin-bottom:6px}
 .sh-missing p{font:15px/1.4 var(--ui);color:var(--sub);margin:0 8px 14px}
+.read-free{align-self:stretch;display:flex;flex-direction:column;gap:8px;margin:0 0 14px;padding:12px;border-radius:14px;background:var(--bg2);text-align:left}
+.read-free b{font:400 18px/1 "Bangers";letter-spacing:.05em;color:var(--mustard)}
+.read-free .explain-watch{margin:0}
 .steps{list-style:none;margin:0 0 6px;padding:0;display:grid;gap:10px}
 .steps li{display:flex;align-items:center;gap:12px;font:16px var(--ui)}
 .steps li span{flex:none;width:28px;height:28px;border-radius:14px;background:var(--mustard);color:var(--ink);font:700 15px/28px var(--ui);text-align:center}
@@ -3091,7 +3094,7 @@ const SCREENS = {
     const c = byId(p.id);
     if (!owned(c)) return {
       title:c ? 'Locked Card' : 'Card unavailable', hideLarge:true,
-      body:`<div class="sh-missing"><div class="sh-mcard">${lockedCardHTML(c)}</div><h3>${c ? 'Not found yet' : 'Card unavailable'}</h3><p>${c ? 'Find this card in a pack to open its art and study questions.' : 'This card could not be found.'}</p></div>`
+      body:`<div class="sh-missing"><div class="sh-mcard">${lockedCardHTML(c)}</div><h3>${c ? 'Not found yet' : 'Card unavailable'}</h3><p>${c ? 'Find this card in a pack to unlock its art, quiz on it and level it up. You can read it now.' : 'This card could not be found.'}</p>${readFreeHTML(c)}</div>`
     };
     const st = S.cards[c.id];
     if (c.category === 'MEMORY TRICK' && st.owned) tipOnce('trick');
@@ -4047,10 +4050,18 @@ function cardMenu(id){
       <button data-act="card-style" data-id="${id}">${ICO('sparkle')} Card Style</button>
     </div><button class="sheet-cancel" data-act="sheet-close">Cancel</button>`);
 }
+/* Free reading: anyone can read a card's intro, rule and lesson video before owning it. Quizzing stays owned-only. */
+function readFreeHTML(c){
+  if (!c) return '';
+  const k = cardVideo(c), vid = k ? videoButtonHTML(k, '', '', 'explain-watch', 'Watch the lesson') : '';
+  const intro = c.intro ? `<button class="sk-btn" data-act="intro-read" data-id="${c.id}">${ICO('read')} Read the intro</button>` : '';
+  const rule = c.source ? `<button class="sk-btn" data-act="push" data-s="rule" data-id="${c.id}">${ICO('subject')} Read the rule</button>` : '';
+  return vid || intro || rule ? `<div class="read-free"><b>Read it now</b>${vid}${intro}${rule}</div>` : '';
+}
 function missingSheet(id){
   const c = byId(id);
   openSheet(`<div class="sh-missing"><div class="sh-mcard">${lockedCardHTML(c)}</div>
-      <h3>${c ? 'Not found yet' : 'Card unavailable'}</h3><p>${c ? `This ${c.trickType ? 'Memory Trick' : 'card'} is waiting in a pack. ${S.packs ? `You have ${S.packs} pack${S.packs > 1 ? 's' : ''} to open.` : 'Study a card you own to earn a pack. This card stays locked until you collect it.'}` : 'This card could not be found.'}</p></div>
+      <h3>${c ? 'Not found yet' : 'Card unavailable'}</h3><p>${c ? `This ${c.trickType ? 'Memory Trick' : 'card'} is waiting in a pack. ${S.packs ? `You have ${S.packs} pack${S.packs > 1 ? 's' : ''} to open.` : 'Study a card you own to earn a pack.'} You can read it now. Collect it to quiz on it and level it up.` : 'This card could not be found.'}</p>${readFreeHTML(c)}</div>
     ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN A PACK</button>` : `<button class="btn-big" data-act="tab" data-tab="study">${PLAY_ICON} STUDY YOUR OWNED CARDS</button>`}
     <button class="sheet-cancel" data-act="sheet-close">Not now</button>`);
 }
