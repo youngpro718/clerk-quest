@@ -49,7 +49,7 @@ function showLogin(wall){
       : `<p class="login-tag">Study the court rules. Collect the cards.</p>`}
     ${closable ? `<button class="login-x" data-act="acct-close" aria-label="Close">Not now</button>` : ''}
     ${cloud() ? authFormHTML(acct.tab)
-      : `<p class="acct-err">${ICO('warning')} Can't reach Clerk Quest right now. Check your connection, then try again.</p>
+      : `<p class="acct-err">${ICO('warning')} Can't reach Becoming a Clerk right now. Check your connection, then try again.</p>
          <button class="btn-big gold" data-act="acct-retry">TRY AGAIN</button>`}</div>`;
 }
 function hideLogin(){ const el = document.getElementById('login-root'); if (!el) return; el.remove(); refresh(); maybeWelcome(); }

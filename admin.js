@@ -91,7 +91,7 @@ const ADMIN_SCREENS = {
         <small>${x.has ? `Level ${x.level} · ${x.owned.length} of ${CARDS.length} cards · ${x.coins.toLocaleString()} coins · Getting Started ${x.gsDone} of ${STEPS.length}` : 'No progress yet'}</small>
         <small>Joined ${fmtDate(Date.parse(p.joined_at))} · ${lastText(x.last)}</small></span>${chev}</button>`; }).join('');
     return { title:'Admin', right:`<button class="nb-btn txt" data-act="adm-reload">Refresh</button>`, body:`
-      <div class="adm-hero"><span>${ICO('stats')}</span><div><b>Clerk Quest Admin</b><small>Server-authorized tools for review and testing</small></div></div>
+      <div class="adm-hero"><span>${ICO('stats')}</span><div><b>Becoming a Clerk Admin</b><small>Server-authorized tools for review and testing</small></div></div>
       <div class="sec-h"><span>Sign-ups</span>${ADM.players ? `<span class="adm-count">${list.length}</span>` : ''}</div>
       ${signups}
       <p class="st-note">Newest first. Tap a player to see their progress. Nothing here changes another player's progress.</p>
@@ -320,7 +320,7 @@ document.addEventListener('click', e => {
     case 'adm-quiz-reset': ADM.quizChoice = null; refresh(); break;
     case 'adm-screen': { const v = t.dataset.v;
       if (v === 'startup' && typeof previewStartupSplash === 'function') previewStartupSplash();
-      else if (v === 'startup') openSheet(`<div class="adm-loading"><div class="home-logo">CLERK <span>QUEST</span></div><p>Study it. Collect it. Master it.</p><div class="sp-bar"><i style="width:62%"></i></div><small>Shuffling the cards…</small></div><button class="sheet-cancel" data-act="sheet-close">Close preview</button>`);
+      else if (v === 'startup') openSheet(`<div class="adm-loading"><div class="home-logo">BECOMING <span>A CLERK</span></div><p>Study for the New York court clerk exam.</p><div class="sp-bar"><i style="width:62%"></i></div><small>Shuffling the cards…</small></div><button class="sheet-cancel" data-act="sheet-close">Close preview</button>`);
       else if (v === 'welcome') previewWelcome();
       else if (v === 'loading') openSheet(`<div class="adm-loading">${ICO('cards')}<h3>GETTING YOUR DECK READY</h3><div class="sp-bar"><i style="width:68%"></i></div><p>Setting up your desk…</p></div><button class="sheet-cancel" data-act="sheet-close">Close preview</button>`);
       else if (v === 'result') openSheet(`<div class="results adm-result"><h1>SESSION ADJOURNED</h1><div class="score">4 / 5</div><div class="sub">correct answers</div><div class="rchips"><span class="chip">+140 XP</span><span class="chip">${ICO('pack')} +1 DAILY PACK</span></div><div class="panel"><b>Fixture Card</b> · Level 2<div class="pbar"><b style="width:70%"></b></div><div class="prow"><span>98 / 140 XP</span><span>42 XP to go</span></div></div></div><button class="sheet-cancel" data-act="sheet-close">Close preview</button>`);

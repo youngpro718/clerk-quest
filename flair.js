@@ -33,9 +33,9 @@
 .cqf-clip::after{content:"";position:absolute;left:50%;bottom:6px;translate:-50% 0;width:16px;height:8px;border-radius:4px;background:var(--desk);border:2px solid var(--ink)}
 .cqf-card{--mx:var(--gx,30%);--my:var(--gy,20%);position:relative;width:min(78vw,300px);border:3px solid var(--ink);border-radius:16px;overflow:hidden;
   background:var(--paper);color:var(--ink);box-shadow:6px 8px 0 rgba(0,0,0,.45);isolation:isolate}
-.cqf-top{display:flex;align-items:center;justify-content:space-between;padding:11px 14px 9px;background:var(--rank);border-bottom:3px solid var(--ink);color:var(--rank-ink)}
-.cqf-top b{font:400 22px/1 "Bangers",sans-serif;letter-spacing:.05em}
-.cqf-top small{font:400 14px/1 "Bangers",sans-serif;letter-spacing:.08em;opacity:.85}
+.cqf-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 14px 9px;background:var(--rank);border-bottom:3px solid var(--ink);color:var(--rank-ink)}
+.cqf-top b{max-width:150px;font:400 19px/1.05 "Bangers",sans-serif;letter-spacing:.025em}
+.cqf-top small{flex:none;font:400 12px/1 "Bangers",sans-serif;letter-spacing:.08em;opacity:.85}
 .cqf-slot{position:absolute;top:7px;left:50%;translate:-50% 0;width:44px;height:7px;border-radius:4px;background:var(--desk);opacity:.85}
 .cqf-body{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:13px 14px 8px;align-items:start}
 .cqf-photo{position:relative;width:92px;aspect-ratio:3/4;border:2.5px solid var(--ink);border-radius:8px;overflow:hidden;background:var(--paper2)}
@@ -99,7 +99,7 @@
         <button class="cqf-swing" type="button" aria-label="Your Clerk ID: ${e(playerTitle())}, level ${lv}">
           <span class="cqf-clip" aria-hidden="true"></span>
           <div class="cqf-card" data-rank="${rk}">
-            <div class="cqf-top"><b>CLERK QUEST</b><small>COURT ID · ${no}</small><span class="cqf-slot"></span></div>
+            <div class="cqf-top"><b>BECOMING A CLERK</b><small>COURT ID · ${no}</small><span class="cqf-slot"></span></div>
             <div class="cqf-body">
               <div class="cqf-photo">${pic ? `<img src="${e(pic)}" alt="">` : ''}<span class="cqf-lv">L${lv}</span></div>
               <div><div class="cqf-name">${e(playerTitle())}</div>
