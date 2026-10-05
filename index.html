@@ -327,6 +327,27 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .t.s5.title{gap:.7cqw;padding:0 0 1cqw}
 .t.s5.title span{height:auto}
 .t.s5.title:has(.title-print){padding:0;gap:0;align-items:center;justify-content:center}
+/* Series 1 printed lettering: preserve the parchment placard and balance live labels. */
+.card.s1-lettered .t.title:has(.title-print){padding:1.8cqw 3cqw;gap:0}
+.card.s1-lettered .rar{gap:1cqw}
+.card.s1-lettered .rar .gem{width:8cqw;height:8cqw;font-size:5cqw;flex:none}
+.card.s1-lettered .lvl{gap:1.1cqw;font-size:4.2cqw}
+.card.s1-lettered .quote{font-weight:700}
+.card.s1-lettered .stars{font-size:3.5cqw;letter-spacing:0}
+/* Series 3: centered printed titles and balanced live footers. */
+.card.series3 .t.title:has(.title-print){gap:0;padding:0}
+.card.series3 .rar{gap:1cqw}
+.card.series3 .rar .gem{width:7.3cqw;height:7.3cqw;font-size:4.8cqw;flex:none}
+.card.series3 .lvl{font-size:4.2cqw;gap:1cqw}
+.card.series3 .quote{padding:0 1cqw;font-weight:700}
+.title-strip{overflow:hidden}
+.card.series4 .t.title:has(.title-print){padding:0;gap:0;justify-content:center;align-items:center}
+.card.series4 .t.num{font-size:5.1cqw;transform:none;letter-spacing:0;-webkit-text-stroke:.4cqw #171513}
+.card.series4 .t.rar,.card.series4 .t.lvl{font-size:4cqw;gap:.5cqw;justify-content:center;transform:none;-webkit-text-stroke:.3cqw #171513;text-shadow:.15cqw .2cqw #171513}
+.card.series4 .t.rar span[style]{font-size:4cqw!important}
+.card.series4 .t.rar .gem{width:4.8cqw;height:4.8cqw;font-size:3.4cqw;flex:none}
+.card.series4 .t.lvl .stars{font-size:3.6cqw;letter-spacing:0;line-height:1}
+.card.series4 .t.quote{font-weight:700;font-size:var(--notebook-quote,3.8cqw)!important;-webkit-text-stroke:0;text-shadow:none;line-height:1.04;transform:none;padding:0 1cqw;overflow:hidden}
 .title-print{position:relative;flex:none;pointer-events:none}
 .title-fallback{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;gap:.7cqw}
 .title-print img{position:absolute;max-width:none;object-fit:fill}
@@ -629,6 +650,25 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 /* the verdict stamp lands on the mascot (or the title, on copy-check cards), never on the question */
 #back .stampimg.big{width:54%;left:auto;right:0;top:40%;--rot:-8deg}
 #back .stampimg.big.top{width:58%;left:21%;right:auto;top:3.5%;--rot:-5deg}
+/* Series 3 reverse: paper panels inside a navy film archive, all quiz labels stay live. */
+#back.s3-study{background:#102532;border:1.2cqw solid #d9a648;border-radius:5cqw;box-shadow:inset 0 0 0 .6cqw #201d18;overflow:hidden}
+#back.s3-study .bgs{display:none}
+#back.s3-study::after{content:"";position:absolute;inset:17% 1.5% 5%;pointer-events:none;z-index:1;border-left:2.4cqw dashed #ddcfad;border-right:2.4cqw dashed #ddcfad;opacity:.65}
+#back.s3-study .title{background:#f6e7c8;border:.35cqw solid #a87836;border-radius:1.5cqw;padding:.8cqw;gap:0}
+#back.s3-study .bnum,#back.s3-study .lvtag{background:#f4ddab;border:.35cqw solid #ab7e37;border-radius:1.3cqw;color:#211e18}
+#back.s3-study .brar,#back.s3-study .bcat,#back.s3-study .icon,#back.s3-study .counter{color:#f6ecd4}
+#back.s3-study .qtext,#back.s3-study .rec{background:#f6e7c8;border:.35cqw solid #bc914b;border-radius:1.6cqw;padding:1.5cqw 2cqw}
+#back.s3-study .ans{border-color:#bc914b;background:#fff0d5;box-shadow:0 .6cqw 0 #060e14}
+#back.s3-study .ans .L{background:#8c2624;border-color:#bc914b;color:#fff1d4}
+#back.s3-study .hint{background:#ead9b7;border:.35cqw solid #bc914b;border-radius:1.5cqw;padding:1.5cqw}
+#back.s3-study .pts{background:#123d43;border:.35cqw solid #bc914b;border-radius:1.5cqw;color:#fff1d4}
+#back.s3-study .nxtab{background:#922b25;border:.35cqw solid #bc914b;border-radius:1cqw;color:#fff1d4}
+#back.s3-study .nxl,#back.s3-study .nxr{background:#f6e7c8;border:.35cqw solid #bc914b;border-radius:1.5cqw;padding:1.5cqw}
+#back.s3-study .nxr{font-size:3.1cqw;gap:.6cqw;line-height:1.12}
+#back.s3-study .nxr b{font-size:3cqw;margin-bottom:.3cqw;gap:.7cqw}
+#back.s3-study .pts .v{font-size:8cqw}
+#back.s3-study .hint{font-size:3.5cqw;gap:1.6cqw}
+#back.s3-study .hint b{font-size:3.8cqw}
 /* the question side is drawn in 3 slices so its middle (plain paper) can stretch */
 .bgs{position:absolute;left:0;width:100%;z-index:0;background:url(art/back_card.webp) no-repeat;pointer-events:none}
 .bgs.t{top:0;height:33.4821%;background-size:100% 256.0%;background-position:top}
@@ -1181,7 +1221,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="study/quick-reference/series-lessons.js?v=691837ab"></script>
 <script src="curriculum-pilot.js?v=9e0d75af"></script>
 <script src="card-typography.js?v=53a87104"></script>
-<script src="card-title-art.js?v=e81d0c7d"></script>
+<script src="card-title-art.js?v=e1304f60"></script>
 <script src="card-caption-art.js?v=54f165ad"></script>
 <script src="binder.js?v=dcc2617f"></script>
 <script src="onboarding.js?v=22f27a83"></script>
@@ -2152,13 +2192,13 @@ function titleLine(c, line, width, cap){
   return `<span class="t${line}" data-fit="${width}" data-max="${size}" style="font-size:${size}cqw;font-family:'${font}';letter-spacing:${tracking}">${esc(first ? c.l1 : c.l2)}</span>`;
 }
 // Printed titles are authored separately; saved progression and character layers stay independent.
-function printedTitleHTML(c){
+function printedTitleHTML(c, boxRatio=750/220, firstWidth=62, secondWidth=62, cap=8){
   const t = window.CQ_TITLE_ART?.[c.id];
-  if (!t) return `${titleLine(c, 1, 62, 7.8)}${titleLine(c, 2, 62, 8)}`;
-  const [x,y,w,h] = t.ink, [iw,ih] = t.size, boxRatio = 750/220, ratio = w/h;
+  if (!t) return `${titleLine(c, 1, firstWidth, Math.min(7.8,cap))}${titleLine(c, 2, secondWidth, cap)}`;
+  const [x,y,w,h] = t.ink, [iw,ih] = t.size, ratio = w/h;
   const width = ratio >= boxRatio ? 100 : ratio/boxRatio*100;
   const height = ratio >= boxRatio ? boxRatio/ratio*100 : 100;
-  return `<div class="title-fallback" aria-hidden="true">${titleLine(c, 1, 62, 7.8)}${titleLine(c, 2, 62, 8)}</div><div class="title-print" style="width:${width}%;height:${height}%" role="img" aria-label="${esc(c.name)}"><img src="${artSrc(t.asset)}" alt="" decoding="async" style="width:${iw/w*100}%;height:${ih/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%"></div>`;
+  return `<div class="title-fallback" aria-hidden="true">${titleLine(c, 1, firstWidth, Math.min(7.8,cap))}${titleLine(c, 2, secondWidth, cap)}</div><div class="title-print" style="width:${width}%;height:${height}%" role="img" aria-label="${esc(c.name)}"><img src="${artSrc(t.asset)}" alt="" decoding="async" style="width:${iw/w*100}%;height:${ih/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%"></div>`;
 }
 document.addEventListener('error', e => {
   const image = e.target, print = image.closest?.('.title-print');
@@ -2354,8 +2394,7 @@ function frontS3HTML(c, st, opt={}){
     <div class="t cat s3" style="${P(690,32,880,118)}">${esc(c.category)}</div>
     <div class="t icon s3" style="${P(880,36,966,114)}"><img src="art/icon_${c.trickType}.webp" alt="${TRICK_TYPES[c.trickType].label}"></div>
     <div class="t title s3" style="${P(92,148,936,278)}">
-      ${titleLine(c, 1, 76, 5.4)}
-      ${titleLine(c, 2, 78, 6.2)}
+      ${window.CQ_TITLE_ART?.[c.id] ? printedTitleHTML(c, 844/130, 76, 78, 6.2) : `${titleLine(c, 1, 76, 5.4)}${titleLine(c, 2, 78, 6.2)}`}
     </div>
     <div class="t quote s3 ${c.quote.length > 27 ? 'long' : ''}" style="${P(250,1206,782,1292)};${quoteStyle(c)}">“${quoteText(c)}”</div>
     <div class="t rar s3" style="${P(44,1322,346,1458)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:${c.rarity.length > 6 ? 3.3 : 4.2}cqw">${c.rarity.toUpperCase()}</span></div>
@@ -2378,10 +2417,19 @@ function comicCaptionHTML(c){
   const art = plate ? `<img class="s5-caption-art" src="${artSrc(plate.asset)}" alt="" style="width:${iw/w*100}%;height:${ih/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%">` : '';
   return `<div class="s5-caption caption-${kind}" style="${box}">${art}<div class="s5-caption-copy" style="font-size:${size}cqw">“${quoteText(c)}”</div></div>`;
 }
+function notebookTitleHTML(c,line){
+  const title=window.CQ_TITLE_ART?.[c.id], ink=title?.lines?.[line-1];
+  if(!ink) return titleLine(c,line,64,line===1?7.2:5.5);
+  const [x,y,w,h]=ink,[iw,ih]=title.size,boxRatio=670/60,ratio=w/h;
+  const width=ratio>=boxRatio?100:ratio/boxRatio*100;
+  const height=ratio>=boxRatio?boxRatio/ratio*100:100;
+  const label=line===1?c.l1:c.l2;
+  return `<div class="title-fallback" aria-hidden="true">${titleLine(c,line,64,line===1?7.2:5.5)}</div><div class="title-print title-strip" role="img" aria-label="${esc(label)}" style="width:${width}%;height:${height}%"><img src="${artSrc(title.asset)}" alt="" decoding="async" style="width:${iw/w*100}%;height:${ih/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%"></div>`;
+}
 function frontS45HTML(c, st, opt={}){
   const lv = st.level, need = NEED[lv-1], s4 = c.series === 4;
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
-  const frameSrc = s4 ? 'art/frame_s4.webp' : 'art/frame_s5_v3.webp';
+  const frameSrc = s4 ? 'art/frame_s4_v2.webp' : 'art/frame_s5_v3.webp';
   const frameBreak = frameBreakCharacter(c, lv);
   const artBox = s4 ? P(174,415,891,1198) : P(88,480,936,1310);
   const art = artHTML(c, lv, {omitCharacter:!!frameBreak, omitMnemonicBadge:true});
@@ -2395,13 +2443,13 @@ function frontS45HTML(c, st, opt={}){
     <div class="t xpstrip s45 s${c.series} meta" style="${s4 ? P(307,77,696,139) : P(285,79,640,148)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
     <div class="t cat s45 s${c.series} meta" style="${s4 ? P(717,77,922,139) : P(686,79,946,148)}">${esc(c.category)}</div>
     
-    ${s4 ? `<div class="t title s45 s4 meta" style="${P(195,184,891,277)}">${titleLine(c, 1, 64, 7.2)}</div>
-      <div class="t title s45 s4 meta" style="${P(195,307,891,369)}">${titleLine(c, 2, 64, 5.5)}</div>`
+    ${s4 ? `<div class="t title s45 s4 meta" style="${P(205,197,875,257)}">${notebookTitleHTML(c,1)}</div>
+      <div class="t title s45 s4 meta" style="${P(205,292,875,352)}">${notebookTitleHTML(c,2)}</div>`
       : `<div class="t title s45 s5 meta" style="${P(140,203,890,423)}">${printedTitleHTML(c)}</div>`}
-    ${s4 ? `<div class="t quote s45 s4 meta" style="${P(236,1183,850,1275)};${quoteStyle(c)}">“${quoteText(c)}”</div>` : comicCaptionHTML(c)}
-    <div class="t rar s45 s${c.series} meta" style="${s4 ? P(123,1321,358,1428) : P(82,1330,323,1450)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:calc(${raritySize}cqw*var(--fit,1))">${c.rarity.toUpperCase()}</span></div>
-    <div class="t set s45 s${c.series} meta" style="${s4 ? P(430,1321,686,1428) : P(383,1330,640,1450)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
-    <div class="t lvl s45 s${c.series} meta" style="${s4 ? P(758,1321,901,1428) : P(704,1330,942,1450)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
+    ${s4 ? `<div class="t quote s45 s4 meta" style="${P(230,1148,860,1236)};${quoteStyle(c)};--notebook-quote:${Math.min((window.CQ_CARD_TYPOGRAPHY?.[c.id]?.quoteLines?.length || 1)>1 ? 3.8 : 4.8,window.CQ_CARD_TYPOGRAPHY?.[c.id]?.quoteSize || 4)}cqw">“${quoteText(c)}”</div>` : comicCaptionHTML(c)}
+    <div class="t rar s45 s${c.series} meta" style="${s4 ? P(140,1318,345,1418) : P(82,1330,323,1450)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:calc(${raritySize}cqw*var(--fit,1))">${c.rarity.toUpperCase()}</span></div>
+    <div class="t set s45 s${c.series} meta" style="${s4 ? P(416,1318,675,1418) : P(383,1330,640,1450)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
+    <div class="t lvl s45 s${c.series} meta" style="${s4 ? P(737,1318,913,1418) : P(704,1330,942,1450)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
 }
 function frontHTML(c, st, opt={}){
@@ -2425,8 +2473,7 @@ function frontHTML(c, st, opt={}){
     <div class="t cat" style="${P(502,62,856,144)}">${esc(c.category)}</div>
     <div class="t icon" style="${P(862,62,958,156)}">${c.trickType ? `<img src="art/icon_${c.trickType}.webp" alt="${TRICK_TYPES[c.trickType].label}">` : ICON[c.icon]}</div>
     <div class="t title" style="${P(104,176,922,434)}">
-      ${titleLine(c, 1, 74, 12.5)}
-      ${titleLine(c, 2, 52, 12.5)}
+      ${window.CQ_TITLE_ART?.[c.id] ? printedTitleHTML(c, 818/258, 74, 52, 12.5) : `${titleLine(c, 1, 74, 12.5)}${titleLine(c, 2, 52, 12.5)}`}
     </div>
     <div class="t quote" style="${P(246,1092,782,1262)};${quoteStyle(c)}">“${quoteText(c)}”</div>
     <div class="t rar" style="${P(82,1290,312,1448)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:${c.rarity.length > 6 ? 3.3 : 4.2}cqw">${c.rarity.toUpperCase()}</span></div>
@@ -2460,7 +2507,7 @@ function cardEl(c, st, opt={}, extraClass=''){
   const tier = cold ? '' : glowTier(c, st);
   const charged = tier && tier !== 'max' && !st.mastered && st.xp / NEED[st.level-1] >= .7;
   const rings = tier ? `<div class="ring soft"></div><div class="ring"></div>` : '';
-  return `<div class="card series${c.series || 1} lv${st.level} ${c.trickType?'special':''} ${cold?'cold':''} ${tier?'tier-'+tier:''} ${charged?'charged':''} ${extraClass}" data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${rings}${tier==='max'?'<div class="gloss"></div>':''}${frontHTML(c, st, opt)}${frostHTML(c, st, now)}</div>`;
+  return `<div class="card series${c.series || 1} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} lv${st.level} ${c.trickType?'special':''} ${cold?'cold':''} ${tier?'tier-'+tier:''} ${charged?'charged':''} ${extraClass}" data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${rings}${tier==='max'?'<div class="gloss"></div>':''}${frontHTML(c, st, opt)}${frostHTML(c, st, now)}</div>`;
 }
 
 /* The bracket labels (XP, category, card set) are grown to the largest size that fits their painted bracket,
@@ -2998,7 +3045,11 @@ const stickerArtSrc = id => ['summons','motion'].includes(id) ? artSrc('characte
 const packArtFor = cards => { const series = Math.max(1, ...cards.map(c => c && Number(c.series) || 1)); return artSrc(series === 1 ? 'pack' : `pack_s${series}`); };
 const nextPackArt = () => nextPackArtSrc();   // the wrapper of the series the next free pack comes from
 const hintCosts = () => !!(sess && sess.hint && !sess.freeHint);   // a free-hint boost makes the hint cost nothing
-const backSrc = () => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : 'art/cardback.webp';   // the card back in use
+const backSrc = c => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : c?.series === 3 ? 'art/back_s3_archive_v1.webp' : 'art/cardback.webp';
+function cardReverseHTML(c){
+  const themed = c?.series === 3 && !(S.styles && S.styles.back);
+  return `<img class="cbackimg" src="${backSrc(c)}" alt="${themed ? 'Series 3 court memory card back' : 'Card back'}">${themed ? '<svg class="reverse-labels" viewBox="0 0 1024 1536" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"><text x="512" y="245" text-anchor="middle" fill="#26221a" font-family="Bangers, sans-serif" font-size="88" letter-spacing="4">COURT MEMORY</text><text x="512" y="1247" text-anchor="middle" fill="#fff0ce" font-family="Bangers, sans-serif" font-size="62" letter-spacing="5">SERIES 3</text></svg>' : ''}`;
+}   // the card back in use
 /* A card's equipped style: a bought frame (Series 1/2 only) and holo foil. */
 const styleFrame = c => { const e = S.styles && S.styles.cards[c.id] && S.styles.cards[c.id].eq; return e && e.frame && ![3,4,5].includes(c.series) ? artSrc('frame_' + e.frame) : ''; };
 const holoHTML = c => { const e = S.styles && S.styles.cards[c.id] && S.styles.cards[c.id].eq; return e && e.foil ? `<div class="holo" style="background-image:url(${artSrc('foil_texture')})"></div><div class="foil"></div>` : ''; };
@@ -3200,7 +3251,7 @@ const SCREENS = {
           ${hasRule ? `<button class="cd-qbtn" data-act="cd-jump" data-id="${c.id}">${ICO('read')} ${c.source ? 'Case File' : 'The Trick'}</button>` : ''}
           ${cardVideoButtonHTML(c) ? videoButtonHTML(cardVideo(c), '', c.id, 'cd-qbtn vid', 'Watch') : ''}
         </div>` : ''}
-        <div class="cd-top"><div class="cd-card" data-act="cd-flip" aria-label="Tap to flip the card">${cardEl(c, shown)}<div class="cd-back"><img src="${backSrc()}" alt="Card back"></div></div>
+        <div class="cd-top"><div class="cd-card" data-act="cd-flip" aria-label="Tap to flip the card">${cardEl(c, shown)}<div class="cd-back">${cardReverseHTML(c)}</div></div>
           <div class="stage-dots">${Array.from({length:maxL(c)}, (_, i) => i + 1).map(l => `<button data-act="stage" data-l="${l}" class="${l === pv ? 'cur' : ''} ${l > st.level ? 'lk' : ''}" ${l > st.level ? 'disabled aria-label="Locked"' : `aria-label="Level ${l} art"`}>${l > st.level ? ICO('lock') : l}</button>`).join('')}</div>
           ${pv !== st.level ? `<p class="preview-note">Previewing Level ${pv} art</p>` : ''}
         </div>
@@ -3491,14 +3542,13 @@ function paintStudy(anim){
     ? `<b>${ICO('lock')} LEVEL ${lv+1} UNLOCKS:</b><span>• Harder questions</span><span>• +${REWARD[lv]} XP per answer</span><span>• New card art</span>`
     : `<b>${ICO('mastered')} MASTERY:</b><span>• Gold MASTERED stamp</span><span>• Bragging rights</span><span>• Final lore line</span>`;
   const back = document.getElementById('back');
-  back.className = 'card' + (anim ? ' fade-swap' : '');
+  back.className = 'card' + (c.series === 3 ? ' s3-study' : '') + (anim ? ' fade-swap' : '');
   back.innerHTML = `
     <div class="bgs t"></div><div class="bgs m"></div><div class="bgs b"></div>
     <div class="t bnum" style="${PB(62,62,228,152)}">${c.num}</div>
     <div class="t brar" style="${PB(72,158,228,220)}">${c.rarity.toUpperCase()}</div>
     <div class="t title" style="${PB(262,72,772,262)}">
-      ${titleLine(c, 1, 46, 8.2)}
-      ${titleLine(c, 2, 33, 8.6)}</div>
+      ${c.series === 3 ? printedTitleHTML(c, 510/190, 46, 33, 8.6) : `${titleLine(c, 1, 46, 8.2)}${titleLine(c, 2, 33, 8.6)}`}</div>
     <div class="t bcat" style="${PB(794,60,968,168)}">${esc(c.category)}</div>
     <div class="t icon" style="${PB(836,168,950,270)}">${ICON[c.icon]}</div>
     <div class="t lvtag" style="${PB(66,284,328,392)}">LEVEL ${lv}</div>
@@ -3946,7 +3996,7 @@ function openPack(opts = {}){
         <span class="pk-cut" style="top:${TEAR_Y}%"></span>${label}
       </button>
       <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
-        <div class="pk-inner"><div class="pk-face pk-back"><img class="cbackimg" src="${backSrc()}" alt="Card back"></div>
+        <div class="pk-inner"><div class="pk-face pk-back">${cardReverseHTML(p.c)}</div>
         <div class="pk-face pk-front">${cardEl(p.c, p.st)}</div></div>
         <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? ICO('memory') + ' MEMORY TRICK!' : 'NEW!') : `DUPLICATE · +${p.coins} ${COIN}`}</span>
       </button>`).join('')}</div>
@@ -4369,7 +4419,7 @@ window.addEventListener('cq-cloud', e => {
   if (nav.tab === 'profile') refresh();
 });
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.
-['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_s4.webp','art/frame_s5_v3.webp','art/caption_s5_short.webp','art/caption_s5_medium.webp','art/caption_s5_long.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/answer_button.webp']
+['art/back_s3_archive_v1.webp','art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_s4_v2.webp','art/frame_s5_v3.webp','art/caption_s5_short.webp','art/caption_s5_medium.webp','art/caption_s5_long.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/answer_button.webp']
   .forEach(src => { const i = new Image(); i.src = src; if (i.decode) i.decode().catch(() => {}); });
 </script>
 </body>

@@ -43,3 +43,7 @@ against the official guide or the statute.
 ## Expanded quick references (2026-10-03)
 
 The owner supplied 63 CPL entries and 6 Penal Law entries in `quick-reference/`. The original notes are retained as inputs. Verified, paraphrased summaries are being prepared separately; see `quick-reference/verification.md` for statute links and corrections. New card names, art, and quiz integration remain unpublished drafts pending design review. Exam-frequency claims and unconfirmed sample-question tags are not treated as verified facts.
+
+## Official statute text collection (2026-10-05)
+
+The downloaded official statute PDFs, readable text, exact exam scope, source URLs and Cornell reference copies moved to the private `docs/official-text/` folder on 2026-10-05 (see its README), so they are kept but not published with the site. These retrievals are source material, not reviewed lessons or approved exam content. The May 31, 2026 exam-cutoff versions still need verification.
