@@ -356,6 +356,15 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .card.series5 .t.rar,.card.series5 .t.lvl{-webkit-text-stroke:.4cqw #172b3c;text-shadow:.2cqw .25cqw 0 #172b3c;transform:none}
 .card.series5 .t.rar .gem{width:5.5cqw;height:5.5cqw;font-size:3.8cqw}
 .card.series5 .t.set{-webkit-text-stroke:0;text-shadow:none}
+.s5-caption{position:absolute;z-index:3;pointer-events:none}
+.s5-caption:not(:has(>.s5-caption-art)){background:#f0e4ca;border:.4cqw solid #172b3c}
+.s5-caption-art{position:absolute;max-width:none;object-fit:fill}
+.s5-caption-copy{position:absolute;inset:10% 8%;display:flex;align-items:center;justify-content:center;white-space:pre-line;text-align:center;font-family:"Bangers";line-height:1.04;letter-spacing:.025em;color:#172b3c}
+.card.series5 .t.rar{gap:.7cqw;justify-content:center;color:#172b3c;-webkit-text-stroke:.15cqw #fff8e6;text-shadow:none}
+.card.series5 .t.rar span[style]{font-size:4.4cqw!important}
+.card.series5 .t.rar .gem{width:5cqw;height:5cqw;font-size:3.6cqw;flex:none}
+.card.series5 .t.lvl{gap:.8cqw;justify-content:center;font-size:4.4cqw;line-height:1}
+.card.series5 .t.lvl .stars{font-size:4.2cqw;line-height:1;letter-spacing:.05em;-webkit-text-stroke:.25cqw #172b3c}
 .framebreak-character.series45.series4{left:13%;top:14%;width:74%;height:66%;transform:translate3d(0,0,0) rotate(-3deg) scale(1)}
 .framebreak-character.series45.series5{left:6%;top:12%;width:88%;height:74%;transform:translate3d(0,0,0) rotate(3deg) scale(1)}
 .card.series4 .stampimg.mastered,.card.series5 .stampimg.mastered{z-index:8}
@@ -1173,6 +1182,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="curriculum-pilot.js?v=9e0d75af"></script>
 <script src="card-typography.js?v=53a87104"></script>
 <script src="card-title-art.js?v=e81d0c7d"></script>
+<script src="card-caption-art.js?v=54f165ad"></script>
 <script src="binder.js?v=dcc2617f"></script>
 <script src="onboarding.js?v=22f27a83"></script>
 <script src="account.js?v=5042effc"></script>
@@ -2152,6 +2162,7 @@ function printedTitleHTML(c){
 }
 document.addEventListener('error', e => {
   const image = e.target, print = image.closest?.('.title-print');
+  if (image.classList?.contains('s5-caption-art')) { image.remove(); return; }
   if (!print) return;
   const parent = print.parentElement, fallback = parent.querySelector('.title-fallback');
   print.remove();
@@ -2352,10 +2363,25 @@ function frontS3HTML(c, st, opt={}){
     <div class="t lvl s3" style="${P(676,1322,982,1458)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
 }
+// Blank caption plates are independent from the frame; live words keep their own size.
+function comicCaptionHTML(c){
+  const typography = window.CQ_CARD_TYPOGRAPHY?.[c.id] || {};
+  const lines = typography.quoteLines || [c.quote];
+  const longest = Math.max(...lines.map(x=>x.length));
+  const automaticKind = lines.length === 1 ? 'short' : longest > 22 || lines.length > 2 ? 'long' : 'medium';
+  const kind = ['short','medium','long'].includes(typography.captionKind) ? typography.captionKind : automaticKind;
+  const plate = window.CQ_CAPTION_ART?.[kind];
+  const box = kind === 'long' ? P(135,1080,890,1303) : kind === 'short' ? P(170,1175,878,1298) : P(145,1133,890,1300);
+  const automaticSize = Math.min(kind === 'short' ? 6.2 : kind === 'long' ? 4.8 : 5.6, 125/Math.max(1,longest));
+  const size = Number.isFinite(typography.captionSize) ? Math.max(2.8, Math.min(8, typography.captionSize)) : automaticSize;
+  const [x,y,w,h] = plate?.ink || [0,0,1,1], [iw,ih] = plate?.size || [1,1];
+  const art = plate ? `<img class="s5-caption-art" src="${artSrc(plate.asset)}" alt="" style="width:${iw/w*100}%;height:${ih/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%">` : '';
+  return `<div class="s5-caption caption-${kind}" style="${box}">${art}<div class="s5-caption-copy" style="font-size:${size}cqw">“${quoteText(c)}”</div></div>`;
+}
 function frontS45HTML(c, st, opt={}){
   const lv = st.level, need = NEED[lv-1], s4 = c.series === 4;
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
-  const frameSrc = s4 ? 'art/frame_s4.webp' : 'art/frame_s5_v2.webp';
+  const frameSrc = s4 ? 'art/frame_s4.webp' : 'art/frame_s5_v3.webp';
   const frameBreak = frameBreakCharacter(c, lv);
   const artBox = s4 ? P(174,415,891,1198) : P(88,480,936,1310);
   const art = artHTML(c, lv, {omitCharacter:!!frameBreak, omitMnemonicBadge:true});
@@ -2372,10 +2398,10 @@ function frontS45HTML(c, st, opt={}){
     ${s4 ? `<div class="t title s45 s4 meta" style="${P(195,184,891,277)}">${titleLine(c, 1, 64, 7.2)}</div>
       <div class="t title s45 s4 meta" style="${P(195,307,891,369)}">${titleLine(c, 2, 64, 5.5)}</div>`
       : `<div class="t title s45 s5 meta" style="${P(140,203,890,423)}">${printedTitleHTML(c)}</div>`}
-    <div class="t quote s45 s${c.series} meta" style="${s4 ? P(236,1183,850,1275) : P(192,1156,854,1280)};${quoteStyle(c)}">“${quoteText(c)}”</div>
-    <div class="t rar s45 s${c.series} meta" style="${s4 ? P(123,1321,358,1428) : P(72,1352,338,1444)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:calc(${raritySize}cqw*var(--fit,1))">${c.rarity.toUpperCase()}</span></div>
-    <div class="t set s45 s${c.series} meta" style="${s4 ? P(430,1321,686,1428) : P(389,1352,655,1444)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
-    <div class="t lvl s45 s${c.series} meta" style="${s4 ? P(758,1321,901,1428) : P(707,1352,952,1444)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
+    ${s4 ? `<div class="t quote s45 s4 meta" style="${P(236,1183,850,1275)};${quoteStyle(c)}">“${quoteText(c)}”</div>` : comicCaptionHTML(c)}
+    <div class="t rar s45 s${c.series} meta" style="${s4 ? P(123,1321,358,1428) : P(82,1330,323,1450)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:calc(${raritySize}cqw*var(--fit,1))">${c.rarity.toUpperCase()}</span></div>
+    <div class="t set s45 s${c.series} meta" style="${s4 ? P(430,1321,686,1428) : P(383,1330,640,1450)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
+    <div class="t lvl s45 s${c.series} meta" style="${s4 ? P(758,1321,901,1428) : P(704,1330,942,1450)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
 }
 function frontHTML(c, st, opt={}){
@@ -4343,7 +4369,7 @@ window.addEventListener('cq-cloud', e => {
   if (nav.tab === 'profile') refresh();
 });
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.
-['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_s4.webp','art/frame_s5_v2.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/answer_button.webp']
+['art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_s4.webp','art/frame_s5_v3.webp','art/caption_s5_short.webp','art/caption_s5_medium.webp','art/caption_s5_long.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/answer_button.webp']
   .forEach(src => { const i = new Image(); i.src = src; if (i.decode) i.decode().catch(() => {}); });
 </script>
 </body>
