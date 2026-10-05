@@ -116,8 +116,51 @@ const LESSON_VIDEOS = {
     ],
     links:[['CPLR 5003', 'https://www.nysenate.gov/legislation/laws/CVP/5003'], ['CPLR 2222', 'https://www.nysenate.gov/legislation/laws/CVP/2222'], ['Rule 202.5-b', 'https://www.nycourts.gov/rules/rule/section-2025-b-electronic-filing-supreme-court-consensual-program']],
   },
+  svs: {
+    kicker:'CPLR 304(a) · 2301 · Difference Trick', title:'Summons vs. Subpoena', len:'1 min',
+    src:'media/card-summons-vs-subpoena.mp4?v=1', poster:'media/card-summons-vs-subpoena-poster.jpg?v=1',
+    note:'Study guide to CPLR 304(a) and 2301. The store example is fictional.',
+    transcript:[
+      'A summons and a subpoena look alike. Both are court papers, and both have Latin-sounding names. But they do very different jobs. Mixing them up is a classic exam trap.',
+      'A summons brings a defendant into a lawsuit. It tells the person that a case has started against them, and that they must respond or appear. The hook is: you\'re IN the case. If you ignore a summons, you risk a default judgment.',
+      'A subpoena orders a person to come to court and testify. That person is often a witness, not a party. The hook is: you\'re NEEDED for the case. If you ignore a subpoena, you risk contempt of court.',
+      'A subpoena duces tecum orders a person to bring papers or other things. Duces tecum means, bring with you.',
+      'Here is an example. Someone sues a store, so the store gets a summons. The store\'s bookkeeper is not a party, but must bring the ledgers to court. That takes a subpoena duces tecum.',
+      'So, summons: you\'re in. Subpoena: you\'re needed. The rules are CPLR section 304(a), and section 2301.',
+    ],
+    links:[['CPLR 304', 'https://www.nysenate.gov/legislation/laws/CVP/304'], ['CPLR 2301', 'https://www.nysenate.gov/legislation/laws/CVP/2301']],
+  },
+  whosigns: {
+    kicker:'FCA § 312.1 · Who Trick', title:'Who Signs the Summons?', len:'1 min',
+    src:'media/card-who-signs-the-summons.mp4?v=1', poster:'media/card-who-signs-the-summons-poster.jpg?v=1',
+    note:'Study guide to Family Court Act § 312.1 (summons on a juvenile delinquency petition).',
+    transcript:[
+      'When someone files a juvenile delinquency petition in Family Court, the court issues a summons. This card answers one question. Who signs that summons?',
+      'The Family Court Act, section 312.1, gives the answer. The summons must be signed by a judge, or by the clerk of the court.',
+      'The hook is: the court signs its own summons. The judge and the clerk both belong to the court. So both of them can sign.',
+      'Two other offices often come up in these cases. But the rule does not list them. The probation department cannot sign the summons. The presentment agency cannot sign it either.',
+      'On the exam, all four can appear in one list. Pick the judge and the clerk. Do not pick probation or the presentment agency.',
+      'Judge or clerk. The court signs. The rule is Family Court Act, section 312.1.',
+    ],
+    links:[['FCA § 312.1', 'https://www.nysenate.gov/legislation/laws/FCT/312.1']],
+  },
+  clock6090: {
+    kicker:'Uniform Rules § 205.43(b) · Clock Trick', title:'The 60 / 90 Clock', len:'1 min',
+    src:'media/card-the-60-90-clock.mp4?v=1', poster:'media/card-the-60-90-clock-poster.jpg?v=1',
+    note:'Study guide to Uniform Rules § 205.43(b). The dates are an example; day counts exclude the first day.',
+    transcript:[
+      'This card teaches two deadlines for one hearing. It is a hearing to decide if someone willfully violated a support order. That means they did not obey it on purpose. The hook is: start in 60, finish in 90.',
+      'The process starts with a summons. The summons gives a date. After service, the first clock counts from that date.',
+      'The judge or support magistrate must start the hearing within 60 days of the date in the summons. The 60 clock fires the starting gun.',
+      'Then a second clock starts, on the day that the hearing begins. The hearing must finish within 90 days of that day. The 90 clock waves the finish flag.',
+      'Here is an example. The summons gives March 1. The hearing must start within 60 days, so by April 30. Say it starts on April 10. Then it must end within 90 days of April 10, so by July 9.',
+      'The exam trap is the second starting point. The 90 days do not count from the summons date. They count from the day the hearing began. Two clocks, two different starting lines.',
+      'Start in 60. Finish in 90. The rule is Uniform Rules, section 205.43(b).',
+    ],
+    links:[],
+  },
 };
-const CARD_VIDEOS = { eightback:'eightback' };   // card id -> lesson
+const CARD_VIDEOS = { eightback:'eightback', svs:'svs', whosigns:'whosigns', clock6090:'clock6090' };   // card id -> lesson
 const cardVideo = c => (c && CARD_VIDEOS[c.id]) || null;
 
 /* The "Watch" button. `from` = 'intro' (with the card id) brings the person back to that card's intro. */
@@ -139,7 +182,7 @@ function openLessonVideo(key, from, cardId){
     <details class="video-transcript" id="lesson-transcript"><summary>Read the transcript</summary>
       ${v.transcript.map(p => `<p>${esc(p)}</p>`).join('')}
     </details>
-    <p class="video-sources">${v.links.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(' · ')}</p>
+    <p class="video-sources"${v.links.length ? '' : ' hidden'}>${v.links.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(' · ')}</p>
     ${from === 'intro' && cardId ? `<button class="sheet-cancel" data-act="intro-back" data-id="${cardId}">Back to the intro</button>` : `<button class="sheet-cancel" data-act="sheet-close">Close</button>`}
   </div>`);
 }
