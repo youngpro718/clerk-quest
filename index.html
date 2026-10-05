@@ -1316,6 +1316,7 @@ const commonCard = (o) => Object.assign({ cutout:true, maxLevel:3, category:'COU
 CARDS.push(
   commonCard({
     id:'motion', art:'character_motion', canonicalCharacter:true, bgs:{1:'art/bg_summons_1.webp'}, num:'#005', l1:'THE', l2:'MOTION', name:'Motion', emoji:'🏃',
+    source:{"cite": "CPLR 2211", "quote": "A motion is an application for an order. A motion on notice is made when a notice of the motion or an order to show cause is served.", "context": "A motion asks for an order. For a motion on notice, service of either the notice of motion or the order to show cause is the act that makes the motion.", "url": "https://legislation.nysenate.gov/pdf/laws/CVP2211", "from": "New York State Senate, official CPLR text retrieved October 4, 2026. May 31, 2026 exam-cutoff version and human review pending."},
     // Read-first intro (checked 2026-09-30 against CPLR 2211 on nysenate.gov)
     intro:{ idea:'A motion is an application for an order. A motion on notice is made when the notice of motion (or an order to show cause) is served.',
       example:'The defendant wants the case dismissed, so its lawyer serves a notice of motion on the plaintiff. The motion is made on the day that notice is served.',
@@ -1337,6 +1338,7 @@ CARDS.push(
   }),
   commonCard({
     id:'affidavit', art:'character_affidavit', canonicalCharacter:true, bgs:{1:'art/bg_adjournment_1.webp'}, num:'#006', l1:'THE', l2:'AFFIDAVIT', name:'Affidavit', emoji:'✋',
+    source:{"cite": "CPLR 2106(a) · affirmation substitute excerpt", "quote": "CPLR 2106(a), affirmation substitute: The statement of any person wherever made, subscribed and affirmed by that person to be true under the penalties of perjury, other than in a deposition, or an oath of office, or an oath required to be taken before a specified person other than a notary, may be used in an action in New York in lieu of and with the same force and effect as an affidavit, a certificate, a response to a notice to admit, an answer to interrogatories, a verification of a pleading, a bill of particulars and any other sworn statement.", "context": "CPLR 2106(a) describes an affirmation under the penalties of perjury that may be used in a New York action in lieu of, and with the same force and effect as, an affidavit and other sworn statements. This excerpt does not define an affidavit.", "url": "https://legislation.nysenate.gov/pdf/laws/CVP2106", "from": "New York State Senate, official CPLR text retrieved October 4, 2026. May 31, 2026 exam-cutoff version and human review pending."},
     // Read-first intro (checked 2026-09-30 against CPLR 2106 on nysenate.gov)
     intro:{ idea:'An affidavit is a written statement sworn to before someone who can give oaths, like a notary. In New York, a statement affirmed under penalty of perjury, in the required words, can be used in its place.',
       example:'Instead of swearing before a notary, Maria signs her statement with the CPLR 2106 affirmation ("I affirm … under the penalties of perjury …"). It has the same force as an affidavit.',
@@ -1400,6 +1402,7 @@ CARDS.push(
   }),
   commonCard({
     id:'judgment', art:'character_judgment', canonicalCharacter:true, bgs:{1:'art/bg_judgment_1.webp', 2:'art/bg_judgment_2.webp'}, num:'#009', l1:'THE', l2:'JUDGMENT', name:'Judgment', emoji:'⚖️',
+    source:{"cite": "CPLR 5011 · first two sentences", "quote": "A judgment is the determination of the rights of the parties in an action or special proceeding and may be either interlocutory or final. A judgment shall refer to, and state the result of, the verdict or decision, or recite the default upon which it is based.", "context": "An interlocutory judgment is an intermediate determination of the parties' rights; a final judgment finally determines those rights. The judgment must state the result of the verdict or decision, or recite the default on which it is based.", "url": "https://legislation.nysenate.gov/pdf/laws/CVP5011", "from": "New York State Senate, official CPLR text retrieved October 4, 2026. May 31, 2026 exam-cutoff version and human review pending."},
     // Read-first intro (checked 2026-09-30 against CPLR 5011 on nysenate.gov)
     intro:{ idea:'A judgment is the court\'s determination of the parties\' rights in an action or special proceeding. It can be interlocutory (partway through) or final.',
       example:'After trial, the court determines that the tenant owes the landlord $8,000. That determination of the parties\' rights is the judgment. A jury\'s verdict alone is not.',
@@ -2071,6 +2074,9 @@ const TRICK_TYPES = { chain:{label:'Chain Trick', blurb:'Teaches the order of st
 /* Case File reading questions, written per card. Each one is answered by the card's source rule text. */
 const READ_QS = {
   summons:["What is filed to commence an action?", "When is a notice needed with a summons?", "What starts the 20-day and 30-day appearance clocks?", "Under 308(2), when are mailing, proof filing and completion due?"],
+  motion:["What is a motion?", "When is a motion on notice made?", "Which two served papers can make a motion on notice?"],
+  affidavit:["How must the statement be subscribed and affirmed?", "What exceptions does the quoted sentence list?", "What may the affirmation be used in lieu of?"],
+  judgment:["What does a judgment determine?", "What are the two types of judgment named in the rule?", "What must a judgment state or recite?"],
   svs:["What does each document require?", "Can a party receive a subpoena?", "Is a default judgment automatic?", "Which kind of subpoena does the quoted contempt provision concern?"],
   whosigns:['Who may sign the summons? (There are two answers.)', 'Which court issues it?', 'What filing leads to it?'],
   clock6090:['How many days to start the hearing, and counted from what date?', 'How many days to finish it, counted from when?', 'Who holds the hearing?'],
