@@ -1214,7 +1214,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js?v=b8aec09d"></script>
-<script src="study.js?v=297f604c"></script>
+<script src="study.js?v=f82c3831"></script>
 <script src="economy.js?v=a7261374"></script>
 <script src="store.js?v=037a6033"></script>
 <script src="study/quick-reference/quick-reference.js?v=09020a13"></script>
@@ -3342,17 +3342,18 @@ const SCREENS = {
   },
 
   help(){
-    const item = (t, b) => `<details class="xrow"><summary><span class="xt">${t}</span>${chev}</summary><div>${b}</div></details>`;
+    // `v` = a How to Play video in LESSON_VIDEOS (study.js), shown under the topic's text
+    const item = (t, b, v) => `<details class="xrow"><summary><span class="xt">${t}</span>${chev}</summary><div>${b}${v ? videoButtonHTML('howto-' + v, null, null, 'explain-watch', 'Watch how it works') : ''}</div></details>`;
     return { title:'How to Play', body:`<div class="list">
-      ${item(ICO('play') + ' Studying', 'Each round is 5 questions from one card. Correct answers earn XP. A hint (Sidebar) halves the XP and coins for that answer. Nothing you already have is taken away. Wrong answers show the right answer and why.')}
-      ${item(ICO('star') + ' Levels & glows', 'Cards level up as you earn XP. Questions get harder and the art upgrades. Near the top level a neon ring races around the card; at the top it turns gold with a gloss.')}
-      ${item(ICO('trophy') + ' Quests', 'Three daily quests reset every midnight, and milestones reward long-term progress. Every reward is a card pack.')}
-      ${item(ICO('pack') + ' Packs', 'Your first finished round each day earns a pack of 3 cards, and quests can earn more. Later rounds that day still earn XP and coins. New cards join your collection; duplicates turn into coins.')}
-      ${item(ICO('thermo_snow') + ' Cold cases', 'Cards you haven\'t studied in a while go cold (2 days at Level 1, up to 21 days when mastered). One correct answer reopens the case for a +' + COLD_BONUS + ' XP bonus.')}
-      ${item(ICO('mastered') + ' Levels and Mastered', 'Right answers fill a card\'s XP bar. It levels up, and at the top it is Mastered. That is a game milestone for the card, not a promise about the exam. Cards you leave alone go cold, so come back to them.')}
-      ${item(ICO('memory') + ' Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).')}
-      ${item(ICO('series2') + ' Series', 'Series 2 cards use a new art style and have their own pack wrapper.')}
-      ${item(ICO('subject') + ' Official sources', 'Rule cards are built only from the rule text quoted in the NYS Unified Court System Court Clerk sample questions and cite their source. Other questions are sample content. Fact-check before relying on them.')}
+      ${item(ICO('play') + ' Studying', 'Each round is 5 questions from one card. Correct answers earn XP. A hint (Sidebar) halves the XP and coins for that answer. Nothing you already have is taken away. Wrong answers show the right answer and why.', 'studying')}
+      ${item(ICO('star') + ' Levels & glows', 'Cards level up as you earn XP. Questions get harder and the art upgrades. Near the top level a neon ring races around the card; at the top it turns gold with a gloss.', 'levels')}
+      ${item(ICO('trophy') + ' Quests', 'Three daily quests reset every midnight, and milestones reward long-term progress. Every reward is a card pack.', 'quests')}
+      ${item(ICO('pack') + ' Packs', 'Your first finished round each day earns a pack of 3 cards, and quests can earn more. Later rounds that day still earn XP and coins. New cards join your collection; duplicates turn into coins.', 'packs')}
+      ${item(ICO('thermo_snow') + ' Cold cases', 'Cards you haven\'t studied in a while go cold (2 days at Level 1, up to 21 days when mastered). One correct answer reopens the case for a +' + COLD_BONUS + ' XP bonus.', 'cold')}
+      ${item(ICO('mastered') + ' Levels and Mastered', 'Right answers fill a card\'s XP bar. It levels up, and at the top it is Mastered. That is a game milestone for the card, not a promise about the exam. Cards you leave alone go cold, so come back to them.', 'mastered')}
+      ${item(ICO('memory') + ' Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).', 'tricks')}
+      ${item(ICO('series2') + ' Series', 'Series 2 cards use a new art style and have their own pack wrapper.', 'series')}
+      ${item(ICO('subject') + ' Official sources', 'Rule cards are built only from the rule text quoted in the NYS Unified Court System Court Clerk sample questions and cite their source. Other questions are sample content. Fact-check before relying on them.', 'sources')}
       </div>` };
   },
 
