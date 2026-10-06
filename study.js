@@ -407,9 +407,24 @@ const LESSON_VIDEOS = {
     ],
     links:[],
   },
+  childvoice: {
+    kicker:'CPLR § 1201 · Chain Trick', title:'Who Speaks for the Child?', len:'1 min',
+    src:'media/card-who-speaks-for-the-child.mp4?v=1', poster:'media/card-who-speaks-for-the-child-poster.jpg?v=1',
+    note:'Study guide to CPLR § 1201. The 15-year-old is a fictional example.',
+    transcript:[
+      'A child can be a party in a court case. But a child does not appear alone. So who speaks for the child?',
+      'CPLR section 1201 sets a line. First, the guardian of the child\'s property. If there is none, a parent with legal custody. If there is none, another person or agency with legal custody.',
+      'The line is not a menu. The next adult speaks only when the one before does not exist.',
+      'The hook is: Good Parents Obey. G, P, O. Guardian, parent, other.',
+      'Here is an example. A 15-year-old has no guardian of her property. She lives with her mother, who has legal custody. So her mother speaks for her.',
+      'Now the special cases. If the court appoints a guardian ad litem, that person speaks, and the line is skipped. And a married child may appear by an adult spouse who lives with them.',
+      'Good Parents Obey. Go down the line, unless the court appoints a guardian ad litem. The rule is CPLR section 1201.',
+    ],
+    links:[['CPLR 1201', 'https://www.nysenate.gov/legislation/laws/CVP/1201']],
+  },
 };
 const CARD_VIDEOS = { eightback:'eightback', svs:'svs', whosigns:'whosigns', clock6090:'clock6090',
-  eightdays:'eightdays', sealed:'sealed', followpetitioner:'followpetitioner', amendonce:'amendonce', jurywaiver:'jurywaiver', interest:'interest', quash:'quash', bail:'bail', acd:'acd', military:'military' };   // card id -> lesson
+  eightdays:'eightdays', sealed:'sealed', followpetitioner:'followpetitioner', amendonce:'amendonce', jurywaiver:'jurywaiver', interest:'interest', quash:'quash', bail:'bail', acd:'acd', military:'military', childvoice:'childvoice' };   // card id -> lesson
 const cardVideo = c => (c && CARD_VIDEOS[c.id]) || null;
 
 /* The "Watch" button. `from` = 'intro' (with the card id) brings the person back to that card's intro. */
