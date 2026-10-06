@@ -65,8 +65,8 @@ const SLEEVES = [
   { id:'navy', name:'Navy Legal', price:120, size:[372, 487], win:[40, 40, 331, 437] },
   { id:'ledger', name:'Green Ledger', price:120, size:[369, 488], win:[51, 46, 319, 437] },
 ];
-const DECO = { stamp:{ list:STAMPS, owned:'stamps', label:'Stamp', none:'No stamp', art:id => `art/deco_stamp_${id}.png` },
-               sleeve:{ list:SLEEVES, owned:'sleeves', label:'Sleeve', none:'No sleeve', art:id => `art/deco_sleeve_${id}.png` } };
+const DECO = { stamp:{ list:STAMPS, owned:'stamps', label:'Stamp', none:'No stamp', art:id => `art/deco_stamp_${id}.webp` },
+               sleeve:{ list:SLEEVES, owned:'sleeves', label:'Sleeve', none:'No sleeve', art:id => `art/deco_sleeve_${id}.webp` } };
 const styles = () => { S.styles = S.styles || { cards:{}, backs:[], back:'' }; S.styles.stamps = S.styles.stamps || []; S.styles.sleeves = S.styles.sleeves || []; return S.styles; };
 const cardStyle = id => (styles().cards[id] = styles().cards[id] || { frames:[], foil:false, eq:{ frame:'', foil:false } });
 const framesAllowed = c => ![3,4,5].includes(c.series);   // store frames are shaped for the Series 1/2 layout
@@ -164,7 +164,7 @@ function storeHTML(){
     <div class="sec-h"><span>Series Packs</span></div><p class="st-note">Each pack holds cards from its own series, and some hold a trick card or a sticker. Duplicates turn into Copies and a few coins.</p>
     <div class="st-grid">${packs}</div>
     <div class="sec-h"><span>Copies</span></div><p class="st-note">Collect ${COPIES_TO_CERTIFY} Copies to certify any card you own. Duplicate cards give Copies too. You have ${copies()}.</p>
-    <div class="list"><button class="row" data-act="st-copy"><span class="st-bimg"><img src="art/copy.png" alt=""></span>
+    <div class="list"><button class="row" data-act="st-copy"><span class="st-bimg"><img src="art/copy.webp" alt=""></span>
       <span class="row-main"><b>1 Copy</b><small>${copyBuysLeft() ? `${copyBuysLeft()} left this week` : 'Sold out until Monday'}</small></span>${copyBuysLeft() ? priceTag(PRICE.copy, coins >= PRICE.copy) : ''}</button></div>
     <div class="sec-h"><span>Complete Decks</span></div><p class="st-note">Every card in a series, all at once, for anyone who wants to start studying without waiting on packs. You only pay for cards you don't have yet.</p>
     <div class="st-grid">${decks}</div>
@@ -176,8 +176,8 @@ function storeHTML(){
     <div class="sec-h"><span>Card Styles</span></div><p class="st-note">Frames go on one card. Stamps and sleeves are bought once, then go on as many cards as you like. Or open any card and tap ••• → Card Style.</p>
     <div class="list">
       <button class="row" data-act="sty-pick" data-set="frame"><span class="st-bimg"><img src="${artSrc('frame_marble')}" alt=""></span><span class="row-main"><b>Frames</b><small>Marble, Night Court, Old Parchment · 200 each</small></span>${chev}</button>
-      <button class="row" data-act="sty-pick" data-set="stamp"><span class="st-bimg"><img src="art/deco_stamp_ordered.png" alt=""></span><span class="row-main"><b>Rubber Stamps</b><small>Received, Urgent, So Ordered and more · 60 each</small></span>${chev}</button>
-      <button class="row" data-act="sty-pick" data-set="sleeve"><span class="st-bimg"><img src="art/deco_sleeve_manila.png" alt=""></span><span class="row-main"><b>Card Sleeves</b><small>Manila, Red Tape, Navy, Ledger · 120 each</small></span>${chev}</button>
+      <button class="row" data-act="sty-pick" data-set="stamp"><span class="st-bimg"><img src="art/deco_stamp_ordered.webp" alt=""></span><span class="row-main"><b>Rubber Stamps</b><small>Received, Urgent, So Ordered and more · 60 each</small></span>${chev}</button>
+      <button class="row" data-act="sty-pick" data-set="sleeve"><span class="st-bimg"><img src="art/deco_sleeve_manila.webp" alt=""></span><span class="row-main"><b>Card Sleeves</b><small>Manila, Red Tape, Navy, Ledger · 120 each</small></span>${chev}</button>
     </div>
     <div class="sec-h"><span>Card Backs</span></div><p class="st-note">One back for your whole collection. See it in packs, or tap a card on its page to flip it. With Classic, each series shows its own back, and getting every card in a series to Certified earns that series an exclusive back that can't be bought.</p>
     ${backStyleHTML()}
@@ -217,7 +217,7 @@ function packSheet(n){
 const copyBuysLeft = () => { const w = S.copyBuys; return !w || w.week !== weekKey() ? PRICE.copiesPerWeek : Math.max(0, PRICE.copiesPerWeek - w.n); };
 function copySheet(){
   const left = copyBuysLeft();
-  buySheet({ title:'1 Copy', art:`<span class="st-art boost"><img src="art/copy.png" alt=""></span>`, price:PRICE.copy, act:'st-buy-copy', set:'copy', locked:!left, lockedText:'NO MORE COPIES THIS WEEK',
+  buySheet({ title:'1 Copy', art:`<span class="st-art boost"><img src="art/copy.webp" alt=""></span>`, price:PRICE.copy, act:'st-buy-copy', set:'copy', locked:!left, lockedText:'NO MORE COPIES THIS WEEK',
     note:`You have ${copies()} of the ${COPIES_TO_CERTIFY} Copies needed to certify a card. ${left ? `${left} of ${PRICE.copiesPerWeek} left to buy this week.` : 'You can buy more on Monday.'}` });
 }
 function buyCopy(){

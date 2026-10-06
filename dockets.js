@@ -270,7 +270,7 @@ function docketsTabHTML(){
 /* How a won reward card looks: acing the one-chance quiz makes it the Super Rare (full color, holo), even from black and white */
 const rwLook = r => r.superRare ? 'rare super' : r.reward;
 const rwLabel = r => r.superRare ? 'Gold Seal' : r.reward === 'rare' ? 'Certified · full color' : 'Filed · black and white';   // Landmark cards use the card versions
-const rwSeal = r => r.superRare ? '<img class="rw-seal gold" src="art/ver_gold_seal.png" alt="Gold Seal">' : r.reward === 'rare' ? '<img class="rw-seal" src="art/ver_certified_seal.png" alt="Certified seal">' : '';
+const rwSeal = r => r.superRare ? '<img class="rw-seal gold" src="art/ver_gold_seal.webp" alt="Gold Seal">' : r.reward === 'rare' ? '<img class="rw-seal" src="art/ver_certified_seal.webp" alt="Certified seal">' : '';
 function rewardThumb(r){
   const d = docketDef(r.id), rw = DOCKET_REWARDS[d.reward];
   return `<button class="dk-rw ${rwLook(r)}" data-act="dk-reward" data-id="${r.id}"><span class="rw-card ${rwLook(r)}"><img src="${artSrc(rw.front)}" alt="${esc(rw.name)}">${r.superRare ? '<i class="rw-holo"></i>' : ''}${rwSeal(r)}</span>

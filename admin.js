@@ -338,7 +338,7 @@ const ADMIN_CSS = `
 .adm-lvs button.on{background:var(--mustard);color:var(--ink)}
 .adm-modes{display:flex;gap:6px;overflow-x:auto;margin:0 0 10px;padding-bottom:2px;scrollbar-width:none}.adm-modes button{flex:none;min-height:32px;padding:0 11px;border:1px solid var(--line);border-radius:16px;background:transparent;color:var(--sub);font:14px var(--ui)}.adm-modes button.on{background:var(--paper);color:var(--ink);border-color:var(--paper)}
 .adm-card{width:66%;margin:0 auto 8px}
-.adm-card.compact{width:48%;max-width:190px}.adm-force-holo .art-win:after{content:"";position:absolute;inset:0;z-index:8;background:url(art/foil_texture.png) center/cover;mix-blend-mode:screen;opacity:.58;animation:holo 4s linear infinite}
+.adm-card.compact{width:48%;max-width:190px}.adm-force-holo .art-win:after{content:"";position:absolute;inset:0;z-index:8;background:url(art/foil_texture.webp) center/cover;mix-blend-mode:screen;opacity:.58;animation:holo 4s linear infinite}
 .adm-rule{margin:0 0 14px} .adm-trick{margin:0 0 14px;text-align:left} .adm-trick ul{margin:6px 0 10px;padding-left:20px}
 .adm-q{margin:0 0 10px;padding:12px 14px;border-radius:14px;background:var(--bg2)}
 .adm-qt{margin:0 0 8px;font:19px/1.3 "Patrick Hand"}

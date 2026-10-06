@@ -13,9 +13,9 @@ const hearingAdjourned = st => !!(st && st.hearing === todayKey());
 /* The box on the card page: locked until mastered, then Begin (or Adjourned until tomorrow). Gold Seal cards show nothing. */
 function hearingBoxHTML(c, st){
   if (!st.owned || verOf(st) === 'gold') return '';
-  if (!st.mastered) return `<div class="hearbox locked"><img src="art/ver_gold_seal.png" alt=""><span><b>Final Hearing</b><small>Master this card to unlock its Final Hearing and earn the Gold Seal.</small></span></div>`;
+  if (!st.mastered) return `<div class="hearbox locked"><img src="art/ver_gold_seal.webp" alt=""><span><b>Final Hearing</b><small>Master this card to unlock its Final Hearing and earn the Gold Seal.</small></span></div>`;
   const adj = hearingAdjourned(st);
-  return `<div class="hearbox"><img src="art/ver_gold_seal.png" alt=""><span><b>Final Hearing</b><small>${adj ? 'Adjourned. Your next hearing opens tomorrow.' : `${HEARING_QUESTIONS} questions, no hints, no misses. Pass to earn the Gold Seal.`}</small></span>
+  return `<div class="hearbox"><img src="art/ver_gold_seal.webp" alt=""><span><b>Final Hearing</b><small>${adj ? 'Adjourned. Your next hearing opens tomorrow.' : `${HEARING_QUESTIONS} questions, no hints, no misses. Pass to earn the Gold Seal.`}</small></span>
     <button class="hearbtn" data-act="hearing-start" data-id="${c.id}" ${adj ? 'disabled' : ''}>${adj ? 'Tomorrow' : 'Begin'}</button></div>`;
 }
 
@@ -61,10 +61,10 @@ function hearingVerdict(passed, missed){
   save(); refresh();
   ov.querySelector('.hr-count').textContent = '';
   ov.querySelector('.hr-body').innerHTML = passed
-    ? `<div class="hr-verdict"><div class="hr-card">${cardEl(c, st)}<img class="hr-stamp sealed" src="art/stamp_sealed.png" alt="Sealed"></div>
+    ? `<div class="hr-verdict"><div class="hr-card">${cardEl(c, st)}<img class="hr-stamp sealed" src="art/stamp_sealed.webp" alt="Sealed"></div>
         <h2>Gold Seal!</h2><p>You answered all ${hearing.qs.length} without a miss. ${esc(c.name)} now carries the Gold Seal.</p>
         <button class="btn-big gold" data-act="hearing-close">CLOSE THE HEARING</button></div>`
-    : `<div class="hr-verdict"><img class="hr-stamp adjourned" src="art/stamp_adjourned.png" alt="Adjourned, try again tomorrow">
+    : `<div class="hr-verdict"><img class="hr-stamp adjourned" src="art/stamp_adjourned.webp" alt="Adjourned, try again tomorrow">
         <p class="hr-miss"><b>The answer was:</b> ${esc(missed.a)}</p>${missed.w ? `<p>${esc(missed.w)}</p>` : ''}
         <p>Study the card and come back tomorrow. You need all ${hearing.qs.length} right.</p>
         <button class="btn-big gold" data-act="hearing-close">BACK TO THE CARD</button></div>`;
@@ -91,7 +91,7 @@ const HEARING_CSS = `
 .hearbtn{flex:none;min-height:40px;padding:0 16px;border:2px solid var(--ink);border-radius:20px;background:var(--mustard);color:var(--ink);font:400 18px "Bangers";letter-spacing:.05em}
 .hearbtn:disabled{opacity:.45}
 .hearing{position:fixed;inset:0;z-index:75;background:#120e0a;isolation:isolate;display:flex;flex-direction:column;color:var(--paper);overflow:auto;animation:fadein .25s both}
-.hr-bg{position:fixed;inset:0;z-index:-1;background:linear-gradient(rgba(16,12,8,.55),rgba(16,12,8,.85)),url(art/hearing_bg.jpg) center/cover}
+.hr-bg{position:fixed;inset:0;z-index:-1;background:linear-gradient(rgba(16,12,8,.55),rgba(16,12,8,.85)),url(art/hearing_bg.webp) center/cover}
 .hr-top{display:flex;align-items:center;gap:10px;padding:max(12px,env(safe-area-inset-top)) 14px 6px}
 .hr-x{width:40px;height:40px;border:0;border-radius:50%;background:rgba(0,0,0,.45);color:var(--paper);font-size:18px}
 .hr-title{flex:1;text-align:center;font:400 26px/1 "Bangers";letter-spacing:.08em;color:var(--mustard);text-shadow:0 2px 0 #000}

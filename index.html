@@ -712,7 +712,7 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 #back.question_s3{--qpanel:url(art/question_s3_question.svg);--tpanel:url(art/question_s3_table.svg);--epanel:url(art/question_s3_explanation.svg);--apanel:url(art/question_s3_answer.svg);--hpanel:url(art/question_s3_hint.svg);--ppanel:url(art/question_s3_points.svg);--xpanel:url(art/question_s3_progress.svg);--qaccent:#123d43;--qlabel:#8c2624;--qpaper:#f6e7c8}
 #back.question_s4{--qpanel:url(art/question_s4_question.svg);--tpanel:url(art/question_s4_table.svg);--epanel:url(art/question_s4_explanation.svg);--apanel:url(art/question_s4_answer.svg);--hpanel:url(art/question_s4_hint.svg);--ppanel:url(art/question_s4_points.svg);--xpanel:url(art/question_s4_progress.svg);--qaccent:#171719;--qlabel:#cf3b2a;--qpaper:#fbf6e8}
 #back.question_s5{--qpanel:url(art/question_s5_question.svg);--tpanel:url(art/question_s5_table.svg);--epanel:url(art/question_s5_explanation.svg);--apanel:url(art/question_s5_answer.svg);--hpanel:url(art/question_s5_hint.svg);--ppanel:url(art/question_s5_points.svg);--xpanel:url(art/question_s5_progress.svg);--qaccent:#243b5c;--qlabel:#b93835;--qpaper:#fff5d9}
-#back[class*="question_s"] .qtext{background:var(--qpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:1.7cqw 2.4cqw}
+#back[class*="question_s"] .qtext{background:var(--qpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:2.6cqw 3cqw;line-height:1.06}   /* padding lines the text up with the panel art's inner frame */
 #back[class*="question_s"] .rec{background:var(--tpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:3cqw 3cqw 2cqw}
 #back[class*="question_s"] .ans{background-color:transparent;background-image:var(--apanel);background-position:center;background-size:100% 100%;background-repeat:no-repeat;border:0;border-radius:0;box-shadow:0 .65cqw 0 rgba(0,0,0,.28)}
 #back[class*="question_s"] .ans .L{background:var(--qaccent);border-right:.45cqw solid var(--qlabel);color:#fff8e8}
@@ -1286,7 +1286,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="cloud-sync.js?v=b8aec09d"></script>
 <script src="study.js?v=70f30b50"></script>
 <script src="economy.js?v=2aa30748"></script>
-<script src="store.js?v=445a4a57"></script>
+<script src="store.js?v=cf53bc01"></script>
 <script src="study/quick-reference/quick-reference.js?v=09020a13"></script>
 <script src="study/quick-reference/series-lessons.js?v=691837ab"></script>
 <script src="curriculum-pilot.js?v=9e0d75af"></script>
@@ -1296,10 +1296,10 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="binder.js?v=dcc2617f"></script>
 <script src="onboarding.js?v=22f27a83"></script>
 <script src="account.js?v=5042effc"></script>
-<script src="admin.js?v=421218f4"></script>
+<script src="admin.js?v=c099c17f"></script>
 <script src="stickers.js?v=70340509"></script>
-<script src="dockets.js?v=a213ecd8"></script>
-<script src="hearing.js?v=98989009"></script>
+<script src="dockets.js?v=32fec8b7"></script>
+<script src="hearing.js?v=a7e3ecd9"></script>
 <script src="today.js?v=8dfb2c73"></script>
 <script src="exam.js?v=5c38761d"></script>
 <script src="exam-questions.js?v=79574fc7"></script>
@@ -3733,7 +3733,7 @@ function paintStudy(anim){
     const len = q.q.length;
     const fs = len > 100 ? 4.4 : 5;   // never smaller; longer text opens the full-text sheet
     const ys = [596,758,920,1082];   // tall, well-spaced answers
-    mid = `<div class="t qtext" style="${PB(96,386,934,566)};font-size:${fs}cqw"><span class="qt">${esc(q.q)}</span></div>
+    mid = `<div class="t qtext" style="${PB(96,386,934,588)};font-size:${fs}cqw"><span class="qt">${esc(q.q)}</span></div>
       ${q.opts.map((o,i)=>{ let cls=''; if (ans){ if (o===q.a) cls='right'; else if (o===ans.choice) cls='wrong'; }
         const afs = o.length > 22 ? 4 : o.length > 16 ? 4.3 : 5;   // never smaller; longer text opens the full-text sheet
         const wrap = o.length > 22 ? 'wrap' : '';
@@ -3783,10 +3783,13 @@ function paintStudy(anim){
   let anyCut = false, qCut = false;
   const qbox = back.querySelector('.qtext');
   if (qbox && q.type !== 'table') {
-    const qs = qbox.querySelector('.qt');
-    if (qs.scrollHeight > qbox.clientHeight + 2) {
+    const qs = qbox.querySelector('.qt'), qcs = getComputedStyle(qbox);
+    const room = () => qbox.clientHeight - parseFloat(qcs.paddingTop) - parseFloat(qcs.paddingBottom);   // the writing area inside the padding
+    let qfs = parseFloat(qbox.style.fontSize);
+    while (qs.scrollHeight > room() + 1 && qfs > 4.4) { qfs = Math.max(4.4, qfs - .1); qbox.style.fontSize = qfs.toFixed(2) + 'cqw'; }   // a third line shrinks a little, never below the long-question size
+    if (qs.scrollHeight > room() + 1) {
       qCut = true;
-      qs.style.webkitLineClamp = Math.max(1, Math.floor(qbox.clientHeight / parseFloat(getComputedStyle(qs).lineHeight)));
+      qs.style.webkitLineClamp = Math.max(1, Math.floor((room() + 1) / parseFloat(getComputedStyle(qs).lineHeight)));
       qbox.classList.add('cut'); qbox.insertAdjacentHTML('beforeend', '<span class="more">more</span>');
       if (!ans) qbox.dataset.act = 'ans-sheet';
     }
