@@ -81,6 +81,9 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none}
 .art-bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.9) saturate(.92)}
 .art-vig{position:absolute;inset:0;background:radial-gradient(ellipse 70% 65% at 50% 55%, transparent 55%, rgba(20,12,4,.45) 100%)}
 .art-img.cut{inset:1% 2% 12% 2%;width:96%;height:87%;object-fit:contain;z-index:1;filter:drop-shadow(0 1.2cqw 0 rgba(0,0,0,.25))}
+.card.illustrated-mnemonic .art-bgimg{filter:brightness(.72) saturate(.68) contrast(.92)}
+.card.illustrated-mnemonic .art-vig{background:radial-gradient(ellipse 64% 62% at 50% 51%,transparent 38%,rgba(20,12,4,.62) 100%)}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 /* Marvel Snap-style breakout: the character's feet stay in the picture window and only its head, arms and props
    break past the frame. The card's lettering sits on top of it, and its shadow falls opposite the tilt. */
 .framebreak-character{left:4%;top:13%;width:92%;height:67.5%;object-fit:contain;object-position:50% 100%;z-index:7;transform:translate3d(0,0,0) rotate(0deg) scale(1);transform-origin:50% 100%;pointer-events:none;
@@ -1128,7 +1131,7 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .summary b{display:block;font-weight:400;font-size:19px}
 .summary small{display:block;font:13px var(--ui);color:var(--sub)}
 .cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px}
-.cgrid.two{grid-template-columns:repeat(2,1fr)}
+.cgrid.two{grid-template-columns:repeat(2,minmax(0,220px));justify-content:center}
 @media (min-width:700px){.cgrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
 .gcard{background:none;border:0;padding:0}
 .gl small{display:block;text-align:center;font:13px var(--ui);color:var(--sub);margin-top:6px}
@@ -1339,7 +1342,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js?v=b8aec09d"></script>
-<script src="study.js?v=9a78b633"></script>
+<script src="study.js?v=c0c0a01c"></script>
 <script src="economy.js?v=8b2bf044"></script>
 <script src="store.js?v=cf53bc01"></script>
 <script src="study/quick-reference/quick-reference.js?v=09020a13"></script>
@@ -1351,7 +1354,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="binder.js?v=dcc2617f"></script>
 <script src="onboarding.js?v=22f27a83"></script>
 <script src="account.js?v=5042effc"></script>
-<script src="admin.js?v=c099c17f"></script>
+<script src="admin.js?v=0843a192"></script>
 <script src="stickers.js?v=70340509"></script>
 <script src="dockets.js?v=32fec8b7"></script>
 <script src="hearing.js?v=a7e3ecd9"></script>
@@ -1362,7 +1365,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="sticker3d.js?v=9a43370e"></script>
 <script src="questions.js?v=b59c89f2"></script>
 <script src="flair.js?v=be54d585"></script>
-<script>window.ART_MANIFEST = {"series4_case-starter": {"1": "art/series4_case-starter.webp"}, "s4_case_starter": {"1": "art/series4_case-starter.webp"}, "series4_clock-dodger": {"1": "art/series4_clock-dodger.webp"}, "s4_clock_dodger": {"1": "art/series4_clock-dodger.webp"}, "series4_exam-duo": {"1": "art/series4_exam-duo.webp"}, "s4_exam_duo": {"1": "art/series4_exam-duo.webp"}, "series4_jurisdiction-jet": {"1": "art/series4_jurisdiction-jet.webp"}, "s4_jurisdiction_jet": {"1": "art/series4_jurisdiction-jet.webp"}, "series4_jury-juggler": {"1": "art/series4_jury-juggler.webp"}, "s4_jury_juggler": {"1": "art/series4_jury-juggler.webp"}, "series4_note-ninja": {"1": "art/series4_note-ninja.webp"}, "s4_note_ninja": {"1": "art/series4_note-ninja.webp"}, "series4_plea-piper": {"1": "art/series4_plea-piper.webp"}, "s4_plea_piper": {"1": "art/series4_plea-piper.webp"}, "series4_proof-polly": {"1": "art/series4_proof-polly.webp"}, "s4_proof_polly": {"1": "art/series4_proof-polly.webp"}, "series4_sentence-sprint": {"1": "art/series4_sentence-sprint.webp"}, "s4_sentence_sprint": {"1": "art/series4_sentence-sprint.webp"}, "series4_trial-track": {"1": "art/series4_trial-track.webp"}, "s4_trial_track": {"1": "art/series4_trial-track.webp"}, "series4_verdict-vex": {"1": "art/series4_verdict-vex.webp"}, "s4_verdict_vex": {"1": "art/series4_verdict-vex.webp"}, "series4_warrant-walt": {"1": "art/series4_warrant-walt.webp"}, "s4_warrant_walt": {"1": "art/series4_warrant-walt.webp"}, "series5_captain-classify": {"1": "art/series5_captain-classify.webp"}, "s5_captain_classify": {"1": "art/series5_captain-classify.webp"}, "series5_class-shift": {"1": "art/series5_class-shift.webp"}, "s5_class_shift": {"1": "art/series5_class-shift.webp"}, "series5_double-gain": {"1": "art/series5_double-gain.webp"}, "s5_double_gain": {"1": "art/series5_double-gain.webp"}, "series5_felony-titan": {"1": "art/series5_felony-titan.webp"}, "s5_felony_titan": {"1": "art/series5_felony-titan.webp"}, "series5_minor-mischief": {"1": "art/series5_minor-mischief.webp"}, "s5_minor_mischief": {"1": "art/series5_minor-mischief.webp"}, "series5_offense-oracle": {"1": "art/series5_offense-oracle.webp"}, "s5_offense_oracle": {"1": "art/series5_offense-oracle.webp"}, "series5_split-verdict": {"1": "art/series5_split-verdict.webp"}, "s5_split_verdict": {"1": "art/series5_split-verdict.webp"}, "series5_the-aces": {"1": "art/series5_the-aces.webp"}, "s5_the_aces": {"1": "art/series5_the-aces.webp"}, "series5_the-fine-collector": {"1": "art/series5_the-fine-collector.webp"}, "s5_the_fine_collector": {"1": "art/series5_the-fine-collector.webp"}, "series5_the-many": {"1": "art/series5_the-many.webp"}, "s5_the_many": {"1": "art/series5_the-many.webp"}, "series5_triple-take": {"1": "art/series5_triple-take.webp"}, "s5_triple_take": {"1": "art/series5_triple-take.webp"}, "series5_vault-voltage": {"1": "art/series5_vault-voltage.webp"}, "s5_vault_voltage": {"1": "art/series5_vault-voltage.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "character_acd": {"1": "art/character_acd_1.webp"}, "character_adjournment": {"1": "art/character_adjournment_1.webp"}, "character_affidavit": {"1": "art/character_affidavit_1.webp"}, "character_appeal30": {"1": "art/character_appeal30_1.webp"}, "character_bail": {"1": "art/character_bail_1.webp"}, "character_calendarcall": {"1": "art/character_calendarcall_1.webp"}, "character_eightback": {"1": "art/character_eightback_1.webp"}, "character_freeze": {"1": "art/character_freeze_1.webp"}, "character_interest": {"1": "art/character_interest_1.webp"}, "character_judgment": {"1": "art/character_judgment_1.webp"}, "character_jurywaiver": {"1": "art/character_jurywaiver_1.webp"}, "character_military": {"1": "art/character_military_1.webp"}, "character_motion": {"1": "art/character_motion_1.webp"}, "character_newtrial": {"1": "art/character_newtrial_1.webp"}, "character_quash": {"1": "art/character_quash_1.webp"}, "character_reargue": {"1": "art/character_reargue_1.webp"}, "character_renew": {"1": "art/character_renew_1.webp"}, "character_schoolnotice": {"1": "art/character_schoolnotice_1.webp"}, "character_sj120": {"1": "art/character_sj120_1.webp"}, "character_summons": {"1": "art/character_summons_1.webp"}, "character_undodefault": {"1": "art/character_undodefault_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
+<script>window.ART_MANIFEST = {"series4_case-starter": {"1": "art/series4_case-starter.webp"}, "s4_case_starter": {"1": "art/series4_case-starter.webp"}, "series4_clock-dodger": {"1": "art/series4_clock-dodger.webp"}, "s4_clock_dodger": {"1": "art/series4_clock-dodger.webp"}, "series4_exam-duo": {"1": "art/series4_exam-duo.webp"}, "s4_exam_duo": {"1": "art/series4_exam-duo.webp"}, "series4_jurisdiction-jet": {"1": "art/series4_jurisdiction-jet.webp"}, "s4_jurisdiction_jet": {"1": "art/series4_jurisdiction-jet.webp"}, "series4_jury-juggler": {"1": "art/series4_jury-juggler.webp"}, "s4_jury_juggler": {"1": "art/series4_jury-juggler.webp"}, "series4_note-ninja": {"1": "art/series4_note-ninja.webp"}, "s4_note_ninja": {"1": "art/series4_note-ninja.webp"}, "series4_plea-piper": {"1": "art/series4_plea-piper.webp"}, "s4_plea_piper": {"1": "art/series4_plea-piper.webp"}, "series4_proof-polly": {"1": "art/series4_proof-polly.webp"}, "s4_proof_polly": {"1": "art/series4_proof-polly.webp"}, "series4_sentence-sprint": {"1": "art/series4_sentence-sprint.webp"}, "s4_sentence_sprint": {"1": "art/series4_sentence-sprint.webp"}, "series4_trial-track": {"1": "art/series4_trial-track.webp"}, "s4_trial_track": {"1": "art/series4_trial-track.webp"}, "series4_verdict-vex": {"1": "art/series4_verdict-vex.webp"}, "s4_verdict_vex": {"1": "art/series4_verdict-vex.webp"}, "series4_warrant-walt": {"1": "art/series4_warrant-walt.webp"}, "s4_warrant_walt": {"1": "art/series4_warrant-walt.webp"}, "series5_captain-classify": {"1": "art/series5_captain-classify.webp"}, "s5_captain_classify": {"1": "art/series5_captain-classify.webp"}, "series5_class-shift": {"1": "art/series5_class-shift.webp"}, "s5_class_shift": {"1": "art/series5_class-shift.webp"}, "series5_double-gain": {"1": "art/series5_double-gain.webp"}, "s5_double_gain": {"1": "art/series5_double-gain.webp"}, "series5_felony-titan": {"1": "art/series5_felony-titan.webp"}, "s5_felony_titan": {"1": "art/series5_felony-titan.webp"}, "series5_minor-mischief": {"1": "art/series5_minor-mischief.webp"}, "s5_minor_mischief": {"1": "art/series5_minor-mischief.webp"}, "series5_offense-oracle": {"1": "art/series5_offense-oracle.webp"}, "s5_offense_oracle": {"1": "art/series5_offense-oracle.webp"}, "series5_split-verdict": {"1": "art/series5_split-verdict.webp"}, "s5_split_verdict": {"1": "art/series5_split-verdict.webp"}, "series5_the-aces": {"1": "art/series5_the-aces.webp"}, "s5_the_aces": {"1": "art/series5_the-aces.webp"}, "series5_the-fine-collector": {"1": "art/series5_the-fine-collector.webp"}, "s5_the_fine_collector": {"1": "art/series5_the-fine-collector.webp"}, "series5_the-many": {"1": "art/series5_the-many.webp"}, "s5_the_many": {"1": "art/series5_the-many.webp"}, "series5_triple-take": {"1": "art/series5_triple-take.webp"}, "s5_triple_take": {"1": "art/series5_triple-take.webp"}, "series5_vault-voltage": {"1": "art/series5_vault-voltage.webp"}, "s5_vault_voltage": {"1": "art/series5_vault-voltage.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "character_acd": {"1": "art/character_acd_1.webp"}, "character_adjournment": {"1": "art/character_adjournment_1.webp"}, "character_affidavit": {"1": "art/character_affidavit_1.webp"}, "character_appeal30": {"1": "art/character_appeal30_1.webp"}, "character_bail": {"1": "art/character_bail_1.webp"}, "character_calendarcall": {"1": "art/character_calendarcall_1.webp"}, "character_eightback": {"1": "art/character_eightback_1.webp"}, "character_freeze": {"1": "art/character_freeze_1.webp"}, "character_interest": {"1": "art/character_interest_1.webp"}, "character_judgment": {"1": "art/character_judgment_1.webp"}, "character_jurywaiver": {"1": "art/character_jurywaiver_1.webp"}, "character_lawyers_file_motions_v2": {"1": "art/character_lawyers_file_motions_v2_1.webp"}, "character_military": {"1": "art/character_military_1.webp"}, "character_motion": {"1": "art/character_motion_1.webp"}, "character_newtrial": {"1": "art/character_newtrial_1.webp"}, "character_quash": {"1": "art/character_quash_1.webp"}, "character_reargue": {"1": "art/character_reargue_1.webp"}, "character_renew": {"1": "art/character_renew_1.webp"}, "character_schoolnotice": {"1": "art/character_schoolnotice_1.webp"}, "character_silly_clerks_drink_mocha_v2": {"1": "art/character_silly_clerks_drink_mocha_v2_1.webp"}, "character_sj120": {"1": "art/character_sj120_1.webp"}, "character_summons": {"1": "art/character_summons_1.webp"}, "character_undodefault": {"1": "art/character_undodefault_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
 const REWARD = [25, 35, 50, 75, 100];     // XP per correct answer at each level
@@ -2164,12 +2167,15 @@ CARDS.forEach(c => { if (SERIES3_IDS.has(c.id)) { c.bgs = {1:SERIES3_BACKGROUNDS
 /* Memory Trick cards: special cards that teach a mnemonic. Found in packs. */
 CARDS.push(
   {
-    id:'lfm', art:'none', num:'★01', l1:'LAWYERS FILE', l2:'MOTIONS', name:'Lawyers File Motions', emoji:'🧠',
+    id:'lfm', art:'character_lawyers_file_motions_v2', num:'★01', l1:'LAWYERS FILE', l2:'MOTIONS', name:'Lawyers File Motions', emoji:'🧠',
     // Read-first intro (checked 2026-09-30 against standard alphabetic filing rules)
     intro:{ idea:'File names by last name, then first name, then middle initial. Nothing comes before something.',
       example:'Smith, Anna is filed before Smith, Anna B., and Smith before Smithson. In each pair, the shorter one has nothing where the other has more.',
       source:'Clerk practice skill: standard alphabetic filing rules (not a statute)' },
     category:'MEMORY TRICK', set:'FILING ORDER', rarity:'uncommon', trickType:'chain', icon:'folder', maxLevel:3, gen:'alpha',
+    cutout:true, canonicalCharacter:true, illustratedMnemonic:true, frameBreak:true, bgs:{1:'art/bg_records.webp'},
+    artFit:{left:-2, top:-1, width:104, height:94, position:'50% 100%'},
+    breakoutFit:{left:3, top:21, width:94, height:56, position:'50% 100%'},
     quote:'Last. First.\nMiddle.',
     mnemonic:{ sentence:'Lawyers File Motions', letters:['L','F','M'], words:['Lawyers','File','Motions'],
       means:['Last name','First name','Middle initial'], extra:['Date of birth','Case number','Street address'],
@@ -2178,12 +2184,15 @@ CARDS.push(
     stickers:{},
   },
   {
-    id:'caseorder', art:'none', num:'★02', l1:'SILLY CLERKS', l2:'DRINK MOCHA', name:'Silly Clerks Drink Mocha', emoji:'🧠',
+    id:'caseorder', art:'character_silly_clerks_drink_mocha_v2', num:'★02', l1:'SILLY CLERKS', l2:'DRINK MOCHA', name:'Silly Clerks Drink Mocha', emoji:'🧠',
     // Read-first intro (checked 2026-09-30 against CPLR 304, 320, 2211, 5011 on nysenate.gov)
     intro:{ idea:'A civil case usually moves in this order: summons and complaint, answer, discovery, motions, trial, judgment, then appeal. Real cases can skip steps.',
       example:'Priya files and serves a summons and complaint. The defendant answers, they exchange records, one side moves to dismiss, the case is tried, the court enters judgment, and the losing side may appeal.',
       source:'CPLR §§ 304, 320, 2211, 5011 · the big picture' },
     category:'MEMORY TRICK', set:'LIFE OF A CASE', rarity:'uncommon', trickType:'chain', icon:'court', maxLevel:3, gen:'sequence',
+    cutout:true, canonicalCharacter:true, illustratedMnemonic:true, frameBreak:true, bgs:{1:'art/bg_judgment_1.webp'},
+    artFit:{left:12, top:-1, width:88, height:92, position:'100% 100%'},   // letter row clears the Memory badge
+    breakoutFit:{left:1, top:20, width:98, height:57, position:'50% 100%'},
     quote:'The life of a\ncase, in order.',
     mnemonic:{ sentence:'Silly Clerks Always Drink Mocha Till Judges Arrive', letters:['S','C','A','D','M','T','J','A'],
       words:['Silly','Clerks','Always','Drink','Mocha','Till','Judges','Arrive'],
@@ -2563,17 +2572,30 @@ function frameBreakCharacter(c, lv){
   if (!(FRAME_BREAK_CARDS.has(c.id) || c.frameBreak) || !c.cutout || lv !== maxL(c)) return '';
   const base = resolvedArtLevel(c, lv);
   if (!base || (c.scene && c.scene[base])) return '';
-  return `<img class="framebreak-character${c.series === 2 ? ' series2' : c.series >= 4 ? ` series45 series${c.series}` : ''}"${HEADROOM[c.id] ? ` style="--drop:${HEADROOM[c.id]}"` : ''} src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`;
+  const f = c.breakoutFit || {}, fit = [
+    Number.isFinite(f.left) ? `left:${f.left}%` : '', Number.isFinite(f.top) ? `top:${f.top}%` : '',
+    Number.isFinite(f.width) ? `width:${f.width}%` : '', Number.isFinite(f.height) ? `height:${f.height}%` : '',
+    f.position ? `object-position:${f.position}` : '', HEADROOM[c.id] ? `--drop:${HEADROOM[c.id]}` : ''
+  ].filter(Boolean).join(';');
+  return `<img class="framebreak-character${c.series === 2 ? ' series2' : c.series >= 4 ? ` series45 series${c.series}` : ''}"${fit ? ` style="${fit}"` : ''} src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`;
 }
 function artHTML(c, lv, opt={}){
-  if (c.mnemonic) return mnemonicArt(c);
+  if (c.mnemonic && !c.illustratedMnemonic) return mnemonicArt(c);
   if (c.panel && !(ART[c.id] && ART[c.id][1])) return ruleArt(c);
   const base = resolvedArtLevel(c, lv);
   const cut = c.cutout && !(c.scene && c.scene[base]);  // some levels are full scenes even on cut-out cards
   let h = (c.trickType && !c.mnemonic && !opt.omitMnemonicBadge) ? `<img class="mn-badge low" src="art/icon_memory.webp" alt="Memory Trick">` : '';
+  if (c.illustratedMnemonic && !opt.omitMnemonicBadge) h = `<img class="mn-badge low" src="art/icon_memory.webp" alt="Memory Trick">`;
+  const f = cut && c.artFit ? c.artFit : null;
+  const fit = f ? [
+    Number.isFinite(f.left) ? `left:${f.left}%` : '', Number.isFinite(f.top) ? `top:${f.top}%` : '',
+    Number.isFinite(f.width) ? `width:${f.width}%` : '', Number.isFinite(f.height) ? `height:${f.height}%` : '',
+    f.position ? `object-position:${f.position}` : ''
+  ].filter(Boolean).join(';') : '';
   h += base
-    ? (cut ? (bgFor(c, lv) ? `<img class="art-bgimg" src="${bgFor(c, lv)}" alt=""><div class="art-vig"></div>` : `<div class="art-back series${c.series || 1}"></div>`) : '') + (opt.omitCharacter && cut ? '' : `<img class="art-img ${cut?'cut':''}" src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`)
+    ? (cut ? (bgFor(c, lv) ? `<img class="art-bgimg" src="${bgFor(c, lv)}" alt=""><div class="art-vig"></div>` : `<div class="art-back series${c.series || 1}"></div>`) : '') + (opt.omitCharacter && cut ? '' : `<img class="art-img ${cut?'cut':''}"${fit ? ` style="${fit}"` : ''} src="${ART[c.id][base]}" alt="${c.illustratedMnemonic ? '' : `${esc(c.name)} artwork, level ${base}`}">`)
     : `<div class="art-ph"><span class="ph-tag">ART COMING SOON</span><div class="ph-emoji">${c.emoji}</div></div>`;
+  if (c.illustratedMnemonic) h += `<span class="sr-only">Mnemonic: ${esc(c.mnemonic.sentence)}. ${c.mnemonic.letters.map((letter, i) => `${letter}: ${c.mnemonic.means[i]}`).join('. ')}.</span>`;
   for (let l = Math.max(base+1, 2); l <= lv; l++) (c.stickers[l]||[]).forEach(s => h += stickerHTML(s));
   return h;
 }
@@ -2676,7 +2698,7 @@ function frontHTML(c, st, opt={}){
   const frameBreak = frameBreakCharacter(c, lv);
   const frameSrc = verOf(st) === 'gold' ? (c.trickType ? 'art/frame_gold_trick.webp' : 'art/frame_gold.webp') : styleFrame(c) || frameFor(c, lv);   // Gold Seal wins over a bought frame
   const protectedFrame = frameBreak ? `<img class="frame-metadata top" data-frame-mask="top" src="${frameSrc}" alt=""><img class="frame-metadata quote" data-frame-mask="quote" src="${frameSrc}" alt=""><img class="frame-metadata footer" data-frame-mask="footer" src="${frameSrc}" alt="">` : '';
-  const frameBreakMnemonic = frameBreak && c.trickType && !c.mnemonic ? `<img class="mn-badge framebreak-memory" src="art/icon_memory.webp" alt="Memory Trick">` : '';
+  const frameBreakMnemonic = frameBreak && c.trickType && (!c.mnemonic || c.illustratedMnemonic) ? `<img class="mn-badge framebreak-memory" src="art/icon_memory.webp" alt="Memory Trick">` : '';
   return `
     <div class="art-win" style="${P(66,383,958,1207)}">${artHTML(c, lv, {omitCharacter:!!frameBreak, omitMnemonicBadge:!!frameBreak})}${holoHTML(c)}</div>
     <img class="frame" src="${frameSrc}" alt="">
@@ -2711,8 +2733,9 @@ function frostHTML(c, st, now=Date.now()){
 function cardEl(c, st, opt={}, extraClass=''){
   const now = Date.now(), cold = isCold(st, now), deadline = coldAfter(st), last = Number.isFinite(+st.last) ? +st.last : 0;
   const charged = !cold && !st.mastered && st.level < maxL(c) && st.xp / NEED[st.level-1] >= .7;   // almost leveled up
-  return `<div class="card series${c.series || 1} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} lv${st.level} ver-${verOf(st)} ${sleeveOf(c) ? 'sleeved' : ''} ${c.trickType?'special':''} ${cold?'cold':''} ${charged?'charged':''} ${extraClass}" ${sleeveOf(c) ? `style="--sl:${sleeveScale(sleeveOf(c))}"` : ''} data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${frontHTML(c, st, opt)}${verDecorHTML(st)}${decoHTML(c)}${frostHTML(c, st, now)}</div>`;
+  return `<div class="card series${c.series || 1} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} ${c.illustratedMnemonic ? 'illustrated-mnemonic' : ''} lv${st.level} ver-${verOf(st)} ${sleeveOf(c) ? 'sleeved' : ''} ${c.trickType?'special':''} ${cold?'cold':''} ${charged?'charged':''} ${extraClass}" ${sleeveOf(c) ? `style="--sl:${sleeveScale(sleeveOf(c))}"` : ''} data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${frontHTML(c, st, opt)}${verDecorHTML(st)}${decoHTML(c)}${frostHTML(c, st, now)}</div>`;
 }
+
 
 /* The bracket labels (XP, category, card set) are grown to the largest size that fits their painted bracket,
    but never below a legible floor: --fit multiplies their font sizes. Headline labels are sized in CSS.
@@ -3641,9 +3664,14 @@ const SCREENS = {
   },
 
   glows(){
-    if (!ADM.is) return { title:'Glow Tiers', body:'<p class="empty">Admins only.</p>' };
-    const g = byId('gavel'), cell = (lv, xp, label) => `<div class="gl">${cardEl(g, {level:lv, xp, mastered:false, owned:true})}<small>${label}</small></div>`;
-    return { title:'Glow Tiers', body:`<div class="cgrid two">${cell(2, 0, 'Level 2')}${cell(3, 0, 'Level 3')}${cell(4, 0, 'Level 4')}${cell(4, 250, 'Level 4 · almost leveled up')}${cell(5, 0, 'Level 5')}</div>` };
+    if (!ADM.is) return { title:'Card Glows', body:'<p class="empty">Admins only.</p>' };
+    // The glows a card can have today (see the card glow system CSS): level 2, Memory Trick, cold, and almost leveled up
+    const g = byId('gavel'), trick = CARDS.find(c => c.trickType && !c.series) || g;
+    const cell = (c, st, label) => `<div class="gl">${neutralRender(() => cardEl(c, st))}<small>${label}</small></div>`;
+    return { title:'Card Glows', body:`<p class="st-note">Every glow a card can show. Levels 3 to 5 have no glow of their own.</p><div class="cgrid two">
+      ${cell(g, admFixture(g, 1, 'normal'), 'No glow (level 1)')}${cell(g, admFixture(g, 2, 'normal'), 'Level 2 · faint white')}
+      ${cell(g, admFixture(g, 3, 'charged'), 'Almost leveled up · gold')}${cell(trick, admFixture(trick, 1, 'normal'), 'Memory Trick · purple')}
+      ${cell(g, admFixture(g, 3, 'cold'), 'Cold · blue')}</div>` };
   },
 };
 function playerTitle(){

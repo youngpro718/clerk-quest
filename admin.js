@@ -148,20 +148,27 @@ document.addEventListener('click', e => {
 });
 
 /* ---------- Check the game: read-only copies of cards, rules, questions, lessons, and screens ---------- */
-const seriesLabel = c => c.trickType && !c.series ? 'Memory Trick' : `Series ${c.series || 1}`;
+const seriesLabel = c => c.trickType ? (c.series ? `Series ${c.series} · Memory Trick` : 'Memory Trick') : `Series ${c.series || 1}`;
 const adminScreen = (title, make) => ADM.is ? make() : adminDenied(title);
-const admFixture = (c, lv, mode) => {
+const admFixture = (c, lv, mode, ver) => {
   const level = Math.max(1, Math.min(maxL(c), Number(lv) || 1));
-  const st = { level, xp:0, mastered:false, owned:true };
+  const st = { level, xp:0, mastered:false, owned:true, vers:VERSIONS[ver] && ver !== 'filed' ? [ver] : [] };
   if (mode === 'charged') st.xp = Math.round(NEED[level - 1] * .82);
   if (mode === 'frost') st.last = Date.now() - Math.round(coldAfter(st) * .72);
   if (mode === 'cold') st.last = Date.now() - coldAfter(st) - DAY;
   if (mode === 'mastered') { st.level = maxL(c); st.xp = NEED[st.level - 1]; st.mastered = true; }
   return st;
 };
-function admCardPreview(c, lv, mode){
-  const cls = mode === 'holo' ? 'adm-force-holo' : '';
-  return cardEl(c, admFixture(c, lv, mode), {}, cls);
+/* Admin previews show the plain card design. The signed-in admin's own sleeve, stamp, bought frame and card back
+   (S.styles) and earned series backs (worked out from S.cards) would otherwise show through, so both are hidden
+   for this one synchronous render and put straight back. Nothing is saved. */
+function neutralRender(make){
+  const keep = { styles:S.styles, cards:S.cards };
+  S.styles = null; S.cards = {};
+  try { return make(); } finally { S.styles = keep.styles; S.cards = keep.cards; }
+}
+function admCardPreview(c, lv, mode, ver){
+  return neutralRender(() => cardEl(c, admFixture(c, lv, mode, ver)));
 }
 /* Every question a card can ask at a level. Bank questions are listed in full; made-fresh ones are sampled. */
 function questionsFor(c, lv){
@@ -198,9 +205,17 @@ function ruleHTML(c){   // display only: no highlighting, no "read" credit
 
 Object.assign(ADMIN_SCREENS, {
   admincards(){
-    return adminScreen('All Cards', () => { const groups = [...new Set(CARDS.map(seriesLabel))];
-    return { title:'All Cards', body:`<p class="st-note">Every card, including ones you don't own. Tap one to see each level, visual state, rule, and every question.</p>
-      ${groups.map(g => { const list = CARDS.filter(c => seriesLabel(c) === g); return list.length ? `<div class="sec-h"><span>${g}</span><span class="adm-count">${list.length}</span></div>
+    return adminScreen('All Cards', () => {
+    // The game's own series (same names and membership as the Collection), then the Memory Tricks that sit outside every series
+    const loose = CARDS.filter(c => !SERIES_DEFS.some(d => d.test(c)));
+    const groups = SERIES_DEFS.map(d => { const list = CARDS.filter(d.test);
+      return { g:d.label + (list.length && list.every(c => c.trickType) ? ' · Memory Tricks' : ''), list }; })
+      .concat([{ g:'Memory Tricks · not in a series', list:loose }]);
+    const tricks = CARDS.filter(c => c.trickType), where = groups.filter(x => x.list.some(c => c.trickType))
+      .map(x => `${x.list.filter(c => c.trickType).length} ${x.list === loose ? 'not in a series' : 'in ' + x.g.split(' · ')[0]}`);
+    return { title:'All Cards', body:`<p class="st-note">Every card, including ones you don't own. Tap one to see each level, version, visual state, rule, and every question.</p>
+      <p class="st-note">${tricks.length} are Memory Tricks: ${where.join(', ')}.</p>
+      ${groups.map(({ g, list }) => { return list.length ? `<div class="sec-h"><span>${esc(g)}</span><span class="adm-count">${list.length}</span></div>
         <div class="list">${list.map(c => `<button class="row" data-act="push" data-s="admincard" data-id="${c.id}">${admThumb(c, maxL(c))}
           <span class="row-main"><b>${esc(c.name)}</b><small>${esc(c.num)} · ${esc(titleCase(c.set))} · ${maxL(c)} levels</small></span>${chev}</button>`).join('')}</div>` : ''; }).join('')}` };
     });
@@ -208,12 +223,15 @@ Object.assign(ADMIN_SCREENS, {
   admincard(p){
     if (!ADM.is) return adminDenied('Card');
     const c = byId(p.id); if (!c) return { title:'Card', body:'' };
-    const lv = Math.min(p.lv || 1, maxL(c)), mode = p.mode || 'normal', { bank, made } = questionsFor(c, lv);
-    const states = [['normal','Clean'],['charged','Charged'],['frost','Frost'],['cold','Cold'],['holo','Holo'],['mastered','Mastered']];
+    const lv = Math.min(p.lv || 1, maxL(c)), mode = p.mode || 'normal', ver = VERSIONS[p.ver] ? p.ver : 'filed', { bank, made } = questionsFor(c, lv);
+    const states = [['normal','Clean'],['charged','Charged'],['frost','Frost'],['cold','Cold'],['mastered','Mastered']];
+    const vers = Object.keys(VERSIONS).map(v => [v, titleCase(VERSIONS[v].label)]);
     return { title:c.name, right:made.length ? `<button class="nb-btn txt" data-act="adm-reroll">Shuffle</button>` : '', body:`
       <div class="adm-lvs">${Array.from({ length:maxL(c) }, (_, i) => `<button class="${i + 1 === lv ? 'on' : ''}" data-act="adm-lv" data-lv="${i + 1}">Level ${i + 1}</button>`).join('')}</div>
       <div class="adm-modes">${states.map(([v,label]) => `<button class="${v === mode ? 'on' : ''}" data-act="adm-mode" data-v="${v}">${label}</button>`).join('')}</div>
-      <div class="adm-card">${admCardPreview(c, lv, mode)}</div>
+      <div class="adm-modes adm-vers">${vers.map(([v,label]) => `<button class="${v === ver ? 'on' : ''}" data-act="adm-ver" data-v="${v}">${label}</button>`).join('')}</div>
+      <div class="adm-card"><div class="cd-card" data-act="cd-flip" aria-label="Tap to flip the card">${admCardPreview(c, lv, mode, ver)}<div class="cd-back">${neutralRender(() => cardReverseHTML(c))}</div></div></div>
+      <p class="st-note c">Tap the card to see its back.</p>
       <p class="st-note c">${esc(c.num)} · ${esc(seriesLabel(c))} · ${esc(titleCase(c.set))} · ${esc(c.rarity || '')}</p>
       ${ruleHTML(c)}
       <div class="sec-h"><span>Level ${lv} questions</span><span class="adm-count">${bank.length}${made.length ? ' + samples' : ''}</span></div>
@@ -264,12 +282,12 @@ Object.assign(ADMIN_SCREENS, {
       const series = [...new Set(CARDS.map(c => c.series || 1))].sort((a,b) => a-b);
       const samples = series.map(n => CARDS.find(c => (c.series || 1) === n && (FRAME_BREAK_CARDS.has(c.id) || c.frameBreak)) || CARDS.find(c => (c.series || 1) === n)).filter(Boolean);
       const s3 = CARDS.find(c => c.series === 3), frame = CARDS.find(c => (FRAME_BREAK_CARDS.has(c.id) || c.frameBreak) && c.cutout);
-      return { title:'Card Visual Lab', body:`<p class="st-note">Tap a sample to inspect every level and switch among clean, charged, frosted, cold, holo, and mastered fixtures.</p>
+      return { title:'Card Visual Lab', body:`<p class="st-note">Tap a sample to inspect every level and switch among the four versions (Filed, Certified, Exhibit, Gold Seal) and the clean, charged, frosted, cold, and mastered states.</p>
         <div class="sec-h"><span>Series coverage</span></div><div class="adm-gallery">${samples.map(c => `<button data-act="push" data-s="admincard" data-id="${c.id}">${admCardPreview(c, Math.min(2,maxL(c)), 'normal')}<small>Series ${c.series || 1}</small></button>`).join('')}</div>
         <div class="sec-h"><span>Required effects</span></div><div class="list">
           ${s3 ? `<button class="row" data-act="push" data-s="admincard" data-id="${s3.id}">${admThumb(s3,2)}<span class="row-main"><b>Progressive color</b><small>Series 3 paint stages across levels</small></span>${chev}</button>` : ''}
           ${frame ? `<button class="row" data-act="push" data-s="admincard" data-id="${frame.id}">${admThumb(frame,maxL(frame))}<span class="row-main"><b>Frame break &amp; motion</b><small>Max-level cutout and device tilt</small></span>${chev}</button>` : ''}
-          <button class="row" data-act="push" data-s="glows"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Level glow</b><small>The almost-leveled-up glow</small></span>${chev}</button>
+          <button class="row" data-act="push" data-s="glows"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Card glows</b><small>Level 2, almost leveled up, Memory Trick, and cold</small></span>${chev}</button>
         </div>` };
     });
   },
@@ -315,6 +333,7 @@ document.addEventListener('click', e => {
   switch (t.dataset.act) {
     case 'adm-lv': { const en = topEntry(); en.p = { ...en.p, lv:+t.dataset.lv }; refresh(); currentScreenEl().querySelector('.scr').scrollTop = 0; break; }
     case 'adm-mode': { const en = topEntry(); en.p = { ...en.p, mode:t.dataset.v }; refresh(); break; }
+    case 'adm-ver': { const en = topEntry(); en.p = { ...en.p, ver:t.dataset.v }; refresh(); break; }
     case 'adm-reroll': refresh(); break;
     case 'adm-quiz-answer': ADM.quizChoice = +t.dataset.i; refresh(); break;
     case 'adm-quiz-reset': ADM.quizChoice = null; refresh(); break;
@@ -337,8 +356,9 @@ const ADMIN_CSS = `
 .adm-lvs button{flex:none;min-height:36px;padding:0 14px;border:0;border-radius:18px;background:var(--bg2);color:var(--sub);font:18px "Patrick Hand"}
 .adm-lvs button.on{background:var(--mustard);color:var(--ink)}
 .adm-modes{display:flex;gap:6px;overflow-x:auto;margin:0 0 10px;padding-bottom:2px;scrollbar-width:none}.adm-modes button{flex:none;min-height:32px;padding:0 11px;border:1px solid var(--line);border-radius:16px;background:transparent;color:var(--sub);font:14px var(--ui)}.adm-modes button.on{background:var(--paper);color:var(--ink);border-color:var(--paper)}
-.adm-card{width:66%;margin:0 auto 8px}
-.adm-card.compact{width:48%;max-width:190px}.adm-force-holo .art-win:after{content:"";position:absolute;inset:0;z-index:8;background:url(art/foil_texture.webp) center/cover;mix-blend-mode:screen;opacity:.58;animation:holo 4s linear infinite}
+/* Same sizing as the player's card screen (.cd-card): never wider than 300px, and short enough to clear the buttons and the tab bar */
+.adm-card{width:min(66%,300px,calc((100dvh - 330px) / 1.5));min-width:160px;margin:0 auto 8px}
+.adm-card.compact{width:48%;max-width:190px}.adm-card .cd-card{width:100%}.adm-vers button.on{background:var(--mustard);border-color:var(--mustard);color:var(--ink)}
 .adm-rule{margin:0 0 14px} .adm-trick{margin:0 0 14px;text-align:left} .adm-trick ul{margin:6px 0 10px;padding-left:20px}
 .adm-q{margin:0 0 10px;padding:12px 14px;border-radius:14px;background:var(--bg2)}
 .adm-qt{margin:0 0 8px;font:19px/1.3 "Patrick Hand"}
@@ -350,9 +370,9 @@ const ADMIN_CSS = `
 .adm-rows code{padding:3px 6px;border-radius:6px;background:rgba(255,255,255,.06);font:13px "Courier Prime",monospace;color:var(--paper)}
 .adm-email{margin:0 0 4px;font:400 22px "Bangers";letter-spacing:.03em;word-break:break-all}
 .adm-hero{display:flex;align-items:center;gap:13px;margin:4px 0 18px;padding:15px;border-radius:17px;background:linear-gradient(135deg,rgba(227,178,60,.18),rgba(143,179,209,.1));border:.5px solid var(--line)}.adm-hero>span,.adm-hero>img{width:46px;height:46px;display:grid;place-items:center}.adm-hero b{display:block;font:400 24px "Bangers";letter-spacing:.05em}.adm-hero small{display:block;color:var(--sub);font:13px/1.35 var(--ui);margin-top:3px}.adm-hero.tester{background:linear-gradient(135deg,rgba(143,179,209,.18),rgba(123,75,181,.12))}
-.adm-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.adm-gallery button{border:0;background:none;color:var(--paper);padding:0}.adm-gallery small{display:block;margin-top:5px;font:13px var(--ui);color:var(--sub)}
+.adm-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,220px));justify-content:center;gap:12px}@media (max-width:520px){.adm-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}.adm-gallery button{border:0;background:none;color:var(--paper);padding:0}.adm-gallery small{display:block;margin-top:5px;font:13px var(--ui);color:var(--sub)}
 .adm-answers{display:flex;flex-direction:column;gap:7px}.adm-answers button{min-height:46px;padding:8px 11px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.04);color:var(--paper);text-align:left;font:16px/1.25 var(--ui)}.adm-answers button.ok{background:rgba(95,212,122,.16);border-color:#5fd47a}.adm-answers button.bad{background:rgba(255,107,94,.14);border-color:#ff6b5e}
-.adm-pack{text-align:center;padding:18px;border-radius:17px;background:var(--bg2)}.adm-pack img{display:block;width:min(45%,180px);max-height:230px;object-fit:contain;margin:0 auto 9px}.adm-pack b,.adm-pack small{display:block}.adm-pack b{font:400 22px "Bangers";letter-spacing:.05em}.adm-pack small{font:13px var(--ui);color:var(--sub);margin-top:4px}.adm-pulls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.adm-pulls>div{min-width:0;text-align:center}.adm-pulls small{display:block;font:11px/1.2 var(--ui);color:var(--sub);margin-top:5px}.adm-back{width:100%;aspect-ratio:1024/1536;object-fit:cover;border-radius:6%/4%}
+.adm-pack{text-align:center;padding:18px;border-radius:17px;background:var(--bg2)}.adm-pack img{display:block;width:min(45%,180px);max-height:230px;object-fit:contain;margin:0 auto 9px}.adm-pack b,.adm-pack small{display:block}.adm-pack b{font:400 22px "Bangers";letter-spacing:.05em}.adm-pack small{font:13px var(--ui);color:var(--sub);margin-top:4px}.adm-pulls{display:grid;grid-template-columns:repeat(3,minmax(0,200px));justify-content:center;gap:8px;margin-top:14px}.adm-pulls>div{min-width:0;text-align:center}.adm-pulls small{display:block;font:11px/1.2 var(--ui);color:var(--sub);margin-top:5px}.adm-back{width:100%;aspect-ratio:1024/1536;object-fit:cover;border-radius:6%/4%}
 .adm-loading{text-align:center;padding:14px 4px}.adm-loading>.ico{width:64px;height:64px}.adm-loading h3{font:400 27px "Bangers";letter-spacing:.05em}.adm-loading p,.adm-loading small{color:var(--sub)}.adm-loading .sp-bar{position:relative;inset:auto;width:100%;margin:14px 0}.adm-result{padding:0}.adm-result .score{font-size:60px}.adm-result .panel{margin-top:14px}
 .adm-save-card{display:grid;grid-template-columns:46px 1fr;gap:10px 12px;padding:10px 12px;border-bottom:.5px solid var(--line)}.adm-save-card:last-child{border-bottom:0}.adm-save-card>span{min-width:0}.adm-save-card>span b,.adm-save-card>span small{display:block}.adm-save-card>span b{font:18px "Patrick Hand"}.adm-save-card>span small{font:12px var(--ui);color:var(--sub)}.adm-save-card>div{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.adm-save-card>div button{min-height:36px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.05);color:var(--paper);font:14px var(--ui)}.adm-save-card>div button:disabled{opacity:.4}
 `;

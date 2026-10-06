@@ -562,8 +562,36 @@ const LESSON_VIDEOS = {
     ],
     links:[['CPLR 5513', 'https://www.nysenate.gov/legislation/laws/CVP/5513'], ['CPLR 5515', 'https://www.nysenate.gov/legislation/laws/CVP/5515']],
   },
+  lfm: {
+    kicker:'Filing practice · Chain Trick', title:'Lawyers File Motions', len:'1 min',
+    src:'media/card-lawyers-file-motions.mp4?v=1', poster:'media/card-lawyers-file-motions-poster.jpg?v=1',
+    note:'Study guide to standard alphabetic filing practice. The names are examples.',
+    transcript:[
+      'A clerk has a stack of files to put in order by name. This card answers one question. Which part of the name counts first?',
+      'File by last name first. Then by first name. Then by middle initial. And one more rule: nothing comes before something. A name that runs out first is filed first.',
+      'The hook is: Lawyers File Motions. L, F, M. Last, first, middle.',
+      'Here is an example. Smith comes before Smithson, because Smith runs out first. And Smith, Anna comes before Smith, Anna B. The one with nothing there goes first.',
+      'On the exam, watch for extras. Which one is not part of the filing order? Date of birth. Only last name, first name, and middle initial count.',
+      'Lawyers File Motions. Last name, first name, middle initial. And nothing comes before something.',
+    ],
+    links:[],
+  },
+  caseorder: {
+    kicker:'Life of a case · Chain Trick', title:'Silly Clerks Drink Mocha', len:'1 min',
+    src:'media/card-silly-clerks-drink-mocha.mp4?v=1', poster:'media/card-silly-clerks-drink-mocha-poster.jpg?v=1',
+    note:'Study guide to the usual order of a civil case. Real cases can skip steps. Priya\'s case is an example.',
+    transcript:[
+      'A civil case moves through a lot of steps. This card answers one question. What is the usual order?',
+      'Here is the usual order. Summons. Complaint. Answer. Discovery. Motions. Trial. Judgment. Appeal. Real cases can skip steps, and motions can come up at many points. This is the big picture.',
+      'The hook is: Silly Clerks Always Drink Mocha Till Judges Arrive. One letter for each step.',
+      'Here is an example. Priya files and serves a summons and complaint. The defendant answers. They exchange records in discovery. One side moves to dismiss. The case is tried, the court enters judgment, and the losing side may appeal.',
+      'On the exam, it can look like this. In the usual order, what comes right after the answer? Discovery. Always, then Drink. A, then D.',
+      'Silly Clerks Always Drink Mocha Till Judges Arrive. That is the big picture of a civil case.',
+    ],
+    links:[],
+  },
 };
-const CARD_VIDEOS = { eightback:'eightback', svs:'svs', whosigns:'whosigns', clock6090:'clock6090', eightdays:'eightdays', sealed:'sealed', followpetitioner:'followpetitioner', amendonce:'amendonce', jurywaiver:'jurywaiver', interest:'interest', quash:'quash', bail:'bail', acd:'acd', military:'military', childvoice:'childvoice', ypsi:'ypsi', custodyornot:'custodyornot', newtrial:'newtrial', schoolnotice:'schoolnotice', reargue:'reargue', renew:'renew', sj120:'sj120', undodefault:'undodefault', freeze:'freeze', appeal30:'appeal30' };   // card id -> lesson
+const CARD_VIDEOS = { eightback:'eightback', svs:'svs', whosigns:'whosigns', clock6090:'clock6090', eightdays:'eightdays', sealed:'sealed', followpetitioner:'followpetitioner', amendonce:'amendonce', jurywaiver:'jurywaiver', interest:'interest', quash:'quash', bail:'bail', acd:'acd', military:'military', childvoice:'childvoice', ypsi:'ypsi', custodyornot:'custodyornot', newtrial:'newtrial', schoolnotice:'schoolnotice', reargue:'reargue', renew:'renew', sj120:'sj120', undodefault:'undodefault', freeze:'freeze', appeal30:'appeal30', lfm:'lfm', caseorder:'caseorder' };   // card id -> lesson
 const cardVideo = c => (c && CARD_VIDEOS[c.id]) || null;
 
 /* The "Watch" button. `from` = 'intro' (with the card id) brings the person back to that card's intro. */
