@@ -33,12 +33,14 @@ const coinsForAnswer = hinted => hinted ? Math.ceil(COINS.answer / 2) : COINS.an
 const coinsForDup = () => COINS.dup;
 
 /* Study streak: paid once a day, on the first finished round. Returns the coins paid (0 if already paid today). */
+const yesterdayKey = () => { const y = new Date(); y.setDate(y.getDate() - 1); return y.getFullYear() + '-' + (y.getMonth() + 1) + '-' + y.getDate(); };
+/* The streak still alive: studied today or yesterday. An older streak is broken and shows as 0. */
+const liveStreak = () => S.streak && (S.streak.last === todayKey() || S.streak.last === yesterdayKey()) ? S.streak.days || 0 : 0;
 function payStreak(){
   const today = todayKey();
   const st = S.streak = S.streak || { last:null, days:0 };
   if (st.last === today) return 0;
-  const y = new Date(); y.setDate(y.getDate() - 1);
-  const yesterday = y.getFullYear() + '-' + (y.getMonth() + 1) + '-' + y.getDate();
+  const yesterday = yesterdayKey();
   st.days = st.last === yesterday ? st.days + 1 : 1;
   st.last = today;
   return earnCoins(Math.min(COINS.streakStep * st.days, COINS.streakMax), st.days > 1 ? `${st.days}-day study streak` : 'First round today');
@@ -51,7 +53,7 @@ function coinChip(){
 function coinSheet(){
   const log = S.coinLog || [];
   const when = t => { const m = Math.round((Date.now() - t) / 60000); return m < 1 ? 'just now' : m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' h ago' : new Date(t).toLocaleDateString(undefined, {month:'short', day:'numeric'}); };
-  const streak = S.streak && S.streak.days ? `<p class="coin-streak">${ICO('streak')} ${S.streak.days}-day streak${S.streak.last === todayKey() ? '' : ' · study today to keep it'}</p>` : '';
+  const streak = liveStreak() ? `<p class="coin-streak">${ICO('streak')} ${liveStreak()}-day streak${S.streak.last === todayKey() ? '' : ' · study today to keep it'}</p>` : '';
   openSheet(`<div class="coin-head"><span class="coin-big">${COIN}</span><b>${(S.coins || 0).toLocaleString()}</b><small>coins</small></div>${streak}
     
     <div class="sec-h"><span>How to earn</span></div>

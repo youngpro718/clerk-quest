@@ -90,7 +90,7 @@
       const RW = { legendary:5, epic:4, rare:3, uncommon:2, common:1 };
       const top = mine.slice().sort((a, b) => (S.cards[b.id].level - S.cards[a.id].level) || ((RW[b.rarity]||0) - (RW[a.rarity]||0)))[0];
       const pic = top && typeof ART !== 'undefined' && ART[top.id] && (ART[top.id].color || ART[top.id][1]);
-      const into = S.stats.xp % 250, streak = (S.streak && S.streak.days) || 0;
+      const into = S.stats.xp % 250, streak = typeof liveStreak === 'function' ? liveStreak() : 0;
       const no = String(1000 + (S.stats.xp * 7 + S.packsOpened * 13) % 9000);
       const wrap = document.createElement('div');
       wrap.className = 'cqf-id';
