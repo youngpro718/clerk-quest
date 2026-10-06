@@ -53,7 +53,21 @@ const BACKS = [
   { id:'marble', name:'Marble Nameplate', price:150 },
   { id:'night', name:'Night Skyline', price:150 },
 ];
-const styles = () => (S.styles = S.styles || { cards:{}, backs:[], back:'' });
+/* Paperwork extras (replaced holo foil, 2026-10-05): rubber stamps and card sleeves. Buy a style once, then put it on any cards.
+   A sleeve's win is its clear window in the art (x0, y0, x1, y1 of size), so the card can sit exactly inside it. */
+const STAMPS = [
+  { id:'received', name:'Received', price:60 }, { id:'urgent', name:'Urgent', price:60 }, { id:'approved', name:'Approved', price:60 },
+  { id:'record', name:'On the Record', price:60 }, { id:'ordered', name:'So Ordered', price:60 }, { id:'timestamped', name:'Time Stamped', price:60 },
+];
+const SLEEVES = [
+  { id:'manila', name:'Manila Folder', price:120, size:[372, 507], win:[39, 73, 325, 440] },
+  { id:'redtape', name:'Red Tape', price:120, size:[371, 501], win:[53, 62, 318, 418] },
+  { id:'navy', name:'Navy Legal', price:120, size:[372, 487], win:[40, 40, 331, 437] },
+  { id:'ledger', name:'Green Ledger', price:120, size:[369, 488], win:[51, 46, 319, 437] },
+];
+const DECO = { stamp:{ list:STAMPS, owned:'stamps', label:'Stamp', none:'No stamp', art:id => `art/deco_stamp_${id}.png` },
+               sleeve:{ list:SLEEVES, owned:'sleeves', label:'Sleeve', none:'No sleeve', art:id => `art/deco_sleeve_${id}.png` } };
+const styles = () => { S.styles = S.styles || { cards:{}, backs:[], back:'' }; S.styles.stamps = S.styles.stamps || []; S.styles.sleeves = S.styles.sleeves || []; return S.styles; };
 const cardStyle = id => (styles().cards[id] = styles().cards[id] || { frames:[], foil:false, eq:{ frame:'', foil:false } });
 const framesAllowed = c => ![3,4,5].includes(c.series);   // store frames are shaped for the Series 1/2 layout
 function styleSheet(id){
@@ -72,12 +86,18 @@ function styleSheet(id){
         ${cs.eq.frame ? btn('sty-frame', 'Use', '" data-v="') : btn('sty-frame', `${ICO('check')} In use`, 'on" data-v="')}</div>
       ${FRAMES.map(frameRow).join('')}</div>`
       : `<p class="st-note">This series keeps its own signature frame.</p>`}
+    ${['stamp', 'sleeve'].map(k => { const D = DECO[k], on = cs.eq[k] || '';
+      return `<div class="sec-h"><span>${D.label}</span></div><div class="list sty-list">
+        <div class="sty-row"><span class="sty-prev none"></span><span class="row-main"><b>${D.none}</b></span>${on ? btn('sty-deco', 'Use', `" data-k="${k}" data-v="`) : btn('sty-deco', `${ICO('check')} In use`, `on" data-k="${k}" data-v="`)}</div>
+        ${D.list.map(x => { const have = styles()[D.owned].includes(x.id);
+          return `<div class="sty-row"><img class="sty-prev deco ${k}" src="${D.art(x.id)}" alt=""><span class="row-main"><b>${esc(x.name)}</b><small>${have ? 'Yours · use on any card' : x.price + ' coins, then use on any card'}</small></span>
+            ${on === x.id ? btn('sty-deco', `${ICO('check')} In use`, `on" data-k="${k}" data-v="${x.id}`) : have ? btn('sty-deco', 'Use', `" data-k="${k}" data-v="${x.id}`) : btn('sty-buydeco', `${COIN}${x.price}`, `buy" data-k="${k}" data-v="${x.id}`, coins >= x.price)}</div>`; }).join('')}</div>`; }).join('')}
     <p class="st-note c">You have ${COIN}${coins.toLocaleString()}</p>
     <button class="sheet-cancel" data-act="sheet-close">Done</button>`);
 }
 function cardPicker(kind){
   const list = CARDS.filter(owned).filter(c => kind !== 'frame' || framesAllowed(c));
-  openSheet(`<h3>Frame: pick a card</h3><div class="list">${list.map(c => `<button class="row" data-act="sty-open" data-id="${c.id}">${thumb(c)}<span class="row-main"><b>${esc(c.name)}</b><small>${esc(c.num)}</small></span>${chev}</button>`).join('')}</div>
+  openSheet(`<h3>${kind === 'frame' ? 'Frame' : DECO[kind] ? DECO[kind].label : 'Style'}: pick a card</h3><div class="list">${list.map(c => `<button class="row" data-act="sty-open" data-id="${c.id}">${thumb(c)}<span class="row-main"><b>${esc(c.name)}</b><small>${esc(c.num)}</small></span>${chev}</button>`).join('')}</div>
     <button class="sheet-cancel" data-act="sheet-close">Cancel</button>`);
 }
 const backStyleHTML = () => `<div class="st-grid backs">${[{ id:'', name:'Classic', price:0 }].concat(BACKS).map(b => {
@@ -153,9 +173,11 @@ function storeHTML(){
       return `<button class="st-item" data-act="ls-get" data-id="${L.id}">${lessonDeckArt(L)}<span class="st-name">${esc(L.name)}</span>
         <span class="st-sub">${L.cards.length} cards · ${m ? m + ' new' : 'all owned'}</span>
         ${m ? priceTag(lessonDeckPrice(L), coins >= lessonDeckPrice(L)) : `<span class="st-price owned">${ICO('check')} Owned</span>`}</button>`; }).join('')}</div>
-    <div class="sec-h"><span>Card Styles</span></div><p class="st-note">A frame goes on one card. Or open any card and tap ••• → Card Style.</p>
+    <div class="sec-h"><span>Card Styles</span></div><p class="st-note">Frames go on one card. Stamps and sleeves are bought once, then go on as many cards as you like. Or open any card and tap ••• → Card Style.</p>
     <div class="list">
       <button class="row" data-act="sty-pick" data-set="frame"><span class="st-bimg"><img src="${artSrc('frame_marble')}" alt=""></span><span class="row-main"><b>Frames</b><small>Marble, Night Court, Old Parchment · 200 each</small></span>${chev}</button>
+      <button class="row" data-act="sty-pick" data-set="stamp"><span class="st-bimg"><img src="art/deco_stamp_ordered.png" alt=""></span><span class="row-main"><b>Rubber Stamps</b><small>Received, Urgent, So Ordered and more · 60 each</small></span>${chev}</button>
+      <button class="row" data-act="sty-pick" data-set="sleeve"><span class="st-bimg"><img src="art/deco_sleeve_manila.png" alt=""></span><span class="row-main"><b>Card Sleeves</b><small>Manila, Red Tape, Navy, Ledger · 120 each</small></span>${chev}</button>
     </div>
     <div class="sec-h"><span>Card Backs</span></div><p class="st-note">One back for your whole collection. See it in packs, or tap a card on its page to flip it. With Classic, each series shows its own back, and getting every card in a series to Certified earns that series an exclusive back that can't be bought.</p>
     ${backStyleHTML()}
@@ -240,6 +262,9 @@ document.addEventListener('click', e => {
     case 'st-buy-boost': buyBoost(set); break;
     case 'sty-pick': cardPicker(set); break;
     case 'sty-open': case 'card-style': closeSheet(true); styleSheet(t.dataset.id); break;
+    case 'sty-deco': { const k = t.dataset.k; if (!DECO[k]) break; cardStyle(t.dataset.id).eq[k] = t.dataset.v || ''; save(); refresh(); styleSheet(t.dataset.id); break; }
+    case 'sty-buydeco': { const k = t.dataset.k, D = DECO[k], x = D && D.list.find(y => y.id === t.dataset.v), c = byId(t.dataset.id);
+      if (x && c && spendCoins(x.price, `${x.name} ${D.label.toLowerCase()}`)) { styles()[D.owned].push(x.id); cardStyle(c.id).eq[k] = x.id; save(); refresh(); styleSheet(c.id); toast(`${x.name} ${D.label.toLowerCase()} on ${c.name}. Use it on any card.`, 'sparkle'); } break; }
     case 'sty-frame': { const cs = cardStyle(t.dataset.id); cs.eq.frame = t.dataset.v || ''; save(); refresh(); styleSheet(t.dataset.id); break; }
     case 'sty-buyframe': { const f = FRAMES.find(x => x.id === t.dataset.v), c = byId(t.dataset.id);
       if (f && spendCoins(f.price, `${f.name} frame: ${c.name}`)) { const cs = cardStyle(c.id); cs.frames.push(f.id); cs.eq.frame = f.id; save(); refresh(); styleSheet(c.id); toast(`${f.name} frame on ${c.name}`, 'sparkle'); } break; }
