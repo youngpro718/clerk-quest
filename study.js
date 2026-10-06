@@ -90,7 +90,7 @@ function caseFileHTML(c){
 const LESSON_VIDEOS = {
   eightback: {
     kicker:'CPLR 2214(b) · motion deadlines', title:'Eight Before, Two Back', len:'1 min',
-    src:'media/motion-deadlines-explainer.mp4?v=60s', poster:'media/motion-deadlines-explainer-poster.jpg?v=60s',
+    src:'media/motion-deadlines-explainer.mp4?v=60s2', poster:'media/motion-deadlines-explainer-poster.jpg?v=60s',
     note:'Study guide to CPLR 2214(b); service method, calendar rules, and court directions can affect actual deadlines.',
     transcript:[
       'When someone asks a New York court to decide a motion, the judge sets a hearing day. And before that day arrives, the law gives each side a deadline. Deadlines that are counted backward.',
@@ -103,7 +103,7 @@ const LESSON_VIDEOS = {
   },
   'docket-four-dates': {
     kicker:'Hot Docket CQ-D001 · Level 1', title:'One Order, Four Dates', len:'1 min',
-    src:'media/docket-four-dates.mp4?v=1', poster:'media/docket-four-dates-poster.jpg?v=1',
+    src:'media/docket-four-dates.mp4?v=2', poster:'media/docket-four-dates-poster.jpg?v=1',
     note:'Study guide to CPLR 5003, CPLR 2222 and 22 NYCRR 202.5-b(h). The case and dates are fictional.',
     transcript:[
       'One order. Four dates. And the rules care which is which.',
@@ -118,7 +118,7 @@ const LESSON_VIDEOS = {
   },
   svs: {
     kicker:'CPLR 304(a) · 2301 · Difference Trick', title:'Summons vs. Subpoena', len:'1 min',
-    src:'media/card-summons-vs-subpoena.mp4?v=1', poster:'media/card-summons-vs-subpoena-poster.jpg?v=1',
+    src:'media/card-summons-vs-subpoena.mp4?v=2', poster:'media/card-summons-vs-subpoena-poster.jpg?v=1',
     note:'Study guide to CPLR 304(a) and 2301. The store example is fictional.',
     transcript:[
       'A summons and a subpoena look alike. Both are court papers, and both have Latin-sounding names. But they do very different jobs. Mixing them up is a classic exam trap.',
@@ -132,7 +132,7 @@ const LESSON_VIDEOS = {
   },
   whosigns: {
     kicker:'FCA § 312.1 · Who Trick', title:'Who Signs the Summons?', len:'1 min',
-    src:'media/card-who-signs-the-summons.mp4?v=1', poster:'media/card-who-signs-the-summons-poster.jpg?v=1',
+    src:'media/card-who-signs-the-summons.mp4?v=2', poster:'media/card-who-signs-the-summons-poster.jpg?v=1',
     note:'Study guide to Family Court Act § 312.1 (summons on a juvenile delinquency petition).',
     transcript:[
       'When someone files a juvenile delinquency petition in Family Court, the court issues a summons. This card answers one question. Who signs that summons?',
@@ -146,7 +146,7 @@ const LESSON_VIDEOS = {
   },
   clock6090: {
     kicker:'Uniform Rules § 205.43(b) · Clock Trick', title:'The 60 / 90 Clock', len:'1 min',
-    src:'media/card-the-60-90-clock.mp4?v=1', poster:'media/card-the-60-90-clock-poster.jpg?v=1',
+    src:'media/card-the-60-90-clock.mp4?v=2', poster:'media/card-the-60-90-clock-poster.jpg?v=1',
     note:'Study guide to Uniform Rules § 205.43(b). The dates are an example; day counts exclude the first day.',
     transcript:[
       'This card teaches two deadlines for one hearing. It is a hearing to decide if someone willfully violated a support order. That means they did not obey it on purpose. The hook is: start in 60, finish in 90.',
@@ -161,7 +161,7 @@ const LESSON_VIDEOS = {
   },
   eightdays: {
     kicker:'FCA § 427(a) · Clock Trick', title:'8 Days Before', len:'1 min',
-    src:'media/card-8-days-before.mp4?v=1', poster:'media/card-8-days-before-poster.jpg?v=1',
+    src:'media/card-8-days-before.mp4?v=2', poster:'media/card-8-days-before-poster.jpg?v=1',
     note:'Study guide to Family Court Act § 427(a). The dates are an example.',
     transcript:[
       'In Family Court, the summons and petition must reach the respondent before the court date. This card answers one question. How early?',
@@ -175,11 +175,11 @@ const LESSON_VIDEOS = {
   },
   sealed: {
     kicker:'CPL § 160.50(1) · Trigger Trick', title:'Sealed in Your Favor', len:'1 min',
-    src:'media/card-sealed-in-your-favor.mp4?v=1', poster:'media/card-sealed-in-your-favor-poster.jpg?v=1',
+    src:'media/card-sealed-in-your-favor.mp4?v=3', poster:'media/card-sealed-in-your-favor-poster.jpg?v=3',
     note:'Study guide to CPL § 160.50(1). Sam is a fictional example.',
     transcript:[
       'Sometimes a criminal case ends in the accused person\'s favor. For example, all the charges are dismissed. This card answers one question. What happens to the record?',
-      'The Criminal Procedure Law, section 160.50, gives the answer. The record is sealed. And the clerk of the court immediately notifies DCJS, the state Division of Criminal Justice Services, and the police.',
+      'The record is sealed. And the clerk of the court immediately notifies DCJS, the state Division of Criminal Justice Services, and the police. That is the Criminal Procedure Law, section 160.50.',
       'The hook is: case ends in your favor? Seal it. And the clerk does not wait. The notice goes out immediately.',
       'Here is an example. All charges against Sam are dismissed. The clerk seals the record, and notifies DCJS and the police right away. There is one exception. A court can find that justice requires otherwise, but only after at least five days\' notice.',
       'Here is a common trap. Find the incorrect step. The clerk waits thirty days before notifying DCJS. That step is wrong. The rule says immediately.',
@@ -189,7 +189,7 @@ const LESSON_VIDEOS = {
   },
   followpetitioner: {
     kicker:'FCA § 168.2 · Who Trick', title:'Follow the Petitioner', len:'1 min',
-    src:'media/card-follow-the-petitioner.mp4?v=1', poster:'media/card-follow-the-petitioner-poster.jpg?v=1',
+    src:'media/card-follow-the-petitioner.mp4?v=2', poster:'media/card-follow-the-petitioner-poster.jpg?v=1',
     note:'Study guide to Family Court Act § 168.2. Ana is a fictional example.',
     transcript:[
       'A Family Court judge issues an order of protection. The clerk must file a copy with the police. This card answers one question. Which police?',
@@ -203,7 +203,7 @@ const LESSON_VIDEOS = {
   },
   amendonce: {
     kicker:'CPLR § 3025(a) · Clock Trick', title:'Amend Once, No Permission', len:'1 min',
-    src:'media/card-amend-once.mp4?v=1', poster:'media/card-amend-once-poster.jpg?v=1',
+    src:'media/card-amend-once.mp4?v=2', poster:'media/card-amend-once-poster.jpg?v=1',
     note:'Study guide to CPLR § 3025(a). Lee and the dates are a fictional example.',
     transcript:[
       'Sometimes a party needs to fix a pleading, like a complaint, after it is served. This card answers one question. When can they fix it without asking the court?',
@@ -217,11 +217,11 @@ const LESSON_VIDEOS = {
   },
   jurywaiver: {
     kicker:'CPL § 320.10(2) · Who Trick', title:'Waive the Jury', len:'1 min',
-    src:'media/card-waive-the-jury.mp4?v=1', poster:'media/card-waive-the-jury-poster.jpg?v=1',
+    src:'media/card-waive-the-jury.mp4?v=2', poster:'media/card-waive-the-jury-poster.jpg?v=2',
     note:'Study guide to CPL § 320.10(2). Chris is a fictional example.',
     transcript:[
       'A defendant in a criminal case may want a trial without a jury, where the judge alone decides. This card answers one question. How does the defendant give up the jury?',
-      'The Criminal Procedure Law, section 320.10, sets three steps. The waiver must be in writing. The defendant must sign it in person, in open court, in front of the judge. And the court must approve it.',
+      'Waiving a jury takes three steps, under the Criminal Procedure Law, section 320.10. The waiver must be in writing. The defendant must sign it in person, in open court, in front of the judge. And the court must approve it.',
       'The hook is: write it, sign it, judge approves it. The prosecutor\'s consent is not one of the three.',
       'Here is an example. Chris wants a bench trial. A letter from his lawyer is not enough. Chris must sign a written waiver himself, in open court. Then the judge must approve it.',
       'On the exam, it can look like this. The defense attorney signs the waiver for the defendant, in the judge\'s chambers. What is wrong? The defendant must sign it in person, in open court.',
@@ -231,11 +231,11 @@ const LESSON_VIDEOS = {
   },
   interest: {
     kicker:'CPLR § 5003 · Difference Trick', title:'The Interest Clock', len:'1 min',
-    src:'media/card-the-interest-clock.mp4?v=1', poster:'media/card-the-interest-clock-poster.jpg?v=1',
+    src:'media/card-the-interest-clock.mp4?v=3', poster:'media/card-the-interest-clock-poster.jpg?v=3',
     note:'Study guide to CPLR § 5003. The amounts and dates are an example.',
     transcript:[
       'A court orders someone to pay money, and that money earns interest. This card answers one question. On which date does the interest start?',
-      'CPLR section 5003 gives two answers. A money judgment earns interest from the date it is entered. An order to pay money earns interest from the date it is docketed as a judgment.',
+      'There are two answers. A money judgment earns interest from the date it is entered. An order to pay money earns interest from the date it is docketed as a judgment. That is CPLR section 5003.',
       'The hook is: judgment? Entry. Order? Docketing. J goes with E. O goes with D.',
       'Here is an example. A five thousand dollar judgment is entered May 3. Interest runs from May 3. A costs order is docketed as a judgment on June 9. Its interest runs from June 9.',
       'Here is the trap. A money judgment is entered March 3, and docketed March 10. Interest runs from March 3. It is a judgment, so the entry date counts.',
@@ -245,7 +245,7 @@ const LESSON_VIDEOS = {
   },
   quash: {
     kicker:'CPLR § 2304 · Who Trick', title:'Quash It Where It Returns', len:'1 min',
-    src:'media/card-quash-it-where-it-returns.mp4?v=1', poster:'media/card-quash-it-where-it-returns-poster.jpg?v=1',
+    src:'media/card-quash-it-where-it-returns.mp4?v=2', poster:'media/card-quash-it-where-it-returns-poster.jpg?v=1',
     note:'Study guide to CPLR § 2304. The Kings County subpoena is a fictional example.',
     transcript:[
       'Someone gets a subpoena and wants to challenge it. This card answers one question. Where, and how fast, must they go?',
@@ -259,11 +259,11 @@ const LESSON_VIDEOS = {
   },
   bail: {
     kicker:'CPL § 500.10(9) · Difference Trick', title:'What Counts as Bail', len:'1 min',
-    src:'media/card-what-counts-as-bail.mp4?v=1', poster:'media/card-what-counts-as-bail-poster.jpg?v=1',
+    src:'media/card-what-counts-as-bail.mp4?v=2', poster:'media/card-what-counts-as-bail-poster.jpg?v=2',
     note:'Study guide to the CPL § 500.10(9) definition of bail.',
     transcript:[
       'A court sets bail, and the defendant\'s family wants to pay it. This card answers one question. What counts as bail?',
-      'The Criminal Procedure Law, section 500.10, defines bail. Bail means one of three things. Cash bail. A bail bond. Or money paid with a credit card.',
+      'Bail has a fixed list. Under the Criminal Procedure Law, section 500.10, bail means one of three things. Cash bail. A bail bond. Or money paid with a credit card.',
       'The hook is: cash, bond, or card. Three items, and only three.',
       'Here is an example. The family can post bail in cash, through a bail bond, or by credit card. A deed to their house is not on that list.',
       'On the exam, find the extra. Which one is not listed? Real property. It is not cash, bond, or card.',
@@ -273,11 +273,11 @@ const LESSON_VIDEOS = {
   },
   acd: {
     kicker:'CPL § 170.56 · Clock Trick', title:'12 Months, Max', len:'1 min',
-    src:'media/card-12-months-max.mp4?v=1', poster:'media/card-12-months-max-poster.jpg?v=1',
+    src:'media/card-12-months-max.mp4?v=3', poster:'media/card-12-months-max-poster.jpg?v=3',
     note:'Study guide to CPL § 170.56(1–2). The terms are an example.',
     transcript:[
       'A court can adjourn a case in contemplation of dismissal. People call it an A C D. This card answers one question. How long can it last?',
-      'The Criminal Procedure Law, section 170.56, sets the rules for this kind of A C D. The court must set conditions, and they may include supervision. Before dismissal, the court may change the conditions, or make the term longer or shorter. But the total can never be more than twelve months.',
+      'The court must set conditions, and they may include supervision. Before dismissal, the court may change the conditions, or make the term longer or shorter. But the total can never be more than twelve months. That is the Criminal Procedure Law, section 170.56.',
       'The hook is: adjust it all you want. Max, twelve.',
       'Here is an example. An A C D is set for six months, with supervision. Then the court extends it by four months. That is ten in all, so it is fine. Another extension, to fourteen months, would go past the limit.',
       'On the exam, add it up. Nine months, plus five more. That is fourteen. It is over the cap, so the answer is no.',
@@ -287,11 +287,11 @@ const LESSON_VIDEOS = {
   },
   military: {
     kicker:'Uniform Rules § 202.22(a)(7) · Who Trick', title:'The Military Calendar', len:'1 min',
-    src:'media/card-the-military-calendar.mp4?v=1', poster:'media/card-the-military-calendar-poster.jpg?v=1',
+    src:'media/card-the-military-calendar.mp4?v=3', poster:'media/card-the-military-calendar-poster.jpg?v=3',
     note:'Study guide to Uniform Rules § 202.22(a)(7). The witness is a fictional example.',
     transcript:[
       'A judge can keep special calendars of cases. One of them is the military calendar. This card answers one question. When does a case go on it?',
-      'Uniform Rules section 202.22 lists three conditions, and all three must be true. One: a party, or a witness needed at trial, is in military service. Two: that person is not available for trial. Three: a deposition can\'t be taken, or would not give adequate evidence.',
+      'There are three conditions, and all three must be true. One: a party, or a witness needed at trial, is in military service. Two: that person is not available for trial. Three: a deposition can\'t be taken, or would not give adequate evidence. That is Uniform Rules, section 202.22.',
       'The hook is: serving, unavailable, no good deposition. If one is missing, it is not a military calendar case.',
       'Here is an example. A key witness is deployed overseas, and can\'t come to trial. A deposition would not give adequate evidence. All three are true, so the judge may place the case on the military calendar.',
       'Here is the trap. A needed witness is deployed overseas, but an adequate video deposition can be taken. Military calendar? No. The third condition fails.',
@@ -422,9 +422,148 @@ const LESSON_VIDEOS = {
     ],
     links:[['CPLR 1201', 'https://www.nysenate.gov/legislation/laws/CVP/1201']],
   },
+  ypsi: {
+    kicker:'CPL § 720.20(1) · Trigger Trick', title:'Conviction → What\'s Next?', len:'1 min',
+    src:'media/card-conviction-whats-next.mp4?v=1', poster:'media/card-conviction-whats-next-poster.jpg?v=1',
+    note:'Study guide to CPL § 720.20(1). The months are an example.',
+    transcript:[
+      'An eligible youth has just been convicted. Is the youth a youthful offender? This card answers one question. When does the court decide?',
+      'Here is the order. First, conviction. Then the court must order a pre-sentence investigation. Next comes a written report. And at the time of sentencing, with the report in hand, the court must decide whether the youth is a youthful offender. That is the Criminal Procedure Law, section 720.20.',
+      'The hook is: investigate first. Decide at sentence. Not at conviction.',
+      'Here is an example. An eligible youth is convicted in March. The court orders a pre-sentence investigation. At sentencing in May, with the written report in hand, it decides youthful offender status. Not back in March.',
+      'On the exam, it can look like this. When must the court decide whether the youth is a youthful offender? At the time of pronouncing sentence. Not upon conviction, and not at arraignment.',
+      'Investigate first. Decide at sentence. The rule is Criminal Procedure Law, section 720.20.',
+    ],
+    links:[['CPL § 720.20', 'https://www.nysenate.gov/legislation/laws/CRP/720.20']],
+  },
+  custodyornot: {
+    kicker:'DRL § 75-a · Difference Trick', title:'Custody or Not?', len:'1 min',
+    src:'media/card-custody-or-not.mp4?v=1', poster:'media/card-custody-or-not-poster.jpg?v=1',
+    note:'Study guide to the DRL § 75-a definition of a child custody proceeding. The cases are examples.',
+    transcript:[
+      'A child is caught up in a court case. Is it a child custody proceeding? This card answers one question. What counts?',
+      'Here is the test. If legal custody, physical custody, or visitation is an issue, it counts. That includes divorce, separation, neglect, abuse, guardianship, and paternity cases. But four kinds never count: juvenile delinquency, persons in need of supervision, contractual emancipation, and title three enforcement. That is the Domestic Relations Law, section 75-a.',
+      'The hook is: custody at issue? It counts. Then learn the four that never count.',
+      'Here is an example. Parents divorce, and they fight over visitation. That is a child custody proceeding. A juvenile delinquency case about the same child is not.',
+      'On the exam, it can look like this. Does a paternity case count when custody is an issue? Yes. Paternity is on the list. Do not mix it up with the four exclusions.',
+      'Custody at issue? It counts. The four exclusions never do. The rule is Domestic Relations Law, section 75-a.',
+    ],
+    links:[['DRL § 75-a', 'https://www.nysenate.gov/legislation/laws/DOM/75-A']],
+  },
+  newtrial: {
+    kicker:'CPLR § 4402 · Trigger Trick', title:'Mid-Trial Reset', len:'1 min',
+    src:'media/card-mid-trial-reset.mp4?v=1', poster:'media/card-mid-trial-reset-poster.jpg?v=1',
+    note:'Study guide to CPLR § 4402. The trial is an example.',
+    transcript:[
+      'Halfway through a trial, something goes wrong. This card answers one question. Can the court hit reset?',
+      'Yes, it can. At any time during the trial, on motion of any party, the court may order a continuance, or a new trial. The standard is the interest of justice, on terms that are just. That is CPLR section 4402.',
+      'The hook is: any time during trial. Any party. Not before, and not after.',
+      'Here is an example. Midway through a trial, something happens that makes the trial unfair. A party moves for a new trial. The court may order a new trial or a continuance, if the interest of justice calls for it.',
+      'On the exam, it can look like this. Who may make this motion? Any party. Not only the plaintiff, and not only the defendant.',
+      'Any time during trial. Any party. The rule is CPLR section 4402.',
+    ],
+    links:[['CPLR 4402', 'https://www.nysenate.gov/legislation/laws/CVP/4402']],
+  },
+  schoolnotice: {
+    kicker:'CPL § 380.90(2) · Trigger Trick', title:'The School Gets Notified', len:'1 min',
+    src:'media/card-the-school-gets-notified.mp4?v=1', poster:'media/card-the-school-gets-notified-poster.jpg?v=1',
+    note:'Study guide to CPL § 380.90(2). The student is an example.',
+    transcript:[
+      'A high school student is sentenced for a crime. This card answers one question. Who tells the school?',
+      'The sentencing court tells the school, when three things are true. The student is under nineteen. The school is a public or private elementary or secondary school. And the student is sentenced for a crime. Then the court notifies the school\'s designated educational official. That is the Criminal Procedure Law, section 380.90.',
+      'The hook is: under nineteen, plus sentenced, equals the school is told. And it is the court that tells them.',
+      'Here is an example. An eighteen-year-old high school senior is sentenced for a crime. Eighteen is under nineteen. So the court that sentenced the student notifies the school\'s designated educational official. A college student would not be covered.',
+      'On the exam, it can look like this. Who notifies the school after the sentencing? The sentencing court. Not the district attorney, and not the parents.',
+      'Under nineteen, plus sentenced, equals the school is told. The rule is Criminal Procedure Law, section 380.90.',
+    ],
+    links:[['CPL § 380.90', 'https://www.nysenate.gov/legislation/laws/CRP/380.90']],
+  },
+  reargue: {
+    kicker:'CPLR § 2221(d) · Difference Trick', title:'Overlooked, Not New', len:'1 min',
+    src:'media/card-overlooked-not-new.mp4?v=1', poster:'media/card-overlooked-not-new-poster.jpg?v=1',
+    note:'Study guide to CPLR § 2221(d). The dates are an example.',
+    transcript:[
+      'A party lost a motion and thinks the judge got it wrong. This card answers one question. How do they ask the court to look again?',
+      'They move to reargue. Label it as reargument. Base it on facts or law the court overlooked or misunderstood, with no new facts. And make it within thirty days after service of the order with notice of entry. That is CPLR section 2221, subdivision d.',
+      'The hook is: you missed it. Look again. Same facts, sharper argument. New facts belong to a different card: renew.',
+      'Here is an example. The order with notice of entry is served March first. The lawyer thinks the court misread a statute. So the lawyer moves to reargue, labeled as such, by March thirty-first. No new facts.',
+      'On the exam, it can look like this. Within what time must a motion to reargue be made? Thirty days after notice of entry is served. Not thirty days from the ruling itself.',
+      'You missed it. Look again. The rule is CPLR section 2221, subdivision d.',
+    ],
+    links:[['CPLR 2221', 'https://www.nysenate.gov/legislation/laws/CVP/2221']],
+  },
+  renew: {
+    kicker:'CPLR § 2221(e) · Difference Trick', title:'New Facts, Good Excuse', len:'1 min',
+    src:'media/card-new-facts-good-excuse.mp4?v=1', poster:'media/card-new-facts-good-excuse-poster.jpg?v=1',
+    note:'Study guide to CPLR § 2221(e). The contract is an example.',
+    transcript:[
+      'After losing a motion, a party finds something new. This card answers one question. How do they bring it back to the court?',
+      'They move to renew. Label it as renewal. Base it on new facts that would change the result, or on a change in the law. And give a reasonable excuse for not offering those facts before. That is CPLR section 2221, subdivision e.',
+      'The hook is: found something new. Here\'s why it\'s late. No new facts? That is reargue, the other card.',
+      'Here is an example. A party loses a motion. Later, they find a signed contract that would change the decision. They move to renew, and they explain why they could not present it the first time.',
+      'On the exam, it can look like this. Along with new facts, what must a motion to renew give? A reason they were not offered before. New facts need a good excuse.',
+      'Found something new. Here\'s why it\'s late. The rule is CPLR section 2221, subdivision e.',
+    ],
+    links:[['CPLR 2221', 'https://www.nysenate.gov/legislation/laws/CVP/2221']],
+  },
+  sj120: {
+    kicker:'CPLR § 3212(a) · Clock Trick', title:'120 Days After the Note', len:'1 min',
+    src:'media/card-120-days-after-the-note.mp4?v=1', poster:'media/card-120-days-after-the-note-poster.jpg?v=1',
+    note:'Study guide to CPLR § 3212(a). The dates are an example.',
+    transcript:[
+      'A party wants the court to decide the case without a trial. That is summary judgment. This card answers one question. What is the deadline?',
+      'Any party may move for summary judgment after issue is joined. If the court sets no other date, the motion is due no later than one hundred twenty days after the note of issue is filed. A date set by the court can\'t be earlier than thirty days after the note. After the deadline, a party needs leave of court, on good cause. That is CPLR section 3212.',
+      'The hook is: note filed, clock\'s running. One hundred twenty days.',
+      'Here is an example. The note of issue is filed January tenth, and the court set no date. The summary judgment motion is due by May tenth. After that, only with leave of court on good cause.',
+      'On the exam, it can look like this. If the court sets no date, when is the motion due? One hundred twenty days after the note of issue. Not thirty. Thirty is only the earliest date a court can set.',
+      'Note filed, clock\'s running. One hundred twenty days. The rule is CPLR section 3212.',
+    ],
+    links:[['CPLR 3212', 'https://www.nysenate.gov/legislation/laws/CVP/3212']],
+  },
+  undodefault: {
+    kicker:'CPLR § 5015(b) · Who Trick', title:'The Clerk Can Undo a Default', len:'1 min',
+    src:'media/card-the-clerk-can-undo-a-default.mp4?v=1', poster:'media/card-the-clerk-can-undo-a-default-poster.jpg?v=1',
+    note:'Study guide to CPLR § 5015(b). Lee is an example.',
+    transcript:[
+      'A default judgment was entered, and now both sides want it gone. This card answers one question. Who can undo it?',
+      'The clerk can. If the parties, or their attorneys, file a stipulation consenting to vacate a default judgment entered under section 3215, the clerk of the court may vacate it. Without that stipulation, it takes a motion to the court. That is CPLR section 5015, subdivision b.',
+      'The hook is: both sides agree? The clerk can undo it. No agreement? Ask the court.',
+      'Here is an example. A default judgment was entered against Lee. Both sides\' lawyers sign and file a stipulation consenting to vacate it. The clerk can vacate it, with no motion needed.',
+      'On the exam, it can look like this. What must be filed for the clerk to vacate a default judgment? A stipulation of consent. Signed by the parties, or by their attorneys.',
+      'Both sides agree? The clerk can undo it. The rule is CPLR section 5015, subdivision b.',
+    ],
+    links:[['CPLR 5015', 'https://www.nysenate.gov/legislation/laws/CVP/5015']],
+  },
+  freeze: {
+    kicker:'CPLR § 5222 · Who Trick', title:'The Clerk Can Freeze It', len:'1 min',
+    src:'media/card-the-clerk-can-freeze-it.mp4?v=1', poster:'media/card-the-clerk-can-freeze-it-poster.jpg?v=1',
+    note:'Study guide to CPLR § 5222(a)–(b). The bank is an example.',
+    transcript:[
+      'A creditor won a money judgment, but the debtor\'s money sits in a bank. This card answers one question. Who can freeze it?',
+      'Three can issue a restraining notice. The clerk of the court. The judgment creditor\'s attorney, as an officer of the court. Or a support collection unit. The notice must warn that disobeying it is contempt of court. It freezes the property for up to one year, or until the judgment is paid or vacated. That is CPLR section 5222.',
+      'The hook is: nobody moves that money. The notice freezes. It does not take.',
+      'Here is an example. The creditor\'s attorney serves a restraining notice on the debtor\'s bank. The bank cannot transfer that money for up to one year, or until the judgment is paid or vacated.',
+      'On the exam, it can look like this. Besides the clerk, who else may issue a restraining notice? The judgment creditor\'s attorney, acting as an officer of the court.',
+      'Nobody moves that money. The rule is CPLR section 5222.',
+    ],
+    links:[['CPLR 5222', 'https://www.nysenate.gov/legislation/laws/CVP/5222']],
+  },
+  appeal30: {
+    kicker:'CPLR §§ 5513, 5515 · Clock Trick', title:'Serve It, File It, 30 Days', len:'1 min',
+    src:'media/card-serve-it-file-it-30-days.mp4?v=1', poster:'media/card-serve-it-file-it-30-days-poster.jpg?v=1',
+    note:'Study guide to CPLR §§ 5513(a) and 5515(1). The dates are an example.',
+    transcript:[
+      'A party lost and wants to appeal. This card answers one question. How, and how fast?',
+      'Two acts. Serve a notice of appeal on the other side. Then file it in the office where the judgment was entered. For an appeal as of right, both must happen within thirty days after you are served with the judgment and written notice of its entry. That is CPLR sections 5513 and 5515.',
+      'The hook is: serve it. File it. Thirty days. The clock starts at service with notice of entry.',
+      'Here is an example. The winning side serves the judgment with notice of entry on June first. The losing side must serve and file the notice of appeal by July first. July fifteenth is too late.',
+      'On the exam, it can look like this. How is an appeal taken? Serve a notice of appeal, and file it. Two acts, not one.',
+      'Serve it. File it. Thirty days. The rules are CPLR sections 5513 and 5515.',
+    ],
+    links:[['CPLR 5513', 'https://www.nysenate.gov/legislation/laws/CVP/5513'], ['CPLR 5515', 'https://www.nysenate.gov/legislation/laws/CVP/5515']],
+  },
 };
-const CARD_VIDEOS = { eightback:'eightback', svs:'svs', whosigns:'whosigns', clock6090:'clock6090',
-  eightdays:'eightdays', sealed:'sealed', followpetitioner:'followpetitioner', amendonce:'amendonce', jurywaiver:'jurywaiver', interest:'interest', quash:'quash', bail:'bail', acd:'acd', military:'military', childvoice:'childvoice' };   // card id -> lesson
+const CARD_VIDEOS = { eightback:'eightback', svs:'svs', whosigns:'whosigns', clock6090:'clock6090', eightdays:'eightdays', sealed:'sealed', followpetitioner:'followpetitioner', amendonce:'amendonce', jurywaiver:'jurywaiver', interest:'interest', quash:'quash', bail:'bail', acd:'acd', military:'military', childvoice:'childvoice', ypsi:'ypsi', custodyornot:'custodyornot', newtrial:'newtrial', schoolnotice:'schoolnotice', reargue:'reargue', renew:'renew', sj120:'sj120', undodefault:'undodefault', freeze:'freeze', appeal30:'appeal30' };   // card id -> lesson
 const cardVideo = c => (c && CARD_VIDEOS[c.id]) || null;
 
 /* The "Watch" button. `from` = 'intro' (with the card id) brings the person back to that card's intro. */
