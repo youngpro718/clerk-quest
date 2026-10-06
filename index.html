@@ -464,7 +464,9 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .pk-card:not(.flipped) .pk-front,.pk-card.flipped .pk-back{pointer-events:none}
 .pk-face{transition:opacity 0s linear .31s}
 .pk-card:not(.flipped) .pk-front,.pk-card.flipped .pk-back{opacity:0}
-.cbackimg{width:100%;height:100%;object-fit:cover;border-radius:6%/4%;filter:drop-shadow(0 10px 14px rgba(0,0,0,.55))}
+.cbackimg{display:block;width:100%;height:100%;object-fit:cover;border-radius:6%/4%;filter:drop-shadow(0 10px 14px rgba(0,0,0,.55))}
+.cd-back{position:relative}
+.reverse-labels{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .pk-badge{position:absolute;left:50%;top:-12px;translate:-50% 0;z-index:9;font-family:"Bangers";letter-spacing:.06em;font-size:clamp(13px,3.4vw,18px);padding:3px 10px;border:2px solid var(--ink);border-radius:999px;white-space:nowrap;opacity:0;transition:opacity .3s .45s;color:var(--ink)}
 .pk-card.flipped .pk-badge{opacity:1}
 .pk-badge.new{background:#ffe27a} .pk-badge.dup{background:#bfe0b5} .pk-badge.trick{background:#d6c2ff}
@@ -650,30 +652,46 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 /* the verdict stamp lands on the mascot (or the title, on copy-check cards), never on the question */
 #back .stampimg.big{width:54%;left:auto;right:0;top:40%;--rot:-8deg}
 #back .stampimg.big.top{width:58%;left:21%;right:auto;top:3.5%;--rot:-5deg}
-/* Series 3 reverse: paper panels inside a navy film archive, all quiz labels stay live. */
-#back.s3-study{background:#102532;border:1.2cqw solid #d9a648;border-radius:5cqw;box-shadow:inset 0 0 0 .6cqw #201d18;overflow:hidden}
-#back.s3-study .bgs{display:none}
-#back.s3-study::after{content:"";position:absolute;inset:17% 1.5% 5%;pointer-events:none;z-index:1;border-left:2.4cqw dashed #ddcfad;border-right:2.4cqw dashed #ddcfad;opacity:.65}
-#back.s3-study .title{background:#f6e7c8;border:.35cqw solid #a87836;border-radius:1.5cqw;padding:.8cqw;gap:0}
-#back.s3-study .bnum,#back.s3-study .lvtag{background:#f4ddab;border:.35cqw solid #ab7e37;border-radius:1.3cqw;color:#211e18}
-#back.s3-study .brar,#back.s3-study .bcat,#back.s3-study .icon,#back.s3-study .counter{color:#f6ecd4}
-#back.s3-study .qtext,#back.s3-study .rec{background:#f6e7c8;border:.35cqw solid #bc914b;border-radius:1.6cqw;padding:1.5cqw 2cqw}
-#back.s3-study .ans{border-color:#bc914b;background:#fff0d5;box-shadow:0 .6cqw 0 #060e14}
-#back.s3-study .ans .L{background:#8c2624;border-color:#bc914b;color:#fff1d4}
-#back.s3-study .hint{background:#ead9b7;border:.35cqw solid #bc914b;border-radius:1.5cqw;padding:1.5cqw}
-#back.s3-study .pts{background:#123d43;border:.35cqw solid #bc914b;border-radius:1.5cqw;color:#fff1d4}
-#back.s3-study .nxtab{background:#922b25;border:.35cqw solid #bc914b;border-radius:1cqw;color:#fff1d4}
-#back.s3-study .nxl,#back.s3-study .nxr{background:#f6e7c8;border:.35cqw solid #bc914b;border-radius:1.5cqw;padding:1.5cqw}
-#back.s3-study .nxr{font-size:3.1cqw;gap:.6cqw;line-height:1.12}
-#back.s3-study .nxr b{font-size:3cqw;margin-bottom:.3cqw;gap:.7cqw}
-#back.s3-study .pts .v{font-size:8cqw}
-#back.s3-study .hint{font-size:3.5cqw;gap:1.6cqw}
-#back.s3-study .hint b{font-size:3.8cqw}
-/* the question side is drawn in 3 slices so its middle (plain paper) can stretch */
-.bgs{position:absolute;left:0;width:100%;z-index:0;background:url(art/back_card.webp) no-repeat;pointer-events:none}
-.bgs.t{top:0;height:33.4821%;background-size:100% 256.0%;background-position:top}
-.bgs.m{top:33.4821%;height:33.2589%;background-size:100% 451.7647%;background-position:0 50.1672%}
-.bgs.b{bottom:0;height:33.2589%;background-size:100% 257.7181%;background-position:bottom}
+/* Series-authored question faces. The SVGs are blank surfaces; every label and answer remains live HTML. */
+#back[class*="question_s"]{overflow:hidden;border-radius:5% / 2.86%;background:#efe4c8}
+#back .question-frame{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#back.question_s1{--qpanel:url(art/question_s1_question.svg);--tpanel:url(art/question_s1_table.svg);--epanel:url(art/question_s1_explanation.svg);--apanel:url(art/question_s1_answer.svg);--hpanel:url(art/question_s1_hint.svg);--ppanel:url(art/question_s1_points.svg);--xpanel:url(art/question_s1_progress.svg);--qaccent:#6e90a9;--qlabel:#d77969;--qpaper:#f5ecd8}
+#back.question_s2{--qpanel:url(art/question_s2_question.svg);--tpanel:url(art/question_s2_table.svg);--epanel:url(art/question_s2_explanation.svg);--apanel:url(art/question_s2_answer.svg);--hpanel:url(art/question_s2_hint.svg);--ppanel:url(art/question_s2_points.svg);--xpanel:url(art/question_s2_progress.svg);--qaccent:#4b2b70;--qlabel:#e4b84b;--qpaper:#fff5d8}
+#back.question_s3{--qpanel:url(art/question_s3_question.svg);--tpanel:url(art/question_s3_table.svg);--epanel:url(art/question_s3_explanation.svg);--apanel:url(art/question_s3_answer.svg);--hpanel:url(art/question_s3_hint.svg);--ppanel:url(art/question_s3_points.svg);--xpanel:url(art/question_s3_progress.svg);--qaccent:#123d43;--qlabel:#8c2624;--qpaper:#f6e7c8}
+#back.question_s4{--qpanel:url(art/question_s4_question.svg);--tpanel:url(art/question_s4_table.svg);--epanel:url(art/question_s4_explanation.svg);--apanel:url(art/question_s4_answer.svg);--hpanel:url(art/question_s4_hint.svg);--ppanel:url(art/question_s4_points.svg);--xpanel:url(art/question_s4_progress.svg);--qaccent:#171719;--qlabel:#cf3b2a;--qpaper:#fbf6e8}
+#back.question_s5{--qpanel:url(art/question_s5_question.svg);--tpanel:url(art/question_s5_table.svg);--epanel:url(art/question_s5_explanation.svg);--apanel:url(art/question_s5_answer.svg);--hpanel:url(art/question_s5_hint.svg);--ppanel:url(art/question_s5_points.svg);--xpanel:url(art/question_s5_progress.svg);--qaccent:#243b5c;--qlabel:#b93835;--qpaper:#fff5d9}
+#back[class*="question_s"] .qtext{background:var(--qpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:1.7cqw 2.4cqw}
+#back[class*="question_s"] .rec{background:var(--tpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:3cqw 3cqw 2cqw}
+#back[class*="question_s"] .ans{background-color:transparent;background-image:var(--apanel);background-position:center;background-size:100% 100%;background-repeat:no-repeat;border:0;border-radius:0;box-shadow:0 .65cqw 0 rgba(0,0,0,.28)}
+#back[class*="question_s"] .ans .L{background:var(--qaccent);border-right:.45cqw solid var(--qlabel);color:#fff8e8}
+#back[class*="question_s"] .ans.right{background-image:linear-gradient(rgba(108,185,104,.3),rgba(108,185,104,.3)),var(--apanel);filter:drop-shadow(0 0 1.4cqw rgba(63,143,74,.9))}
+#back[class*="question_s"] .ans.wrong{background-image:linear-gradient(rgba(203,72,59,.26),rgba(203,72,59,.26)),var(--apanel);opacity:.72}
+#back[class*="question_s"] .ans.right .L{background:#3f8f4a}
+#back[class*="question_s"] .ans.wrong .L{background:#a43b32}
+#back[class*="question_s"] .hint{background:var(--hpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:1.5cqw 2.5cqw}
+#back[class*="question_s"] .hint.used{filter:drop-shadow(0 0 1.7cqw rgba(255,216,83,.9))}
+#back[class*="question_s"] .pts{background:var(--ppanel) center/100% 100% no-repeat;border:0;border-radius:0;color:#fff7e4;text-shadow:0 .25cqw .15cqw rgba(0,0,0,.65)}
+#back[class*="question_s"] .progress-surface{z-index:2;background:var(--xpanel) center/100% 100% no-repeat;pointer-events:none}
+#back[class*="question_s"] .nxl,#back[class*="question_s"] .nxr{background:none;border:0;border-radius:0;padding:1.5cqw}
+#back[class*="question_s"] .nxtab{background:var(--qlabel);border:.35cqw solid var(--qaccent);border-radius:1cqw;color:#fff8e8;text-shadow:0 .25cqw 0 rgba(0,0,0,.35)}
+#back[class*="question_s"] .explain{background-color:var(--qpaper);background-image:var(--epanel);background-position:center;background-size:100% 100%;background-repeat:no-repeat;border:0;border-radius:1.5cqw;color:#211e18;padding:3cqw 4cqw;overflow:auto;box-shadow:0 1.2cqw 0 rgba(0,0,0,.38)}
+#back[class*="question_s"] .title{background:var(--qpaper);border:.35cqw solid var(--qlabel);border-radius:1.4cqw;padding:.8cqw;gap:.2cqw}
+#back[class*="question_s"] .bnum,#back[class*="question_s"] .lvtag{background:var(--qlabel);border:.35cqw solid var(--qaccent);border-radius:1.2cqw;color:#fff8e8;text-shadow:0 .25cqw 0 rgba(0,0,0,.35)}
+#back[class*="question_s"] .brar,#back[class*="question_s"] .bcat,#back[class*="question_s"] .icon,#back[class*="question_s"] .counter{color:#fff4d8;text-shadow:0 .3cqw .2cqw rgba(0,0,0,.7)}
+#back.question_s1 .brar,#back.question_s1 .bcat,#back.question_s1 .icon,#back.question_s1 .counter,#back.question_s2 .brar,#back.question_s2 .bcat,#back.question_s2 .icon,#back.question_s2 .counter,#back.question_s4 .brar,#back.question_s4 .bcat,#back.question_s4 .icon,#back.question_s4 .counter,#back.question_s5 .brar,#back.question_s5 .bcat,#back.question_s5 .icon,#back.question_s5 .counter{color:#211e18;text-shadow:none}
+#back.question_s2 .bnum,#back.question_s2 .lvtag,#back.question_s2 .nxtab{color:#211e18;text-shadow:none}
+#back.question_s2 .title{transform:rotate(-.5deg);box-shadow:.6cqw .7cqw 0 #17121e}
+#back.question_s4 .title{border-style:dashed;transform:rotate(.35deg)}
+#back.question_s5 .title{box-shadow:.7cqw .7cqw 0 #151a25}
+/* The proven Series 3 compact sizing is used by every question face for small phones. */
+#back[class*="question_s"] .nxr{font-size:3.1cqw;gap:.6cqw;line-height:1.12}
+#back[class*="question_s"] .nxr b{font-size:3cqw;margin-bottom:.3cqw;gap:.7cqw}
+#back[class*="question_s"] .pts{font-size:3.3cqw;line-height:.95;gap:.2cqw;padding:1.2cqw .8cqw .8cqw}
+#back[class*="question_s"] .pts .v{font-size:8cqw;line-height:1}
+#back[class*="question_s"] .hint{font-size:3.5cqw;gap:1.6cqw;padding:1.3cqw 2.5cqw 2.3cqw}
+#back[class*="question_s"] .hint > span:last-child{padding-top:.4cqw}
+#back[class*="question_s"] .hint b{font-size:3.6cqw;line-height:1.08;margin-bottom:.35cqw}
+#back[class*="question_s"] .bnum{font-size:5cqw;letter-spacing:0;white-space:nowrap}
 .face.back{transform:rotateY(180deg)}
 /* only the side facing the player can be tapped */
 .flip:not(.flipped) .face.back, .flip.flipped .face.front{pointer-events:none}
@@ -1230,6 +1248,8 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="stickers.js?v=70340509"></script>
 <script src="dockets.js?v=da920b66"></script>
 <script src="today.js?v=8dfb2c73"></script>
+<script src="exam.js?v=5c38761d"></script>
+<script src="exam-questions.js?v=79574fc7"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="sticker3d.js?v=9a43370e"></script>
 <script src="questions.js?v=b59c89f2"></script>
@@ -3045,10 +3065,24 @@ const stickerArtSrc = id => ['summons','motion'].includes(id) ? artSrc('characte
 const packArtFor = cards => { const series = Math.max(1, ...cards.map(c => c && Number(c.series) || 1)); return artSrc(series === 1 ? 'pack' : `pack_s${series}`); };
 const nextPackArt = () => nextPackArtSrc();   // the wrapper of the series the next free pack comes from
 const hintCosts = () => !!(sess && sess.hint && !sess.freeHint);   // a free-hint boost makes the hint cost nothing
-const backSrc = c => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : c?.series === 3 ? 'art/back_s3_archive_v1.webp' : 'art/cardback.webp';
+const reverseSeries = c => Number(c?.series) || 1;
+const SERIES_BACKS = {
+  1:'art/back_s1_template_v1.webp', 2:'art/back_s2_template_v1.webp',
+  3:'art/back_s3_archive_v1.webp', 4:'art/back_s4_template_v1.webp', 5:'art/back_s5_template_v1.webp'
+};
+const SERIES_BACK_LABELS = {
+  1:{src:'art/back_label_s1_v1.svg', label:'Series 1 Court Terms card back'},
+  2:{src:'art/back_label_s2_v1.svg', label:'Series 2 Memory Tricks card back'},
+  4:{src:'art/back_label_s4_v1.svg', label:'Series 4 Criminal Procedure card back'},
+  5:{src:'art/back_label_s5_v1.svg', label:'Series 5 Penal Law card back'}
+};
+const backSrc = c => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : (SERIES_BACKS[reverseSeries(c)] || 'art/cardback.webp');
 function cardReverseHTML(c){
-  const themed = c?.series === 3 && !(S.styles && S.styles.back);
-  return `<img class="cbackimg" src="${backSrc(c)}" alt="${themed ? 'Series 3 court memory card back' : 'Card back'}">${themed ? '<svg class="reverse-labels" viewBox="0 0 1024 1536" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"><text x="512" y="245" text-anchor="middle" fill="#26221a" font-family="Bangers, sans-serif" font-size="88" letter-spacing="4">COURT MEMORY</text><text x="512" y="1247" text-anchor="middle" fill="#fff0ce" font-family="Bangers, sans-serif" font-size="62" letter-spacing="5">SERIES 3</text></svg>' : ''}`;
+  const custom = !!(S.styles && S.styles.back), series = reverseSeries(c), themedS3 = series === 3 && !custom;
+  const label = !custom && SERIES_BACK_LABELS[series];
+  const backgroundAlt = custom ? 'Equipped custom card back' : themedS3 ? 'Series 3 court memory card back' : label ? '' : 'Card back';
+  const lettering = label ? `<img class="reverse-labels" src="${label.src}" role="img" aria-label="${label.label}" alt="${label.label}">` : '';
+  return `<img class="cbackimg" src="${backSrc(c)}" alt="${backgroundAlt}">${lettering}${themedS3 ? '<svg class="reverse-labels" viewBox="0 0 1024 1536" aria-hidden="true"><text x="512" y="245" text-anchor="middle" fill="#26221a" font-family="Bangers, sans-serif" font-size="88" letter-spacing="4">COURT MEMORY</text><text x="512" y="1247" text-anchor="middle" fill="#fff0ce" font-family="Bangers, sans-serif" font-size="62" letter-spacing="5">SERIES 3</text></svg>' : ''}`;
 }   // the card back in use
 /* A card's equipped style: a bought frame (Series 1/2 only) and holo foil. */
 const styleFrame = c => { const e = S.styles && S.styles.cards[c.id] && S.styles.cards[c.id].eq; return e && e.frame && ![3,4,5].includes(c.series) ? artSrc('frame_' + e.frame) : ''; };
@@ -3153,7 +3187,7 @@ const SCREENS = {
       const cold = mine.filter(c => isCold(S.cards[c.id]));
       const almost = mine.filter(c => { const st = S.cards[c.id]; return !st.mastered && Math.ceil((NEED[st.level-1] - st.xp) / REWARD[st.level-1]) <= 2; });
       const upNext = mine.filter(c => !S.cards[c.id].mastered && !isCold(S.cards[c.id])).sort((a, b) => cardProgress(b) - cardProgress(a)).slice(0, 5);
-      body += `<button class="quick" data-act="quick">${PLAY_ICON} Quick Round<small>A random card from your collection</small></button>
+      body += `${typeof examRowHTML === 'function' ? examRowHTML() : ''}<button class="quick" data-act="quick">${PLAY_ICON} Quick Round<small>A random card from your collection</small></button>
         ${cold.length ? `<div class="sec-h"><span>${ICO('thermo_snow')} Cold Cases</span></div><div class="list">${cold.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('')}</div>` : ''}
         ${almost.length ? `<div class="sec-h"><span>${ICO('almost')} Almost Leveled Up</span></div><div class="carousel">${almost.map(c => miniCard(c)).join('')}</div>` : ''}
         <div class="sec-h"><span>Up Next</span></div><div class="list">${upNext.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('') || `<p class="empty">Every card you own is mastered or cold. ${ICO('celebrate')}</p>`}</div>
@@ -3414,7 +3448,7 @@ function renderTabbar(){
 const nav = { tab:'home', stacks:{} };
 TABS.forEach(([id]) => nav.stacks[id] = [{s:id, p:{}}]);
 const topEntry = () => { const st = nav.stacks[nav.tab]; return st[st.length - 1]; };
-Object.assign(SCREENS, STUDY_SCREENS, STORE_SCREENS, BINDER_SCREENS, ACCOUNT_SCREENS, ADMIN_SCREENS, STICKER_SCREENS, DOCKET_SCREENS);
+Object.assign(SCREENS, STUDY_SCREENS, STORE_SCREENS, BINDER_SCREENS, ACCOUNT_SCREENS, ADMIN_SCREENS, STICKER_SCREENS, DOCKET_SCREENS, typeof EXAM_SCREENS === 'object' ? EXAM_SCREENS : {});
 function currentScreenEl(){ return document.querySelector('#screens .screen.current'); }
 function saveScroll(){ const el = currentScreenEl(); if (el && el._entry) el._entry.scroll = el.querySelector('.scr').scrollTop; }
 function buildScreen(entry, depth = nav.stacks[nav.tab].length - 1){
@@ -3511,14 +3545,15 @@ function shrinkToFit(el, minCqw){
 }
 function paintStudy(anim){
   const c = byId(sess.id), st = S.cards[sess.id];
+  const series = Number(c.series) || 1;
   const disp = sess.display || st; // frozen display state while a level-up is pending
   const lv = disp.level, q = sess.q, ans = sess.answered;
   const reward = Math.round(REWARD[lv-1] * (hintCosts() ? .5 : 1)) * (doubleXPOn() ? 2 : 1);
   const need = NEED[lv-1];
   const pct = disp.mastered ? 100 : Math.min(100, disp.xp/need*100);
   const letters = 'ABCD';
-  const mascotSrc = c.mascot || (c.cutout && c.series !== 3 ? uiCharacterSrc(c, true) : null);
-  const mascotHTML = c.series === 3 && c.cutout ? uiCharacterHTML(c, lv, false) : (mascotSrc ? `<img src="${mascotSrc}" alt="" class="${c.mascot?'':'cutm'}">` : '');
+  const mascotSrc = c.mascot || (c.cutout && series !== 3 ? uiCharacterSrc(c, true) : null);
+  const mascotHTML = series === 3 && c.cutout ? uiCharacterHTML(c, lv, false) : (mascotSrc ? `<img src="${mascotSrc}" alt="" class="${c.mascot?'':'cutm'}">` : '');
   app.classList.toggle('tq', q.type === 'table');
   let mid = '';
   if (q.type === 'table') {
@@ -3543,21 +3578,22 @@ function paintStudy(anim){
     ? `<b>${ICO('lock')} LEVEL ${lv+1} UNLOCKS:</b><span>• Harder questions</span><span>• +${REWARD[lv]} XP per answer</span><span>• New card art</span>`
     : `<b>${ICO('mastered')} MASTERY:</b><span>• Gold MASTERED stamp</span><span>• Bragging rights</span><span>• Final lore line</span>`;
   const back = document.getElementById('back');
-  back.className = 'card' + (c.series === 3 ? ' s3-study' : '') + (anim ? ' fade-swap' : '');
+  back.className = `card question_s${series}` + (anim ? ' fade-swap' : '');
   back.innerHTML = `
-    <div class="bgs t"></div><div class="bgs m"></div><div class="bgs b"></div>
+    <img class="question-frame" src="art/question_s${series}_template.svg" alt="">
     <div class="t bnum" style="${PB(62,62,228,152)}">${c.num}</div>
     <div class="t brar" style="${PB(72,158,228,220)}">${c.rarity.toUpperCase()}</div>
     <div class="t title" style="${PB(262,72,772,262)}">
-      ${c.series === 3 ? printedTitleHTML(c, 510/190, 46, 33, 8.6) : `${titleLine(c, 1, 46, 8.2)}${titleLine(c, 2, 33, 8.6)}`}</div>
+      ${series === 3 ? printedTitleHTML(c, 510/190, 46, 33, 8.6) : `${titleLine(c, 1, 46, 8.2)}${titleLine(c, 2, 33, 8.6)}`}</div>
     <div class="t bcat" style="${PB(794,60,968,168)}">${esc(c.category)}</div>
     <div class="t icon" style="${PB(836,168,950,270)}">${ICON[c.icon]}</div>
     <div class="t lvtag" style="${PB(66,284,328,392)}">LEVEL ${lv}</div>
     <div class="t counter" style="${PB(610,316,912,372)}${sessLen() > 9 ? ';font-size:3.3cqw;letter-spacing:.02em' : ''}">QUESTION ${sess.i+1} OF ${sessLen()}</div>
     ${mid}
     <button class="t hint ${sess.hint?'used':''}" style="${PB(68,1230,642,1408)}" data-act="hint" ${sess.hint||ans?'disabled':''}>
-      <span class="bulb">${ICO('hint')}</span><span><b>${sess.hint ? 'HINT:' : 'SIDEBAR?'}</b>${esc(sess.hint ? q.h : boosts().freeHints ? `Tap for a free hint (${boosts().freeHints} left).` : 'Tap for a hint. Correct answers then earn half XP and coins.')}</span></button>
+      <span class="bulb">${ICO('hint')}</span><span><b>${sess.hint ? 'HINT:' : 'SIDEBAR?'}</b>${esc(sess.hint ? q.h : boosts().freeHints ? `Tap for a free hint (${boosts().freeHints} left).` : 'Tap for a hint. Half XP and coins if right.')}</span></button>
     <div class="t pts" style="${PB(664,1240,956,1408)}"><span>POINT VALUE</span><span class="v ${hintCosts()?'half':''}">${ICO('star')} +${reward}${hintCosts()?` <s>+${REWARD[lv-1] * (doubleXPOn() ? 2 : 1)}</s>`:''}</span></div>
+    <div class="progress-surface" aria-hidden="true" style="${PB(86,1446,950,1670)}"></div>
     <div class="t nxtab" style="${PB(70,1436,358,1508)}">NEXT LEVEL</div>
     <div class="t nxl" style="${PB(86,1520,596,1670)}">
       <span>${disp.mastered ? 'Card MASTERED!' : sess.display ? '<b>LEVEL UP READY!</b>' : `${need - disp.xp} XP to ${lv<maxL(c)?`Level ${lv+1}`:'MASTERED'}`}</span>
@@ -4420,8 +4456,13 @@ window.addEventListener('cq-cloud', e => {
   if (nav.tab === 'profile') refresh();
 });
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.
-['art/back_s3_archive_v1.webp','art/back_card.webp','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_s4_v2.webp','art/frame_s5_v3.webp','art/caption_s5_short.webp','art/caption_s5_medium.webp','art/caption_s5_long.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/answer_button.webp']
+['art/back_s1_template_v1.webp','art/back_s2_template_v1.webp','art/back_s3_archive_v1.webp','art/back_s4_template_v1.webp','art/back_s5_template_v1.webp','art/back_label_s1_v1.svg','art/back_label_s2_v1.svg','art/back_label_s4_v1.svg','art/back_label_s5_v1.svg','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_s4_v2.webp','art/frame_s5_v3.webp','art/caption_s5_short.webp','art/caption_s5_medium.webp','art/caption_s5_long.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/answer_button.webp']
   .forEach(src => { const i = new Image(); i.src = src; if (i.decode) i.decode().catch(() => {}); });
+for (let series = 1; series <= 5; series++) {
+  ['template','question','answer','hint','points','progress','table','explanation'].forEach(part => {
+    const i = new Image(); i.src = `art/question_s${series}_${part}.svg`; if (i.decode) i.decode().catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
