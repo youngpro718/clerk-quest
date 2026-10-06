@@ -64,7 +64,7 @@
     const trick = b.classList.contains('trick');
     const s = document.createElement('span');
     s.className = 'cqf-stamp' + (trick ? ' order' : '');
-    s.textContent = trick ? 'SO ORDERED' : 'FILED';
+    s.textContent = b.classList.contains('v-certified') ? 'CERTIFIED' : b.classList.contains('v-exhibit') ? 'ADMITTED' : trick ? 'SO ORDERED' : 'FILED';   // card versions
     card.appendChild(s);
     setTimeout(() => {
       s.classList.add('on'); card.classList.add('cqf-thud');

@@ -147,6 +147,59 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .gem{width:9.5cqw;height:9.5cqw;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:5.4cqw;
   border:.45cqw solid var(--ink);box-shadow:inset 0 -1cqw 0 rgba(0,0,0,.2), inset 0 .8cqw 0 rgba(255,255,255,.35)}
 .r-special{background:linear-gradient(135deg,#8a4fc2,#d8a526)}
+/* Case Closed (quests) */
+.cc-pack{position:relative;display:grid;place-items:center}
+.cc-pack img.bob{height:150px;filter:drop-shadow(0 10px 14px rgba(0,0,0,.5));animation:packidle 2.4s ease-in-out infinite}
+.cc-stamp{position:absolute;width:170px;left:50%;top:52%;translate:-50% -50%;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4));animation:certstamp .45s cubic-bezier(.2,1.4,.4,1) .3s both}
+.row.q.casebox .cc-mini{width:52px;flex:none;rotate:-6deg}
+@media (prefers-reduced-motion:reduce){.cc-stamp{animation:none}}
+/* series goals */
+.sgoals{display:grid;gap:8px;margin:0 0 14px}
+.sg-row{display:flex;align-items:center;gap:12px;padding:8px 12px;border:2px solid rgba(0,0,0,.18);border-radius:14px;background:rgba(255,255,255,.04)}
+.sg-row img{width:46px;height:46px;object-fit:contain;flex:none;filter:grayscale(1);opacity:.5}
+.sg-row.done{border-color:rgba(227,178,60,.6);background:rgba(227,178,60,.1)}.sg-row.done img{filter:none;opacity:1}
+.sg-row span{flex:1;min-width:0}.sg-row b{display:block;font-size:18px}.sg-row small{display:block;font:14px/1.3 var(--ui);color:var(--sub)}
+.sg-row .sg-rw{color:var(--mustard)}
+.sg-ok .ico{width:24px;height:24px}
+.sg-chips{display:flex;gap:3px;flex:none;margin-right:4px}
+.sg-chips img{width:24px;height:24px;object-fit:contain;filter:grayscale(1);opacity:.3}.sg-chips img.on{filter:none;opacity:1}
+.sg-titles{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:10px 0 4px}
+.sg-ribbon{display:inline-grid;place-items:center;min-width:220px;height:46px;padding:0 44px 6px;box-sizing:border-box;background:url(art/title_ribbon.webp) center/100% 100% no-repeat;
+  color:#2b1b06;font:400 19px/1 "Bangers";letter-spacing:.05em;text-shadow:0 1px 0 rgba(255,246,214,.8)}
+/* certify with Copies (card page) */
+.certbox{display:flex;align-items:center;gap:12px;margin:12px 0 4px;padding:10px 12px;border:2px solid var(--line, rgba(0,0,0,.2));border-radius:14px;background:rgba(143,163,179,.14)}
+.certbox img{width:44px;height:auto;flex:none}
+.certbox span{flex:1;min-width:0}.certbox b{display:block;font-size:18px}.certbox small{display:block;font:14px/1.3 var(--ui);color:var(--sub)}
+.certbtn{flex:none;min-height:40px;padding:0 16px;border:2px solid var(--ink);border-radius:20px;background:#d9e3ec;color:var(--ink);font:400 18px "Bangers";letter-spacing:.05em}
+.certbtn:disabled{opacity:.45}
+.reward.certified .cert-card{position:relative;width:min(56vw,230px);margin:0 auto 6px}
+.cert-stamp{position:absolute;left:50%;top:55%;translate:-50% -50%;rotate:-12deg;z-index:12;padding:4px 12px;border:4px solid #5f7c96;border-radius:8px;color:#5f7c96;
+  font:400 clamp(24px,8vw,34px)/1 "Bangers";letter-spacing:.06em;background:rgba(255,255,255,.55);animation:certstamp .45s cubic-bezier(.2,1.4,.4,1) .35s both}
+@keyframes certstamp{from{transform:scale(2.4);opacity:0}}
+@media (prefers-reduced-motion:reduce){.cert-stamp{animation:none}}
+/* version decorations on the card face (verDecorHTML) */
+.vd{position:absolute;pointer-events:none;z-index:8}
+.vd-shine{inset:1.3% 1.7% 1.6%;border-radius:5cqw;mix-blend-mode:screen;
+  background:linear-gradient(115deg,transparent 38%,rgba(225,236,255,.55) 47%,rgba(255,255,255,.18) 52%,transparent 60%);background-size:300% 100%;animation:foil 5s linear infinite}
+.vd-seal{width:20%;right:2%;top:65%;transform:rotate(-10deg);filter:drop-shadow(0 .6cqw .8cqw rgba(0,0,0,.45))}
+.vd-tape{width:30%;left:35%;top:-1.2%;transform:rotate(-3deg);opacity:.92}
+.vd-clip{width:12%;left:-2.5%;top:20%;transform:rotate(-14deg);filter:drop-shadow(0 .4cqw .5cqw rgba(0,0,0,.4))}
+.vd-tag{width:25%;left:1%;top:40%;transform:rotate(-12deg);filter:drop-shadow(0 .6cqw .8cqw rgba(0,0,0,.45))}
+.card.ver-certified{--glow:0 0 3cqw rgba(200,220,255,.55)}
+.card.ver-exhibit{--glow:0 0 3cqw rgba(255,190,80,.6)}
+.card.ver-gold{--glow:0 0 4.5cqw rgba(255,200,60,.75)}
+.card.ver-gold .stampimg.mastered{display:none}   /* the Gold Seal replaces the MASTERED stamp */
+/* gold frames are light: the small labels switch to dark ink with a pale halo so they stay readable */
+.card.ver-gold :is(.t.num,.t.xpstrip,.t.cat,.t.rar,.t.set,.t.lvl),.card.ver-gold :is(.t.num,.t.xpstrip,.t.cat,.t.rar,.t.set,.t.lvl) :not(.gem){
+  color:#2b1b06!important;-webkit-text-stroke:0!important;text-shadow:0 0 .45cqw rgba(255,246,214,.95),0 0 .18cqw rgba(255,246,214,1)!important}
+.card.ver-gold .t.lvl .stars .on{color:#8a5200!important}.card.ver-gold .t.lvl .stars .off{color:rgba(43,27,6,.35)!important}
+.card.ver-gold .t.xpstrip i{background:rgba(43,27,6,.25)!important}
+.vd-shine.gold{background-image:linear-gradient(115deg,transparent 36%,rgba(255,232,150,.55) 46%,rgba(255,200,80,.25) 52%,transparent 62%);animation-duration:4s}
+.vd-goldseal{width:17%;right:2%;top:62%;transform:rotate(8deg);filter:drop-shadow(0 .6cqw .8cqw rgba(0,0,0,.5))}
+.pk-badge.v-gold{background:#f3cf55}
+@media (prefers-reduced-motion:reduce){.vd-shine{animation:none;background-position:50% 0}}
+.pk-badge.v-certified{background:#d9e3ec} .pk-badge.v-exhibit{background:#ffd23f}
+.v-filed{background:var(--common)} .v-certified{background:#8fa3b3} .v-exhibit{background:#cf3b2a} .v-gold{background:#e3b23c}
 .r-common{background:var(--common)} .r-uncommon{background:var(--uncommon)} .r-rare{background:var(--rare)} .r-epic{background:var(--epic)} .r-legendary{background:var(--legendary)}
 .set{flex-direction:column;gap:1cqw;font-size:4.1cqw;letter-spacing:.04em;padding:0 2cqw}
 .set small{font-family:"Bangers";font-size:3.4cqw;letter-spacing:.08em}
@@ -168,30 +221,8 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .card.lv2{--glow:0 0 2.2cqw rgba(255,255,255,.25)}
 .card.special{--glow:0 0 3cqw rgba(190,120,255,.75)}
 .card.cold{--glow:0 0 3cqw rgba(140,200,255,.8)}
-/* neon ring that races around the edge (levels just below the top) */
-@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
-.ring{position:absolute;inset:0 .4% .1%;border-radius:6.4cqw;padding:1.25cqw;z-index:-1;pointer-events:none;
-  background:conic-gradient(from var(--ang),transparent 0deg 150deg,var(--n1) 230deg,#fff 285deg,var(--n2) 320deg,transparent 360deg);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
-  animation:ringspin 2.8s linear infinite}
-.ring.soft{padding:2.6cqw;inset:-1.2%;filter:blur(2cqw);opacity:1}
-@keyframes ringspin{to{--ang:360deg}}
-.card.tier-cyan{--n1:#1fd8ff;--n2:#8ff6ff;--glow:0 0 3cqw rgba(31,216,255,.45)}
-.card.tier-pink{--n1:#ff3df2;--n2:#b36bff;--glow:0 0 3cqw rgba(255,61,242,.45)}
-.card.tier-max{--n1:#ffc933;--n2:#fff4b8;--glow:0 0 4cqw rgba(255,200,60,.65)}
-.card.series4.tier-max{--n1:#d5322b;--n2:#fff0d4;--glow:0 0 4cqw rgba(213,50,43,.55)}
-.card.tier-max .ring{animation-duration:5s}
-.card.charged .ring{animation-duration:1.3s}
-.card.charged{--glow:0 0 4.5cqw var(--n1)}
-/* top-level gloss: lacquer shine + slow holographic sweep across the whole card */
-.gloss{position:absolute;inset:1.3% 1.7% 1.6%;border-radius:5cqw;overflow:hidden;z-index:9;pointer-events:none;mix-blend-mode:overlay}
-.gloss::before{content:"";position:absolute;inset:0;
-  background:radial-gradient(120% 55% at 18% 0%,rgba(255,255,255,.22),transparent 50%),
-    linear-gradient(120deg,transparent 38%,rgba(255,255,255,.5) 46%,rgba(255,255,255,.08) 51%,transparent 58%);
-  background-size:100% 100%,300% 300%;animation:glosssweep 4.2s ease-in-out infinite}
-.gloss::after{content:"";position:absolute;inset:0;opacity:.12;
-  background:linear-gradient(115deg,#ff4fa0,#ffd34f,#4fffc1,#7a6bff,#ff4fa0);background-size:400% 100%;animation:holo 7s linear infinite}
-@keyframes glosssweep{0%,15%{background-position:0 0,120% 0}60%,100%{background-position:0 0,-40% 0}}
+/* almost leveled up: a warm glow when a card is 70%+ of the way to its next level */
+.card.charged{--glow:0 0 4.5cqw rgba(255,214,90,.75)}
 @keyframes holo{to{background-position:400% 0}}
 @keyframes goldglow{0%,100%{filter:drop-shadow(0 0 1.4cqw rgba(255,200,60,.7))}50%{filter:drop-shadow(0 0 3.2cqw rgba(255,210,80,1))}}
 .card.locked{filter:grayscale(1) brightness(.7)}
@@ -470,6 +501,21 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .pk-badge{position:absolute;left:50%;top:-12px;translate:-50% 0;z-index:9;font-family:"Bangers";letter-spacing:.06em;font-size:clamp(13px,3.4vw,18px);padding:3px 10px;border:2px solid var(--ink);border-radius:999px;white-space:nowrap;opacity:0;transition:opacity .3s .45s;color:var(--ink)}
 .pk-card.flipped .pk-badge{opacity:1}
 .pk-badge.new{background:#ffe27a} .pk-badge.dup{background:#bfe0b5} .pk-badge.trick{background:#d6c2ff}
+/* one-at-a-time reveal: the cards rise as a stack, rarest at the bottom; flip the top card, then swipe it away */
+.pk.stack .pk-cards .pk-card{position:absolute;touch-action:none;width:min(62vw,290px,38vh);z-index:calc(10 - var(--i));transition-delay:.55s}
+.pk.out.stack .pk-cards .pk-card{transform:translateY(calc(var(--i) * 10px)) rotate(calc(var(--i) * 2.5deg))}
+.pk.out.stack .pk-cards .pk-card.top{transform:none;transition-delay:0s}
+.pk.out.stack .pk-cards .pk-card.gone{transform:translate(calc(var(--dir,1) * 125vw),-8vh) rotate(calc(var(--dir,1) * 28deg));opacity:0;pointer-events:none;
+  transition:transform .45s cubic-bezier(.4,0,.8,.6),opacity .2s .25s;transition-delay:0s}
+.pk.out.stack .pk-cards .pk-card.drag{transition:none}
+.pk.sum .pk-card{transition-delay:calc(var(--i) * .1s)}
+/* something special is coming: the face-down card glows and trembles before you flip it */
+.pk-card.top.tease:not(.flipped) .pk-back{animation:tease 1.1s ease-in-out infinite}
+.pk-card.top.tease.rare:not(.flipped) .pk-back{animation:tease 1.1s ease-in-out infinite,teaserare 2.2s linear infinite}
+@keyframes tease{0%,100%{filter:drop-shadow(0 0 10px rgba(255,214,90,.55))}50%{filter:drop-shadow(0 0 26px rgba(255,214,90,1));transform:rotate(-1deg) scale(1.02)}}
+@keyframes teaserare{to{filter:hue-rotate(360deg)}}
+.pk .pk-skip{z-index:3;max-width:340px;color:var(--paper);display:none}
+.pk.out.stack .pk-skip{display:block}
 .zoom{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;
   background:rgba(0,0,0,.82);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:fadein .2s both;cursor:pointer}
 .zoom-card{width:min(88vw,420px,calc((100dvh - 90px) / 1.5));animation:zoomin .32s cubic-bezier(.2,1.3,.4,1) both}
@@ -536,7 +582,6 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
   mask-image:radial-gradient(ellipse 72% 68% at 50% 48%,transparent 0 var(--frost-hole),rgba(0,0,0,.28) calc(var(--frost-hole) + 7%),#000 calc(var(--frost-hole) + 15%))}
 .frost-status{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .card.cold{--glow:0 0 3cqw rgba(140,200,255,.8)}
-.card.cold>.ring,.card.cold>.gloss{display:none}
 .stampimg.mastered{width:52%;right:2%;top:57%;--rot:-10deg}
 @keyframes slamimg{0%{transform:rotate(var(--rot)) scale(2.2);opacity:0}100%{transform:rotate(var(--rot)) scale(1);opacity:1}}
 .stampimg{transform:rotate(var(--rot))}
@@ -1156,8 +1201,8 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .row.q.claimed .row-main b{opacity:.6}
 .pill.gold{background:var(--mustard);color:var(--ink);border:2px solid var(--ink);font-weight:700}
 .reward{display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:10px}
-.reward img{height:150px;filter:drop-shadow(0 10px 14px rgba(0,0,0,.5))}
-.reward img.bob{animation:packidle 2.4s ease-in-out infinite}
+.reward > img{height:150px;filter:drop-shadow(0 10px 14px rgba(0,0,0,.5))}
+.reward > img.bob{animation:packidle 2.4s ease-in-out infinite}
 .reward p{margin:0;font:15px var(--ui);color:var(--sub)}
 .reward b{margin-top:6px;font-family:"Luckiest Guy";font-weight:400;font-size:22px;color:var(--mustard)}
 .acts.checks button{display:flex;align-items:center;justify-content:space-between}
@@ -1233,8 +1278,8 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js?v=b8aec09d"></script>
 <script src="study.js?v=70f30b50"></script>
-<script src="economy.js?v=a7261374"></script>
-<script src="store.js?v=037a6033"></script>
+<script src="economy.js?v=2aa30748"></script>
+<script src="store.js?v=21be2d4d"></script>
 <script src="study/quick-reference/quick-reference.js?v=09020a13"></script>
 <script src="study/quick-reference/series-lessons.js?v=691837ab"></script>
 <script src="curriculum-pilot.js?v=9e0d75af"></script>
@@ -1244,16 +1289,17 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="binder.js?v=dcc2617f"></script>
 <script src="onboarding.js?v=22f27a83"></script>
 <script src="account.js?v=5042effc"></script>
-<script src="admin.js?v=0c2f65ed"></script>
+<script src="admin.js?v=421218f4"></script>
 <script src="stickers.js?v=70340509"></script>
-<script src="dockets.js?v=da920b66"></script>
+<script src="dockets.js?v=a213ecd8"></script>
+<script src="hearing.js?v=98989009"></script>
 <script src="today.js?v=8dfb2c73"></script>
 <script src="exam.js?v=5c38761d"></script>
 <script src="exam-questions.js?v=79574fc7"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="sticker3d.js?v=9a43370e"></script>
 <script src="questions.js?v=b59c89f2"></script>
-<script src="flair.js?v=7d93e03a"></script>
+<script src="flair.js?v=bae09fc0"></script>
 <script>window.ART_MANIFEST = {"series4_case-starter": {"1": "art/series4_case-starter.webp"}, "s4_case_starter": {"1": "art/series4_case-starter.webp"}, "series4_clock-dodger": {"1": "art/series4_clock-dodger.webp"}, "s4_clock_dodger": {"1": "art/series4_clock-dodger.webp"}, "series4_exam-duo": {"1": "art/series4_exam-duo.webp"}, "s4_exam_duo": {"1": "art/series4_exam-duo.webp"}, "series4_jurisdiction-jet": {"1": "art/series4_jurisdiction-jet.webp"}, "s4_jurisdiction_jet": {"1": "art/series4_jurisdiction-jet.webp"}, "series4_jury-juggler": {"1": "art/series4_jury-juggler.webp"}, "s4_jury_juggler": {"1": "art/series4_jury-juggler.webp"}, "series4_note-ninja": {"1": "art/series4_note-ninja.webp"}, "s4_note_ninja": {"1": "art/series4_note-ninja.webp"}, "series4_plea-piper": {"1": "art/series4_plea-piper.webp"}, "s4_plea_piper": {"1": "art/series4_plea-piper.webp"}, "series4_proof-polly": {"1": "art/series4_proof-polly.webp"}, "s4_proof_polly": {"1": "art/series4_proof-polly.webp"}, "series4_sentence-sprint": {"1": "art/series4_sentence-sprint.webp"}, "s4_sentence_sprint": {"1": "art/series4_sentence-sprint.webp"}, "series4_trial-track": {"1": "art/series4_trial-track.webp"}, "s4_trial_track": {"1": "art/series4_trial-track.webp"}, "series4_verdict-vex": {"1": "art/series4_verdict-vex.webp"}, "s4_verdict_vex": {"1": "art/series4_verdict-vex.webp"}, "series4_warrant-walt": {"1": "art/series4_warrant-walt.webp"}, "s4_warrant_walt": {"1": "art/series4_warrant-walt.webp"}, "series5_captain-classify": {"1": "art/series5_captain-classify.webp"}, "s5_captain_classify": {"1": "art/series5_captain-classify.webp"}, "series5_class-shift": {"1": "art/series5_class-shift.webp"}, "s5_class_shift": {"1": "art/series5_class-shift.webp"}, "series5_double-gain": {"1": "art/series5_double-gain.webp"}, "s5_double_gain": {"1": "art/series5_double-gain.webp"}, "series5_felony-titan": {"1": "art/series5_felony-titan.webp"}, "s5_felony_titan": {"1": "art/series5_felony-titan.webp"}, "series5_minor-mischief": {"1": "art/series5_minor-mischief.webp"}, "s5_minor_mischief": {"1": "art/series5_minor-mischief.webp"}, "series5_offense-oracle": {"1": "art/series5_offense-oracle.webp"}, "s5_offense_oracle": {"1": "art/series5_offense-oracle.webp"}, "series5_split-verdict": {"1": "art/series5_split-verdict.webp"}, "s5_split_verdict": {"1": "art/series5_split-verdict.webp"}, "series5_the-aces": {"1": "art/series5_the-aces.webp"}, "s5_the_aces": {"1": "art/series5_the-aces.webp"}, "series5_the-fine-collector": {"1": "art/series5_the-fine-collector.webp"}, "s5_the_fine_collector": {"1": "art/series5_the-fine-collector.webp"}, "series5_the-many": {"1": "art/series5_the-many.webp"}, "s5_the_many": {"1": "art/series5_the-many.webp"}, "series5_triple-take": {"1": "art/series5_triple-take.webp"}, "s5_triple_take": {"1": "art/series5_triple-take.webp"}, "series5_vault-voltage": {"1": "art/series5_vault-voltage.webp"}, "s5_vault_voltage": {"1": "art/series5_vault-voltage.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "character_acd": {"1": "art/character_acd_1.webp"}, "character_adjournment": {"1": "art/character_adjournment_1.webp"}, "character_affidavit": {"1": "art/character_affidavit_1.webp"}, "character_appeal30": {"1": "art/character_appeal30_1.webp"}, "character_bail": {"1": "art/character_bail_1.webp"}, "character_calendarcall": {"1": "art/character_calendarcall_1.webp"}, "character_eightback": {"1": "art/character_eightback_1.webp"}, "character_freeze": {"1": "art/character_freeze_1.webp"}, "character_interest": {"1": "art/character_interest_1.webp"}, "character_judgment": {"1": "art/character_judgment_1.webp"}, "character_jurywaiver": {"1": "art/character_jurywaiver_1.webp"}, "character_military": {"1": "art/character_military_1.webp"}, "character_motion": {"1": "art/character_motion_1.webp"}, "character_newtrial": {"1": "art/character_newtrial_1.webp"}, "character_quash": {"1": "art/character_quash_1.webp"}, "character_reargue": {"1": "art/character_reargue_1.webp"}, "character_renew": {"1": "art/character_renew_1.webp"}, "character_schoolnotice": {"1": "art/character_schoolnotice_1.webp"}, "character_sj120": {"1": "art/character_sj120_1.webp"}, "character_summons": {"1": "art/character_summons_1.webp"}, "character_undodefault": {"1": "art/character_undodefault_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
 <script>
 /* ================= DATA ================= */
@@ -2195,11 +2241,75 @@ const READ_QS = {
 const READ_XP = 10;   // player XP for reading a card's case file the first time
 function frameFor(c, lv){
   if (c.trickType) return 'art/frame_trick.webp';
-  const max = maxL(c);
-  if (lv === max) return 'art/frame_premium.webp';
-  if ((max === 3 && lv === 2) || (max === 5 && lv >= 3)) return 'art/frame_mid.webp';
-  return 'art/frame_base.webp';
+  return 'art/frame_base.webp';   // looks come from the card's version now, not its level
 }
+/* Card versions (spec: docs/superpowers/specs/2026-10-05-card-versions-design.md). A card shows its best version. */
+const VERSIONS = { filed:{ n:0, label:'FILED' }, certified:{ n:1, label:'CERTIFIED' }, exhibit:{ n:2, label:'EXHIBIT' }, gold:{ n:3, label:'GOLD SEAL' } };
+const verOf = st => [].concat(st && st.vers || []).reduce((best, v) => VERSIONS[v] && VERSIONS[v].n > VERSIONS[best].n ? v : best, 'filed');
+const verLabel = st => VERSIONS[verOf(st)].label;
+/* Series goals: every card owned (COMPLETE stamp), every card Certified or better (that series' exclusive card back),
+   every card Gold Seal (the title "Clerk of Series N"). Rewards are worked out from the cards, so they can't drift. */
+const seriesCards = n => CARDS.filter(seriesDef(n).test);
+function seriesGoals(n){
+  const cs = seriesCards(n), rank = c => owned(c) ? VERSIONS[verOf(S.cards[c.id])].n : -1, all = f => cs.length > 0 && cs.every(f);
+  return { total:cs.length, owned:cs.filter(owned).length, cert:cs.filter(c => rank(c) >= 1).length, gold:cs.filter(c => rank(c) >= 3).length,
+    complete:all(owned), certified:all(c => rank(c) >= 1), golden:all(c => rank(c) >= 3) };
+}
+const SERIES_GOALS = [
+  { k:'complete', have:'owned', img:'art/stamp_complete.webp', name:'Complete', how:'Collect every card', reward:n => `A COMPLETE stamp on Series ${n}` },
+  { k:'certified', have:'cert', img:'art/ver_certified_seal.webp', name:'Certified', how:'Every card Certified or better', reward:n => `The exclusive Series ${n} card back` },
+  { k:'golden', have:'gold', img:'art/ver_gold_seal.webp', name:'Gold Seal', how:'Every card Gold Seal', reward:n => `The title "Clerk of Series ${n}"` },
+];
+const seriesTitles = () => SERIES_DEFS.filter(d => seriesGoals(d.n).golden).map(d => `Clerk of Series ${d.n}`);
+function seriesGoalsHTML(n){
+  const g = seriesGoals(n);
+  return `<div class="sgoals">${SERIES_GOALS.map(x => `<div class="sg-row ${g[x.k] ? 'done' : ''}"><img src="${x.img}" alt="">
+    <span><b>${x.name}</b><small>${x.how} · ${g[x.have]} of ${g.total}</small><small class="sg-rw">${g[x.k] ? 'Earned: ' : 'Reward: '}${esc(x.reward(n))}</small></span>
+    ${g[x.k] ? `<i class="sg-ok">${ICO('check')}</i>` : ''}</div>`).join('')}</div>`;
+}
+function seriesRowHTML(s){
+  const n = +s.g.slice(1), g = seriesGoals(n), list = CARDS.filter(groupTest(s.g)), have = list.filter(owned).length;
+  return `<button class="row" data-act="push" data-s="cards" data-g="${esc(s.g)}">
+    <span class="th emo gi">${ICO(s.icon)}</span><span class="row-main"><b>${esc(s.label)}</b><small>${have} of ${list.length} collected</small>${pbar(have / Math.max(1, list.length))}</span>
+    <span class="sg-chips">${SERIES_GOALS.map(x => `<img class="${g[x.k] ? 'on' : ''}" src="${x.img}" alt="${x.name}${g[x.k] ? ' earned' : ''}">`).join('')}</span>${chev}</button>`;
+}
+/* Say so once when a goal is reached (checked on every screen refresh) */
+function checkSeriesGoals(){
+  const seen = S.goalsSeen = S.goalsSeen || {}; let news = [];
+  SERIES_DEFS.forEach(d => { const g = seriesGoals(d.n); SERIES_GOALS.forEach(x => { const id = d.n + x.k; if (g[x.k] && !seen[id]) { seen[id] = true; news.push(`Series ${d.n}: ${x.reward(d.n)}`); } }); });
+  if (news.length) { save(); toast(news.length > 1 ? `${news.length} series goals reached!` : `Goal reached! ${news[0]}`, 'crown'); }
+}
+/* Copies: every duplicate adds one to a shared pile. Spend COPIES_TO_CERTIFY on any Filed card you own to certify it. */
+const COPIES_TO_CERTIFY = 10;   // TUNE
+const copies = () => S.copies || 0;
+function certifyCard(id){
+  const c = byId(id), st = c && S.cards[id];
+  if (!st || !st.owned || verOf(st) !== 'filed' || copies() < COPIES_TO_CERTIFY) return;
+  S.copies = copies() - COPIES_TO_CERTIFY; st.vers = [].concat(st.vers || [], 'certified');
+  save(); nativeFeedback('levelup'); refresh();
+  openSheet(`<div class="reward certified"><div class="cert-card">${cardEl(c, st)}<span class="cert-stamp">CERTIFIED</span></div><h3>Certified!</h3>
+    <p>${esc(c.name)} now carries the Certified seal. ${copies()} ${copies() === 1 ? 'Copy' : 'Copies'} left.</p></div>
+    <button class="btn-big gold" data-act="sheet-close">NICE</button>`);
+  confetti(document.querySelector('.sheet') || document.body);
+}
+function certifyBoxHTML(c, st){
+  if (!st.owned || verOf(st) !== 'filed') return '';
+  const have = copies(), can = have >= COPIES_TO_CERTIFY;
+  return `<div class="certbox"><img src="art/copy.webp" alt=""><span><b>Certify this card</b><small>${can ? `Use ${COPIES_TO_CERTIFY} Copies to give it the Certified seal.` : `Collect ${COPIES_TO_CERTIFY} Copies from duplicate cards to certify it.`} You have ${have}.</small></span>
+    <button class="certbtn" data-act="certify" data-id="${c.id}" ${can ? '' : 'disabled'}>Certify</button></div>`;
+}
+const PACK_VER_ODDS = { exhibit:1/30, certified:1/4 };   // TUNE: at most one special version per pack
+const rollVersion = () => { const r = Math.random(); return r < PACK_VER_ODDS.exhibit ? 'exhibit' : r < PACK_VER_ODDS.exhibit + PACK_VER_ODDS.certified ? 'certified' : null; };
+/* Certified: a raised seal and a silver shine. Exhibit: mounted like evidence, with tape, a clip and an EXHIBIT tag. */
+function verDecorHTML(st){
+  const v = verOf(st);
+  if (v === 'certified') return `<div class="vd vd-shine"></div><img class="vd vd-seal" src="art/ver_certified_seal.webp" alt="Certified seal">`;
+  if (v === 'gold') return `<img class="vd vd-goldseal" src="art/ver_gold_seal.webp" alt="Gold Seal">`;
+  if (v === 'exhibit') return `<img class="vd vd-tape" src="art/ver_exhibit_tape.webp" alt=""><img class="vd vd-clip" src="art/ver_exhibit_clip.webp" alt=""><img class="vd vd-tag" src="art/ver_exhibit_tag.webp" alt="Exhibit tag">`;
+  return '';
+}
+const verBadge = (st, big, small, unit = 'cqw') => { const v = verOf(st), l = VERSIONS[v].label;
+  return `<span class="gem v-${v}">★</span><span style="font-size:${l.length > 6 ? small : big}${unit}">${l}</span>`; };
 const bgFor = (c, lv) => { if (!c.bgs) return null; let b = null; for (let l=1; l<=lv; l++) if (c.bgs[l]) b = c.bgs[l]; return b; };
 // Measure the lettering, rather than the stretched flex container. Authored sizes
 // are restored before each fit so a temporary narrow view cannot permanently shrink a title.
@@ -2261,6 +2371,11 @@ function normalize(s){
   s = s && s.cards ? s : freshState();
   CARDS.forEach(c => { s.cards[c.id] = Object.assign({level:1,xp:0,mastered:false,owned:STARTERS.includes(c.id)}, s.cards[c.id]||{}); });
   if (s.packs == null) s.packs = 1;
+  if (!s.foilRefund) {   // holo foil left the store on 2026-10-05: give back the 100 coins each one cost
+    s.foilRefund = true; let n = 0;
+    Object.values((s.styles && s.styles.cards) || {}).forEach(cs => { if (cs && cs.foil) { n++; cs.foil = false; if (cs.eq) cs.eq.foil = false; } });
+    if (n) { s.coins = (s.coins || 0) + n * 100; s.coinLog = [{ n:n * 100, why:`Holo foil refund (${n} card${n > 1 ? 's' : ''})`, at:Date.now() }].concat(s.coinLog || []).slice(0, 25); }
+  }
   if (s.packsOpened == null) s.packsOpened = 0;
   if (!s.seenOfficial3) { s.seenOfficial3 = true; if (s.packsOpened > 0) { s.packs += 3; s.guarantee = [].concat(s.guarantee || [], ['jurywaiver','interest','quash','newtrial','schoolnotice','bail','acd','military']); } }
   if (!s.seenOfficial2) { s.seenOfficial2 = true; if (s.packsOpened > 0) { s.packs += 2; s.guarantee = [].concat(s.guarantee || [], ['eightdays','sealed','followpetitioner','amendonce','childvoice','custodyornot']); } }
@@ -2368,9 +2483,8 @@ function frameBreakCharacter(c, lv){
   return `<img class="framebreak-character${c.series === 2 ? ' series2' : c.series >= 4 ? ` series45 series${c.series}` : ''}" src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`;
 }
 function artHTML(c, lv, opt={}){
-  const foil = lv >= 3 && lv < maxL(c) ? `<div class="foil"></div>` : '';
-  if (c.mnemonic) return mnemonicArt(c) + foil;
-  if (c.panel && !(ART[c.id] && ART[c.id][1])) return ruleArt(c) + foil;
+  if (c.mnemonic) return mnemonicArt(c);
+  if (c.panel && !(ART[c.id] && ART[c.id][1])) return ruleArt(c);
   const base = resolvedArtLevel(c, lv);
   const cut = c.cutout && !(c.scene && c.scene[base]);  // some levels are full scenes even on cut-out cards
   let h = (c.trickType && !c.mnemonic && !opt.omitMnemonicBadge) ? `<img class="mn-badge low" src="art/icon_memory.webp" alt="Memory Trick">` : '';
@@ -2378,7 +2492,6 @@ function artHTML(c, lv, opt={}){
     ? (cut ? (bgFor(c, lv) ? `<img class="art-bgimg" src="${bgFor(c, lv)}" alt=""><div class="art-vig"></div>` : `<div class="art-back series${c.series || 1}"></div>`) : '') + (opt.omitCharacter && cut ? '' : `<img class="art-img ${cut?'cut':''}" src="${ART[c.id][base]}" alt="${esc(c.name)} artwork, level ${base}">`)
     : `<div class="art-ph"><span class="ph-tag">ART COMING SOON</span><div class="ph-emoji">${c.emoji}</div></div>`;
   for (let l = Math.max(base+1, 2); l <= lv; l++) (c.stickers[l]||[]).forEach(s => h += stickerHTML(s));
-  h += foil;
   return h;
 }
 function starsHTML(lv, newStar, max=5){
@@ -2399,7 +2512,7 @@ function s3CharacterLayers(c, lv, cls='s3-character'){
 function s3ArtHTML(c, lv){
   const bg = bgFor(c, lv);
   const character = lv < maxL(c) ? s3CharacterLayers(c, lv) : '';
-  return `${bg ? `<img class="s3-bg" src="${bg}" alt="">` : '<div class="art-back"></div>'}<div class="s3-bgshade"></div>${character}${lv >= 2 && lv < maxL(c) ? '<div class="foil"></div>' : ''}`;
+  return `${bg ? `<img class="s3-bg" src="${bg}" alt="">` : '<div class="art-back"></div>'}<div class="s3-bgshade"></div>${character}`;
 }
 function frontS3HTML(c, st, opt={}){
   const lv = st.level, need = NEED[lv-1];
@@ -2407,7 +2520,7 @@ function frontS3HTML(c, st, opt={}){
   const breakout = lv >= maxL(c) ? s3CharacterLayers(c, lv, 'framebreak-character s3-breakout') : '';
   return `
     <div class="art-win s3win" style="${P(0,0,1024,1536)}">${s3ArtHTML(c, lv)}${holoHTML(c)}</div>
-    <img class="frame" src="art/frame_s3.webp" alt="">
+    <img class="frame" src="${verOf(st) === 'gold' ? 'art/frame_gold_s3.webp' : 'art/frame_s3.webp'}" alt="">
     ${breakout}
     <div class="t num s3" style="${P(60,40,215,110)}">${c.num}</div>
     <div class="t xpstrip s3" style="${P(240,32,672,118)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
@@ -2417,7 +2530,7 @@ function frontS3HTML(c, st, opt={}){
       ${window.CQ_TITLE_ART?.[c.id] ? printedTitleHTML(c, 844/130, 76, 78, 6.2) : `${titleLine(c, 1, 76, 5.4)}${titleLine(c, 2, 78, 6.2)}`}
     </div>
     <div class="t quote s3 ${c.quote.length > 27 ? 'long' : ''}" style="${P(250,1206,782,1292)};${quoteStyle(c)}">“${quoteText(c)}”</div>
-    <div class="t rar s3" style="${P(44,1322,346,1458)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:${c.rarity.length > 6 ? 3.3 : 4.2}cqw">${c.rarity.toUpperCase()}</span></div>
+    <div class="t rar s3" style="${P(44,1322,346,1458)}">${verBadge(st, 4.2, 3.3)}</div>
     <div class="t set s3" style="${P(362,1326,662,1456)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl s3" style="${P(676,1322,982,1458)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
@@ -2449,12 +2562,11 @@ function notebookTitleHTML(c,line){
 function frontS45HTML(c, st, opt={}){
   const lv = st.level, need = NEED[lv-1], s4 = c.series === 4;
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
-  const frameSrc = s4 ? 'art/frame_s4_v2.webp' : 'art/frame_s5_v3.webp';
+  const frameSrc = verOf(st) === 'gold' ? (s4 ? 'art/frame_gold_s4.webp' : 'art/frame_gold_s5.webp') : s4 ? 'art/frame_s4_v2.webp' : 'art/frame_s5_v3.webp';
   const frameBreak = frameBreakCharacter(c, lv);
   const artBox = s4 ? P(174,415,891,1198) : P(88,480,936,1310);
   const art = artHTML(c, lv, {omitCharacter:!!frameBreak, omitMnemonicBadge:true});
   const icon = c.trickType ? `<img src="art/icon_${c.trickType}.webp" alt="${TRICK_TYPES[c.trickType].label}">` : ICON[c.icon];
-  const raritySize = c.rarity.length > 6 ? 2.15 : 2.65;
   return `
     <div class="art-win s45win s${c.series}" style="${artBox}">${art}${holoHTML(c)}</div>
     <img class="frame" src="${frameSrc}" alt="Series ${c.series} card frame">
@@ -2467,7 +2579,7 @@ function frontS45HTML(c, st, opt={}){
       <div class="t title s45 s4 meta" style="${P(205,292,875,352)}">${notebookTitleHTML(c,2)}</div>`
       : `<div class="t title s45 s5 meta" style="${P(140,203,890,423)}">${printedTitleHTML(c)}</div>`}
     ${s4 ? `<div class="t quote s45 s4 meta" style="${P(230,1148,860,1236)};${quoteStyle(c)};--notebook-quote:${Math.min((window.CQ_CARD_TYPOGRAPHY?.[c.id]?.quoteLines?.length || 1)>1 ? 3.8 : 4.8,window.CQ_CARD_TYPOGRAPHY?.[c.id]?.quoteSize || 4)}cqw">“${quoteText(c)}”</div>` : comicCaptionHTML(c)}
-    <div class="t rar s45 s${c.series} meta" style="${s4 ? P(140,1318,345,1418) : P(82,1330,323,1450)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:calc(${raritySize}cqw*var(--fit,1))">${c.rarity.toUpperCase()}</span></div>
+    <div class="t rar s45 s${c.series} meta" style="${s4 ? P(140,1318,345,1418) : P(82,1330,323,1450)}">${verBadge(st, 'calc(2.65cqw*var(--fit,1))', 'calc(2.15cqw*var(--fit,1))', '')}</div>
     <div class="t set s45 s${c.series} meta" style="${s4 ? P(416,1318,675,1418) : P(383,1330,640,1450)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl s45 s${c.series} meta" style="${s4 ? P(737,1318,913,1418) : P(704,1330,942,1450)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
@@ -2479,7 +2591,7 @@ function frontHTML(c, st, opt={}){
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
   const sparks = lv >= 4 ? [[2,1],[92,2],[1,62],[93,58],[48,0],[40,93]].map((p,i)=>`<div class="spark" style="left:${p[0]}%;top:${p[1]}%;animation-delay:${i*.3}s">✦</div>`).join('') : '';
   const frameBreak = frameBreakCharacter(c, lv);
-  const frameSrc = styleFrame(c) || frameFor(c, lv);
+  const frameSrc = verOf(st) === 'gold' ? (c.trickType ? 'art/frame_gold_trick.webp' : 'art/frame_gold.webp') : styleFrame(c) || frameFor(c, lv);   // Gold Seal wins over a bought frame
   const protectedFrame = frameBreak ? `<img class="frame-metadata top" data-frame-mask="top" src="${frameSrc}" alt=""><img class="frame-metadata quote" data-frame-mask="quote" src="${frameSrc}" alt=""><img class="frame-metadata footer" data-frame-mask="footer" src="${frameSrc}" alt="">` : '';
   const frameBreakMnemonic = frameBreak && c.trickType && !c.mnemonic ? `<img class="mn-badge framebreak-memory" src="art/icon_memory.webp" alt="Memory Trick">` : '';
   return `
@@ -2496,22 +2608,13 @@ function frontHTML(c, st, opt={}){
       ${window.CQ_TITLE_ART?.[c.id] ? printedTitleHTML(c, 818/258, 74, 52, 12.5) : `${titleLine(c, 1, 74, 12.5)}${titleLine(c, 2, 52, 12.5)}`}
     </div>
     <div class="t quote" style="${P(246,1092,782,1262)};${quoteStyle(c)}">“${quoteText(c)}”</div>
-    <div class="t rar" style="${P(82,1290,312,1448)}"><span class="gem r-${c.rarity}">★</span><span style="font-size:${c.rarity.length > 6 ? 3.3 : 4.2}cqw">${c.rarity.toUpperCase()}</span></div>
+    <div class="t rar" style="${P(82,1290,312,1448)}">${verBadge(st, 4.2, 3.3)}</div>
     <div class="t set" style="${P(334,1294,706,1446)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl" style="${P(728,1290,944,1448)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${sparks}
     ${c.series ? (c.series <= 3 ? `<img class="series-badge" src="art/series${c.series}_badge.webp" alt="Series ${c.series}" style="${P(806,392,952,538)}">`
       : `<span class="series" aria-label="Series ${c.series}" style="${P(806,410,952,514)}">SERIES ${c.series}</span>`) : ''}
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
-}
-/* Glow tiers: neon ring on the levels just below the top, gold ring + gloss at the top. */
-function glowTier(c, st){
-  const max = maxL(c), lv = st.level;
-  if (lv >= max) return 'max';
-  if (max === 5 && lv === 3) return 'cyan';
-  if (max === 5 && lv === 4) return 'pink';
-  if (max === 3 && lv === 2) return 'cyan';
-  return '';
 }
 function frostStyle(progress){
   const p = Math.max(0, Math.min(1, Number(progress) || 0));
@@ -2524,10 +2627,8 @@ function frostHTML(c, st, now=Date.now()){
 }
 function cardEl(c, st, opt={}, extraClass=''){
   const now = Date.now(), cold = isCold(st, now), deadline = coldAfter(st), last = Number.isFinite(+st.last) ? +st.last : 0;
-  const tier = cold ? '' : glowTier(c, st);
-  const charged = tier && tier !== 'max' && !st.mastered && st.xp / NEED[st.level-1] >= .7;
-  const rings = tier ? `<div class="ring soft"></div><div class="ring"></div>` : '';
-  return `<div class="card series${c.series || 1} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} lv${st.level} ${c.trickType?'special':''} ${cold?'cold':''} ${tier?'tier-'+tier:''} ${charged?'charged':''} ${extraClass}" data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${rings}${tier==='max'?'<div class="gloss"></div>':''}${frontHTML(c, st, opt)}${frostHTML(c, st, now)}</div>`;
+  const charged = !cold && !st.mastered && st.level < maxL(c) && st.xp / NEED[st.level-1] >= .7;   // almost leveled up
+  return `<div class="card series${c.series || 1} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} lv${st.level} ver-${verOf(st)} ${c.trickType?'special':''} ${cold?'cold':''} ${charged?'charged':''} ${extraClass}" data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${frontHTML(c, st, opt)}${verDecorHTML(st)}${frostHTML(c, st, now)}</div>`;
 }
 
 /* The bracket labels (XP, category, card set) are grown to the largest size that fits their painted bracket,
@@ -3076,7 +3177,8 @@ const SERIES_BACK_LABELS = {
   4:{src:'art/back_label_s4_v1.svg', label:'Series 4 Criminal Procedure card back'},
   5:{src:'art/back_label_s5_v1.svg', label:'Series 5 Penal Law card back'}
 };
-const backSrc = c => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : (SERIES_BACKS[reverseSeries(c)] || 'art/cardback.webp');
+const certifiedBack = n => SERIES_DEFS.some(d => d.n === n) && seriesGoals(n).certified ? `art/back_s${n}_certified.webp` : '';   // earned, never bought
+const backSrc = c => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : (certifiedBack(reverseSeries(c)) || SERIES_BACKS[reverseSeries(c)] || 'art/cardback.webp');
 function cardReverseHTML(c){
   const custom = !!(S.styles && S.styles.back), series = reverseSeries(c), themedS3 = series === 3 && !custom;
   const label = !custom && SERIES_BACK_LABELS[series];
@@ -3086,7 +3188,7 @@ function cardReverseHTML(c){
 }   // the card back in use
 /* A card's equipped style: a bought frame (Series 1/2 only) and holo foil. */
 const styleFrame = c => { const e = S.styles && S.styles.cards[c.id] && S.styles.cards[c.id].eq; return e && e.frame && ![3,4,5].includes(c.series) ? artSrc('frame_' + e.frame) : ''; };
-const holoHTML = c => { const e = S.styles && S.styles.cards[c.id] && S.styles.cards[c.id].eq; return e && e.foil ? `<div class="holo" style="background-image:url(${artSrc('foil_texture')})"></div><div class="foil"></div>` : ''; };
+const holoHTML = c => '';   // holo foil retired 2026-10-05 (versions give the shine now); kept as a no-op so the card layouts stay unchanged
 const COIN = `<img class="ico coin" src="art/icon_coin.webp" alt="coins">`;
 const titleCase = s => s.toLowerCase().replace(/(^|[\s:&(])([a-z])/g, (m, a, b) => a + b.toUpperCase()).replace(/\bCplr\b/, 'CPLR').replace(/\bAct\b/, 'Act');
 function subjects(){ return [...new Set(CARDS.map(c => c.set))].map(set => ({g:'set:' + set, label:titleCase(set)})); }
@@ -3096,7 +3198,7 @@ function groupRow(g, label, icon, act = 'cards'){
     <span class="th emo gi">${ICO(icon)}</span><span class="row-main"><b>${esc(label)}</b><small>${have} of ${list.length} collected</small>${pbar(have / Math.max(1, list.length))}</span>${chev}</button>`;
 }
 
-/* ---------- daily quests + milestones (every reward is a card pack) ---------- */
+/* ---------- daily quests + milestones: daily quests pay coins, finishing all three closes the case (+1 pack); milestones give packs ---------- */
 const todayKey = () => { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
 function daily(){
   if (!S.daily || S.daily.date !== todayKey()) S.daily = { date:todayKey(), sessions:0, correct:0, trick:0, claimed:{} };
@@ -3133,18 +3235,40 @@ function questRow(q, kind){
   const x = questState(q, kind);
   const btn = x.claimed ? `<span class="q-done">✓</span>`
     : x.done ? `<button class="q-claim" data-act="claim" data-kind="${kind}" data-q="${q.id}">Claim</button>`
-    : `<span class="q-reward">${ICO('pack')} +1</span>`;
+    : kind === 'daily' ? `<span class="q-reward">+${COINS.dailyQuest} ${COIN}</span>` : `<span class="q-reward">${ICO('pack')} +1</span>`;
   return `<div class="row q ${x.claimed ? 'claimed' : ''} ${x.done && !x.claimed ? 'ready' : ''}"><span class="th emo gi">${ICO(q.icon)}</span>
     <span class="row-main"><b>${esc(q.label)}</b><small>${x.claimed ? 'Claimed' : x.val + ' / ' + x.need}</small>${x.claimed ? '' : pbar(x.val / x.need)}</span>${btn}</div>`;
 }
 function claimQuest(kind, id){
   const q = (kind === 'daily' ? DAILY_QUESTS : MILESTONES).find(x => x.id === id); if (!q) return;
   const x = questState(q, kind); if (!x.done || x.claimed) return;
-  if (kind === 'daily') { daily().claimed[id] = true; onbFlag('claimed'); } else { S.milestones = S.milestones || {}; S.milestones[id] = true; }
-  const coins = kind === 'daily' ? earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`) : 0;
+  if (kind === 'daily') {
+    daily().claimed[id] = true; onbFlag('claimed');
+    const coins = earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`);
+    if (caseClosedReady()) return closeCase();
+    save(); nativeFeedback('claim'); refresh();
+    const left = DAILY_QUESTS.filter(d => !daily().claimed[d.id]).length;
+    toast(`+${coins} coins · ${left} more to close the case`, 'coin'); return;
+  }
+  S.milestones = S.milestones || {}; S.milestones[id] = true;
   S.packs++; save(); nativeFeedback('claim'); refresh();
-  openSheet(`<div class="reward"><img src="art/pack.webp" alt="" class="bob"><h3>Quest complete!</h3><p>${esc(q.label)}</p><b>+1 card pack${coins ? ` · +${coins} ${COIN}` : ''}</b></div>
+  openSheet(`<div class="reward"><img src="art/pack.webp" alt="" class="bob"><h3>Milestone reached!</h3><p>${esc(q.label)}</p><b>+1 card pack</b></div>
     <button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN IT NOW</button><button class="sheet-cancel" data-act="sheet-close">Later</button>`);
+}
+/* Case Closed: claiming all three daily quests earns one extra pack a day */
+const caseClosedReady = () => DAILY_QUESTS.every(q => daily().claimed[q.id]) && !daily().caseClosed;
+function closeCase(){
+  daily().caseClosed = true; S.packs++; save(); nativeFeedback('claim'); refresh();
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  openSheet(`<div class="reward caseclosed"><div class="cc-pack"><img class="bob" src="${nextPackArt()}" alt=""><img class="cc-stamp" src="art/stamp_caseclosed.webp" alt="Case closed"></div>
+    <h3>Case closed!</h3><p>You finished all 3 daily quests.</p><b>+1 Case Closed pack</b></div>
+    <button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN IT NOW</button><button class="sheet-cancel" data-act="sheet-close">Later</button>`);
+}
+function caseRowHTML(){
+  const n = DAILY_QUESTS.filter(q => daily().claimed[q.id]).length, done = !!daily().caseClosed;
+  return `<div class="row q casebox ${done ? 'claimed' : ''}"><img class="cc-mini" src="art/stamp_caseclosed.webp" alt="">
+    <span class="row-main"><b>Close the case</b><small>${done ? 'Closed for today. New quests at midnight.' : `Claim all 3 daily quests · ${n} / 3`}</small>${done ? '' : pbar(n / 3)}</span>
+    ${done ? `<span class="q-done">✓</span>` : `<span class="q-reward">${ICO('pack')} +1</span>`}</div>`;
 }
 function toast(msg, icon){
   document.querySelectorAll('.toast').forEach(t => t.remove());
@@ -3222,7 +3346,7 @@ const SCREENS = {
         <div class="sec-h"><span>Subjects</span></div>
         <div class="list">${subjects().map(s => groupRow(s.g, s.label, 'subject')).join('')}</div>
         <div class="sec-h"><span>Series</span></div>
-        <div class="list">${SERIES.map(s => groupRow(s.g, s.label, s.icon)).join('')}</div>`),
+        <div class="list">${SERIES.map(s => /^s\d$/.test(s.g) ? seriesRowHTML(s) : groupRow(s.g, s.label, s.icon)).join('')}</div>`),
     };
   },
 
@@ -3236,7 +3360,7 @@ const SCREENS = {
     return {
       title:groupLabel(p.g),
       right:`<button class="nb-btn txt" data-act="sort-sheet">Sort</button>`,
-      body:`<div class="cgrid">${list.map(c => owned(c)
+      body:`${/^s\d$/.test(p.g || '') ? seriesGoalsHTML(+p.g.slice(1)) : ''}<div class="cgrid">${list.map(c => owned(c)
         ? `<button class="gcard" data-act="push" data-s="card" data-id="${c.id}" data-lp="${c.id}">${cardEl(c, S.cards[c.id])}</button>`
         : `<button class="gcard" data-act="missing" data-id="${c.id}">${lockedCardHTML(c)}</button>`).join('')}</div>`,
     };
@@ -3259,7 +3383,7 @@ const SCREENS = {
     if (tab === 'overview') {
       panel = `<div class="list info">
           <div class="row"><span class="k">Number</span><span class="v">${esc(c.num)}</span></div>
-          <div class="row"><span class="k">Rarity</span><span class="v">${esc(c.rarity[0].toUpperCase() + c.rarity.slice(1))}</span></div>
+          <div class="row"><span class="k">Version</span><span class="v">${esc(verLabel(st)[0] + verLabel(st).slice(1).toLowerCase())}</span></div>
           <div class="row"><span class="k">Subject</span><span class="v">${esc(titleCase(c.set))}</span></div>
           ${c.series ? `<div class="row"><span class="k">Series</span><span class="v">Series ${c.series}</span></div>` : ''}
           ${c.trickType ? `<div class="row"><span class="k">Trick type</span><span class="v"><img class="ti" src="art/icon_${c.trickType}.webp" alt=""> ${TRICK_TYPES[c.trickType].label}</span></div>` : ''}
@@ -3291,6 +3415,7 @@ const SCREENS = {
         </div>
         <h2 class="cd-name">${esc(c.name)}</h2>
         <div class="cd-level"><span>${st.mastered ? ICO('mastered') + ' Mastered' : 'Level ' + st.level}</span><span>${st.mastered ? 'Max' : st.xp + ' / ' + NEED[st.level-1] + ' XP'}</span></div>${pbar(cardProgress(c))}
+        ${certifyBoxHTML(c, st)}${hearingBoxHTML(c, st)}
         ${c.bank && c.bank.length ? `<div class="rc-row"><span>Recall</span>${Recall.pips(c.id)}<small>${Recall.dueText(c.id)}</small></div>` : ''}
         ${seg('tab', tab, tabs)}
         <div class="cd-panel">${panel}</div>`,
@@ -3321,7 +3446,7 @@ const SCREENS = {
         <span><b>${dDone === DAILY_QUESTS.length ? 'All daily quests done!' : 'Today\'s quests'}</b><small>New quests in ${hrs}h ${mins}m${ready ? ` · ${ready} reward${ready > 1 ? 's' : ''} ready (Daily + Milestones)` : ''}</small></span>
         ${ready ? `<button class="pill gold" data-act="claim-all">Claim all (${ready})</button>` : ''}</div>`;
     body += `<div style="height:14px"></div>` + seg('tab', tab, [['daily', 'Daily'], ['mile', 'Milestones']]);
-    if (tab === 'daily') body += `<div class="list">${DAILY_QUESTS.map(q => questRow(q, 'daily')).join('')}</div><p class="foot">Every reward is a card pack.</p>`;
+    if (tab === 'daily') body += `<div class="list">${DAILY_QUESTS.map(q => questRow(q, 'daily')).join('')}</div><div class="list" style="margin-top:12px">${caseRowHTML()}</div><p class="foot">Each quest pays coins. Claim all three to close the case and earn a pack.</p>`;
     else {
       const open = MILESTONES.filter(q => !questState(q, 'mile').claimed), done = MILESTONES.filter(q => questState(q, 'mile').claimed);
       body += `<div class="list">${open.map(q => questRow(q, 'mile')).join('') || `<p class="empty">Every milestone claimed! ${ICO('crown')}</p>`}</div>
@@ -3337,6 +3462,7 @@ const SCREENS = {
     return { title:'Profile', body:`
       <div class="prof-head">${ring((S.stats.xp % 250) / 250, 'L' + playerLevel(), 88)}
         <span><b>${playerTitle()}</b><small>${S.stats.xp ? `${S.stats.xp} XP earned · Keep studying to grow` : 'Your first study round starts your record'}</small></span></div>
+      ${seriesTitles().length ? `<div class="sg-titles">${seriesTitles().map(t => `<span class="sg-ribbon">${esc(t)}</span>`).join('')}</div>` : ''}
       <div class="stat4 ${showAccuracy ? '' : 'three'}">
         ${showAccuracy ? `<div><b>${acc}</b><small>Accuracy</small></div>` : ''}<div><b>${S.stats.sessions || '—'}</b><small>Rounds</small></div>
         <div><b>${CARDS.filter(owned).length}</b><small>Cards</small></div><div><b>${mastered || '—'}</b><small>Mastered</small></div></div>
@@ -3380,9 +3506,9 @@ const SCREENS = {
     const item = (t, b, v) => `<details class="xrow"><summary><span class="xt">${t}</span>${chev}</summary><div>${b}${v ? videoButtonHTML('howto-' + v, null, null, 'explain-watch', 'Watch how it works') : ''}</div></details>`;
     return { title:'How to Play', body:`<div class="list">
       ${item(ICO('play') + ' Studying', 'Each round is 5 questions from one card. Correct answers earn XP. A hint (Sidebar) halves the XP and coins for that answer. Nothing you already have is taken away. Wrong answers show the right answer and why.', 'studying')}
-      ${item(ICO('star') + ' Levels & glows', 'Cards level up as you earn XP. Questions get harder and the art upgrades. Near the top level a neon ring races around the card; at the top it turns gold with a gloss.', 'levels')}
-      ${item(ICO('trophy') + ' Quests', 'Three daily quests reset every midnight, and milestones reward long-term progress. Every reward is a card pack.', 'quests')}
-      ${item(ICO('pack') + ' Packs', 'Your first finished round each day earns a pack of 3 cards, and quests can earn more. Later rounds that day still earn XP and coins. New cards join your collection; duplicates turn into coins.', 'packs')}
+      ${item(ICO('star') + ' Levels & glows', 'Cards level up as you earn XP. Questions get harder and the art upgrades. When a card is close to its next level, it glows.', 'levels')}
+      ${item(ICO('trophy') + ' Quests', 'Three daily quests reset every midnight. Each one pays coins, and claiming all three closes the case for a bonus pack. Milestones reward long-term progress with packs.', 'quests')}
+      ${item(ICO('pack') + ' Packs', 'Your first finished round each day earns a pack of 3 cards, and closing the case on your daily quests earns one more. Later rounds that day still earn XP and coins. New cards join your collection. Duplicates turn into Copies: collect 10 to certify any card you own.', 'packs')}
       ${item(ICO('thermo_snow') + ' Cold cases', 'Cards you haven\'t studied in a while go cold (2 days at Level 1, up to 21 days when mastered). One correct answer reopens the case for a +' + COLD_BONUS + ' XP bonus.', 'cold')}
       ${item(ICO('mastered') + ' Levels and Mastered', 'Right answers fill a card\'s XP bar. It levels up, and at the top it is Mastered. That is a game milestone for the card, not a promise about the exam. Cards you leave alone go cold, so come back to them.', 'mastered')}
       ${item(ICO('memory') + ' Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).', 'tricks')}
@@ -3403,7 +3529,7 @@ const SCREENS = {
       </div>
       <div class="sec-h"><span>Appearance &amp; accessibility</span></div>
       <div class="list">
-        <button class="row" data-act="push" data-s="store"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Card appearance</b><small>Frames, backs, and foil</small></span>${chev}</button>
+        <button class="row" data-act="push" data-s="store"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Card appearance</b><small>Frames, backs, and covers</small></span>${chev}</button>
         <div class="row"><span class="th emo gi">${ICO('settings')}</span><span class="row-main"><b>Reduce Motion</b><small>Follows your device setting · ${prefersReducedMotion() ? 'On' : 'Off'}</small></span></div>
       </div>
       <div class="sec-h"><span>Help &amp; app</span></div>
@@ -3421,7 +3547,7 @@ const SCREENS = {
   glows(){
     if (!ADM.is) return { title:'Glow Tiers', body:'<p class="empty">Admins only.</p>' };
     const g = byId('gavel'), cell = (lv, xp, label) => `<div class="gl">${cardEl(g, {level:lv, xp, mastered:false, owned:true})}<small>${label}</small></div>`;
-    return { title:'Glow Tiers', body:`<div class="cgrid two">${cell(2, 0, 'Level 2')}${cell(3, 0, 'Level 3 · cyan')}${cell(4, 0, 'Level 4 · magenta')}${cell(4, 250, 'Level 4 · charged')}${cell(5, 0, 'Level 5 · gold + gloss')}</div>` };
+    return { title:'Glow Tiers', body:`<div class="cgrid two">${cell(2, 0, 'Level 2')}${cell(3, 0, 'Level 3')}${cell(4, 0, 'Level 4')}${cell(4, 250, 'Level 4 · almost leveled up')}${cell(5, 0, 'Level 5')}</div>` };
   },
 };
 function playerTitle(){
@@ -3503,7 +3629,7 @@ function switchTab(id){
   }
   saveScroll(); nav.tab = id; showScreen('none');
 }
-function refresh(){ saveScroll(); showScreen('none'); }   // re-render the current screen in place (keeps scroll)
+function refresh(){ saveScroll(); showScreen('none'); checkSeriesGoals(); }   // re-render the current screen in place (keeps scroll)
 
 /* ---- study session ---- */
 function startSession(id, lesson){
@@ -3582,7 +3708,7 @@ function paintStudy(anim){
   back.innerHTML = `
     <img class="question-frame" src="art/question_s${series}_template.svg" alt="">
     <div class="t bnum" style="${PB(62,62,228,152)}">${c.num}</div>
-    <div class="t brar" style="${PB(72,158,228,220)}">${c.rarity.toUpperCase()}</div>
+    <div class="t brar" style="${PB(72,158,228,220)}">${verLabel(S.cards[c.id])}</div>
     <div class="t title" style="${PB(262,72,772,262)}">
       ${series === 3 ? printedTitleHTML(c, 510/190, 46, 33, 8.6) : `${titleLine(c, 1, 46, 8.2)}${titleLine(c, 2, 33, 8.6)}`}</div>
     <div class="t bcat" style="${PB(794,60,968,168)}">${esc(c.category)}</div>
@@ -3944,14 +4070,20 @@ function drawPack(n = nextPackSeries()){
   if (S.packsOpened < GUARANTEE_PACKS) take(shuffle(pool.filter(c => !owned(c) && !picks.includes(c)))[0] || shuffle(tricks.filter(c => !owned(c) && !picks.includes(c)))[0]);   // early packs hold something new
   let guard = 0;
   while (picks.length < 3 && guard++ < 60) take(pickByRarity(pool.filter(c => !picks.includes(c))));
-  const out = resolvePulls(picks); out.series = d.n; return out;
+  const ver = rollVersion(), special = {};
+  if (ver && picks.length) special[picks[Math.floor(Math.random() * picks.length)].id] = ver;
+  const out = resolvePulls(picks, special); out.series = d.n; return out;
 }
-/* Picked cards → new cards join the collection, duplicates pay coins */
-function resolvePulls(picks){
+/* Picked cards → new cards join the collection, duplicates give a Copy and a few coins */
+function resolvePulls(picks, special = {}){
   return shuffle(picks).map(c => {
-    const st = S.cards[c.id], isNew = !st.owned; let coins = 0;
-    if (isNew) st.owned = true; else coins = earnCoins(coinsForDup(c), `Duplicate: ${c.name}`);
-    return { c, isNew, coins, st:{...st} };
+    const st = S.cards[c.id], isNew = !st.owned, ver = special[c.id] || 'filed';
+    const newVer = ver !== 'filed' && ![].concat(st.vers || []).includes(ver);   // a version you didn't have yet is never a duplicate
+    let coins = 0;
+    if (isNew) st.owned = true;
+    if (newVer) st.vers = [].concat(st.vers || [], ver);
+    if (!isNew && !newVer) { S.copies = copies() + 1; coins = earnCoins(coinsForDup(c), `Duplicate: ${c.name}`); }
+    return { c, isNew, ver, newVer, coins, st:{...st} };
   });
 }
 /* Swipe to rip: a ragged tear line across the top of the pack. The torn part of the flap peels up under your finger. */
@@ -3988,7 +4120,25 @@ function packTorn(btn){
   else btn.querySelector('.pk-flap').style.transform = '';   // the .torn rule flings it away
   btn.classList.toggle('from-r', btn._dir < 0); btn.classList.remove('shake'); btn.classList.add('torn');
   nativeFeedback('packtear'); softFlash();
-  ov.classList.add('out'); ov.querySelector('.pk-hint').textContent = 'Tap each card to flip it.';
+  ov.classList.add('out', 'stack'); nextPackCard(ov);
+}
+/* One-at-a-time reveal: the top card flips on a tap, then a swipe (or another tap) sends it away */
+function nextPackCard(ov){
+  const left = [...ov.querySelectorAll('.pk-card:not(.gone)')], top = left[0], hint = ov.querySelector('.pk-hint');
+  if (!top) return packSummary(ov);
+  top.classList.add('top');
+  hint.textContent = top.classList.contains('rare') ? 'Ooh, this one looks like evidence… tap to flip it!' : top.classList.contains('tease') ? 'Something is shining… tap to flip it!' : 'Tap the card to flip it.';
+}
+function sendPackCard(card, dir = 1){
+  const ov = card.closest('.pk');
+  card.classList.remove('top', 'drag'); card.style.transform = ''; card.style.setProperty('--dir', dir < 0 ? -1 : 1); card.classList.add('gone');
+  nextPackCard(ov);
+}
+function packSummary(ov){   // every card back in a fan, face up, with its NEW / DUPLICATE badge
+  if (ov.classList.contains('all')) return;
+  ov.querySelectorAll('.pk-card').forEach(c => { c.classList.remove('top', 'gone', 'drag'); c.style.transform = ''; if (!c.classList.contains('flipped')) c.classList.add('flipped'); });
+  ov.classList.remove('stack'); ov.classList.add('sum', 'all');
+  ov.querySelector('.pk-hint').textContent = ov._sticker ? 'Nice pull! And there\'s a bonus sticker inside.' : 'Nice pull! Tap a card to see it up close.';
 }
 document.addEventListener('pointerdown', e => {
   const btn = e.target.closest('.pk-pack'); if (!btn || btn._done) return;
@@ -4008,11 +4158,37 @@ document.addEventListener('pointermove', e => {
   if (btn._p >= .7) finishRip(btn);
 });
 ['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, () => { const btn = document.querySelector('.pk-pack'); if (btn) btn._drag = null; }));
+/* swipe a flipped top card off the stack; it follows your finger and flies off past ~70px */
+document.addEventListener('pointerdown', e => {
+  const card = e.target.closest('.pk.stack .pk-card.top.flipped'); if (!card) return;
+  card._sw = { x:e.clientX, id:e.pointerId, dx:0 };
+  try { card.setPointerCapture(e.pointerId); } catch (_) {}
+});
+document.addEventListener('pointermove', e => {
+  const card = document.querySelector('.pk.stack .pk-card.top'), d = card && card._sw; if (!d || e.pointerId !== d.id) return;
+  d.dx = e.clientX - d.x; if (Math.abs(d.dx) < 6) return;
+  card.classList.add('drag'); card.style.transform = `translateX(${d.dx}px) rotate(${d.dx / 18}deg)`;
+});
+['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, e => {
+  const card = document.querySelector('.pk.stack .pk-card.top'), d = card && card._sw; if (!d || e.pointerId !== d.id) return;
+  card._sw = null;
+  if (Math.abs(d.dx) < 6) return;   // a tap: the click handler takes it
+  card._dragged = true; setTimeout(() => { card._dragged = false; }, 400);
+  if (Math.abs(d.dx) > 70) sendPackCard(card, Math.sign(d.dx));
+  else { card.classList.remove('drag'); card.style.transform = ''; }
+}));
+function packBadge(p){
+  if (p.newVer) return `<span class="pk-badge v-${p.ver}">${p.isNew ? 'NEW · ' : ''}${VERSIONS[p.ver].label}!</span>`;
+  if (p.isNew) return `<span class="pk-badge ${p.c.trickType ? 'trick' : 'new'}">${p.c.trickType ? ICO('memory') + ' MEMORY TRICK!' : 'NEW!'}</span>`;
+  return `<span class="pk-badge dup">+1 COPY · +${p.coins} ${COIN}</span>`;
+}
 function openPack(opts = {}){
   if (!opts.pulls && S.packs <= 0) return;
   if (!opts.pulls) S.packs--;
   const first = S.packsOpened === 0; S.packsOpened++;
   const pulls = opts.pulls || drawPack();
+  const rank = p => VERSIONS[p.ver || 'filed'].n * 2 + (p.isNew ? 1 : 0);
+  pulls.sort((a, b) => rank(a) - rank(b));   // like a real booster: the best card is saved for last
   const bonus = rollSticker();   // every pack can hold a bonus sticker, bought ones too
   const coin = !first && Math.random() < 1 / 5;   // a Continuance: about 1 in 5 packs, bought ones too (never the first); reopens a missed Hot Docket
   if (coin) S.continuances = (S.continuances || 0) + 1;
@@ -4032,15 +4208,16 @@ function openPack(opts = {}){
         <img class="pk-top pk-flap" src="${packImg}" alt="" style="clip-path:${flapClip(line, 0, 0)}">
         <span class="pk-cut" style="top:${TEAR_Y}%"></span>${label}
       </button>
-      <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
+      <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card${p.ver === 'exhibit' ? ' tease rare' : p.ver === 'certified' ? ' tease' : ''}" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
         <div class="pk-inner"><div class="pk-face pk-back">${cardReverseHTML(p.c)}</div>
         <div class="pk-face pk-front">${cardEl(p.c, p.st)}</div></div>
-        <span class="pk-badge ${p.isNew ? (p.c.trickType ? 'trick' : 'new') : 'dup'}">${p.isNew ? (p.c.trickType ? ICO('memory') + ' MEMORY TRICK!' : 'NEW!') : `DUPLICATE · +${p.coins} ${COIN}`}</span>
+        ${packBadge(p)}
       </button>`).join('')}</div>
     </div>
     ${coin ? `<div class="pk-coin"><img src="${artSrc('continuance_coin')}" alt=""><span><b>+1 CONTINUANCE</b><small>Reopens a missed Hot Docket</small></span></div>` : ''}
     <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Swipe across the top to rip it open.' : packSeries ? `A Series ${packSeries} pack! Swipe across the top to rip it open.` : 'Swipe across the top to rip it open.'}</p>
     <button class="sheet-cancel pk-auto" data-act="pk-auto">Open for me</button>
+    <button class="sheet-cancel pk-skip" data-act="pk-skip">Show all</button>
     <button class="btn-big gold pk-done" data-act="${bonus ? 'pk-sticker' : 'pk-done'}">${bonus ? 'OPEN YOUR BONUS STICKER' : 'COLLECT →'}</button>`;
   document.body.appendChild(ov);
   const pk = ov.querySelector('.pk-pack'); pk._line = line; ov._sticker = bonus;
@@ -4060,6 +4237,17 @@ function zoomCard(html){
   document.body.appendChild(z); lockScroll();
 }
 function flipPackCard(card){
+  if (card._dragged) { card._dragged = false; return; }   // a swipe just ended on this card
+  const sov = card.closest('.pk.stack');
+  if (sov) {
+    if (!card.classList.contains('top')) return;
+    if (card.classList.contains('flipped')) return sendPackCard(card, 1);
+    card.classList.add('flipped');
+    if (card.classList.contains('rare')) { softFlash(); nativeFeedback('levelup'); }
+    if (card.querySelector('.pk-badge.new, .pk-badge.trick, .pk-badge.v-certified, .pk-badge.v-exhibit')) confetti(sov);
+    sov.querySelector('.pk-hint').textContent = sov.querySelectorAll('.pk-card:not(.gone)').length > 1 ? 'Swipe it away for the next card.' : 'Swipe it away to see your whole pull.';
+    return;
+  }
   if (card.classList.contains('flipped')) { if (card.closest('.pk.all, .pk.out')) zoomCard(card.querySelector('.pk-front').innerHTML); return; }
   card.classList.add('flipped');
   const ov = card.closest('.pk');
@@ -4383,6 +4571,7 @@ document.addEventListener('click', e => {
     case 'pk-tear': tearPack(t); break;
     case 'pk-auto': { const ov = t.closest('.pk'), pkb = ov && ov.querySelector('.pk-pack'); if (pkb) { pkb._swiped = false; tearPack(pkb); } t.hidden = true; break; }
     case 'pk-flip': flipPackCard(t); break;
+    case 'pk-skip': packSummary(t.closest('.pk')); break;
     case 'pk-done': goBack(); if (typeof guestWall === 'function') guestWall(); break;
     case 'pk-sticker': openSticker(t.closest('.pk')); break;
     case 'bstk-auto': { const l = t.closest('.bstk'); if (l._ctl) { l._ctl.autoPeel(); t.disabled = true; } break; }
@@ -4394,6 +4583,7 @@ document.addEventListener('click', e => {
     case 'card-menu': cardMenu(id); break;
     case 'missing': missingSheet(id); break;
     case 'sheet-close': closeSheet(); break;
+    case 'certify': certifyCard(t.dataset.id); break;
     case 'a2hs-show': a2hsSheet(); break;
     case 'cloud-signin': closeSheet(true); openSignIn(t.dataset.tab || 'signin'); break;
     case 'cloud-signout':
@@ -4412,8 +4602,12 @@ document.addEventListener('click', e => {
     case 't-reset': { if (!ADM.is) break; closeSheet(true); Object.assign(S.cards[id], {level:1, xp:0, mastered:false}); save(); const en = topEntry(); if (en.p) delete en.p.preview; refresh(); toast('↺ Card reset to Level 1'); break; }
     case 't-pack': if (ADM.is) { S.packs++; save(); refresh(); toast('Test pack added', 'pack'); } break;
     case 'claim': claimQuest(t.dataset.kind, t.dataset.q); break;
-    case 'claim-all': { const list = readyList(); list.forEach(([k, q]) => { if (k === 'daily') { daily().claimed[q.id] = true; onbFlag('claimed'); earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`); } else { S.milestones = S.milestones || {}; S.milestones[q.id] = true; } });
-      S.packs += list.length; save(); if (list.length) nativeFeedback('claim'); refresh(); toast(`+${list.length} pack${list.length > 1 ? 's' : ''} claimed`, 'pack'); break; }
+    case 'claim-all': { const list = readyList(); let packs = 0, coins = 0;
+      list.forEach(([k, q]) => { if (k === 'daily') { daily().claimed[q.id] = true; onbFlag('claimed'); coins += earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`); } else { S.milestones = S.milestones || {}; S.milestones[q.id] = true; packs++; } });
+      S.packs += packs;
+      if (list.length && caseClosedReady()) { closeCase(); break; }
+      save(); if (list.length) nativeFeedback('claim'); refresh();
+      if (list.length) toast([coins ? `+${coins} coins` : '', packs ? `+${packs} pack${packs > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · '), packs ? 'pack' : 'coin'); break; }
     case 'sort-sheet': sortSheet(); break;
     case 'sort': nav.sort = t.dataset.v; refresh(); sortSheet(); break;
     case 'toggle-missing': nav.showMissing = nav.showMissing === false; refresh(); sortSheet(); break;

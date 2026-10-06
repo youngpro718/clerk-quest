@@ -269,7 +269,7 @@ Object.assign(ADMIN_SCREENS, {
         <div class="sec-h"><span>Required effects</span></div><div class="list">
           ${s3 ? `<button class="row" data-act="push" data-s="admincard" data-id="${s3.id}">${admThumb(s3,2)}<span class="row-main"><b>Progressive color</b><small>Series 3 paint stages across levels</small></span>${chev}</button>` : ''}
           ${frame ? `<button class="row" data-act="push" data-s="admincard" data-id="${frame.id}">${admThumb(frame,maxL(frame))}<span class="row-main"><b>Frame break &amp; motion</b><small>Max-level cutout and device tilt</small></span>${chev}</button>` : ''}
-          <button class="row" data-act="push" data-s="glows"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Glow tiers</b><small>Cyan, magenta, charged, gold, and gloss</small></span>${chev}</button>
+          <button class="row" data-act="push" data-s="glows"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Level glow</b><small>The almost-leveled-up glow</small></span>${chev}</button>
         </div>` };
     });
   },
@@ -291,7 +291,7 @@ Object.assign(ADMIN_SCREENS, {
       return { title:'Packs & Rewards', body:`<p class="st-note">Static pull fixtures use temporary card states and never spend, award, or save anything.</p>
         <div class="adm-pack"><img src="${nextPackArt()}" alt="Current pack wrapper"><b>Pack presentation</b><small>Wrapper, card back, new card, duplicate, and Memory Trick labels</small></div>
         <div class="adm-pulls">${pulls.map((c,i) => `<div>${i===0?`<img class="adm-back" src="${backSrc()}" alt="Card back">`:admCardPreview(c,Math.min(2,maxL(c)),'normal')}<small>${['Card back / duplicate','New card','Memory Trick'][i]}</small></div>`).join('')}</div>
-        <div class="sec-h"><span>Reward cards</span></div><div class="list"><button class="row" data-act="push" data-s="rewardpreview"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Hot Docket reward cards</b><small>Rare, black and white, backs, and one-chance quiz previews</small></span>${chev}</button></div>` };
+        <div class="sec-h"><span>Reward cards</span></div><div class="list"><button class="row" data-act="push" data-s="rewardpreview"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Landmark cards (Hot Docket)</b><small>Filed, Certified, backs, and one-chance quiz previews</small></span>${chev}</button></div>` };
     });
   },
   adminscreens(){

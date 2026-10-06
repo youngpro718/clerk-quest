@@ -6,11 +6,10 @@ const COINS = {
   answer: 5,          // right answer (half, rounded up, with a Sidebar hint)
   levelUp: 25,        // a card reaches its next level
   mastered: 100,      // a card is mastered
-  dailyQuest: 20,     // claiming a daily quest (plus its pack)
+  dailyQuest: 20,     // claiming a daily quest (all three also close the case for a pack)
   streakStep: 10,     // first round of the day: +10 per day in a row…
   streakMax: 50,      // …capped here
-  dupCommon: 15,      // a duplicate card from a pack
-  dupRare: 30,        // a duplicate rare card
+  dup: 5,             // a duplicate card from a pack (it also gives a Copy)
 };
 
 /* Add coins and keep a short history for the coin sheet. Callers save afterward (or pass save:true).
@@ -31,7 +30,7 @@ function spendCoins(n, why){
 }
 function logCoins(n, why){ if (n > 0) S.coinLog = [{ n, why, at:Date.now() }].concat(S.coinLog || []).slice(0, 25); }
 const coinsForAnswer = hinted => hinted ? Math.ceil(COINS.answer / 2) : COINS.answer;
-const coinsForDup = c => c.rarity === 'rare' ? COINS.dupRare : COINS.dupCommon;
+const coinsForDup = () => COINS.dup;
 
 /* Study streak: paid once a day, on the first finished round. Returns the coins paid (0 if already paid today). */
 function payStreak(){
@@ -58,7 +57,7 @@ function coinSheet(){
     <div class="sec-h"><span>How to earn</span></div>
     <div class="list info">
       ${[['Right answer', `+${COINS.answer} (${coinsForAnswer(true)} with a hint)`], ['Card levels up', `+${COINS.levelUp}`], ['Card mastered', `+${COINS.mastered}`],
-         ['Daily quest', `+${COINS.dailyQuest}`], ['Study streak', `+${COINS.streakStep} a day, up to +${COINS.streakMax}`], ['Duplicate card', `+${COINS.dupCommon} (rare +${COINS.dupRare})`]]
+         ['Daily quest', `+${COINS.dailyQuest}`], ['Study streak', `+${COINS.streakStep} a day, up to +${COINS.streakMax}`], ['Duplicate card', `+${COINS.dup} and a Copy`]]
         .map(([k, v]) => `<div class="row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('')}
     </div>
     ${log.length ? `<div class="sec-h"><span>Recent</span></div><div class="list info">${log.slice(0, 8).map(e =>

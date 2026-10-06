@@ -10,6 +10,8 @@ const PRICE = {
   subjectPack: 300,    // 3 random cards from one subject
   packsPerWeek: 2,     // store packs a player can buy each week (the daily pack stays the main way to collect)
   packMinCards: 4,     // subjects smaller than this sell only as a deck
+  copy: 50,            // one Copy (10 certify a card); TUNE
+  copiesPerWeek: 10,   // Copies a player can buy each week, so coins speed certifying up but never skip it
 };
 /* Study boosts: they speed studying up, but never level or master a card for you. */
 const BOOSTS = [
@@ -38,13 +40,13 @@ function buyBoost(id){
   if (id === 'double') toast(`Double XP on for ${doubleMinsLeft()} min`, 'almost');
   if (id === 'hints') toast(`${bs.freeHints} free hints ready`, 'hint');
 }
-/* Card styles: frames and foil are bought per card; card backs are bought once for the whole collection. */
+/* Card styles: frames are bought per card; card backs are bought once for the whole collection.
+   Holo foil was retired on 2026-10-05: shine now comes from a card's version (Certified, Exhibit, Gold Seal). Buyers were refunded. */
 const FRAMES = [
   { id:'marble', name:'Courthouse Marble', price:200 },
   { id:'night', name:'Night Court', price:200 },
   { id:'vintage', name:'Old Parchment', price:200 },
 ];
-const FOIL_PRICE = 100;
 const BACKS = [
   { id:'navy', name:'Gavel & Quill', price:150 },
   { id:'redtape', name:'Red Tape', price:150 },
@@ -66,19 +68,16 @@ function styleSheet(id){
   openSheet(`<h3>Card Style</h3><div class="sty-card">${cardEl(c, S.cards[id])}</div><p class="st-note c">${esc(c.name)}</p>
     <div class="sec-h"><span>Frame</span></div>
     ${framesAllowed(c) ? `<div class="list sty-list">
-      <div class="sty-row"><img class="sty-prev" src="${c.trickType ? artSrc('frame_trick') : artSrc('frame_base')}" alt=""><span class="row-main"><b>Standard</b><small>Changes as the card levels up</small></span>
+      <div class="sty-row"><img class="sty-prev" src="${c.trickType ? artSrc('frame_trick') : artSrc('frame_base')}" alt=""><span class="row-main"><b>Standard</b><small>The series frame</small></span>
         ${cs.eq.frame ? btn('sty-frame', 'Use', '" data-v="') : btn('sty-frame', `${ICO('check')} In use`, 'on" data-v="')}</div>
       ${FRAMES.map(frameRow).join('')}</div>`
       : `<p class="st-note">This series keeps its own signature frame.</p>`}
-    <div class="sec-h"><span>Foil</span></div>
-    <div class="list sty-list"><div class="sty-row"><img class="sty-prev" src="${artSrc('foil_texture')}" alt=""><span class="row-main"><b>Holo Foil</b><small>${cs.foil ? (cs.eq.foil ? 'On' : 'Off') : FOIL_PRICE + ' coins'}</small></span>
-      ${cs.foil ? btn('sty-foil', cs.eq.foil ? 'Turn off' : 'Turn on') : btn('sty-buyfoil', `${COIN}${FOIL_PRICE}`, 'buy', coins >= FOIL_PRICE)}</div></div>
     <p class="st-note c">You have ${COIN}${coins.toLocaleString()}</p>
     <button class="sheet-cancel" data-act="sheet-close">Done</button>`);
 }
 function cardPicker(kind){
   const list = CARDS.filter(owned).filter(c => kind !== 'frame' || framesAllowed(c));
-  openSheet(`<h3>${kind === 'frame' ? 'Frame' : 'Foil'}: pick a card</h3><div class="list">${list.map(c => `<button class="row" data-act="sty-open" data-id="${c.id}">${thumb(c)}<span class="row-main"><b>${esc(c.name)}</b><small>${esc(c.num)}</small></span>${chev}</button>`).join('')}</div>
+  openSheet(`<h3>Frame: pick a card</h3><div class="list">${list.map(c => `<button class="row" data-act="sty-open" data-id="${c.id}">${thumb(c)}<span class="row-main"><b>${esc(c.name)}</b><small>${esc(c.num)}</small></span>${chev}</button>`).join('')}</div>
     <button class="sheet-cancel" data-act="sheet-close">Cancel</button>`);
 }
 const backStyleHTML = () => `<div class="st-grid backs">${[{ id:'', name:'Classic', price:0 }].concat(BACKS).map(b => {
@@ -142,8 +141,11 @@ function storeHTML(){
       <span class="row-main"><b>${esc(b.name)}</b><small>${esc(boostStatus(b))}</small></span>${ok ? priceTag(b.price, coins >= b.price) : ''}</button>`; }).join('');
   return `<img class="st-banner" src="${artSrc('store_banner')}" alt="The Clerk's Counter">
     <button class="st-balance" data-act="coins-info"><img src="${artSrc('coin_big')}" alt=""><span><b>${coins.toLocaleString()}</b><small>coins · how to earn more</small></span>${chev}</button>
-    <div class="sec-h"><span>Series Packs</span></div><p class="st-note">Each pack holds cards from its own series, and some hold a trick card or a sticker. Duplicates turn into coins.</p>
+    <div class="sec-h"><span>Series Packs</span></div><p class="st-note">Each pack holds cards from its own series, and some hold a trick card or a sticker. Duplicates turn into Copies and a few coins.</p>
     <div class="st-grid">${packs}</div>
+    <div class="sec-h"><span>Copies</span></div><p class="st-note">Collect ${COPIES_TO_CERTIFY} Copies to certify any card you own. Duplicate cards give Copies too. You have ${copies()}.</p>
+    <div class="list"><button class="row" data-act="st-copy"><span class="st-bimg"><img src="art/copy.png" alt=""></span>
+      <span class="row-main"><b>1 Copy</b><small>${copyBuysLeft() ? `${copyBuysLeft()} left this week` : 'Sold out until Monday'}</small></span>${copyBuysLeft() ? priceTag(PRICE.copy, coins >= PRICE.copy) : ''}</button></div>
     <div class="sec-h"><span>Complete Decks</span></div><p class="st-note">Every card in a series, all at once, for anyone who wants to start studying without waiting on packs. You only pay for cards you don't have yet.</p>
     <div class="st-grid">${decks}</div>
     <div class="sec-h"><span>Lesson Decks</span></div><p class="st-note">Every card in a built-in lesson, so you can take its quiz. You only pay for cards you don't have yet.</p>
@@ -151,12 +153,11 @@ function storeHTML(){
       return `<button class="st-item" data-act="ls-get" data-id="${L.id}">${lessonDeckArt(L)}<span class="st-name">${esc(L.name)}</span>
         <span class="st-sub">${L.cards.length} cards · ${m ? m + ' new' : 'all owned'}</span>
         ${m ? priceTag(lessonDeckPrice(L), coins >= lessonDeckPrice(L)) : `<span class="st-price owned">${ICO('check')} Owned</span>`}</button>`; }).join('')}</div>
-    <div class="sec-h"><span>Card Styles</span></div><p class="st-note">Frames and foil go on one card. Or open any card and tap ••• → Card Style.</p>
+    <div class="sec-h"><span>Card Styles</span></div><p class="st-note">A frame goes on one card. Or open any card and tap ••• → Card Style.</p>
     <div class="list">
       <button class="row" data-act="sty-pick" data-set="frame"><span class="st-bimg"><img src="${artSrc('frame_marble')}" alt=""></span><span class="row-main"><b>Frames</b><small>Marble, Night Court, Old Parchment · 200 each</small></span>${chev}</button>
-      <button class="row" data-act="sty-pick" data-set="foil"><span class="st-bimg"><img src="${artSrc('foil_texture')}" alt=""></span><span class="row-main"><b>Holo Foil</b><small>A shimmer over the art · 100</small></span>${chev}</button>
     </div>
-    <div class="sec-h"><span>Card Backs</span></div><p class="st-note">One back for your whole collection. See it in packs, or tap a card on its page to flip it.</p>
+    <div class="sec-h"><span>Card Backs</span></div><p class="st-note">One back for your whole collection. See it in packs, or tap a card on its page to flip it. With Classic, each series shows its own back, and getting every card in a series to Certified earns that series an exclusive back that can't be bought.</p>
     ${backStyleHTML()}
     <div class="sec-h"><span>Binder Covers</span></div><p class="st-note">Dress up your binders. Put a cover on from a binder's ••• menu. Extra pages are added inside each binder.</p>
     <div class="st-grid backs">${COVERS.filter(cv => cv.price).map(cv => { const have = ownedCovers().includes(cv.id);
@@ -167,14 +168,14 @@ function storeHTML(){
 }
 
 /* ---------- buying ---------- */
-function buySheet({title, art, list, price, act, set, note, locked}){
+function buySheet({title, art, list, price, act, set, note, locked, lockedText = 'NO MORE PACKS THIS WEEK'}){
   const coins = S.coins || 0, can = coins >= price && !locked;
   openSheet(`<div class="st-sheet-art">${art}</div><h3>${esc(title)}</h3>${note ? `<p class="st-note c">${note}</p>` : ''}
     ${list || ''}
     <div class="st-after"><span>Your coins</span><b>${COIN}${coins.toLocaleString()}</b></div>
     <div class="st-after"><span>Price</span><b>−${price.toLocaleString()}</b></div>
     <div class="st-after total"><span>After</span><b>${can ? COIN + (coins - price).toLocaleString() : '—'}</b></div>
-    <button class="btn-big gold" data-act="${act}" data-set="${esc(set)}" ${can ? '' : 'disabled'}>${locked ? 'NO MORE PACKS THIS WEEK' : can ? `BUY FOR ${price.toLocaleString()}` : `NEED ${(price - coins).toLocaleString()} MORE COINS`}</button>
+    <button class="btn-big gold" data-act="${act}" data-set="${esc(set)}" ${can ? '' : 'disabled'}>${locked ? lockedText : can ? `BUY FOR ${price.toLocaleString()}` : `NEED ${(price - coins).toLocaleString()} MORE COINS`}</button>
     <button class="sheet-cancel" data-act="sheet-close">Not now</button>`);
 }
 function deckSheet(n){
@@ -190,6 +191,18 @@ function packSheet(n){
   const left = storePacksLeft();
   buySheet({ title:d.label + ' Pack', art:seriesPackImg(d), price:PRICE.subjectPack, act:'st-buy-pack', set:d.n, locked:!left,
     note:`${left ? `${left} of ${PRICE.packsPerWeek} store packs left this week. ` : `You have bought this week's ${PRICE.packsPerWeek} store packs. Your daily pack is still free. `}3 cards, all from ${esc(d.label)}, sometimes with a trick card or a sticker. ${d.missing.length ? `${d.missing.length} of the ${d.cards.length} ${esc(d.label)} cards are new to you.` : 'You own every card in this series, so each card turns into coins.'}` });
+}
+const copyBuysLeft = () => { const w = S.copyBuys; return !w || w.week !== weekKey() ? PRICE.copiesPerWeek : Math.max(0, PRICE.copiesPerWeek - w.n); };
+function copySheet(){
+  const left = copyBuysLeft();
+  buySheet({ title:'1 Copy', art:`<span class="st-art boost"><img src="art/copy.png" alt=""></span>`, price:PRICE.copy, act:'st-buy-copy', set:'copy', locked:!left, lockedText:'NO MORE COPIES THIS WEEK',
+    note:`You have ${copies()} of the ${COPIES_TO_CERTIFY} Copies needed to certify a card. ${left ? `${left} of ${PRICE.copiesPerWeek} left to buy this week.` : 'You can buy more on Monday.'}` });
+}
+function buyCopy(){
+  if (!copyBuysLeft() || !spendCoins(PRICE.copy, '1 Copy')) return;
+  S.copyBuys = { week:weekKey(), n:PRICE.copiesPerWeek - copyBuysLeft() + 1 }; S.copies = copies() + 1;
+  save(); closeSheet(true); refresh();
+  toast(copies() >= COPIES_TO_CERTIFY ? `${copies()} Copies: open a card to certify it` : `+1 Copy · ${copies()} of ${COPIES_TO_CERTIFY}`, 'check');
 }
 function buyDeck(n){
   const d = storeSeries().find(x => x.n === +n); if (!d || !d.missing.length) return;
@@ -217,6 +230,8 @@ document.addEventListener('click', e => {
     case 'st-pack': packSheet(set); break;
     case 'st-buy-deck': buyDeck(set); break;
     case 'st-buy-pack': buyPack(set); break;
+    case 'st-copy': copySheet(); break;
+    case 'st-buy-copy': buyCopy(); break;
     case 'coins-info': coinSheet(); break;
     case 'st-boost': { const b = BOOSTS.find(x => x.id === set); if (!b) break;
       if (!boostUsable(b)) { toast('No cold cases to warm up right now', 'thermo_snow'); break; }
@@ -228,9 +243,6 @@ document.addEventListener('click', e => {
     case 'sty-frame': { const cs = cardStyle(t.dataset.id); cs.eq.frame = t.dataset.v || ''; save(); refresh(); styleSheet(t.dataset.id); break; }
     case 'sty-buyframe': { const f = FRAMES.find(x => x.id === t.dataset.v), c = byId(t.dataset.id);
       if (f && spendCoins(f.price, `${f.name} frame: ${c.name}`)) { const cs = cardStyle(c.id); cs.frames.push(f.id); cs.eq.frame = f.id; save(); refresh(); styleSheet(c.id); toast(`${f.name} frame on ${c.name}`, 'sparkle'); } break; }
-    case 'sty-foil': { const cs = cardStyle(t.dataset.id); cs.eq.foil = !cs.eq.foil; save(); refresh(); styleSheet(t.dataset.id); break; }
-    case 'sty-buyfoil': { const c = byId(t.dataset.id);
-      if (spendCoins(FOIL_PRICE, `Holo foil: ${c.name}`)) { const cs = cardStyle(c.id); cs.foil = true; cs.eq.foil = true; save(); refresh(); styleSheet(c.id); toast(`Holo foil on ${c.name}`, 'sparkle'); } break; }
     case 'sty-back': { const b = BACKS.find(x => x.id === set), st = styles();
       if (!set || st.backs.includes(set)) { st.back = set || ''; save(); refresh(); toast(`${set ? b.name : 'Classic'} card back in use`, 'cards'); break; }
       buySheet({ title:b.name + ' Card Back', art:`<span class="st-art back"><img src="${artSrc('back_' + b.id)}" alt=""></span>`, price:b.price, act:'sty-buyback', set:b.id, note:'For every card in your collection.' }); break; }

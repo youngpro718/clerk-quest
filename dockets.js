@@ -264,15 +264,16 @@ function docketsTabHTML(){
     <div class="dk-folder"><img src="${artSrc('docket_folder')}" alt="Docket folder"></div>
     <div class="sec-h"><span>Your dockets</span></div><div class="list">${rows || '<p class="empty">Your first Hot Docket arrives soon.</p>'}</div>
     <div class="dk-coins"><img src="${artSrc('continuance_coin')}" alt=""><span><b>${continuances()} Continuance${continuances() === 1 ? '' : 's'}</b><small>${continuances() ? 'Spend one to retry a docket that ended without a reward card.' : 'Found in some packs. One lets you retry a docket that ended without a reward card.'}</small></span></div>
-    ${won.length ? `<div class="sec-h"><span>Reward cards</span></div><div class="dk-rewards">${won.map(r => rewardThumb(r)).join('')}</div>` : ''}
+    ${won.length ? `<div class="sec-h"><span>Landmark cards</span></div><div class="dk-rewards">${won.map(r => rewardThumb(r)).join('')}</div>` : ''}
     <p class="foot">A new Hot Docket arrives on your Home screen about once a week and stays open for a week. Finished ones stay in this folder as your record.</p>`;
 }
 /* How a won reward card looks: acing the one-chance quiz makes it the Super Rare (full color, holo), even from black and white */
 const rwLook = r => r.superRare ? 'rare super' : r.reward;
-const rwLabel = r => r.superRare ? 'Super Rare' : r.reward === 'rare' ? 'Rare · full color' : 'Black and white';
+const rwLabel = r => r.superRare ? 'Gold Seal' : r.reward === 'rare' ? 'Certified · full color' : 'Filed · black and white';   // Landmark cards use the card versions
+const rwSeal = r => r.superRare ? '<img class="rw-seal gold" src="art/ver_gold_seal.png" alt="Gold Seal">' : r.reward === 'rare' ? '<img class="rw-seal" src="art/ver_certified_seal.png" alt="Certified seal">' : '';
 function rewardThumb(r){
   const d = docketDef(r.id), rw = DOCKET_REWARDS[d.reward];
-  return `<button class="dk-rw ${rwLook(r)}" data-act="dk-reward" data-id="${r.id}"><span class="rw-card ${rwLook(r)}"><img src="${artSrc(rw.front)}" alt="${esc(rw.name)}">${r.superRare ? '<i class="rw-holo"></i>' : ''}</span>
+  return `<button class="dk-rw ${rwLook(r)}" data-act="dk-reward" data-id="${r.id}"><span class="rw-card ${rwLook(r)}"><img src="${artSrc(rw.front)}" alt="${esc(rw.name)}">${r.superRare ? '<i class="rw-holo"></i>' : ''}${rwSeal(r)}</span>
     <small>${rwLabel(r)}</small></button>`;
 }
 
@@ -409,7 +410,7 @@ function rewardCardHTML(r, back){
   const d = docketDef(r.id), rw = DOCKET_REWARDS[d.reward];
   const [bl, bt, bw, bh] = rw.btn;
   return `<div class="rw-flip ${back ? 'back' : ''}" data-act="rw-flip">
-    <div class="rw-face front"><span class="rw-card ${rwLook(r)}"><img src="${artSrc(rw.front)}" alt="${esc(rw.name)}">${r.reward === 'rare' || r.superRare ? '<i class="rw-holo"></i>' : ''}</span>${r.superRare ? '<em class="rw-tag super">SUPER RARE</em>' : r.reward === 'rare' ? '<em class="rw-tag">RARE</em>' : ''}</div>
+    <div class="rw-face front"><span class="rw-card ${rwLook(r)}"><img src="${artSrc(rw.front)}" alt="${esc(rw.name)}">${r.reward === 'rare' || r.superRare ? '<i class="rw-holo"></i>' : ''}${rwSeal(r)}</span>${r.superRare ? '<em class="rw-tag super">GOLD SEAL</em>' : r.reward === 'rare' ? '<em class="rw-tag">CERTIFIED</em>' : '<em class="rw-tag filed">FILED</em>'}</div>
     <div class="rw-face backside"><span class="rw-card ${rwLook(r)}"><img src="${artSrc(rw.back)}" alt="${esc(rw.name)}, card back">
       <button class="rw-quizbtn" style="${sfBox(bl, bt, bw, bh)}" data-act="rw-quiz" data-id="${r.id}">${esc(quizButtonLabel(r))}</button></span></div></div>`;
 }
@@ -422,8 +423,8 @@ function openReward(id, reveal){
   const r = rwRec(id), d = docketDef(id); if (!r.reward) return;
   const t = r.preview ? null : docketTotals(d, r), ov = document.createElement('div'); ov.className = 'rw-ov'; ov.dataset.id = id;
   ov.innerHTML = `${reveal ? `<h2 class="rw-h">DOCKET COMPLETE</h2>` : ''}
-    <p class="rw-sub">${r.preview ? `Admin preview · ${r.reward === 'rare' ? 'rare, full color (90%+)' : 'black and white (80–89%, or any retry)'} · nothing is saved`
-      : r.superRare ? `★ Super Rare · you aced the one-chance RBG quiz` : r.reward === 'rare' ? `Rare reward · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%)` : `Reward · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%) · 90% earns full color`}</p>
+    <p class="rw-sub">${r.preview ? `Admin preview · ${r.reward === 'rare' ? 'Certified, full color (90%+)' : 'Filed, black and white (80–89%, or any retry)'} · nothing is saved`
+      : r.superRare ? `★ Gold Seal · you aced the one-chance RBG quiz` : r.reward === 'rare' ? `Certified Landmark card · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%)` : `Filed Landmark card · ${t.right} of ${t.total} right (${Math.round(t.pct * 100)}%) · 90% earns Certified`}</p>
     <div class="rw-stage ${reveal ? 'reveal' : ''}">${rewardCardHTML(r)}</div>
     <p class="rw-hint">Tap the card to flip it.</p>
     <button class="btn-big ${r.reward === 'rare' ? 'gold' : ''}" data-act="rw-close">${reveal ? 'ADD TO MY DOCKET FOLDER' : 'DONE'}</button>`;
@@ -446,14 +447,14 @@ function rewardQuiz(id, show){
     const score = quizScore(rw, r), perfect = score === n;
     ov.innerHTML = `<h2 class="rw-h">RBG QUIZ</h2><div class="rwq-done"><b>${score} of ${n}</b><span>right</span>
         <img class="rwq-stamp" src="${artSrc('dk_stamp_completed')}" alt="Completed"></div>
-      ${perfect ? `<p class="rwq-super">★ SUPER RARE PRIZE UNLOCKED ★</p><p class="rw-sub">All four on your one chance. Your RBG card is now the Super Rare: full color, holo, and gold.</p>`
+      ${perfect ? `<p class="rwq-super">★ GOLD SEAL UNLOCKED ★</p><p class="rw-sub">All four on your one chance. Your RBG card now carries the Gold Seal: full color, holo, and gold.</p>`
         : `<p class="rw-sub">The quiz was one chance only. Every answer is on the back of your card for next time you study.</p>`}
       <button class="btn-big ${perfect ? 'gold' : 'alt'}" data-act="rwq-close">BACK TO THE CARD</button>`;
     return;
   }
   const q = rw.quiz[i], color = RWQ_NOTES[i % RWQ_NOTES.length], picked = r.quiz.a[i], answered = picked != null;
   ov.innerHTML = `<h2 class="rw-h">RBG QUIZ · ${i + 1} OF ${n}</h2>
-    ${i === 0 && !answered ? `<p class="rwq-warn">One chance only · get all ${n} right to unlock a super rare prize</p>` : ''}
+    ${i === 0 && !answered ? `<p class="rwq-warn">One chance only · get all ${n} right to earn the Gold Seal</p>` : ''}
     <div class="rwq-note ${color} ${answered ? '' : 'in'}" style="background-image:url('${artSrc('dk_note_' + color)}')"><div class="rwq-in">
       <p class="rwq-q">${esc(q.q)}</p>
       <div class="rwq-choices ${color === 'ivory' ? 'grid' : ''}">${q.c.map((c, k) => `<button class="rwq-c ${answered && k === q.a ? 'right' : ''} ${answered && k === picked && k !== q.a ? 'wrong' : ''}"
@@ -475,15 +476,15 @@ function pickQuiz(id, i, k){
 }
 const quizButtonLabel = r => { const rw = DOCKET_REWARDS[docketDef(r.id).reward];
   return !quizDone(rw, r) ? (r.quiz && r.quiz.a.some(a => a != null) ? 'Finish Your RBG Quiz' : 'Test Your RBG Knowledge')
-    : r.superRare ? '★ Super Rare Unlocked ★' : `RBG Quiz: ${quizScore(rw, r)} of ${rw.quiz.length}`; };
+    : r.superRare ? '★ Gold Seal Unlocked ★' : `RBG Quiz: ${quizScore(rw, r)} of ${rw.quiz.length}`; };
 
 /* ---------- screens ---------- */
 const DOCKET_SCREENS = {
   rewardpreview(){
-    if (!(typeof ADM !== 'undefined' && ADM.is)) return { title:'Reward Cards', body:'<p class="empty">Admins only.</p>' };
-    return { title:'Reward Cards', body:`<p class="st-note">Every Hot Docket reward, as players see it. Tap one to open it, flip it, and try the quiz. Previews don't save anything.</p>
+    if (!(typeof ADM !== 'undefined' && ADM.is)) return { title:'Landmark Cards', body:'<p class="empty">Admins only.</p>' };
+    return { title:'Landmark Cards', body:`<p class="st-note">Every Hot Docket reward, as players see it. Tap one to open it, flip it, and try the quiz. Previews don't save anything.</p>
       ${HOT_DOCKETS.map(d => { const rw = DOCKET_REWARDS[d.reward]; return `<div class="sec-h"><span>${esc(rw.name)} · ${esc(d.id)}</span></div>
-        <div class="dk-rewards">${[['rare', 'Rare · full color', '90%+ of 15'], ['bw', 'Black and white', '80–89%, or a retry']].map(([k, a, b]) =>
+        <div class="dk-rewards">${[['rare', 'Certified · full color', '90%+ of 15'], ['bw', 'Filed · black and white', '80–89%, or a retry']].map(([k, a, b]) =>
           `<button class="dk-rw ${k}" data-act="rw-preview" data-id="${d.id}" data-kind="${k}"><span class="rw-card ${k}"><img src="${artSrc(rw.front)}" alt="">${k === 'rare' ? '<i class="rw-holo"></i>' : ''}</span><small>${a}<br>${b}</small></button>`).join('')}
           <button class="dk-rw" data-act="rw-preview" data-id="${d.id}" data-kind="rare" data-back="1"><span class="rw-card"><img src="${artSrc(rw.back)}" alt=""></span><small>Card back<br>+ one-chance quiz</small></button></div>`; }).join('')}` };
   },
@@ -491,7 +492,7 @@ const DOCKET_SCREENS = {
     const d = docketDef(p.id); if (!d) return { title:'Hot Docket', body:'<p class="empty">This docket is not available.</p>' };
     const r = docketRec(p.id), n = r.level, x = lvRec(r, n);
     if (docketState(d) === 'missed') return { title:'Hot Docket', body:`<div class="dk-missed"><img src="${artSrc('docket_folder')}" alt="">
-        <h3>This docket's week is over</h3><p>${esc(d.title)} closed before it was finished. A Continuance reopens it with no deadline; a pass earns the black-and-white card.</p>
+        <h3>This docket's week is over</h3><p>${esc(d.title)} closed before it was finished. A Continuance reopens it with no deadline; a pass earns the Filed (black-and-white) Landmark card.</p>
         ${continuances() ? `<button class="btn-big gold" data-act="dk-reopen-missed">Use a Continuance (you have ${continuances()})</button>`
           : `<p class="st-note">You have no Continuances yet. They come in some packs.</p>`}</div>` };
     let tab = DOCKET_TABS.some(([k]) => k === p.tab) ? p.tab : (DOCKET_TABS.find(([k]) => !x.done[k]) || DOCKET_TABS[3])[0];
@@ -501,11 +502,11 @@ const DOCKET_SCREENS = {
     let banner = '';
     if (levelDone && n < 3) banner = `<div class="sf-banner"><span>${ICO('mastered')} Level ${n} complete! Level ${n + 1} adds new filings to the same case.</span><button class="sf-btn go gold" data-act="dk-level">Start Level ${n + 1}</button></div>`;
     else if (levelDone && n === 3) banner = r.reward
-      ? `<div class="sf-banner"><span>${ICO('mastered')} Docket complete! You earned the ${r.superRare ? 'Super Rare' : r.reward === 'rare' ? 'rare full-color' : 'black-and-white'} reward card.</span><button class="sf-btn go gold" data-act="dk-reward" data-id="${d.id}">See card</button></div>`
-      : `<div class="sf-banner"><span>Docket complete, ${docketTotals(d, r).right} of 15 right. A reward card needs 12 (80%).
+      ? `<div class="sf-banner"><span>${ICO('mastered')} Docket complete! You earned the ${r.superRare ? 'Gold Seal' : r.reward === 'rare' ? 'Certified (full-color)' : 'Filed (black-and-white)'} Landmark card.</span><button class="sf-btn go gold" data-act="dk-reward" data-id="${d.id}">See card</button></div>`
+      : `<div class="sf-banner"><span>Docket complete, ${docketTotals(d, r).right} of 15 right. A Landmark card needs 12 (80%).
           ${continuances() ? `Spend a Continuance to answer the 15 questions again (you have ${continuances()}).` : 'Continuance coins come in some packs. One lets you answer the 15 questions again.'}</span>
           ${continuances() ? `<button class="sf-btn go gold" data-act="dk-continue">Use a Continuance</button>` : ''}</div>`;
-    else if (r.retry && !levelDone) banner = `<div class="sf-banner reopen"><img src="${artSrc('dk_stamp_reopened')}" alt="Case reopened"><span>Case reopened: answer the practice questions again. A pass (80%) earns the black-and-white card.</span></div>`;
+    else if (r.retry && !levelDone) banner = `<div class="sf-banner reopen"><img src="${artSrc('dk_stamp_reopened')}" alt="Case reopened"><span>Case reopened: answer the practice questions again. A pass (80%) earns the Filed (black-and-white) Landmark card.</span></div>`;
     if (p.miss) return missScreen(d, r, p);
     const missed = missedQs(d, r);
     if (missed.length && levelDone) banner += `<div class="sf-banner"><span>You missed ${missed.length} so far. Practice just those, free. It earns nothing and changes no score.</span><button class="sf-btn go" data-act="dm-start" data-id="${d.id}">Practice my misses</button></div>`;
@@ -606,12 +607,12 @@ document.addEventListener('click', e => {
       if (finished && r.reward) setTimeout(() => openReward(d.id, true), 700);
       break; }
     case 'dk-reopen-missed':
-      iosAlert({ title:'Use a Continuance?', msg:`Spend 1 of your ${continuances()} to reopen ${d.title}. It stays open with no deadline, and a pass (80%) earns the black-and-white card.`,
+      iosAlert({ title:'Use a Continuance?', msg:`Spend 1 of your ${continuances()} to reopen ${d.title}. It stays open with no deadline, and a pass (80%) earns the Filed (black-and-white) Landmark card.`,
         buttons:[{ label:'Not now', value:false }, { label:'Reopen', value:true, style:'bold' }] })
         .then(ok => { if (ok && reopenMissed(d.id)) { dkGo({}); toast('Case reopened', 'sync'); } });
       break;
     case 'dk-continue':
-      iosAlert({ title:'Use a Continuance?', msg:`Spend 1 of your ${continuances()} Continuance${continuances() === 1 ? '' : 's'} to reopen this docket. You'll answer all 15 practice questions again; your reading stays done. A pass (80%) earns the black-and-white card.`,
+      iosAlert({ title:'Use a Continuance?', msg:`Spend 1 of your ${continuances()} Continuance${continuances() === 1 ? '' : 's'} to reopen this docket. You'll answer all 15 practice questions again; your reading stays done. A pass (80%) earns the Filed (black-and-white) Landmark card.`,
         buttons:[{ label:'Not now', value:false }, { label:'Reopen', value:true, style:'bold' }] })
         .then(ok => { if (ok && reopenDocket(d.id)) { dkGo({ tab:'practice', q:0, sel:null, sheet:0 }); toast('Case reopened', 'sync'); } });
       break;
@@ -762,6 +763,8 @@ button.sf-count{background:none;border:0;padding:6px 4px;min-height:44px;text-de
 .rw-face.front{position:relative}
 .rw-card.super{box-shadow:0 0 0 2px #fff6c8,0 0 0 4px #e3b23c,0 0 34px 10px rgba(255,190,90,.6),0 0 60px 18px rgba(170,120,255,.35),0 10px 24px rgba(0,0,0,.5)}
 .rw-card.super>img{filter:none}
+.rw-card img.rw-seal{position:absolute;right:3%;bottom:3%;width:22%;height:auto;z-index:2;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}.rw-card img.rw-seal.gold{width:18%}
+.rw-tag.filed{background:#e8dcc0}
 .rw-tag.super{background:linear-gradient(135deg,#ffe8f6,#fff3b0 35%,#b9f3ff 70%,#e3c4ff);letter-spacing:.1em}
 .rw-tag{position:absolute;top:-3.2%;left:50%;translate:-50% 0;z-index:2;padding:.25em .6em;border-radius:1em;background:linear-gradient(135deg,#fff3b0,#e3b23c);color:#1d1b17;font:400 clamp(12px,3.4vw,16px)/1 "Bangers";letter-spacing:.08em;font-style:normal;box-shadow:0 2px 6px rgba(0,0,0,.4)}
 .dk-rw .rw-card{width:100%}
