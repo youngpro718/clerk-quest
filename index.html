@@ -473,8 +473,8 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
   background:radial-gradient(circle at 50% 42%,#4a3516,#100e0b 72%);overflow:hidden;animation:fadein .2s both}
 .pk-rays{position:absolute;width:160vmax;height:160vmax;left:50%;top:42%;translate:-50% -50%;pointer-events:none;
   background:repeating-conic-gradient(rgba(255,210,90,.12) 0 8deg,transparent 8deg 20deg);animation:spin 30s linear infinite}
-.pk-stage{position:relative;width:min(94vw,600px);height:min(60vh,520px);display:flex;align-items:center;justify-content:center}
-.pk-pack{position:absolute;width:min(56vw,250px,36vh);aspect-ratio:640/975;border:0;background:none;padding:0;z-index:3;animation:packidle 2.4s ease-in-out infinite}
+.pk-stage{position:relative;width:min(94vw,600px);height:min(64vh,580px);display:flex;align-items:center;justify-content:center}
+.pk-pack{position:absolute;width:min(76vw,330px,37vh);aspect-ratio:640/975;border:0;background:none;padding:0;z-index:3;animation:packidle 2.4s ease-in-out infinite}
 .pk-pack img{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 14px 18px rgba(0,0,0,.6))}
 @keyframes packidle{50%{transform:translateY(-8px) rotate(1.5deg)}}
 .pk-pack.shake{animation:shake .45s linear 2}
@@ -508,8 +508,63 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .pk-badge{position:absolute;left:50%;top:-12px;translate:-50% 0;z-index:9;font-family:"Bangers";letter-spacing:.06em;font-size:clamp(13px,3.4vw,18px);padding:3px 10px;border:2px solid var(--ink);border-radius:999px;white-space:nowrap;opacity:0;transition:opacity .3s .45s;color:var(--ink)}
 .pk-card.flipped .pk-badge{opacity:1}
 .pk-badge.new{background:#ffe27a} .pk-badge.dup{background:#bfe0b5} .pk-badge.trick{background:#d6c2ff}
+/* each series gets its own room: its pack art, blurred and dimmed, fills the background in that series' colour,
+   and the glow and rays brighten as the tear grows (--rip, set by setRip) */
+.pk-bg{position:absolute;inset:-12%;background:center/cover no-repeat;filter:blur(18px) saturate(1.6) brightness(.58);transform:scale(1.15);pointer-events:none;animation:pkbg 14s ease-in-out infinite alternate}
+@keyframes pkbg{to{transform:scale(1.28) rotate(3deg)}}
+.pk-glow{position:absolute;left:50%;top:42%;width:min(80vmin,560px);height:min(80vmin,560px);translate:-50% -50%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,color-mix(in srgb,var(--tint) 70%,transparent) 0%,transparent 62%);opacity:calc(.25 + var(--rip,0) * .75);scale:calc(.75 + var(--rip,0) * .45);transition:opacity .2s,scale .2s}
+.pk .pk-rays{background:repeating-conic-gradient(color-mix(in srgb,var(--tint) 30%,transparent) 0 8deg,transparent 8deg 20deg);opacity:calc(.6 + var(--rip,0) * .9)}
+.pk.out .pk-glow{opacity:.55}
+/* a motif per series, drawn in CSS, over the blurred pack art: gold deco sunburst, purple file-room confetti, teal film strip,
+   red ruled notebook paper, yellow comic halftone */
+.pk-pattern{position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay}
+.pk-s1 .pk-pattern{background:repeating-conic-gradient(from 0deg at 50% 110%,rgba(255,220,130,.5) 0 3deg,transparent 3deg 9deg),repeating-linear-gradient(90deg,transparent 0 46px,rgba(255,230,160,.25) 46px 48px)}
+.pk-s2 .pk-pattern{background:radial-gradient(circle at 20% 30%,#c9a6ff 0 3px,transparent 4px) 0 0/70px 70px,radial-gradient(circle at 70% 60%,#fff 0 2px,transparent 3px) 0 0/90px 90px,repeating-linear-gradient(-35deg,transparent 0 30px,rgba(190,150,255,.25) 30px 32px)}
+.pk-s3 .pk-pattern{opacity:.65;background:repeating-linear-gradient(180deg,rgba(255,255,255,.6) 0 18px,transparent 18px 36px) left/34px 100% no-repeat,repeating-linear-gradient(180deg,rgba(255,255,255,.6) 0 18px,transparent 18px 36px) right/34px 100% no-repeat,radial-gradient(ellipse at 50% 0%,rgba(140,255,240,.45),transparent 60%)}
+.pk-s4 .pk-pattern{opacity:.55;background:linear-gradient(90deg,transparent 15%,rgba(255,80,70,.8) 15% calc(15% + 2px),transparent calc(15% + 2px)),repeating-linear-gradient(180deg,transparent 0 30px,rgba(150,200,255,.55) 30px 32px)}
+.pk-s5 .pk-pattern{opacity:.6;background:radial-gradient(circle,rgba(255,240,120,.8) 1.6px,transparent 2.4px) 0 0/12px 12px,repeating-conic-gradient(from 0deg at 50% 45%,rgba(255,80,60,.35) 0 6deg,transparent 6deg 18deg)}
+.pk-vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 35%,rgba(0,0,0,.75) 100%)}
+/* the rip: a burst of sparks in the series colour */
+.pk-spark{position:absolute;left:50%;top:30%;width:14px;height:14px;border-radius:50%;z-index:6;pointer-events:none;background:radial-gradient(circle,#fff 0 35%,var(--tint) 60%);box-shadow:0 0 16px 5px var(--tint);
+  animation:pkspark .9s cubic-bezier(.15,.8,.3,1) forwards}
+@keyframes pkspark{from{transform:translate(-50%,-50%) scale(1.2);opacity:1}to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.2);opacity:0}}
+/* the chosen pack lands with a thump */
+.pk-pack:focus,.pk-pack:focus-visible{outline:none}   /* the overlay focuses the pack on open; its glow already shows it */
+.pk-pack.landing{animation:pkdrop .55s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes pkdrop{from{transform:translateY(-35%) scale(.62) rotate(-6deg);opacity:.4}}
+@media (prefers-reduced-motion:reduce){.pk-spark,.pk-pack.landing{animation:none}.pk-spark{display:none}}
+.pk-pack.ripping{animation:pkstrain .09s linear infinite}
+@keyframes pkstrain{25%{transform:translate(.6px,-.6px) rotate(.25deg)}75%{transform:translate(-.6px,.6px) rotate(-.25deg)}}
+.pk-pack::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;mix-blend-mode:overlay;-webkit-mask:var(--pack-mask) center/100% 100% no-repeat;mask:var(--pack-mask) center/100% 100% no-repeat;
+  background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.55) 47%,transparent 58%);background-size:260% 100%;animation:pkshine 3.6s ease-in-out infinite}
+.pk-pack.torn::after,.pk-pack.ripping::after{display:none}
+@keyframes pkshine{0%,40%{background-position:130% 0}100%{background-position:-130% 0}}
+@media (prefers-reduced-motion:reduce){.pk-bg,.pk-pack::after,.pk-pack.ripping{animation:none}}
+/* pick your pack */
+.pkc{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;overflow:hidden;
+  background:radial-gradient(circle at 50% 45%,#3b2a12,#0d0b08 75%);animation:fadein .2s both}
+.pkc-bg{position:absolute;inset:0;pointer-events:none;background:repeating-conic-gradient(rgba(255,210,90,.08) 0 8deg,transparent 8deg 20deg);animation:spin 40s linear infinite;width:160vmax;height:160vmax;left:50%;top:45%;translate:-50% -50%}
+.pkc-h{position:relative;margin:0;font:400 clamp(30px,9vw,42px)/1 "Bangers";letter-spacing:.06em;color:var(--mustard);text-shadow:0 3px 0 #000}
+.pkc-sub{position:relative;margin:0 0 6px;color:var(--paper);opacity:.8;text-align:center}
+.pkc-fan{position:relative;width:min(96vw,560px);height:min(58vh,480px)}
+.pkc-pack{position:absolute;bottom:8%;left:50%;width:min(42vw,220px,31vh);aspect-ratio:640/975;padding:0;border:0;background:none;
+  translate:calc(-50% + (var(--i) - (var(--n) - 1) / 2) * min(46vw,240px)) 0;rotate:calc((var(--i) - (var(--n) - 1) / 2) * 8deg);transform-origin:50% 120%;
+  animation:pkcbob 2.6s ease-in-out infinite;animation-delay:calc(var(--i) * -.85s);transition:scale .25s,opacity .3s,translate .5s cubic-bezier(.3,1.3,.5,1),rotate .5s}
+.pkc-pack{perspective:700px}
+.pkc-pack img{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .25s ease-out}
+.pkc-pack::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.8;-webkit-mask:var(--pack-mask) center/100% 100% no-repeat;mask:var(--pack-mask) center/100% 100% no-repeat;
+  background:radial-gradient(circle at var(--sx,50%) 30%,rgba(255,255,255,.7),transparent 45%);transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .25s ease-out}
+.pkc-pack img{width:100%;height:100%;filter:drop-shadow(0 14px 18px rgba(0,0,0,.6)) drop-shadow(0 0 7px color-mix(in srgb,var(--tint) 60%,transparent))}
+.pkc-pack span{position:absolute;left:50%;bottom:-30px;translate:-50% 0;white-space:nowrap;font:400 17px "Bangers";letter-spacing:.05em;color:var(--paper)}
+.pkc-pack:hover,.pkc-pack:focus-visible{scale:1.06}
+@keyframes pkcbob{50%{transform:translateY(-10px)}}
+.pkc.picked .pkc-pack:not(.chosen){opacity:0;scale:.8}
+.pkc .pkc-pack.chosen{translate:-50% -14%;rotate:0deg;scale:1.25;animation:none;z-index:2}
+.pkc-later{position:relative;max-width:340px;color:var(--paper)}
+@media (prefers-reduced-motion:reduce){.pkc-pack,.pkc-bg{animation:none}}
 /* one-at-a-time reveal: the cards rise as a stack, rarest at the bottom; flip the top card, then swipe it away */
-.pk.stack .pk-cards .pk-card{position:absolute;touch-action:none;width:min(62vw,290px,38vh);z-index:calc(10 - var(--i));transition-delay:.55s}
+.pk.stack .pk-cards .pk-card{position:absolute;touch-action:none;width:min(56vw,244px,27.5vh);z-index:calc(10 - var(--i));transition-delay:.55s}
 .pk.out.stack .pk-cards .pk-card{transform:translateY(calc(var(--i) * 10px)) rotate(calc(var(--i) * 2.5deg))}
 .pk.out.stack .pk-cards .pk-card.top{transform:none;transition-delay:0s}
 .pk.out.stack .pk-cards .pk-card.gone{transform:translate(calc(var(--dir,1) * 125vw),-8vh) rotate(calc(var(--dir,1) * 28deg));opacity:0;pointer-events:none;
@@ -3469,7 +3524,7 @@ const SCREENS = {
     return { title:'Packs', body:`
       <div class="packs-hero"><img src="${nextPackArt()}" alt="Becoming a Clerk card pack" class="${S.packs ? 'bob' : 'dim'}">
         <b>${S.packs ? S.packs + ' pack' + (S.packs > 1 ? 's' : '') + ' ready' : 'No packs right now'}</b>
-        <small>${S.packs ? `Your next pack is a Series ${nextSeries} pack: 3 cards, and sometimes a trick card or a sticker.` : 'Your first finished round each day earns a pack. Quests can earn more.'}</small></div>
+        <small>${S.packs ? (S.packsOpened ? 'Pick from 3 series packs each time you open one: 3 cards, and sometimes a trick card or a sticker.' : `Your first pack is a Series ${nextSeries} pack: 3 cards, and sometimes a trick card or a sticker.`) : 'Your first finished round each day earns a pack. Quests can earn more.'}</small></div>
       ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN A PACK</button>` : `<button class="btn-big" data-act="tab" data-tab="study">${PLAY_ICON} STUDY TO EARN A PACK</button>`}
       <div class="list" style="margin-top:18px">
         <div class="row"><span class="k">Packs opened</span><span class="v">${S.packsOpened}</span></div>
@@ -4141,6 +4196,7 @@ function flapClip(line, a, b){   // the wrapper above the tear line, from x = a 
   return `polygon(${ptc([a, 0])},${ptc([b, 0])},${edge.reverse().map(ptc).join(',')})`;
 }
 function setRip(btn, p){   // p: 0 (whole) to 1 (torn all the way across)
+  const ov = btn.closest('.pk'); if (ov) ov.style.setProperty('--rip', Math.max(0, Math.min(1, p)).toFixed(3));   // the room gets brighter as the tear grows
   if (btn._3d) return btn._3d.peel(p, btn._dir < 0 ? -1 : 1);
   const line = btn._line, fromR = btn._dir < 0, P = p * 100, hinge = fromR ? 100 - P : P;
   const flap = btn.querySelector('.pk-flap'), rest = btn.querySelector('.pk-rest');
@@ -4157,13 +4213,21 @@ function finishRip(btn){   // past 70%: finish the tear, then open
   const step = now => { const k = Math.max(0, Math.min(1, (now - t0) / 170)); setRip(btn, start + (1 - start) * k); k < 1 ? requestAnimationFrame(step) : packTorn(btn); };
   requestAnimationFrame(step);
 }
+function sparkBurst(ov){
+  if (prefersReducedMotion()) return;
+  for (let i = 0; i < 28; i++) {
+    const a = Math.PI * 2 * i / 28 + Math.random() * .3, r = 140 + Math.random() * 200, s = document.createElement('i');
+    s.className = 'pk-spark'; s.style.setProperty('--dx', (Math.cos(a) * r).toFixed(0) + 'px'); s.style.setProperty('--dy', (Math.sin(a) * r).toFixed(0) + 'px');
+    s.style.animationDelay = (Math.random() * .08).toFixed(2) + 's'; ov.appendChild(s); setTimeout(() => s.remove(), 1100);
+  }
+}
 function packTorn(btn){
   const ov = btn.closest('.pk');
   btn.querySelector('.pk-rest').style.visibility = 'hidden';
   if (btn._3d) btn.querySelector('.pk-flap').style.visibility = 'hidden';   // the 3D flap flings itself away
   else btn.querySelector('.pk-flap').style.transform = '';   // the .torn rule flings it away
   btn.classList.toggle('from-r', btn._dir < 0); btn.classList.remove('shake'); btn.classList.add('torn');
-  nativeFeedback('packtear'); softFlash();
+  nativeFeedback('packtear'); softFlash(); sparkBurst(ov);
   ov.classList.add('out', 'stack'); nextPackCard(ov);
 }
 /* One-at-a-time reveal: the top card flips on a tap, then a swipe (or another tap) sends it away */
@@ -4226,11 +4290,38 @@ function packBadge(p){
   if (p.isNew) return `<span class="pk-badge ${p.c.trickType ? 'trick' : 'new'}">${p.c.trickType ? ICO('memory') + ' MEMORY TRICK!' : 'NEW!'}</span>`;
   return `<span class="pk-badge dup">+1 COPY · +${p.coins} ${COIN}</span>`;
 }
+/* Pick your pack: two packs from different series float side by side; tap the one you want. The mix changes every time.
+   Series with cards still to find come first. The very first pack skips this (onboarding opens Series 1). */
+const PACK_TINT = { 1:'#e3b23c', 2:'#a77bff', 3:'#3fb5a8', 4:'#e0443a', 5:'#ffcc33' };   // each series' glow colour
+function choosePack(){
+  if (S.packs <= 0 || document.querySelector('.pkc')) return;
+  const open = SERIES_DEFS.filter(d => CARDS.filter(d.test).some(c => !S.cards[c.id].owned)), done = SERIES_DEFS.filter(d => !open.includes(d));
+  const picks = shuffle(open).concat(shuffle(done)).slice(0, 2);
+  const ov = document.createElement('div'); ov.className = 'pkc';
+  ov.innerHTML = `<div class="pkc-bg"></div><h2 class="pkc-h">PICK YOUR PACK</h2><p class="pkc-sub">${S.packs} pack${S.packs > 1 ? 's' : ''} ready · each one holds 3 cards from its series</p>
+    <div class="pkc-fan">${picks.map((d, i) => `<button class="pkc-pack" data-act="pkc-pick" data-set="${d.n}" style="--i:${i};--n:${picks.length};--tint:${PACK_TINT[d.n] || '#e3b23c'};--pack-mask:url('${seriesPackArt(d.n)}')" aria-label="Open a ${esc(d.label)} pack">
+      <img src="${seriesPackArt(d.n)}" alt=""><span>Series ${d.n}</span></button>`).join('')}</div>
+    <button class="sheet-cancel pkc-later" data-act="pkc-close">Not now</button>`;
+  document.body.appendChild(ov); lockScroll();
+}
+/* Handle a pack before you pick it: it tilts toward your finger and a shine follows (like turning a real pack in the light) */
+document.addEventListener('pointermove', e => {
+  const b = e.target.closest && e.target.closest('.pkc-pack'); if (!b) return;
+  const r = b.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+  b.style.setProperty('--ry', (x * 26).toFixed(1) + 'deg'); b.style.setProperty('--rx', (-y * 20).toFixed(1) + 'deg'); b.style.setProperty('--sx', ((x + .5) * 100).toFixed(0) + '%');
+});
+document.addEventListener('pointerout', e => { const b = e.target.closest && e.target.closest('.pkc-pack'); if (b && !b.contains(e.relatedTarget)) ['--rx', '--ry'].forEach(k => b.style.setProperty(k, '0deg')); });
+function pickPack(btn){
+  const ov = btn.closest('.pkc'); if (!ov || ov._picked) return; ov._picked = true;
+  btn.classList.add('chosen'); ov.classList.add('picked'); nativeFeedback('claim');
+  setTimeout(() => { ov.remove(); openPack({ series:+btn.dataset.set, chosen:true }); }, 520);
+}
 function openPack(opts = {}){
   if (!opts.pulls && S.packs <= 0) return;
+  if (!opts.pulls && !opts.chosen && S.packsOpened > 0) return choosePack();
   if (!opts.pulls) S.packs--;
   const first = S.packsOpened === 0; S.packsOpened++;
-  const pulls = opts.pulls || drawPack();
+  const pulls = opts.pulls || drawPack(opts.series || undefined);
   const rank = p => VERSIONS[p.ver || 'filed'].n * 2 + (p.isNew ? 1 : 0);
   pulls.sort((a, b) => rank(a) - rank(b));   // like a real booster: the best card is saved for last
   const bonus = rollSticker();   // every pack can hold a bonus sticker, bought ones too
@@ -4242,11 +4333,12 @@ function openPack(opts = {}){
   const packLabel = opts.label || '';
   const label = packLabel ? `<span class="pk-label ${packSeries >= 4 ? `series45 s${packSeries}` : ''}">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(packLabel)}</b></span>` : '';
   lockScroll(); history.pushState({cq:'pack'}, '');
-  const ov = document.createElement('div'); ov.className = 'pk';
+  const ov = document.createElement('div'); ov.className = 'pk' + (packSeries ? ` pk-s${packSeries}` : '');
+  ov.style.setProperty('--tint', PACK_TINT[packSeries] || '#e3b23c');
   const line = tearLine();
-  ov.innerHTML = `<div class="pk-rays"></div>
+  ov.innerHTML = `<div class="pk-bg" style="background-image:url('${packImg}')"></div><div class="pk-pattern"></div><div class="pk-glow"></div><div class="pk-rays"></div><div class="pk-vig"></div>
     <div class="pk-stage">
-      <button class="pk-pack" data-act="pk-tear" aria-label="Open the pack">
+      <button class="pk-pack" data-act="pk-tear" aria-label="Open the pack" style="--pack-mask:url('${packImg}')">
         <img class="pk-body" src="${packImg}" alt="" style="clip-path:polygon(${line.map(ptc).join(',')},100% 100%,0% 100%)">
         <img class="pk-top pk-rest" src="${packImg}" alt="" style="clip-path:${flapClip(line, 0, 100)}">
         <img class="pk-top pk-flap" src="${packImg}" alt="" style="clip-path:${flapClip(line, 0, 0)}">
@@ -4265,6 +4357,7 @@ function openPack(opts = {}){
     <button class="btn-big gold pk-done" data-act="${bonus ? 'pk-sticker' : 'pk-done'}">${bonus ? 'OPEN YOUR BONUS STICKER' : 'COLLECT →'}</button>`;
   document.body.appendChild(ov);
   const pk = ov.querySelector('.pk-pack'); pk._line = line; ov._sticker = bonus;
+  if (opts.chosen) { pk.classList.add('landing'); setTimeout(() => pk.classList.remove('landing'), 600); }
   // the 3D sticker curl (pack3d.js); until it's ready, or if it can't load, the flat rip below is used
   if (window.Pack3D) Pack3D.attach(pk, packImg, line, TEAR_Y).then(ctl => { if (!pk._p && !pk._done) pk._3d = ctl; else ctl.destroy(); }).catch(() => {});
 }
@@ -4615,6 +4708,8 @@ document.addEventListener('click', e => {
     case 'pk-tear': tearPack(t); break;
     case 'pk-auto': { const ov = t.closest('.pk'), pkb = ov && ov.querySelector('.pk-pack'); if (pkb) { pkb._swiped = false; tearPack(pkb); } t.hidden = true; break; }
     case 'pk-flip': flipPackCard(t); break;
+    case 'pkc-pick': pickPack(t); break;
+    case 'pkc-close': t.closest('.pkc')?.remove(); unlockScroll(); break;
     case 'pk-skip': packSummary(t.closest('.pk')); break;
     case 'pk-done': goBack(); if (typeof guestWall === 'function') guestWall(); break;
     case 'pk-sticker': openSticker(t.closest('.pk')); break;
