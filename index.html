@@ -648,6 +648,7 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .frost-status{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .card.cold{--glow:0 0 3cqw rgba(140,200,255,.8)}
 .stampimg.mastered{width:52%;right:2%;top:57%;--rot:-10deg}
+.card:has(> .framebreak-character) > .stampimg.mastered{z-index:10}   /* never hidden behind a pop-out character (spec 2026-10-06 §2) */
 @keyframes slamimg{0%{transform:rotate(var(--rot)) scale(2.2);opacity:0}100%{transform:rotate(var(--rot)) scale(1);opacity:1}}
 .stampimg{transform:rotate(var(--rot))}
 .stamp.mastered{color:#b8860b;font-size:7cqw;right:4%;top:56%}
@@ -1139,6 +1140,14 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 /* card page */
 .cd-top{display:flex;flex-direction:column;align-items:center;padding-top:6px}
 .cd-card{width:min(62vw,300px,calc((100dvh - 330px) / 1.5))}
+/* Mastered: gold rays burst out behind the card once per page visit, then settle (spec 2026-10-06 §2) */
+.mastered-burst{position:absolute;inset:-28% -40%;z-index:-1;pointer-events:none;opacity:.32;
+  background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,214,90,.95) 0 5deg,transparent 5deg 15deg);
+  -webkit-mask:radial-gradient(closest-side,#000 25%,transparent 100%);mask:radial-gradient(closest-side,#000 25%,transparent 100%)}
+.mastered-burst.play{animation:mburst 1.8s cubic-bezier(.2,.8,.2,1) both}
+@keyframes mburst{0%{opacity:0;transform:scale(.35) rotate(-20deg)}35%{opacity:1;transform:scale(1.08) rotate(4deg)}100%{opacity:.32;transform:scale(1) rotate(0)}}
+@media (prefers-reduced-motion:reduce){.mastered-burst.play{animation:none}}
+html.cq-reduce-motion .mastered-burst.play{animation:none}
 .stage-dots{display:flex;gap:8px;margin-top:12px}
 /* Readiness (separate from XP): Profile panel and a card's recall dots */
 .rd-panel{margin:0 0 16px;padding:14px 16px;border-radius:16px;background:var(--bg2);border:1.5px solid var(--line)}
@@ -1344,7 +1353,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="cloud-sync.js?v=b8aec09d"></script>
 <script src="study.js?v=c0c0a01c"></script>
 <script src="economy.js?v=8b2bf044"></script>
-<script src="store.js?v=cf53bc01"></script>
+<script src="store.js?v=6b699b76"></script>
 <script src="study/quick-reference/quick-reference.js?v=09020a13"></script>
 <script src="study/quick-reference/series-lessons.js?v=691837ab"></script>
 <script src="curriculum-pilot.js?v=9e0d75af"></script>
@@ -1354,7 +1363,8 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="binder.js?v=dcc2617f"></script>
 <script src="onboarding.js?v=22f27a83"></script>
 <script src="account.js?v=5042effc"></script>
-<script src="admin.js?v=0843a192"></script>
+<script src="admin.js?v=7325b086"></script>
+<script src="evolve.js?v=b5f0e3a5"></script>
 <script src="stickers.js?v=70340509"></script>
 <script src="dockets.js?v=32fec8b7"></script>
 <script src="hearing.js?v=a7e3ecd9"></script>
@@ -1362,7 +1372,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="exam.js?v=5c38761d"></script>
 <script src="exam-questions.js?v=79574fc7"></script>
 <script src="pack3d.js?v=175b3691"></script>
-<script src="sticker3d.js?v=9a43370e"></script>
+<script src="sticker3d.js?v=c9a6a6ca"></script>
 <script src="questions.js?v=b59c89f2"></script>
 <script src="flair.js?v=be54d585"></script>
 <script>window.ART_MANIFEST = {"series4_case-starter": {"1": "art/series4_case-starter.webp"}, "s4_case_starter": {"1": "art/series4_case-starter.webp"}, "series4_clock-dodger": {"1": "art/series4_clock-dodger.webp"}, "s4_clock_dodger": {"1": "art/series4_clock-dodger.webp"}, "series4_exam-duo": {"1": "art/series4_exam-duo.webp"}, "s4_exam_duo": {"1": "art/series4_exam-duo.webp"}, "series4_jurisdiction-jet": {"1": "art/series4_jurisdiction-jet.webp"}, "s4_jurisdiction_jet": {"1": "art/series4_jurisdiction-jet.webp"}, "series4_jury-juggler": {"1": "art/series4_jury-juggler.webp"}, "s4_jury_juggler": {"1": "art/series4_jury-juggler.webp"}, "series4_note-ninja": {"1": "art/series4_note-ninja.webp"}, "s4_note_ninja": {"1": "art/series4_note-ninja.webp"}, "series4_plea-piper": {"1": "art/series4_plea-piper.webp"}, "s4_plea_piper": {"1": "art/series4_plea-piper.webp"}, "series4_proof-polly": {"1": "art/series4_proof-polly.webp"}, "s4_proof_polly": {"1": "art/series4_proof-polly.webp"}, "series4_sentence-sprint": {"1": "art/series4_sentence-sprint.webp"}, "s4_sentence_sprint": {"1": "art/series4_sentence-sprint.webp"}, "series4_trial-track": {"1": "art/series4_trial-track.webp"}, "s4_trial_track": {"1": "art/series4_trial-track.webp"}, "series4_verdict-vex": {"1": "art/series4_verdict-vex.webp"}, "s4_verdict_vex": {"1": "art/series4_verdict-vex.webp"}, "series4_warrant-walt": {"1": "art/series4_warrant-walt.webp"}, "s4_warrant_walt": {"1": "art/series4_warrant-walt.webp"}, "series5_captain-classify": {"1": "art/series5_captain-classify.webp"}, "s5_captain_classify": {"1": "art/series5_captain-classify.webp"}, "series5_class-shift": {"1": "art/series5_class-shift.webp"}, "s5_class_shift": {"1": "art/series5_class-shift.webp"}, "series5_double-gain": {"1": "art/series5_double-gain.webp"}, "s5_double_gain": {"1": "art/series5_double-gain.webp"}, "series5_felony-titan": {"1": "art/series5_felony-titan.webp"}, "s5_felony_titan": {"1": "art/series5_felony-titan.webp"}, "series5_minor-mischief": {"1": "art/series5_minor-mischief.webp"}, "s5_minor_mischief": {"1": "art/series5_minor-mischief.webp"}, "series5_offense-oracle": {"1": "art/series5_offense-oracle.webp"}, "s5_offense_oracle": {"1": "art/series5_offense-oracle.webp"}, "series5_split-verdict": {"1": "art/series5_split-verdict.webp"}, "s5_split_verdict": {"1": "art/series5_split-verdict.webp"}, "series5_the-aces": {"1": "art/series5_the-aces.webp"}, "s5_the_aces": {"1": "art/series5_the-aces.webp"}, "series5_the-fine-collector": {"1": "art/series5_the-fine-collector.webp"}, "s5_the_fine_collector": {"1": "art/series5_the-fine-collector.webp"}, "series5_the-many": {"1": "art/series5_the-many.webp"}, "s5_the_many": {"1": "art/series5_the-many.webp"}, "series5_triple-take": {"1": "art/series5_triple-take.webp"}, "s5_triple_take": {"1": "art/series5_triple-take.webp"}, "series5_vault-voltage": {"1": "art/series5_vault-voltage.webp"}, "s5_vault_voltage": {"1": "art/series5_vault-voltage.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "character_acd": {"1": "art/character_acd_1.webp"}, "character_adjournment": {"1": "art/character_adjournment_1.webp"}, "character_affidavit": {"1": "art/character_affidavit_1.webp"}, "character_appeal30": {"1": "art/character_appeal30_1.webp"}, "character_bail": {"1": "art/character_bail_1.webp"}, "character_calendarcall": {"1": "art/character_calendarcall_1.webp"}, "character_eightback": {"1": "art/character_eightback_1.webp"}, "character_freeze": {"1": "art/character_freeze_1.webp"}, "character_interest": {"1": "art/character_interest_1.webp"}, "character_judgment": {"1": "art/character_judgment_1.webp"}, "character_jurywaiver": {"1": "art/character_jurywaiver_1.webp"}, "character_lawyers_file_motions_v2": {"1": "art/character_lawyers_file_motions_v2_1.webp"}, "character_military": {"1": "art/character_military_1.webp"}, "character_motion": {"1": "art/character_motion_1.webp"}, "character_newtrial": {"1": "art/character_newtrial_1.webp"}, "character_quash": {"1": "art/character_quash_1.webp"}, "character_reargue": {"1": "art/character_reargue_1.webp"}, "character_renew": {"1": "art/character_renew_1.webp"}, "character_schoolnotice": {"1": "art/character_schoolnotice_1.webp"}, "character_silly_clerks_drink_mocha_v2": {"1": "art/character_silly_clerks_drink_mocha_v2_1.webp"}, "character_sj120": {"1": "art/character_sj120_1.webp"}, "character_summons": {"1": "art/character_summons_1.webp"}, "character_undodefault": {"1": "art/character_undodefault_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
@@ -2690,11 +2700,11 @@ function frontS45HTML(c, st, opt={}){
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
 }
 function frontHTML(c, st, opt={}){
+  if (typeof isEvolvedView === 'function' && isEvolvedView(c, st)) return evolvedFrontHTML(c, st, opt);   // evolve.js
   if (c.series === 3) return frontS3HTML(c, st, opt);
   if (c.series === 4 || c.series === 5) return frontS45HTML(c, st, opt);
   const lv = st.level, need = NEED[lv-1];
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
-  const sparks = lv >= 4 ? [[2,1],[92,2],[1,62],[93,58],[48,0],[40,93]].map((p,i)=>`<div class="spark" style="left:${p[0]}%;top:${p[1]}%;animation-delay:${i*.3}s">✦</div>`).join('') : '';
   const frameBreak = frameBreakCharacter(c, lv);
   const frameSrc = verOf(st) === 'gold' ? (c.trickType ? 'art/frame_gold_trick.webp' : 'art/frame_gold.webp') : styleFrame(c) || frameFor(c, lv);   // Gold Seal wins over a bought frame
   const protectedFrame = frameBreak ? `<img class="frame-metadata top" data-frame-mask="top" src="${frameSrc}" alt=""><img class="frame-metadata quote" data-frame-mask="quote" src="${frameSrc}" alt=""><img class="frame-metadata footer" data-frame-mask="footer" src="${frameSrc}" alt="">` : '';
@@ -2716,7 +2726,6 @@ function frontHTML(c, st, opt={}){
     <div class="t rar" style="${P(82,1290,312,1448)}">${verBadge(st, 4.2, 3.3)}</div>
     <div class="t set" style="${P(334,1294,706,1446)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl" style="${P(728,1290,944,1448)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
-    ${sparks}
     ${c.series ? (c.series <= 3 ? `<img class="series-badge" src="art/series${c.series}_badge.webp" alt="Series ${c.series}" style="${P(806,392,952,538)}">`
       : `<span class="series" aria-label="Series ${c.series}" style="${P(806,410,952,514)}">SERIES ${c.series}</span>`) : ''}
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
@@ -2733,7 +2742,7 @@ function frostHTML(c, st, now=Date.now()){
 function cardEl(c, st, opt={}, extraClass=''){
   const now = Date.now(), cold = isCold(st, now), deadline = coldAfter(st), last = Number.isFinite(+st.last) ? +st.last : 0;
   const charged = !cold && !st.mastered && st.level < maxL(c) && st.xp / NEED[st.level-1] >= .7;   // almost leveled up
-  return `<div class="card series${c.series || 1} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} ${c.illustratedMnemonic ? 'illustrated-mnemonic' : ''} lv${st.level} ver-${verOf(st)} ${sleeveOf(c) ? 'sleeved' : ''} ${c.trickType?'special':''} ${cold?'cold':''} ${charged?'charged':''} ${extraClass}" ${sleeveOf(c) ? `style="--sl:${sleeveScale(sleeveOf(c))}"` : ''} data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${frontHTML(c, st, opt)}${verDecorHTML(st)}${decoHTML(c)}${frostHTML(c, st, now)}</div>`;
+  return `<div class="card series${c.series || 1} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} ${c.illustratedMnemonic ? 'illustrated-mnemonic' : ''} ${typeof isEvolvedView === 'function' && isEvolvedView(c, st) ? 'evolved' : ''} lv${st.level} ver-${verOf(st)} ${sleeveOf(c) ? 'sleeved' : ''} ${c.trickType?'special':''} ${cold?'cold':''} ${charged?'charged':''} ${extraClass}" ${sleeveOf(c) ? `style="--sl:${sleeveScale(sleeveOf(c))}"` : ''} data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${frontHTML(c, st, opt)}${verDecorHTML(st)}${decoHTML(c)}${frostHTML(c, st, now)}</div>`;
 }
 
 
@@ -2900,22 +2909,8 @@ const BreakoutMotion = (() => {
         if (Math.abs(s.rx-tRx) + Math.abs(s.ry-tRy) + Math.abs(s.g-tG) > .05 || Math.abs(s.vrx) + Math.abs(s.vry) > .01) moving = true;
         return;
       }
-      const card = s.el.closest('.card'); if (!card) return;
-      const width = card.getBoundingClientRect().width;
-      // it leans out further than the card turns, so it reads as standing in front of it
-      const targetX = inputX * width * .09;
-      const targetY = inputY * width * .06 - energy * width * .03;
-      const targetR = inputX * 6;
-      const targetS = 1 + energy * .07;
-      [s.x,s.vx] = spring(s.x,s.vx,targetX,.13,.72,dt);
-      [s.y,s.vy] = spring(s.y,s.vy,targetY,.12,.73,dt);
-      [s.rotation,s.vr] = spring(s.rotation,s.vr,targetR,.12,.72,dt);
-      [s.scale,s.vs] = spring(s.scale,s.vs,targetS,.11,.74,dt);
-      s.x = clamp(s.x,-width*.12,width*.12); s.y = clamp(s.y,-width*.10,width*.08);
-      s.el.style.transform = `translate3d(${s.x.toFixed(2)}px,${s.y.toFixed(2)}px,0) rotate(${s.rotation.toFixed(2)}deg) scale(${s.scale.toFixed(3)})`;
-      const distance = Math.abs(s.x-targetX)+Math.abs(s.y-targetY)+Math.abs(s.rotation-targetR)+Math.abs(s.scale-targetS)*100;
-      const speed = Math.abs(s.vx)+Math.abs(s.vy)+Math.abs(s.vr)+Math.abs(s.vs)*100;
-      if (distance > .22 || speed > .025) moving = true;
+      // The card itself tilts (above); the character stays put on it, so it reads as 3D without jitter (spec 2026-10-06 §2).
+      if (s.el.style.transform) s.el.style.transform = '';
     });
     if (moving) raf = requestAnimationFrame(step);
     else states.forEach(s => s.el.classList.remove('cq-motion-active'));
@@ -3397,6 +3392,7 @@ function toast(msg, icon){
 }
 
 /* ---------- screen definitions ---------- */
+let burstEntry = null;   // the card-page visit that already played the mastered burst; refreshes of the same visit stay still
 const SCREENS = {
   home(){
     const cold = CARDS.filter(c => isCold(S.cards[c.id])).sort((a, b) => S.cards[a.id].last - S.cards[b.id].last);
@@ -3494,7 +3490,11 @@ const SCREENS = {
     const st = S.cards[c.id];
     if (c.category === 'MEMORY TRICK' && st.owned) tipOnce('trick');
     const pv = p.preview || st.level;
-    const shown = pv === st.level ? st : {level:pv, xp:0, mastered:false, owned:true};
+    const shown = pv === st.level ? st : {level:pv, xp:0, mastered:false, owned:true, evoSeen:st.evoSeen, evoArt:st.evoArt};
+    const en = topEntry(), burstPlay = !!shown.mastered && burstEntry !== en;
+    if (shown.mastered) burstEntry = en;
+    if (typeof canEvolve === 'function' && canEvolve(c) && st.level >= 4 && !st.evoSeen) setTimeout(() => showEvolvePeel(c), 450);   // reached level 4 before the art existed
+    const burst = shown.mastered ? `<i class="mastered-burst${burstPlay ? ' play' : ''}" aria-hidden="true"></i>` : '';
     const hasRule = c.source || c.diff || c.mnemonic;
     const tab = p.tab || (hasRule ? 'rule' : 'overview');   // open on the rule, so the Case File and its video are right there
     const tabs = [['overview', 'Overview']].concat(hasRule ? [['rule', c.source ? 'Case File' : 'Trick']] : []).concat([['lore', 'Study Tips']]);
@@ -3528,9 +3528,10 @@ const SCREENS = {
           ${hasRule ? `<button class="cd-qbtn" data-act="cd-jump" data-id="${c.id}">${ICO('read')} ${c.source ? 'Case File' : 'The Trick'}</button>` : ''}
           ${cardVideoButtonHTML(c) ? videoButtonHTML(cardVideo(c), '', c.id, 'cd-qbtn vid', 'Watch') : ''}
         </div>` : ''}
-        <div class="cd-top"><div class="cd-card" data-act="cd-flip" aria-label="Tap to flip the card">${cardEl(c, shown)}<div class="cd-back">${cardReverseHTML(c)}</div></div>
+        <div class="cd-top"><div class="cd-card" data-act="cd-flip" aria-label="Tap to flip the card">${burst}${cardEl(c, shown)}<div class="cd-back">${cardReverseHTML(c)}</div></div>
           <div class="stage-dots">${Array.from({length:maxL(c)}, (_, i) => i + 1).map(l => `<button data-act="stage" data-l="${l}" class="${l === pv ? 'cur' : ''} ${l > st.level ? 'lk' : ''}" ${l > st.level ? 'disabled aria-label="Locked"' : `aria-label="Level ${l} art"`}>${l > st.level ? ICO('lock') : l}</button>`).join('')}</div>
           ${pv !== st.level ? `<p class="preview-note">Previewing Level ${pv} art</p>` : ''}
+          ${typeof evoSwitchHTML === 'function' ? evoSwitchHTML(c, st) : ''}
         </div>
         <h2 class="cd-name">${esc(c.name)}</h2>
         <div class="cd-level"><span>${st.mastered ? ICO('mastered') + ' Mastered' : 'Level ' + st.level}</span><span>${st.mastered ? 'Max' : st.xp + ' / ' + NEED[st.level-1] + ' XP'}</span></div>${pbar(cardProgress(c))}
@@ -4018,6 +4019,7 @@ function advance(){
 /* ---- level up ---- */
 function showLevelUp(id, pl, done){
   const c = byId(id), st = S.cards[id];
+  if (typeof canEvolve === 'function' && pl.to === 4 && canEvolve(c) && !st.evoSeen) return showEvolvePeel(c, done);   // evolve.js: the tear replaces this level-up
   const before = {level:pl.from, xp:NEED[pl.from-1], mastered:false};
   const ov = document.createElement('div');
   ov.className = 'lu'; lockScroll();
@@ -4167,16 +4169,10 @@ function openSticker(ov){
 }
 
 /* ---- card packs ---- */
-/* Pack odds (see docs/superpowers/specs/2026-09-30-economy-design.md): the first few packs always hold a new card,
-   after that it is chance, and rarer cards turn up less often. All numbers here are starting values to tune. */
+/* Pack odds (docs/superpowers/specs/2026-10-05-card-versions-design.md): the first few packs always hold a new card,
+   after that every card in the pack's pool is equally likely. Rarity lives in the version (Filed..Gold Seal), not the card. */
 const GUARANTEE_PACKS = 5;
-const RARITY_WEIGHT = { common:1, uncommon:.5, rare:.15, epic:.08, legendary:.04 };
-const pickByRarity = pool => {   // one card from pool, rarer cards less likely
-  const w = pool.map(c => RARITY_WEIGHT[c.rarity] ?? .5);
-  let r = Math.random() * w.reduce((x, y) => x + y, 0), i = 0;
-  while (i < pool.length - 1 && (r -= w[i]) > 0) i++;
-  return pool[i];
-};
+const pickCard = pool => pool[Math.floor(Math.random() * pool.length)];
 /* Which series the next free pack comes from: the earliest series you have not finished (Series 1 first). */
 function nextPackSeries(){
   for (const d of SERIES_DEFS) if (CARDS.filter(d.test).some(c => !S.cards[c.id].owned)) return d.n;
@@ -4193,10 +4189,10 @@ function drawPack(n = nextPackSeries()){
   if (promised.length) { promised.slice(0, 3).forEach(id => take(byId(id)));
     const left = [].concat(S.guarantee || []).filter(id => !picks.some(c => c.id === id)); S.guarantee = left.length ? left : null; }
   else if (S.packsOpened === 0 && tricks.some(c => !owned(c))) take(shuffle(tricks.filter(c => !owned(c)))[0]);   // the first pack shows a Memory Trick
-  else if (Math.random() < .34) take(shuffle(tricks.filter(c => !owned(c)))[0] || pickByRarity(tricks));          // about 1 pack in 3 carries a trick card
+  else if (Math.random() < .34) take(shuffle(tricks.filter(c => !owned(c)))[0] || pickCard(tricks));          // about 1 pack in 3 carries a trick card
   if (S.packsOpened < GUARANTEE_PACKS) take(shuffle(pool.filter(c => !owned(c) && !picks.includes(c)))[0] || shuffle(tricks.filter(c => !owned(c) && !picks.includes(c)))[0]);   // early packs hold something new
   let guard = 0;
-  while (picks.length < 3 && guard++ < 60) take(pickByRarity(pool.filter(c => !picks.includes(c))));
+  while (picks.length < 3 && guard++ < 60) take(pickCard(pool.filter(c => !picks.includes(c))));
   const ver = rollVersion(), special = {};
   if (ver && picks.length) special[picks[Math.floor(Math.random() * picks.length)].id] = ver;
   const out = resolvePulls(picks, special); out.series = d.n; return out;

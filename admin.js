@@ -152,7 +152,7 @@ const seriesLabel = c => c.trickType ? (c.series ? `Series ${c.series} · Memory
 const adminScreen = (title, make) => ADM.is ? make() : adminDenied(title);
 const admFixture = (c, lv, mode, ver) => {
   const level = Math.max(1, Math.min(maxL(c), Number(lv) || 1));
-  const st = { level, xp:0, mastered:false, owned:true, vers:VERSIONS[ver] && ver !== 'filed' ? [ver] : [] };
+  const st = { level, xp:0, mastered:false, owned:true, vers:VERSIONS[ver] && ver !== 'filed' ? [ver] : [], evoSeen:level >= 4 };   // admin previews show evolved art at 4-5
   if (mode === 'charged') st.xp = Math.round(NEED[level - 1] * .82);
   if (mode === 'frost') st.last = Date.now() - Math.round(coldAfter(st) * .72);
   if (mode === 'cold') st.last = Date.now() - coldAfter(st) - DAY;
@@ -232,6 +232,7 @@ Object.assign(ADMIN_SCREENS, {
       <div class="adm-modes adm-vers">${vers.map(([v,label]) => `<button class="${v === ver ? 'on' : ''}" data-act="adm-ver" data-v="${v}">${label}</button>`).join('')}</div>
       <div class="adm-card"><div class="cd-card" data-act="cd-flip" aria-label="Tap to flip the card">${admCardPreview(c, lv, mode, ver)}<div class="cd-back">${neutralRender(() => cardReverseHTML(c))}</div></div></div>
       <p class="st-note c">Tap the card to see its back.</p>
+      ${typeof canEvolve === 'function' && canEvolve(c) ? `<button class="sk-btn" data-act="adm-evo-peel" data-id="${c.id}">Replay the tear (level 4 evolve)</button>` : ''}
       <p class="st-note c">${esc(c.num)} · ${esc(seriesLabel(c))} · ${esc(titleCase(c.set))} · ${esc(c.rarity || '')}</p>
       ${ruleHTML(c)}
       <div class="sec-h"><span>Level ${lv} questions</span><span class="adm-count">${bank.length}${made.length ? ' + samples' : ''}</span></div>
@@ -333,6 +334,7 @@ document.addEventListener('click', e => {
   switch (t.dataset.act) {
     case 'adm-lv': { const en = topEntry(); en.p = { ...en.p, lv:+t.dataset.lv }; refresh(); currentScreenEl().querySelector('.scr').scrollTop = 0; break; }
     case 'adm-mode': { const en = topEntry(); en.p = { ...en.p, mode:t.dataset.v }; refresh(); break; }
+    case 'adm-evo-peel': { const c = byId(t.dataset.id); showEvolvePeel(c, null, { preview:true, st:admFixture(c, 4, 'normal') }); break; }
     case 'adm-ver': { const en = topEntry(); en.p = { ...en.p, ver:t.dataset.v }; refresh(); break; }
     case 'adm-reroll': refresh(); break;
     case 'adm-quiz-answer': ADM.quizChoice = +t.dataset.i; refresh(); break;

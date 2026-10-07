@@ -1,6 +1,9 @@
 /* Clerk Quest bonus stickers: peel a sticker off its backing sheet in 3D. Ported from the user's Sticker Peel Test
    page (curl over a small roller, sticky back, shadow, matte or holo foil, crackle). Uses three.js through
-   Pack3D.load() (pack3d.js). StickerPeel.mount(host, {src, holo, onPeeled}) fills host with the peel view. */
+   Pack3D.load() (pack3d.js). StickerPeel.mount(host, {src, holo, onPeeled}) fills host with the peel view.
+   Card mode (the evolve tear, evolve.js): {aspect: width/height of the image (default 1, square), bare: true (no backing
+   sheet, no shadow, no tilt, so the canvas lies exactly over a card in the page), frac: the share of the host's height
+   the image fills (bare mode), edgeReach: how far from the edge a drag may start (sticker units, default .55)}. */
 (function(){
   const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
   const reducedMotion = () => window.__CLERK_QUEST_REDUCE_MOTION__ === true || motionQuery.matches;
@@ -27,8 +30,9 @@
     const hc = document.createElement('canvas'); hc.width = hc.height = 128;   // small copy for "is the finger on the sticker"
     hc.getContext('2d').drawImage(img, 0, 0, 128, 128);
     const hits = hc.getContext('2d').getImageData(0, 0, 128, 128).data;
+    const aspect = opt.aspect || 1, HW = Math.min(1, aspect), HH = Math.min(1, 1 / aspect), bare = !!opt.bare;   // half width/height in sticker units
     const onSticker = (x, y) => {
-      const px = Math.floor((x + 1) / 2 * 128), py = Math.floor((1 - (y + 1) / 2) * 128);
+      const px = Math.floor((x / HW + 1) / 2 * 128), py = Math.floor((1 - (y / HH + 1) / 2) * 128);
       return px >= 0 && py >= 0 && px < 128 && py < 128 && hits[(py * 128 + px) * 4 + 3] > 100;
     };
 
@@ -85,7 +89,7 @@
           gl_FragColor = vec4(col, t.a * fade);
         }`,
     });
-    const stickerGeo = new THREE.PlaneGeometry(2, 2, 140, 140), sticker = new THREE.Mesh(stickerGeo, stickerMat);
+    const stickerGeo = new THREE.PlaneGeometry(2 * HW, 2 * HH, 140, 140), sticker = new THREE.Mesh(stickerGeo, stickerMat);
     group.add(sticker);
 
     // the backing sheet: paper, the die-cut line, the shiny liner under the sticker, and the flap's shadow
@@ -111,16 +115,19 @@
         }`,
     });
     const backGeo = new THREE.PlaneGeometry(SW, SH), backing = new THREE.Mesh(backGeo, backMat);
-    backing.position.z = -.002; group.add(backing);
+    backing.position.z = -.002; if (!bare) group.add(backing);
     const shMat = new THREE.ShaderMaterial({ transparent:true, depthWrite:false,
       vertexShader:`varying vec2 vU; void main(){ vU = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
       fragmentShader:`varying vec2 vU; void main(){ vec2 d = abs(vU - .5) * 2.; gl_FragColor = vec4(0.,0.,0., .45 * (1. - smoothstep(.78, 1., max(d.x, d.y)))); }` });
     const shGeo = new THREE.PlaneGeometry(SW + .5, SH + .5), shadow = new THREE.Mesh(shGeo, shMat);
-    shadow.position.set(.06, -.2, -.05); group.add(shadow);
+    shadow.position.set(.06, -.2, -.05); if (!bare) group.add(shadow);
 
     function fit(){
       const w = host.clientWidth, h = host.clientHeight; if (!w || !h) return;
       renderer.setSize(w, h, false); camera.aspect = w / h;
+      if (bare) {   // the image fills exactly opt.frac of the host's height, so it lines up with the page underneath
+        camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(2 * HH / (opt.frac || 1) / 2 / 7)); camera.updateProjectionMatrix(); return;
+      }
       const fovH = 2 * Math.atan((SH + .7) / 2 / 7), fovW = 2 * Math.atan((SW + .6) / 2 / 7 / camera.aspect);
       camera.fov = THREE.MathUtils.radToDeg(Math.max(fovH, fovW)); camera.updateProjectionMatrix();
     }
@@ -209,7 +216,7 @@
     }
     const api = {
       // "Peel it for me": peel from the bottom-right corner toward the top left
-      autoPeel(){ if (off) return; audio(); startPeel(new THREE.Vector2(1, -1), new THREE.Vector2(-.7071, .7071)); comeOff(); schedule(); },
+      autoPeel(){ if (off) return; audio(); startPeel(new THREE.Vector2(HW, -HH), new THREE.Vector2(-.7071, .7071)); comeOff(); schedule(); },
       setMessage,
       destroy,
     };
@@ -229,7 +236,7 @@
           const v = P.clone().sub(grab); if (v.length() < .06) return;
           const dir = v.normalize(); let t = 0;
           while (t < 2.2 && onSticker(grab.x - dir.x * (t + .01), grab.y - dir.y * (t + .01))) t += .01;
-          if (t > .55) { mode = 'tilt'; opt.onHint && opt.onHint(); return; }   // started too far from the edge
+          if (t > (opt.edgeReach || .55)) { mode = 'tilt'; opt.onHint && opt.onHint(); return; }   // started too far from the edge
           startPeel(new THREE.Vector2(grab.x - dir.x * t, grab.y - dir.y * t), dir);
         }
         const v = P.clone().sub(edge), d = v.length();
@@ -259,8 +266,9 @@
       if (!live) return;
       if (!cvs.isConnected) { destroy(); return; }
       const dt = Math.min((now - prev) / 1000, .05); prev = now;
-      if (!reduce && now - lastInput > 2500 && mode === null) { const k = now / 1000; tiltTarget.set(Math.sin(k * .7) * .45, Math.cos(k * .53) * .3); }
-      if (reduce && mode === null) tilt.set(0, 0);
+      if (!bare && !reduce && now - lastInput > 2500 && mode === null) { const k = now / 1000; tiltTarget.set(Math.sin(k * .7) * .45, Math.cos(k * .53) * .3); }
+      if (bare) tiltTarget.set(0, 0);   // stays flat on the card underneath
+      if ((reduce || bare) && mode === null) tilt.set(0, 0);
       else tilt.lerp(tiltTarget, 1 - Math.pow(.001, dt));
       U.tilt.value.copy(tilt);
       group.rotation.y = tilt.x * .32; group.rotation.x = -tilt.y * .32;
