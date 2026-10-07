@@ -446,6 +446,19 @@ window.QBANK = {
    "w": "CPLR 320(a) lists an answer, a notice of appearance, or a motion that extends the time to answer."
   },
   {
+   "lv": 1,
+   "q": "Lee files a summons and bases venue on his own residence. What must the summons also specify?",
+   "c": [
+    "The defendant's date of birth.",
+    "Lee's address.",
+    "The name of the assigned judge.",
+    "The amount of the defendant's insurance."
+   ],
+   "a": "Lee's address.",
+   "h": "Venue chosen by residence means the court needs to see that residence.",
+   "w": "CPLR 305(a): venue based on the plaintiff's residence requires the plaintiff's address."
+  },
+  {
    "lv": 2,
    "q": "Papers go to Ray's adult roommate at home; a copy is mailed 8 days later. When is service complete?",
    "c": [
@@ -509,6 +522,45 @@ window.QBANK = {
    "a": "No. It must also state the time.",
    "h": "Read the list of what the proof must show.",
    "w": "CPLR 308(2): proof of service must identify the person of suitable age and discretion and state the date, time and place of service."
+  },
+  {
+   "lv": 2,
+   "q": "Ana's action was commenced on June 1. No defendant was served within 120 days, and the defendant moves to dismiss. What may the court do?",
+   "c": [
+    "Dismiss with prejudice, because the 120 days cannot be extended.",
+    "Do nothing, because the 120 days only runs once the defendant appears.",
+    "Dismiss without prejudice, or extend the time for good cause or in the interest of justice.",
+    "Extend the time automatically, because the defendant moved late."
+   ],
+   "a": "Dismiss without prejudice, or extend the time for good cause or in the interest of justice.",
+   "h": "The rule gives the court two choices after a missed deadline.",
+   "w": "CPLR 306-b: dismiss without prejudice, or extend for good cause or in the interest of justice."
+  },
+  {
+   "lv": 2,
+   "q": "A private process server, not a sheriff, serves a summons and complaint. In what form is proof of service made?",
+   "c": [
+    "A certificate.",
+    "A letter to the clerk.",
+    "No proof is needed if the defendant answers.",
+    "An affidavit."
+   ],
+   "a": "An affidavit.",
+   "h": "The form depends on who made service.",
+   "w": "CPLR 306(d): a certificate if by a sheriff or public officer; an affidavit if by anyone else."
+  },
+  {
+   "lv": 2,
+   "q": "A company has designated an agent for service under Rule 318. A process server hands the summons to that agent inside New York. Is this valid service?",
+   "c": [
+    "Yes. Delivery to the designated agent within the state is a listed method.",
+    "No. The summons must also be mailed within 20 days.",
+    "No. Only the defendant may be handed a summons.",
+    "Yes, but only if the agent is a lawyer."
+   ],
+   "a": "Yes. Delivery to the designated agent within the state is a listed method.",
+   "h": "Mailing belongs to a different paragraph of 308.",
+   "w": "CPLR 308(3): deliver the summons within the state to the agent designated under Rule 318."
   },
   {
    "lv": 3,
@@ -587,6 +639,19 @@ window.QBANK = {
    "a": "No. It must be at Ray's home or workplace",
    "h": "Where matters as much as who.",
    "w": "CPLR 308(2): delivery is to a person of suitable age and discretion at the actual place of business, dwelling place or usual place of abode of the person to be served."
+  },
+  {
+   "lv": 3,
+   "q": "Methods 1, 2 and 4 of CPLR 308 are all impracticable. How can the plaintiff still serve the defendant?",
+   "c": [
+    "Move on notice to the defendant for permission to skip service.",
+    "Mail the summons by first class mail and file nothing more.",
+    "Move, without notice to the defendant, for an order directing a manner of service.",
+    "Wait for the 120 days to run and refile."
+   ],
+   "a": "Move, without notice to the defendant, for an order directing a manner of service.",
+   "h": "The court picks the manner, and the defendant is not told about the motion.",
+   "w": "CPLR 308(5): the court directs the manner of service on a motion without notice."
   }
  ],
  "motion": [
