@@ -476,19 +476,41 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
   background:radial-gradient(circle at 50% 42%,#4a3516,#100e0b 72%);overflow:hidden;animation:fadein .2s both}
 .pk-rays{position:absolute;width:160vmax;height:160vmax;left:50%;top:42%;translate:-50% -50%;pointer-events:none;
   background:repeating-conic-gradient(rgba(255,210,90,.12) 0 8deg,transparent 8deg 20deg);animation:spin 30s linear infinite}
-.pk-stage{position:relative;width:min(94vw,600px);height:min(64vh,580px);display:flex;align-items:center;justify-content:center}
-.pk-pack{position:absolute;width:min(76vw,330px,37vh);aspect-ratio:640/975;border:0;background:none;padding:0;z-index:3;animation:packidle 2.4s ease-in-out infinite}
+.pk-stage{position:relative;width:min(94vw,600px);height:min(64vh,580px);display:flex;align-items:center;justify-content:center;--pkw:min(76vw,330px,37vh)}
+/* the pack in your hand: it floats, turns in 3D (--rx/--ry, set by packTilt), and casts a soft shadow on the floor */
+.pk-pack{position:absolute;width:var(--pkw);aspect-ratio:640/975;border:0;background:none;padding:0;z-index:3;animation:pkfloat 3.2s ease-in-out infinite;
+  transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+@keyframes pkfloat{50%{translate:0 -7px}}
+.pk-floor{position:absolute;left:50%;top:calc(50% + var(--pkw) * 975 / 640 / 2 + 6px);width:calc(var(--pkw) * .82);height:calc(var(--pkw) * .13);translate:-50% -50%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent);animation:pkfloorbob 3.2s ease-in-out infinite;transition:opacity .4s}
+@keyframes pkfloorbob{50%{scale:.88;opacity:.75}}
+.pk.out .pk-floor{opacity:0}
 .pk-pack img{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 14px 18px rgba(0,0,0,.6))}
 @keyframes packidle{50%{transform:translateY(-8px) rotate(1.5deg)}}
-.pk-pack.shake{animation:shake .45s linear 2}
 .pk-pack.torn{animation:none;pointer-events:none}
 .pk-pack.torn .pk-top{transition:transform .7s cubic-bezier(.3,.8,.4,1),opacity .6s .25s;transform:translate(35%,-130%) rotate(30deg);opacity:0}
 .pk-pack.torn.from-r .pk-top{transform:translate(-35%,-130%) rotate(-30deg)}
-/* swipe to rip: a dotted tear line with a moving arrow until the rip starts */
+/* swipe to rip: the pack holds still while you tear it */
 .pk-pack{touch-action:none}
 .pk-pack.ripping{animation:none}
-.pk-cut{position:absolute;left:5%;right:5%;height:0;z-index:2;border-top:2px dashed rgba(255,248,220,.7);filter:drop-shadow(0 1px 2px rgba(0,0,0,.8));pointer-events:none;transition:opacity .2s}
-.pk-pack.ripping .pk-cut,.pk-pack.torn .pk-cut,.pk-pack.shake .pk-cut{opacity:0}
+/* the cut: a glowing line follows your finger across the top (--cut 0..1, set by setRip), only as wide as the wrapper
+   (--cut-l/--cut-r, measured from the pack art). Before you start, a soft glint runs along it now and then. */
+.pk-slash{position:absolute;left:var(--cut-l,4%);right:calc(100% - var(--cut-r,96%));top:var(--cut-y,12%);height:0;z-index:5;pointer-events:none}
+.pk-slash::before{content:"";position:absolute;left:0;top:-1.5px;height:3px;width:calc(var(--cut,0) * 100%);border-radius:3px;opacity:calc(var(--cut,0) * 30);
+  background:linear-gradient(90deg,color-mix(in srgb,var(--tint) 70%,#fff),#fff 60%);box-shadow:0 0 5px 1px #fff,0 0 14px 4px var(--tint),0 0 30px 8px color-mix(in srgb,var(--tint) 45%,transparent)}
+.pk-slash::after{content:"";position:absolute;left:calc(var(--cut,0) * 100%);top:0;width:16px;height:16px;translate:-50% -50%;border-radius:50%;opacity:calc(var(--cut,0) * 30);
+  background:radial-gradient(circle,#fff 0 25%,color-mix(in srgb,var(--tint) 80%,#fff) 45%,transparent 70%);box-shadow:0 0 18px 6px var(--tint)}
+.pk-pack.from-r .pk-slash::before{left:auto;right:0;background:linear-gradient(270deg,color-mix(in srgb,var(--tint) 70%,#fff),#fff 60%)}
+.pk-pack.from-r .pk-slash::after{left:calc(100% - var(--cut,0) * 100%)}
+.pk-pack.torn .pk-slash::before{width:100%;opacity:1;animation:pkslash .55s ease-out forwards}
+.pk-pack.torn .pk-slash::after{opacity:0}
+@keyframes pkslash{0%{filter:brightness(1.8)}100%{opacity:0;transform:scaleY(3)}}
+.pk-glint{position:absolute;inset:-6px 0;overflow:hidden;opacity:0;transition:opacity .2s}
+.pk-glint::before{content:"";position:absolute;top:50%;left:0;width:22%;height:2px;translate:-100% -50%;border-radius:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent);box-shadow:0 0 8px 2px color-mix(in srgb,var(--tint) 60%,transparent);animation:pkglint 3.6s ease-in-out 1.2s infinite}
+.pk-pack:not(.ripping):not(.torn) .pk-glint{opacity:1}
+@keyframes pkglint{0%{left:0}45%,100%{left:122%}}
+@media (prefers-reduced-motion:reduce){.pk-glint{display:none}}
 .pk-pack.torn .pk-body{transition:transform .8s .5s ease-in,opacity .5s .85s;transform:translateY(80%);opacity:0}
 .pk-cards{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:clamp(8px,2.4vw,18px);z-index:2;pointer-events:none}
 .pk-card{position:relative;width:min(29vw,170px,22vh);aspect-ratio:1024/1536;border:0;background:none;padding:0;perspective:1000px;opacity:0;transform:translateY(45%) scale(.45);
@@ -528,6 +550,13 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .pk-s4 .pk-pattern{opacity:.55;background:linear-gradient(90deg,transparent 15%,rgba(255,80,70,.8) 15% calc(15% + 2px),transparent calc(15% + 2px)),repeating-linear-gradient(180deg,transparent 0 30px,rgba(150,200,255,.55) 30px 32px)}
 .pk-s5 .pk-pattern{opacity:.6;background:radial-gradient(circle,rgba(255,240,120,.8) 1.6px,transparent 2.4px) 0 0/12px 12px,repeating-conic-gradient(from 0deg at 50% 45%,rgba(255,80,60,.35) 0 6deg,transparent 6deg 18deg)}
 .pk-vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 35%,rgba(0,0,0,.75) 100%)}
+/* the letter floor (packfield.js) fades in over the blurred art and takes the place of the pattern and rays */
+.pk-field{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;opacity:0;transition:opacity .9s}
+.pk-field.on{opacity:1}
+.pk.has-field .pk-pattern,.pk.has-field .pk-rays{opacity:0;transition:opacity .9s}
+.pk.has-field .pk-glow{mix-blend-mode:screen}
+.pk.has-field .pk-hint{text-shadow:0 1px 2px #000,0 0 10px #000,0 0 18px rgba(0,0,0,.9)}
+.pk.has-field .pk-vig{background:radial-gradient(ellipse at 50% 42%,transparent 30%,rgba(0,0,0,.7) 100%),linear-gradient(transparent 55%,rgba(0,0,0,.45))}
 /* the rip: a burst of sparks in the series colour */
 .pk-spark{position:absolute;left:50%;top:30%;width:14px;height:14px;border-radius:50%;z-index:6;pointer-events:none;background:radial-gradient(circle,#fff 0 35%,var(--tint) 60%);box-shadow:0 0 16px 5px var(--tint);
   animation:pkspark .9s cubic-bezier(.15,.8,.3,1) forwards}
@@ -537,13 +566,12 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .pk-pack.landing{animation:pkdrop .55s cubic-bezier(.2,1.5,.4,1) both}
 @keyframes pkdrop{from{transform:translateY(-35%) scale(.62) rotate(-6deg);opacity:.4}}
 @media (prefers-reduced-motion:reduce){.pk-spark,.pk-pack.landing{animation:none}.pk-spark{display:none}}
-.pk-pack.ripping{animation:pkstrain .09s linear infinite}
-@keyframes pkstrain{25%{transform:translate(.6px,-.6px) rotate(.25deg)}75%{transform:translate(-.6px,.6px) rotate(-.25deg)}}
 .pk-pack::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;mix-blend-mode:overlay;-webkit-mask:var(--pack-mask) center/100% 100% no-repeat;mask:var(--pack-mask) center/100% 100% no-repeat;
-  background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.55) 47%,transparent 58%);background-size:260% 100%;animation:pkshine 3.6s ease-in-out infinite}
+  background:radial-gradient(circle at var(--gx,50%) var(--gy,30%),rgba(255,255,255,.6),transparent 42%),
+    linear-gradient(115deg,transparent 40%,rgba(255,255,255,.38) 50%,transparent 60%) calc(100% - var(--gx,50%)) 0/260% 100% no-repeat;
+  opacity:var(--go,.7)}   /* the foil shine slides across as the pack turns */
 .pk-pack.torn::after,.pk-pack.ripping::after{display:none}
-@keyframes pkshine{0%,40%{background-position:130% 0}100%{background-position:-130% 0}}
-@media (prefers-reduced-motion:reduce){.pk-bg,.pk-pack::after,.pk-pack.ripping{animation:none}}
+@media (prefers-reduced-motion:reduce){.pk-bg,.pk-pack,.pk-floor{animation:none}}
 /* pick your pack */
 .pkc{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;overflow:hidden;
   background:radial-gradient(circle at 50% 45%,#3b2a12,#0d0b08 75%);animation:fadein .2s both}
@@ -567,6 +595,7 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .pkc-later{position:relative;max-width:340px;color:var(--paper)}
 @media (prefers-reduced-motion:reduce){.pkc-pack,.pkc-bg{animation:none}}
 /* one-at-a-time reveal: the cards rise as a stack, rarest at the bottom; flip the top card, then swipe it away */
+.pk.stack{display:flex}   /* the generic .stack rule (a grid) would otherwise push Show all to the left */
 .pk.stack .pk-cards .pk-card{position:absolute;touch-action:none;width:min(56vw,244px,27.5vh);z-index:calc(10 - var(--i));transition-delay:.55s}
 .pk.out.stack .pk-cards .pk-card{transform:translateY(calc(var(--i) * 10px)) rotate(calc(var(--i) * 2.5deg))}
 .pk.out.stack .pk-cards .pk-card.top{transform:none;transition-delay:0s}
@@ -1372,6 +1401,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="exam.js?v=5c38761d"></script>
 <script src="exam-questions.js?v=79574fc7"></script>
 <script src="pack3d.js?v=175b3691"></script>
+<script src="packfield.js?v=2a7db429"></script>
 <script src="sticker3d.js?v=c9a6a6ca"></script>
 <script src="questions.js?v=65ed0ce9"></script>
 <script src="flair.js?v=be54d585"></script>
@@ -4211,7 +4241,7 @@ function resolvePulls(picks, special = {}){
 }
 /* Swipe to rip: a ragged tear line across the top of the pack. The torn part of the flap peels up under your finger. */
 const TEAR_Y = 12;   // % down the pack, just under the crimp
-function tearLine(){ const pts = []; for (let i = 0; i <= 28; i++) pts.push([i / 28 * 100, TEAR_Y + (i % 2 ? .9 : -.9) + Math.random() * 1.6 - .8]); return pts; }
+function tearLine(){ const pts = []; for (let i = 0; i <= 28; i++) pts.push([i / 28 * 100, TEAR_Y + (Math.random() - .5) * .3]); return pts; }   // a clean cut, with just a hint of paper
 function yAt(line, x){ x = Math.max(0, Math.min(100, x)); const i = Math.min(line.length - 2, Math.floor(x / 100 * (line.length - 1))), [x0, y0] = line[i], [x1, y1] = line[i + 1]; return y0 + (y1 - y0) * (x - x0) / (x1 - x0); }
 const ptc = ([x, y]) => `${x.toFixed(2)}% ${y.toFixed(2)}%`;
 function flapClip(line, a, b){   // the wrapper above the tear line, from x = a to x = b (%)
@@ -4221,6 +4251,7 @@ function flapClip(line, a, b){   // the wrapper above the tear line, from x = a 
 }
 function setRip(btn, p){   // p: 0 (whole) to 1 (torn all the way across)
   const ov = btn.closest('.pk'); if (ov) ov.style.setProperty('--rip', Math.max(0, Math.min(1, p)).toFixed(3));   // the room gets brighter as the tear grows
+  btn.style.setProperty('--cut', Math.max(0, Math.min(1, p)).toFixed(3)); btn.classList.toggle('from-r', btn._dir < 0);   // the glowing cut line
   if (btn._3d) return btn._3d.peel(p, btn._dir < 0 ? -1 : 1);
   const line = btn._line, fromR = btn._dir < 0, P = p * 100, hinge = fromR ? 100 - P : P;
   const flap = btn.querySelector('.pk-flap'), rest = btn.querySelector('.pk-rest');
@@ -4234,7 +4265,7 @@ function finishRip(btn){   // past 70%: finish the tear, then open
   if (!btn._dir) btn._dir = 1;
   if (btn._3d) return btn._3d.finish(btn._dir < 0 ? -1 : 1, () => packTorn(btn));
   const start = btn._p || 0, t0 = performance.now();
-  const step = now => { const k = Math.max(0, Math.min(1, (now - t0) / 170)); setRip(btn, start + (1 - start) * k); k < 1 ? requestAnimationFrame(step) : packTorn(btn); };
+  const step = now => { const k = Math.max(0, Math.min(1, (now - t0) / (170 + (1 - start) * 260))); setRip(btn, start + (1 - start) * k); k < 1 ? requestAnimationFrame(step) : packTorn(btn); };
   requestAnimationFrame(step);
 }
 function sparkBurst(ov){
@@ -4250,8 +4281,8 @@ function packTorn(btn){
   btn.querySelector('.pk-rest').style.visibility = 'hidden';
   if (btn._3d) btn.querySelector('.pk-flap').style.visibility = 'hidden';   // the 3D flap flings itself away
   else btn.querySelector('.pk-flap').style.transform = '';   // the .torn rule flings it away
-  btn.classList.toggle('from-r', btn._dir < 0); btn.classList.remove('shake'); btn.classList.add('torn');
-  nativeFeedback('packtear'); softFlash(); sparkBurst(ov);
+  btn.classList.toggle('from-r', btn._dir < 0); btn.classList.add('torn');
+  nativeFeedback('packtear'); softFlash(); sparkBurst(ov); ov._field?.tear();
   ov.classList.add('out', 'stack'); nextPackCard(ov);
 }
 /* One-at-a-time reveal: the top card flips on a tap, then a swipe (or another tap) sends it away */
@@ -4317,6 +4348,10 @@ function packBadge(p){
 /* Pick your pack: two packs from different series float side by side; tap the one you want. The mix changes every time.
    Series with cards still to find come first. The very first pack skips this (onboarding opens Series 1). */
 const PACK_TINT = { 1:'#e3b23c', 2:'#a77bff', 3:'#3fb5a8', 4:'#e0443a', 5:'#ffcc33' };   // each series' glow colour
+/* the word that rises out of the letter floor when a pack opens, in a colour taken from that pack's art that stands out
+   against the floor (which is tinted with PACK_TINT): red on gold, yellow on purple, cream on teal, white on red, red on yellow */
+const PACK_WORD = { 1:{ word:'GAVEL', color:'#e8473a' }, 2:{ word:'MEMORY', color:'#f5c518' }, 3:{ word:'DOCKET', color:'#f0d9a0' },
+  4:{ word:'DOODLE', color:'#f4f1ea' }, 5:{ word:'HERO', color:'#ff5544' } };
 function choosePack(){
   if (S.packs <= 0 || document.querySelector('.pkc')) return;
   const open = SERIES_DEFS.filter(d => CARDS.filter(d.test).some(c => !S.cards[c.id].owned)), done = SERIES_DEFS.filter(d => !open.includes(d));
@@ -4361,12 +4396,12 @@ function openPack(opts = {}){
   ov.style.setProperty('--tint', PACK_TINT[packSeries] || '#e3b23c');
   const line = tearLine();
   ov.innerHTML = `<div class="pk-bg" style="background-image:url('${packImg}')"></div><div class="pk-pattern"></div><div class="pk-glow"></div><div class="pk-rays"></div><div class="pk-vig"></div>
-    <div class="pk-stage">
+    <div class="pk-stage"><div class="pk-floor"></div>
       <button class="pk-pack" data-act="pk-tear" aria-label="Open the pack" style="--pack-mask:url('${packImg}')">
         <img class="pk-body" src="${packImg}" alt="" style="clip-path:polygon(${line.map(ptc).join(',')},100% 100%,0% 100%)">
         <img class="pk-top pk-rest" src="${packImg}" alt="" style="clip-path:${flapClip(line, 0, 100)}">
         <img class="pk-top pk-flap" src="${packImg}" alt="" style="clip-path:${flapClip(line, 0, 0)}">
-        <span class="pk-cut" style="top:${TEAR_Y}%"></span>${label}
+        <span class="pk-slash" style="--cut-y:${TEAR_Y}%"><i class="pk-glint"></i></span>${label}
       </button>
       <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card${p.ver === 'exhibit' ? ' tease rare' : p.ver === 'certified' ? ' tease' : ''}" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
         <div class="pk-inner"><div class="pk-face pk-back">${cardReverseHTML(p.c)}</div>
@@ -4382,16 +4417,59 @@ function openPack(opts = {}){
   document.body.appendChild(ov);
   const pk = ov.querySelector('.pk-pack'); pk._line = line; ov._sticker = bonus;
   if (opts.chosen) { pk.classList.add('landing'); setTimeout(() => pk.classList.remove('landing'), 600); }
+  packTilt(pk); packCutEdges(pk, packImg);
+  // the room: a floor of raised letters (packfield.js); until it's ready, or if it can't load, the blurred pack art stays
+  if (window.PackField) PackField.mount(ov, { tint:PACK_TINT[packSeries] || '#e3b23c', word:(PACK_WORD[packSeries] || PACK_WORD[1]).word, wordColor:(PACK_WORD[packSeries] || PACK_WORD[1]).color }).then(f => { ov._field = f; ov.classList.add('has-field'); if (pk._done) f.tear(); }).catch(() => {});
   // the 3D sticker curl (pack3d.js); until it's ready, or if it can't load, the flat rip below is used
   if (window.Pack3D) Pack3D.attach(pk, packImg, line, TEAR_Y).then(ctl => { if (!pk._p && !pk._done) pk._3d = ctl; else ctl.destroy(); }).catch(() => {});
 }
-function tearPack(btn){   // a tap: finishes a half-done rip, or opens the pack the old way (shake, then open)
+function tearPack(btn){   // a tap: finishes a half-done rip, or tears the strip off for you
   if (btn._swiped || btn._done) return;
-  if (btn._p || btn._3d) return finishRip(btn);   // with 3D, a tap peels the whole flap off
-  btn._done = true; btn._dir = 1; setRip(btn, 1); btn.querySelector('.pk-flap').style.transform = '';
-  btn.classList.add('shake');
-  setTimeout(() => packTorn(btn), 900);
+  finishRip(btn);   // a tap tears the whole strip off in one smooth pull
 }
+/* The pack in your hand (after the holo cards at poke-holo.simey.me): it sways slowly on its own; touch it and it
+   turns toward your finger. A spring moves it, so it feels heavy instead of twitchy, and the foil shine follows. */
+function packTilt(btn){
+  if (prefersReducedMotion()) return;
+  const cur = { rx:0, ry:0, gx:50, gy:30, go:.55 }, vel = { rx:0, ry:0, gx:0, gy:0, go:0 };
+  let last = performance.now();
+  const step = now => {
+    if (!btn.isConnected) return;
+    const dt = Math.min(.05, (now - last) / 1000), t = now / 1000; last = now;
+    const p = btn._ptr, done = btn.classList.contains('torn'), k = btn.classList.contains('ripping') ? .35 : 1;
+    const tgt = done ? { rx:0, ry:0, gx:50, gy:30, go:0 }
+      : p ? { rx:-p.y * 16 * k, ry:p.x * 22 * k, gx:50 + p.x * 90, gy:50 + p.y * 90, go:.95 }
+      : { rx:Math.sin(t * .9) * 3, ry:Math.sin(t * .6) * 8, gx:50 + Math.sin(t * .6) * 45, gy:30 + Math.sin(t * .9) * 12, go:.55 };
+    for (const key in cur) { vel[key] += ((tgt[key] - cur[key]) * 110 - vel[key] * 15) * dt; cur[key] += vel[key] * dt; }   // stiffness 110, damping 15: settles with a small overshoot
+    btn.style.setProperty('--rx', cur.rx.toFixed(2) + 'deg'); btn.style.setProperty('--ry', cur.ry.toFixed(2) + 'deg');
+    btn.style.setProperty('--gx', cur.gx.toFixed(1) + '%'); btn.style.setProperty('--gy', cur.gy.toFixed(1) + '%'); btn.style.setProperty('--go', cur.go.toFixed(2));
+    if (done && Math.abs(cur.rx) + Math.abs(cur.ry) < .05) return;
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+/* The cut line runs only across the wrapper itself: find where the pack art starts and ends on the cut row */
+function packCutEdges(btn, src){
+  const img = new Image();
+  img.onload = () => { try {
+    const c = document.createElement('canvas'), w = c.width = 200, h = c.height = Math.round(200 * img.naturalHeight / img.naturalWidth), g = c.getContext('2d');
+    g.drawImage(img, 0, 0, w, h);
+    const row = g.getImageData(0, Math.round(h * TEAR_Y / 100), w, 1).data; let l = -1, r = -1;
+    for (let x = 0; x < w; x++) if (row[x * 4 + 3] > 128) { if (l < 0) l = x; r = x; }
+    if (l >= 0 && r > l) { btn.style.setProperty('--cut-l', (l / w * 100 + 1).toFixed(1) + '%'); btn.style.setProperty('--cut-r', ((r + 1) / w * 100 - 1).toFixed(1) + '%'); }
+  } catch (_) {} };
+  img.src = src;
+}
+function packPointer(e){
+  const b = document.querySelector('.pk-pack'); if (!b) return;
+  if (e.target.closest?.('.pk-pack') !== b && !b._drag) return;
+  const r = b.getBoundingClientRect(), c = v => Math.max(-.5, Math.min(.5, v));
+  b._ptr = { x:c((e.clientX - r.left) / r.width - .5), y:c((e.clientY - r.top) / r.height - .5) };
+}
+document.addEventListener('pointerdown', packPointer);
+document.addEventListener('pointermove', packPointer);
+['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, e => { const b = document.querySelector('.pk-pack'); if (b && e.pointerType !== 'mouse') b._ptr = null; }));
+document.addEventListener('pointerout', e => { const b = e.target.closest?.('.pk-pack'); if (b && !b.contains(e.relatedTarget) && !b._drag) b._ptr = null; });
 function zoomCard(html){
   const z = document.createElement('div'); z.className = 'zoom'; z.dataset.act = 'zoom-close';
   z.innerHTML = `<div class="zoom-card">${html}</div><p>Tap anywhere to close</p>`;
