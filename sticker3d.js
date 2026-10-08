@@ -23,6 +23,36 @@
   const SW = 2.5, SH = 2.75;   // backing sheet; the sticker is 2 x 2 in the middle
   const OFF = 1.3;             // pull the edge this far (sticker is 2 wide) and it comes off
 
+  /* The backing sheet, printed like court paperwork: a header, legal-pad lines and margin, a faint court seal
+     behind the sticker (it shows around the sticker's shape), and a FILED stamp, barcode and sheet number below.
+     Drawn once per sticker at 400 px per sheet unit; the sticker covers x 100-900, y 150-950. */
+  function drawSheet(){
+    const W = Math.round(SW * 400), H = Math.round(SH * 400), c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g = c.getContext('2d'), ink = '#2a2118', cx = W / 2, cy = H / 2;
+    const bg = g.createLinearGradient(0, 0, W, H); bg.addColorStop(0, '#f6eedb'); bg.addColorStop(1, '#ecdfc2');
+    g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    g.strokeStyle = 'rgba(80,120,185,.2)'; g.lineWidth = 2;   // legal-pad lines and the red margin
+    for (let y = 176; y < H - 30; y += 34) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+    g.strokeStyle = 'rgba(200,60,50,.38)'; [70, 77].forEach(x => { g.beginPath(); g.moveTo(x, 140); g.lineTo(x, H); g.stroke(); });
+    g.save(); g.translate(cx, cy); g.globalAlpha = .13; g.strokeStyle = ink; g.fillStyle = ink;   // the court seal
+    [330, 318, 222].forEach((r, i) => { g.lineWidth = i === 1 ? 3 : 7; g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.stroke(); });
+    g.font = '44px "Courier Prime", monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    const ring = 'CLERK OF THE COURT · STATE OF NEW YORK · ';
+    [...ring].forEach((ch, i) => { g.save(); g.rotate(i / ring.length * Math.PI * 2); g.fillText(ch, 0, -272); g.restore(); });
+    g.font = '150px Bangers, sans-serif'; g.fillText('CQ', 0, 8); g.restore();
+    g.fillStyle = ink; g.textAlign = 'left'; g.textBaseline = 'alphabetic';   // header
+    g.font = '64px Bangers, sans-serif'; g.fillText('OFFICIAL STICKER SHEET', 96, 84);
+    g.font = '26px "Courier Prime", monospace'; g.globalAlpha = .7; g.fillText('FORM CQ-17  ·  BONUS ISSUE  ·  PEEL FROM ANY EDGE', 98, 124); g.globalAlpha = 1;
+    g.fillRect(96, 136, W - 192, 4);
+    g.save(); g.translate(205, 1028); g.rotate(-.12); g.globalAlpha = .62; g.strokeStyle = '#c0392b'; g.fillStyle = '#c0392b';   // FILED stamp
+    g.lineWidth = 7; g.beginPath(); g.roundRect(-115, -46, 230, 92, 14); g.stroke(); g.font = '76px Bangers, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('FILED', 0, 6); g.restore();
+    let x = 610, seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;   // barcode and sheet number
+    g.fillStyle = ink; while (x < 900) { const w = 2 + Math.floor(rnd() * 3) * 2; g.fillRect(x, 985, w, 62); x += w + 3 + Math.floor(rnd() * 3) * 2; }
+    g.font = '24px "Courier Prime", monospace'; g.textAlign = 'center'; g.fillText('No. ' + String(1000 + Math.floor(Math.random() * 9000)).padStart(6, '0'), 755, 1076);
+    g.strokeStyle = 'rgba(42,33,24,.35)'; g.lineWidth = 3; g.beginPath(); g.roundRect(14, 14, W - 28, H - 28, 34); g.stroke();   // a thin printed border
+    return c;
+  }
+
   async function mount(host, opt){
     await Pack3D.load();
     const img = new Image();
@@ -49,6 +79,12 @@
 
     const blank = document.createElement('canvas'); blank.width = blank.height = 1;
     const blankTex = new THREE.CanvasTexture(blank); U.msg.value = blankTex;
+    let sheetTex = null;
+    if (!bare) {
+      try { await Promise.all(['64px Bangers', '26px "Courier Prime"'].map(f => document.fonts.load(f))); } catch (_) {}
+      sheetTex = new THREE.CanvasTexture(drawSheet()); sheetTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    }
+    U.sheet = { value:sheetTex || blankTex };
     let msgTex = null;
 
     const stickerMat = new THREE.ShaderMaterial({
@@ -97,12 +133,12 @@
       uniforms:U, extensions:{ derivatives:true },
       vertexShader: `varying vec2 vP; void main(){ vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }`,
       fragmentShader: `
-        uniform sampler2D map; uniform sampler2D msg; uniform vec2 tilt; uniform vec2 corner; uniform vec2 dir; uniform float fold; uniform float fade;
+        uniform sampler2D map; uniform sampler2D msg; uniform sampler2D sheet; uniform vec2 tilt; uniform vec2 corner; uniform vec2 dir; uniform float fold; uniform float fade;
         varying vec2 vP;
         void main(){
           vec2 suv = (vP + 1.) * .5;
           float a = (suv.x > 0. && suv.x < 1. && suv.y > 0. && suv.y < 1.) ? texture2D(map, suv).a : 0.;
-          vec3 paper = vec3(.95, .91, .82) * (.97 + fract(sin(dot(floor(vP * 260.), vec2(12.9898, 78.233))) * 43758.5453) * .03);
+          vec3 paper = texture2D(sheet, (vP + vec2(${SW / 2}, ${SH / 2})) / vec2(${SW}, ${SH})).rgb * (.97 + fract(sin(dot(floor(vP * 260.), vec2(12.9898, 78.233))) * 43758.5453) * .03);   // the printed sheet (drawSheet), with paper grain
           vec3 liner = vec3(.91, .93, .95) + exp(-pow((dot(vP, vec2(.7, -.5)) - tilt.x + tilt.y) / .5, 2.)) * .08;
           vec4 m = texture2D(msg, clamp(suv, 0., 1.));
           liner = mix(liner, m.rgb, m.a);   // the surprise is printed on the liner, so it only shows inside the sticker's shape
@@ -288,7 +324,7 @@
       window.removeEventListener('cq-native-motion', motionChanged);
       document.removeEventListener('visibilitychange', visibilityChanged);
       if (ac) { try { ac.close(); } catch (_) {} }
-      [stickerGeo, backGeo, shGeo, stickerMat, backMat, shMat, tex, blankTex, msgTex].forEach(x => x && x.dispose());
+      [stickerGeo, backGeo, shGeo, stickerMat, backMat, shMat, tex, blankTex, msgTex, sheetTex].forEach(x => x && x.dispose());
       renderer.dispose(); try { renderer.forceContextLoss(); } catch (_) {}
     }
     schedule();

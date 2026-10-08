@@ -566,7 +566,7 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .pk.has-field .pk-hint{text-shadow:0 1px 2px #000,0 0 10px #000,0 0 18px rgba(0,0,0,.9)}
 .pk.has-field .pk-vig{background:radial-gradient(ellipse at 50% 42%,transparent 30%,rgba(0,0,0,.7) 100%),linear-gradient(transparent 55%,rgba(0,0,0,.45))}
 /* the rip: a burst of sparks in the series colour */
-.pk-spark{position:absolute;left:50%;top:30%;width:14px;height:14px;border-radius:50%;z-index:6;pointer-events:none;background:radial-gradient(circle,#fff 0 35%,var(--tint) 60%);box-shadow:0 0 16px 5px var(--tint);
+.pk-spark{position:absolute;left:50%;top:30%;width:9px;height:9px;border-radius:50%;z-index:6;pointer-events:none;background:radial-gradient(circle,#fff 0 35%,var(--tint) 60%);box-shadow:0 0 16px 5px var(--tint);
   animation:pkspark .9s cubic-bezier(.15,.8,.3,1) forwards}
 @keyframes pkspark{from{transform:translate(-50%,-50%) scale(1.2);opacity:1}to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.2);opacity:0}}
 /* the chosen pack lands with a thump */
@@ -611,6 +611,23 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
   transition:transform .45s cubic-bezier(.4,0,.8,.6),opacity .2s .25s;transition-delay:0s}
 .pk.out.stack .pk-cards .pk-card.drag{transition:none}
 .pk.sum .pk-card{transition-delay:calc(var(--i) * .1s)}
+/* light instead of confetti (packCardLight): a glow behind the card, rays for Certified and Exhibit, one shine across the face */
+.pk-card.lit-new{--lc:#ffe2a0} .pk-card.lit-trick{--lc:#c9a6ff} .pk-card.lit-certified{--lc:#d4ebff} .pk-card.lit-exhibit{--lc:#ffd23a}
+.pk-halo{position:absolute;left:50%;top:50%;width:200%;aspect-ratio:1;translate:-50% -50%;z-index:-1;pointer-events:none;border-radius:50%;
+  background:radial-gradient(closest-side,var(--lc) 0%,var(--lc) 42%,color-mix(in srgb,var(--lc) 55%,transparent) 56%,transparent 82%);opacity:0;animation:pkhalo 1.2s .28s cubic-bezier(.2,.9,.3,1) forwards}
+.lit-exhibit .pk-halo{width:235%}
+@keyframes pkhalo{0%{opacity:0;scale:.45}35%{opacity:1;scale:1.12}100%{opacity:.75;scale:1}}
+.pk-card.lit .pk-front{animation:pkedge 1.2s .28s ease-out forwards}   /* the card's own edge glows */
+@keyframes pkedge{0%{filter:none}35%{filter:drop-shadow(0 0 10px var(--lc)) drop-shadow(0 0 26px var(--lc))}100%{filter:drop-shadow(0 0 6px var(--lc)) drop-shadow(0 0 16px color-mix(in srgb,var(--lc) 70%,transparent))}}
+.pk-halo.rays::before{content:"";position:absolute;inset:4%;border-radius:50%;opacity:.5;animation:spin 16s linear infinite;
+  background:repeating-conic-gradient(var(--lc) 0 4deg,transparent 4deg 15deg);-webkit-mask:radial-gradient(closest-side,#000 25%,transparent 78%);mask:radial-gradient(closest-side,#000 25%,transparent 78%)}
+.lit-exhibit .pk-halo.rays::before{opacity:.85}
+.pk-shine{position:absolute;inset:0;z-index:20;pointer-events:none;border-radius:6%/4%;overflow:hidden}
+.pk-shine::before{content:"";position:absolute;top:-25%;bottom:-25%;left:0;width:42%;rotate:10deg;translate:-140% 0;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);animation:pkshine2 .85s .45s ease-out forwards}
+@keyframes pkshine2{to{translate:360% 0}}
+.pk.sum .pk-halo{opacity:.45;animation:none}
+@media (prefers-reduced-motion:reduce){.pk-card.lit .pk-front{animation:none}.pk-halo{animation:none;opacity:.6}.pk-halo.rays::before{animation:none}.pk-shine{display:none}}
 /* something special is coming: the face-down card glows and trembles before you flip it */
 .pk-card.top.tease:not(.flipped) .pk-back{animation:tease 1.1s ease-in-out infinite}
 .pk-card.top.tease.rare:not(.flipped) .pk-back{animation:tease 1.1s ease-in-out infinite,teaserare 2.2s linear infinite}
@@ -1344,19 +1361,10 @@ html.cq-reduce-motion .mastered-burst.play{animation:none}
 .cq-brand-small .cq-brand-mark{width:48px;height:48px}
 .cq-brand-small .cq-brand-name{font-size:22px}
 .sp-fan{position:relative;width:100%;height:clamp(225px,32vh,300px);isolation:isolate}
-.sp-card{position:absolute;top:8%;left:var(--left);width:32%;aspect-ratio:2/3;box-sizing:border-box;overflow:hidden;border:3px solid var(--edge);border-radius:10px;background:var(--cover);box-shadow:0 10px 18px rgba(0,0,0,.45);transform:translateX(-50%) rotate(var(--angle));animation:sp-deal .65s cubic-bezier(.22,.8,.2,1) both;animation-delay:var(--delay);z-index:var(--z)}
-.sp-card img{position:absolute;left:3%;top:13%;width:94%;height:76%;object-fit:contain;filter:drop-shadow(0 3px 1px rgba(0,0,0,.2))}
-.sp-card b{position:absolute;left:0;right:0;bottom:5%;font:400 clamp(11px,3vw,16px)/1 "Bangers",sans-serif;letter-spacing:.09em;color:var(--label)}
-.sp-card::before{content:"";position:absolute;inset:6px;border:1px solid var(--edge);border-radius:5px;opacity:.65}
-.sp-card.s1{--edge:#d7ac53;--cover:radial-gradient(ellipse at 50% 45%,#f1e5c9,#a2b4ba);--label:#172b4b;top:18%}
-.sp-card.s1 img{object-fit:cover;top:10%;height:80%}
-.sp-card.s2{--edge:#b59145;--cover:repeating-linear-gradient(-20deg,#503768 0 12px,#49305f 12px 24px);--label:#fff0c3}
-.sp-card.s3{--edge:#bc964b;--cover:#172b3c;--label:#f1e5c9;top:2%}
-.sp-card.s3::after{content:"";position:absolute;inset:0;border-left:6px dotted #bc964b;border-right:6px dotted #bc964b;pointer-events:none}
-.sp-card.s3 img{filter:sepia(1) saturate(.35) drop-shadow(0 3px 1px rgba(0,0,0,.2))}
-.sp-card.s4{--edge:#171513;--cover:repeating-linear-gradient(#f1e5c9 0 16px,#c8baa5 16px 17px);--label:#a62924;border-top:8px solid #c5362a}
-.sp-card.s5{--edge:#b9342d;--cover:repeating-conic-gradient(from 8deg at 50% 48%,#e3b23c 0 14deg,#172b4b 14deg 28deg);--label:#fff0c3}
-.sp-card.s5 b{background:#172b4b;padding:4px 0;bottom:3%}
+.sp-card{position:absolute;top:8%;left:var(--left);width:32%;aspect-ratio:2/3;transform:translateX(-50%) rotate(var(--angle));animation:sp-deal .65s cubic-bezier(.22,.8,.2,1) both;animation-delay:var(--delay);z-index:var(--z)}
+/* real cards from the game (pictures made by tools/splash_cards.js, since the splash shows before the game's scripts run) */
+.sp-card img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 10px 14px rgba(0,0,0,.5))}
+.sp-card.mid{top:0;width:37%}   /* the front card is a little bigger */
 .sp-motto{margin:0;color:#f1e5c9;font:400 clamp(20px,5.5vw,28px)/1.15 "Bangers",sans-serif;letter-spacing:.065em}
 .sp-loading{width:min(68%,290px)}
 .sp-bar{height:6px;border-radius:9px;background:#393229;overflow:hidden}
@@ -1373,11 +1381,11 @@ html.cq-reduce-motion .sp-card{animation:none}
 <div id="splash" role="status" aria-label="Loading Becoming a Clerk"><div class="sp-frame">
   <div class="cq-brand cq-brand-start"><img class="cq-brand-mark" src="art/brand_deck.webp" alt=""><h1 class="cq-brand-name">BECOMING <span>A CLERK</span></h1></div>
   <div class="sp-fan" aria-hidden="true">
-    <div class="sp-card s2" style="--left:18%;--angle:-17deg;--z:1;--delay:.02s"><img src="art/character_interest_1.webp" alt=""><b>SERIES 2</b></div>
-    <div class="sp-card s3" style="--left:34%;--angle:-8deg;--z:2;--delay:.08s"><img src="art/character_eightback_1.webp" alt=""><b>SERIES 3</b></div>
-    <div class="sp-card s5" style="--left:82%;--angle:17deg;--z:1;--delay:.14s"><img src="art/series5_offense-oracle.webp" alt=""><b>SERIES 5</b></div>
-    <div class="sp-card s4" style="--left:66%;--angle:8deg;--z:2;--delay:.2s"><img src="art/series4_case-starter.webp" alt=""><b>SERIES 4</b></div>
-    <div class="sp-card s1" style="--left:50%;--angle:-2deg;--z:3;--delay:.26s"><img src="art/gavel_1.webp" alt=""><b>SERIES 1</b></div>
+    <div class="sp-card" style="--left:18%;--angle:-17deg;--z:1;--delay:.02s"><img src="art/splash_card_s2.webp" alt=""></div>
+    <div class="sp-card" style="--left:34%;--angle:-8deg;--z:2;--delay:.08s"><img src="art/splash_card_s3.webp" alt=""></div>
+    <div class="sp-card" style="--left:82%;--angle:17deg;--z:1;--delay:.14s"><img src="art/splash_card_s5.webp" alt=""></div>
+    <div class="sp-card" style="--left:66%;--angle:8deg;--z:2;--delay:.2s"><img src="art/splash_card_s4.webp" alt=""></div>
+    <div class="sp-card mid" style="--left:50%;--angle:-2deg;--z:3;--delay:.26s"><img src="art/splash_card_s1.webp" alt=""></div>
   </div>
   <p class="sp-motto">Study for the New York court clerk exam.</p>
   <div class="sp-loading"><div class="sp-bar"><i></i></div><p class="sp-cap">Getting your deck ready…</p></div>
@@ -1410,7 +1418,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="exam-questions.js?v=79574fc7"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="packfield.js?v=b72b00a2"></script>
-<script src="sticker3d.js?v=c9a6a6ca"></script>
+<script src="sticker3d.js?v=90437e9d"></script>
 <script src="questions.js?v=65ed0ce9"></script>
 <script src="flair.js?v=be54d585"></script>
 <script>window.ART_MANIFEST = {"series4_case-starter": {"1": "art/series4_case-starter.webp"}, "s4_case_starter": {"1": "art/series4_case-starter.webp"}, "series4_clock-dodger": {"1": "art/series4_clock-dodger.webp"}, "s4_clock_dodger": {"1": "art/series4_clock-dodger.webp"}, "series4_exam-duo": {"1": "art/series4_exam-duo.webp"}, "s4_exam_duo": {"1": "art/series4_exam-duo.webp"}, "series4_jurisdiction-jet": {"1": "art/series4_jurisdiction-jet.webp"}, "s4_jurisdiction_jet": {"1": "art/series4_jurisdiction-jet.webp"}, "series4_jury-juggler": {"1": "art/series4_jury-juggler.webp"}, "s4_jury_juggler": {"1": "art/series4_jury-juggler.webp"}, "series4_note-ninja": {"1": "art/series4_note-ninja.webp"}, "s4_note_ninja": {"1": "art/series4_note-ninja.webp"}, "series4_plea-piper": {"1": "art/series4_plea-piper.webp"}, "s4_plea_piper": {"1": "art/series4_plea-piper.webp"}, "series4_proof-polly": {"1": "art/series4_proof-polly.webp"}, "s4_proof_polly": {"1": "art/series4_proof-polly.webp"}, "series4_sentence-sprint": {"1": "art/series4_sentence-sprint.webp"}, "s4_sentence_sprint": {"1": "art/series4_sentence-sprint.webp"}, "series4_trial-track": {"1": "art/series4_trial-track.webp"}, "s4_trial_track": {"1": "art/series4_trial-track.webp"}, "series4_verdict-vex": {"1": "art/series4_verdict-vex.webp"}, "s4_verdict_vex": {"1": "art/series4_verdict-vex.webp"}, "series4_warrant-walt": {"1": "art/series4_warrant-walt.webp"}, "s4_warrant_walt": {"1": "art/series4_warrant-walt.webp"}, "series5_captain-classify": {"1": "art/series5_captain-classify.webp"}, "s5_captain_classify": {"1": "art/series5_captain-classify.webp"}, "series5_class-shift": {"1": "art/series5_class-shift.webp"}, "s5_class_shift": {"1": "art/series5_class-shift.webp"}, "series5_double-gain": {"1": "art/series5_double-gain.webp"}, "s5_double_gain": {"1": "art/series5_double-gain.webp"}, "series5_felony-titan": {"1": "art/series5_felony-titan.webp"}, "s5_felony_titan": {"1": "art/series5_felony-titan.webp"}, "series5_minor-mischief": {"1": "art/series5_minor-mischief.webp"}, "s5_minor_mischief": {"1": "art/series5_minor-mischief.webp"}, "series5_offense-oracle": {"1": "art/series5_offense-oracle.webp"}, "s5_offense_oracle": {"1": "art/series5_offense-oracle.webp"}, "series5_split-verdict": {"1": "art/series5_split-verdict.webp"}, "s5_split_verdict": {"1": "art/series5_split-verdict.webp"}, "series5_the-aces": {"1": "art/series5_the-aces.webp"}, "s5_the_aces": {"1": "art/series5_the-aces.webp"}, "series5_the-fine-collector": {"1": "art/series5_the-fine-collector.webp"}, "s5_the_fine_collector": {"1": "art/series5_the-fine-collector.webp"}, "series5_the-many": {"1": "art/series5_the-many.webp"}, "s5_the_many": {"1": "art/series5_the-many.webp"}, "series5_triple-take": {"1": "art/series5_triple-take.webp"}, "s5_triple_take": {"1": "art/series5_triple-take.webp"}, "series5_vault-voltage": {"1": "art/series5_vault-voltage.webp"}, "s5_vault_voltage": {"1": "art/series5_vault-voltage.webp"}, "amendonce": {"1": "art/amendonce_1.webp"}, "character_acd": {"1": "art/character_acd_1.webp"}, "character_adjournment": {"1": "art/character_adjournment_1.webp"}, "character_affidavit": {"1": "art/character_affidavit_1.webp"}, "character_appeal30": {"1": "art/character_appeal30_1.webp"}, "character_bail": {"1": "art/character_bail_1.webp"}, "character_calendarcall": {"1": "art/character_calendarcall_1.webp"}, "character_eightback": {"1": "art/character_eightback_1.webp"}, "character_freeze": {"1": "art/character_freeze_1.webp"}, "character_interest": {"1": "art/character_interest_1.webp"}, "character_judgment": {"1": "art/character_judgment_1.webp"}, "character_jurywaiver": {"1": "art/character_jurywaiver_1.webp"}, "character_lawyers_file_motions_v2": {"1": "art/character_lawyers_file_motions_v2_1.webp"}, "character_military": {"1": "art/character_military_1.webp"}, "character_motion": {"1": "art/character_motion_1.webp"}, "character_newtrial": {"1": "art/character_newtrial_1.webp"}, "character_quash": {"1": "art/character_quash_1.webp"}, "character_reargue": {"1": "art/character_reargue_1.webp"}, "character_renew": {"1": "art/character_renew_1.webp"}, "character_schoolnotice": {"1": "art/character_schoolnotice_1.webp"}, "character_silly_clerks_drink_mocha_v2": {"1": "art/character_silly_clerks_drink_mocha_v2_1.webp"}, "character_sj120": {"1": "art/character_sj120_1.webp"}, "character_summons": {"1": "art/character_summons_1.webp"}, "character_undodefault": {"1": "art/character_undodefault_1.webp"}, "childvoice": {"1": "art/childvoice_1.webp"}, "clock6090": {"1": "art/clock6090_1.webp"}, "custodyornot": {"1": "art/custodyornot_1.webp"}, "eightdays": {"1": "art/eightdays_1.webp"}, "followpetitioner": {"1": "art/followpetitioner_1.webp"}, "gavel": {"1": "art/gavel_1.webp"}, "missingfile": {"1": "art/missingfile_1.webp"}, "paperjam": {"1": "art/paperjam_1.webp"}, "sealed": {"1": "art/sealed_1.webp"}, "summonsvssubpoena": {"1": "art/summonsvssubpoena_1.webp"}, "whosigns": {"1": "art/whosigns_1.webp", "2": "art/whosigns_2.webp"}, "ypsi": {"1": "art/ypsi_1.webp"}};</script>
@@ -4278,8 +4286,8 @@ function finishRip(btn){   // past 70%: finish the tear, then open
 }
 function sparkBurst(ov){
   if (prefersReducedMotion()) return;
-  for (let i = 0; i < 28; i++) {
-    const a = Math.PI * 2 * i / 28 + Math.random() * .3, r = 140 + Math.random() * 200, s = document.createElement('i');
+  for (let i = 0; i < 14; i++) {   // a light burst, kept small
+    const a = Math.PI * 2 * i / 14 + Math.random() * .4, r = 110 + Math.random() * 140, s = document.createElement('i');
     s.className = 'pk-spark'; s.style.setProperty('--dx', (Math.cos(a) * r).toFixed(0) + 'px'); s.style.setProperty('--dy', (Math.sin(a) * r).toFixed(0) + 'px');
     s.style.animationDelay = (Math.random() * .08).toFixed(2) + 's'; ov.appendChild(s); setTimeout(() => s.remove(), 1100);
   }
@@ -4308,7 +4316,7 @@ function sendPackCard(card, dir = 1){
 }
 function packSummary(ov){   // every card back in a fan, face up, with its NEW / DUPLICATE badge
   if (ov.classList.contains('all')) return;
-  ov.querySelectorAll('.pk-card').forEach(c => { c.classList.remove('top', 'gone', 'drag'); c.style.transform = ''; if (!c.classList.contains('flipped')) c.classList.add('flipped'); });
+  ov.querySelectorAll('.pk-card').forEach(c => { c.classList.remove('top', 'gone', 'drag'); c.style.transform = ''; if (!c.classList.contains('flipped')) c.classList.add('flipped'); packCardLight(c); });
   ov.classList.remove('stack'); ov.classList.add('sum', 'all');
   ov.querySelector('.pk-hint').textContent = ov._sticker ? 'Nice pull! And there\'s a bonus sticker inside.' : 'Nice pull! Tap a card to see it up close.';
 }
@@ -4502,6 +4510,16 @@ function zoomCard(html){
   z.innerHTML = `<div class="zoom-card">${html}</div><p>Tap anywhere to close</p>`;
   document.body.appendChild(z); lockScroll();
 }
+/* A good pull lights up instead of throwing confetti: a glow blooms behind the card and a shine sweeps its face once.
+   New cards glow warm, Memory Tricks purple, Certified silver with slow rays behind, Exhibit gold with stronger rays. */
+function packCardLight(card){
+  const b = card.querySelector('.pk-badge'), kind = !b ? '' : b.classList.contains('v-exhibit') ? 'exhibit' : b.classList.contains('v-certified') ? 'certified'
+    : b.classList.contains('trick') ? 'trick' : b.classList.contains('new') ? 'new' : '';
+  if (!kind || card.querySelector('.pk-halo')) return;
+  card.classList.add('lit', 'lit-' + kind);
+  card.insertAdjacentHTML('afterbegin', `<i class="pk-halo${kind === 'certified' || kind === 'exhibit' ? ' rays' : ''}"></i>`);
+  card.querySelector('.pk-front')?.insertAdjacentHTML('beforeend', '<i class="pk-shine"></i>');
+}
 function flipPackCard(card){
   if (card._dragged) { card._dragged = false; return; }   // a swipe just ended on this card
   const sov = card.closest('.pk.stack');
@@ -4510,14 +4528,14 @@ function flipPackCard(card){
     if (card.classList.contains('flipped')) return sendPackCard(card, 1);
     card.classList.add('flipped');
     if (card.classList.contains('rare')) { softFlash(); nativeFeedback('levelup'); }
-    if (card.querySelector('.pk-badge.new, .pk-badge.trick, .pk-badge.v-certified, .pk-badge.v-exhibit')) confetti(sov);
+    packCardLight(card);
     sov.querySelector('.pk-hint').textContent = sov.querySelectorAll('.pk-card:not(.gone)').length > 1 ? 'Swipe it away for the next card.' : 'Swipe it away to see your whole pull.';
     return;
   }
   if (card.classList.contains('flipped')) { if (card.closest('.pk.all, .pk.out')) zoomCard(card.querySelector('.pk-front').innerHTML); return; }
   card.classList.add('flipped');
   const ov = card.closest('.pk');
-  if (card.querySelector('.pk-badge.new, .pk-badge.trick')) confetti(ov);
+  packCardLight(card);
   if (!ov.querySelector('.pk-card:not(.flipped)')) { ov.classList.add('all'); ov.querySelector('.pk-hint').textContent = ov._sticker ? 'Nice pull! And there\'s a bonus sticker inside.' : 'Nice pull! Tap a card to see it up close.'; }
 }
 
