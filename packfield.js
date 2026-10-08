@@ -295,5 +295,7 @@
     };
   }
 
-  window.PackField = { mount };
+  // load three.js and the font ahead of time (the pack picker calls this), so the floor is ready when the pack opens
+  const preload = () => Pack3D.load().then(loadFont).catch(() => {});
+  window.PackField = { mount, preload };
 })();

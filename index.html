@@ -551,7 +551,10 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .pk-s5 .pk-pattern{opacity:.6;background:radial-gradient(circle,rgba(255,240,120,.8) 1.6px,transparent 2.4px) 0 0/12px 12px,repeating-conic-gradient(from 0deg at 50% 45%,rgba(255,80,60,.35) 0 6deg,transparent 6deg 18deg)}
 .pk-vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 35%,rgba(0,0,0,.75) 100%)}
 /* the letter floor (packfield.js) fades in over the blurred art and takes the place of the pattern and rays */
-.pk-field{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;opacity:0;transition:opacity .9s}
+.pk-field{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;opacity:0;transition:opacity .45s}
+/* while the floor loads, the room is the floor's own dark colour (not the old blurred art), so it fades in without a flash */
+.pk.field-wait,.pk.has-field{background:color-mix(in srgb,#0d0b09 88%,var(--tint))}
+.pk.field-wait .pk-bg,.pk.field-wait .pk-pattern,.pk.field-wait .pk-rays,.pk.has-field .pk-bg{opacity:0}
 .pk-field.on{opacity:1}
 .pk.has-field .pk-pattern,.pk.has-field .pk-rays{opacity:0;transition:opacity .9s}
 .pk.has-field .pk-glow{mix-blend-mode:screen}
@@ -1401,7 +1404,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="exam.js?v=5c38761d"></script>
 <script src="exam-questions.js?v=79574fc7"></script>
 <script src="pack3d.js?v=175b3691"></script>
-<script src="packfield.js?v=701f47bd"></script>
+<script src="packfield.js?v=b72b00a2"></script>
 <script src="sticker3d.js?v=c9a6a6ca"></script>
 <script src="questions.js?v=65ed0ce9"></script>
 <script src="flair.js?v=be54d585"></script>
@@ -4371,6 +4374,7 @@ function choosePack(){
       <img src="${seriesPackArt(d.n)}" alt=""><span>Series ${d.n}</span></button>`).join('')}</div>
     <button class="sheet-cancel pkc-later" data-act="pkc-close">Not now</button>`;
   document.body.appendChild(ov); lockScroll();
+  window.PackField?.preload();   // get the letter floor ready while you choose
 }
 /* Handle a pack before you pick it: it tilts toward your finger and a shine follows (like turning a real pack in the light) */
 document.addEventListener('pointermove', e => {
@@ -4428,7 +4432,12 @@ function openPack(opts = {}){
   if (opts.chosen) { pk.classList.add('landing'); setTimeout(() => pk.classList.remove('landing'), 600); }
   packTilt(pk); packCutEdges(pk, packImg);
   // the room: a floor of raised letters (packfield.js); until it's ready, or if it can't load, the blurred pack art stays
-  if (window.PackField) PackField.mount(ov, { tint:PACK_TINT[packSeries] || '#e3b23c', words:packFieldWords(packSeries) }).then(f => { ov._field = f; ov.classList.add('has-field'); if (pk._done) f.tear(); }).catch(() => {});
+  if (window.PackField) {
+    ov.classList.add('field-wait');
+    PackField.mount(ov, { tint:PACK_TINT[packSeries] || '#e3b23c', words:packFieldWords(packSeries) })
+      .then(f => { ov._field = f; ov.classList.add('has-field'); ov.classList.remove('field-wait'); if (pk._done) f.tear(); })
+      .catch(() => ov.classList.remove('field-wait'));   // no 3D: bring back the blurred pack art
+  }
   // the 3D sticker curl (pack3d.js); until it's ready, or if it can't load, the flat rip below is used
   if (window.Pack3D) Pack3D.attach(pk, packImg, line, TEAR_Y).then(ctl => { if (!pk._p && !pk._done) pk._3d = ctl; else ctl.destroy(); }).catch(() => {});
 }
