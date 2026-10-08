@@ -4308,7 +4308,9 @@ function packSummary(ov){   // every card back in a fan, face up, with its NEW /
 }
 document.addEventListener('pointerdown', e => {
   const btn = e.target.closest('.pk-pack'); if (!btn || btn._done) return;
-  btn._drag = { x:e.clientX, y:e.clientY, w:btn.getBoundingClientRect().width, id:e.pointerId, base:btn._p || 0, moved:false };
+  const r = btn.getBoundingClientRect();
+  if ((e.clientY - r.top) / r.height > TEAR_Y / 100 + .14) return;   // the cut starts only near the top of the pack, around the glowing line
+  btn._drag = { x:e.clientX, y:e.clientY, w:r.width, id:e.pointerId, base:btn._p || 0, moved:false };
   btn._swiped = false;
   try { btn.setPointerCapture(e.pointerId); } catch (_) {}
 });
@@ -4441,9 +4443,9 @@ function openPack(opts = {}){
   // the 3D sticker curl (pack3d.js); until it's ready, or if it can't load, the flat rip below is used
   if (window.Pack3D) Pack3D.attach(pk, packImg, line, TEAR_Y).then(ctl => { if (!pk._p && !pk._done) pk._3d = ctl; else ctl.destroy(); }).catch(() => {});
 }
-function tearPack(btn){   // a tap: finishes a half-done rip, or tears the strip off for you
+function tearPack(btn){   // Open for me (or Enter on the pack): tears the strip off for you
   if (btn._swiped || btn._done) return;
-  finishRip(btn);   // a tap tears the whole strip off in one smooth pull
+  finishRip(btn);   // the whole strip comes off in one smooth pull
 }
 /* The pack in your hand (after the holo cards at poke-holo.simey.me): it sways slowly on its own; touch it and it
    turns toward your finger. A spring moves it, so it feels heavy instead of twitchy, and the foil shine follows. */
@@ -4825,7 +4827,7 @@ document.addEventListener('click', e => {
       refresh(); break;
     }
     case 'pack-open': closeSheet(true); openPack(); break;
-    case 'pk-tear': tearPack(t); break;
+    case 'pk-tear': if (!e.detail) tearPack(t); break;   // only the keyboard opens it with a press; a finger has to swipe the top (or use Open for me)
     case 'pk-auto': { const ov = t.closest('.pk'), pkb = ov && ov.querySelector('.pk-pack'); if (pkb) { pkb._swiped = false; tearPack(pkb); } t.hidden = true; break; }
     case 'pk-flip': flipPackCard(t); break;
     case 'pkc-pick': pickPack(t); break;
