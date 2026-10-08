@@ -310,6 +310,10 @@ Object.assign(ADMIN_SCREENS, {
       return { title:'Packs & Rewards', body:`<p class="st-note">Static pull fixtures use temporary card states and never spend, award, or save anything.</p>
         <div class="adm-pack"><img src="${nextPackArt()}" alt="Current pack wrapper"><b>Pack presentation</b><small>Wrapper, card back, new card, duplicate, and Memory Trick labels</small></div>
         <div class="adm-pulls">${pulls.map((c,i) => `<div>${i===0?`<img class="adm-back" src="${backSrc()}" alt="Card back">`:admCardPreview(c,Math.min(2,maxL(c)),'normal')}<small>${['Card back / duplicate','New card','Memory Trick'][i]}</small></div>`).join('')}</div>
+        <div class="sec-h"><span>Open a test pack</span></div>
+        <p class="st-note">The real pack opening with sample cards from that series. Nothing is spent, awarded or saved.</p>
+        <div class="adm-packs-open">${SERIES_DEFS.map(d => `<button data-act="adm-pack-open" data-v="${d.n}"><img src="${seriesPackArt(d.n)}" alt=""><small>Series ${d.n}</small></button>`).join('')}</div>
+        <div class="list" style="margin-top:12px"><button class="row" data-act="adm-pack-add"><span class="th emo gi">${ICO('pack')}</span><span class="row-main"><b>Add 5 real packs</b><small>To your own account, to try Pick Your Pack (${S.packs} waiting now)</small></span></button></div>
         <div class="sec-h"><span>Reward cards</span></div><div class="list"><button class="row" data-act="push" data-s="rewardpreview"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Landmark cards (Hot Docket)</b><small>Filed, Certified, backs, and one-chance quiz previews</small></span>${chev}</button></div>` };
     });
   },
@@ -337,6 +341,11 @@ document.addEventListener('click', e => {
     case 'adm-evo-peel': { const c = byId(t.dataset.id); showEvolvePeel(c, null, { preview:true, st:admFixture(c, 4, 'normal') }); break; }
     case 'adm-ver': { const en = topEntry(); en.p = { ...en.p, ver:t.dataset.v }; refresh(); break; }
     case 'adm-reroll': refresh(); break;
+    case 'adm-pack-open': {   // sample pulls: a new card, a duplicate, and a Certified one last, like a real pack's order
+      const n = +t.dataset.v, pool = shuffle(CARDS.filter(seriesDef(n).test));
+      const pulls = pool.slice(0, 3).map((c, i) => ({ c, isNew:i !== 1, ver:i === 2 ? 'certified' : null, newVer:i === 2, coins:i === 1 ? 5 : 0, st:admFixture(c, 1, 'normal', i === 2 ? 'certified' : 'filed') }));
+      pulls.series = n; openPack({ pulls, series:n, preview:true, chosen:true }); break; }
+    case 'adm-pack-add': if (ADM.is) { S.packs += 5; save(); refresh(); toast('5 packs added', 'pack'); } break;
     case 'adm-quiz-answer': ADM.quizChoice = +t.dataset.i; refresh(); break;
     case 'adm-quiz-reset': ADM.quizChoice = null; refresh(); break;
     case 'adm-screen': { const v = t.dataset.v;
@@ -354,6 +363,7 @@ document.addEventListener('click', e => {
 const ADMIN_CSS = `
 .adm-row .row-main small{white-space:normal;overflow:visible;text-overflow:clip} .adm-row .row-main small+small{margin-top:1px;opacity:.8}
 .adm-count{font:18px "Patrick Hand";color:var(--sub)}
+.adm-packs-open{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.adm-packs-open button{padding:6px 2px;border:0;border-radius:12px;background:var(--bg2);color:var(--sub);font:13px var(--ui)}.adm-packs-open img{display:block;width:100%;aspect-ratio:640/975;object-fit:contain;margin-bottom:4px}
 .adm-lvs{display:flex;gap:6px;overflow-x:auto;margin:0 0 12px;scrollbar-width:none} .adm-lvs::-webkit-scrollbar{display:none}
 .adm-lvs button{flex:none;min-height:36px;padding:0 14px;border:0;border-radius:18px;background:var(--bg2);color:var(--sub);font:18px "Patrick Hand"}
 .adm-lvs button.on{background:var(--mustard);color:var(--ink)}

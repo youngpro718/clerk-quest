@@ -511,7 +511,12 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .pk-pack:not(.ripping):not(.torn) .pk-glint{opacity:1}
 @keyframes pkglint{0%{left:0}45%,100%{left:122%}}
 @media (prefers-reduced-motion:reduce){.pk-glint{display:none}}
-.pk-pack.torn .pk-body{transition:transform .8s .5s ease-in,opacity .5s .85s;transform:translateY(80%);opacity:0}
+/* the cards come out: the opened wrapper slides down and off the screen, and the card stack (behind it) shows from
+   its cut edge as it goes, with a little lift, like pulling the cards up out of the pack. No fade, so no ghost. */
+.pk-pack.torn .pk-body,.pk-pack.torn .pk-label{transition:transform 1.1s .18s cubic-bezier(.55,0,.3,1);transform:translateY(210%) rotate(4deg)}
+.pk.emerge .pk-card{transition:none !important;opacity:1 !important}
+.pk.emerge .pk-cards{animation:pkemerge 1.25s both}
+@keyframes pkemerge{0%{transform:translateY(2%);animation-timing-function:cubic-bezier(.3,0,.4,1)}55%{transform:translateY(-5%);animation-timing-function:cubic-bezier(.4,0,.3,1)}100%{transform:none}}
 .pk-cards{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:clamp(8px,2.4vw,18px);z-index:2;pointer-events:none}
 .pk-card{position:relative;width:min(29vw,170px,22vh);aspect-ratio:1024/1536;border:0;background:none;padding:0;perspective:1000px;opacity:0;transform:translateY(45%) scale(.45);
   transition:transform .7s cubic-bezier(.2,1.4,.4,1),opacity .4s;transition-delay:calc(.55s + var(--i) * .18s)}
@@ -1395,7 +1400,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="binder.js?v=dcc2617f"></script>
 <script src="onboarding.js?v=22f27a83"></script>
 <script src="account.js?v=5042effc"></script>
-<script src="admin.js?v=7325b086"></script>
+<script src="admin.js?v=049577e1"></script>
 <script src="evolve.js?v=b5f0e3a5"></script>
 <script src="stickers.js?v=70340509"></script>
 <script src="dockets.js?v=32fec8b7"></script>
@@ -4286,7 +4291,8 @@ function packTorn(btn){
   else btn.querySelector('.pk-flap').style.transform = '';   // the .torn rule flings it away
   btn.classList.toggle('from-r', btn._dir < 0); btn.classList.add('torn');
   nativeFeedback('packtear'); softFlash(); sparkBurst(ov); ov._field?.tear();
-  ov.classList.add('out', 'stack'); nextPackCard(ov);
+  ov.classList.add('out', 'stack', 'emerge'); nextPackCard(ov);
+  setTimeout(() => ov.classList.remove('emerge'), 1300);
 }
 /* One-at-a-time reveal: the top card flips on a tap, then a swipe (or another tap) sends it away */
 function nextPackCard(ov){
@@ -4394,14 +4400,15 @@ function openPack(opts = {}){
   if (!opts.pulls && S.packs <= 0) return;
   if (!opts.pulls && !opts.chosen && S.packsOpened > 0) return choosePack();
   if (!opts.pulls) S.packs--;
-  const first = S.packsOpened === 0; S.packsOpened++;
+  const pv = !!opts.preview;   // an admin test pack: sample cards, and nothing is spent, awarded or saved
+  const first = !pv && S.packsOpened === 0; if (!pv) S.packsOpened++;
   const pulls = opts.pulls || drawPack(opts.series || undefined);
   const rank = p => VERSIONS[p.ver || 'filed'].n * 2 + (p.isNew ? 1 : 0);
   pulls.sort((a, b) => rank(a) - rank(b));   // like a real booster: the best card is saved for last
-  const bonus = rollSticker();   // every pack can hold a bonus sticker, bought ones too
-  const coin = !first && Math.random() < 1 / 5;   // a Continuance: about 1 in 5 packs, bought ones too (never the first); reopens a missed Hot Docket
+  const bonus = pv ? null : rollSticker();   // every pack can hold a bonus sticker, bought ones too
+  const coin = !pv && !first && Math.random() < 1 / 5;   // a Continuance: about 1 in 5 packs, bought ones too (never the first); reopens a missed Hot Docket
   if (coin) S.continuances = (S.continuances || 0) + 1;
-  save();
+  if (!pv) save();
   const packImg = opts.img || (pulls.series ? seriesPackArt(pulls.series) : packArtFor(pulls.map(p => p.c)));
   const packSeries = Number(pulls.series || opts.series || 0);
   const packLabel = opts.label || '';
