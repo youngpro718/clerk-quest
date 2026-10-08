@@ -11,6 +11,9 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=deck-charcoal">
 <link rel="icon" type="image/png" href="favicon.png?v=deck-charcoal">
 <title>Becoming a Clerk</title>
+<!-- Becoming a Clerk. Copyright 2026 Jack Duchatelier. All rights reserved. No part of this app (code, artwork, characters, or original writing) may be copied, reused, or redistributed without written permission. -->
+<meta name="author" content="Jack Duchatelier">
+<meta name="copyright" content="© 2026 Jack Duchatelier. All rights reserved.">
 <meta name="description" content="Prepare for the New York court clerk exam with rule cards, lessons and practice questions.">
 <!-- Link previews (iMessage, Facebook, Slack, etc.). Previews need full web addresses. -->
 <meta property="og:type" content="website">
@@ -1075,6 +1078,7 @@ body{overflow:hidden;background:var(--bg)}
 .topbar .x{min-width:44px;min-height:44px;border-radius:22px;border:0;background:rgba(255,255,255,.09);color:var(--paper);font:600 18px var(--ui)}
 
 /* common building blocks */
+.own-note{margin:28px 8px 6px;text-align:center;font-size:12px;line-height:1.45;color:var(--muted,#9a907f);opacity:.8}
 .sec-h{display:flex;align-items:baseline;justify-content:space-between;margin:22px 2px 8px}
 .sec-h span{font-family:"Bangers";letter-spacing:.07em;font-size:19px;color:var(--paper)}
 .sec-h button{background:none;border:0;color:var(--mustard);font:16px var(--ui);min-height:36px}
@@ -1371,6 +1375,7 @@ html.cq-reduce-motion .mastered-burst.play{animation:none}
 .sp-bar i{display:block;height:100%;width:8%;border-radius:9px;background:#e3b23c;transition:width .4s ease}
 .sp-cap{margin:12px 0 0;font:16px/1.25 "Patrick Hand",system-ui,sans-serif;color:#c6bba5}
 #splash.out{opacity:0;pointer-events:none}
+.sp-own{margin:14px 0 0;text-align:center;font:11px/1.3 system-ui,-apple-system,sans-serif;color:rgba(246,231,200,.42)}
 @keyframes sp-deal{from{opacity:0;transform:translateX(-50%) translateY(24px) rotate(0deg) scale(.94)}to{opacity:1;transform:translateX(-50%) rotate(var(--angle)) scale(1)}}
 @media(max-height:640px){.sp-frame{gap:16px}.cq-brand-start .cq-brand-name{font-size:clamp(28px,8vw,40px)}.cq-brand-start .cq-brand-mark{width:84px;height:84px}.sp-fan{height:205px;width:min(100%,350px)}.sp-motto{font-size:20px}.sp-cap{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.sp-card{animation:none}#splash,.sp-bar i{transition:none}}
@@ -1389,6 +1394,7 @@ html.cq-reduce-motion .sp-card{animation:none}
   </div>
   <p class="sp-motto">Study for the New York court clerk exam.</p>
   <div class="sp-loading"><div class="sp-bar"><i></i></div><p class="sp-cap">Getting your deck ready…</p></div>
+  <p class="sp-own">© 2026 Jack Duchatelier. All rights reserved.</p>
 </div></div>
 <div id="shell"><div id="screens"></div><nav id="tabbar" aria-label="Main"></nav></div>
 <div id="app" hidden></div>
@@ -3680,7 +3686,8 @@ const SCREENS = {
       ${item(ICO('memory') + ' Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).', 'tricks')}
       ${item(ICO('series2') + ' Series', 'There are five series, each with its own art style and pack. A series pack holds cards from that series, and sometimes a trick card or a sticker. Collect every card in a series to stamp it COMPLETE.', 'series')}
       ${item(ICO('subject') + ' Official sources', 'Rule cards are built only from the rule text quoted in the NYS Unified Court System Court Clerk sample questions and cite their source. Other questions are sample content. Fact-check before relying on them.', 'sources')}
-      </div>` };
+      </div>
+      <p class="own-note">© 2026 Jack Duchatelier. All rights reserved.</p>` };
   },
 
   settings(){
@@ -3707,7 +3714,8 @@ const SCREENS = {
       </div>
       <div class="sec-h"><span>Data</span></div><div class="list">
         <button class="row danger" data-act="resetall"><span class="th emo gi">${ICO('warning')}</span><span class="row-main"><b>Reset all progress</b></span></button>
-      </div>` };
+      </div>
+      <p class="own-note">© 2026 Jack Duchatelier. All rights reserved.<br>Becoming a Clerk, its characters, artwork, and original writing may not be copied or reused without permission. Quoted law text belongs to the State of New York.</p>` };
   },
 
   glows(){
