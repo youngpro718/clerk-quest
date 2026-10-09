@@ -312,7 +312,8 @@ window.QBANK = {
    ],
    "a": "It goes to the foot of the next calendar",
    "h": "Progression has a fixed direction.",
-   "w": "Uniform Rule 202.22(b)."
+   "w": "Uniform Rule 202.22(b).",
+   "ex": false
   },
   {
    "lv": 5,
@@ -1148,7 +1149,8 @@ window.QBANK = {
    ],
    "a": "The court may direct otherwise",
    "h": "Read the \"unless\" clause.",
-   "w": "Uniform Rule 202.8(e)(1): such stipulation shall be effective unless the court otherwise directs."
+   "w": "Uniform Rule 202.8(e)(1): such stipulation shall be effective unless the court otherwise directs.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -1187,7 +1189,8 @@ window.QBANK = {
    ],
    "a": "It is late. It was due by the return date",
    "h": "When is the deadline?",
-   "w": "Uniform Rule 202.8(e)(2): the request is submitted on or before the return date."
+   "w": "Uniform Rule 202.8(e)(2): the request is submitted on or before the return date.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -1581,7 +1584,8 @@ window.QBANK = {
    ],
    "a": "A summons",
    "h": "In means a party.",
-   "w": "IN the case: filing the summons starts the action against the defendant (CPLR 304(a))."
+   "w": "IN the case: filing the summons starts the action against the defendant (CPLR 304(a)).",
+   "ex": false
   },
   {
    "lv": 1,
@@ -1594,7 +1598,8 @@ window.QBANK = {
    ],
    "a": "A subpoena",
    "h": "Needed means a witness or records.",
-   "w": "NEEDED for the case: a subpoena requires testimony, and a subpoena duces tecum requires records (CPLR 2301)."
+   "w": "NEEDED for the case: a subpoena requires testimony, and a subpoena duces tecum requires records (CPLR 2301).",
+   "ex": false
   },
   {
    "lv": 1,
@@ -1852,7 +1857,8 @@ window.QBANK = {
    ],
    "a": "A party from a person or record needed",
    "h": "Who is in the case, and who is needed for it.",
-   "w": "IN: the party sued, by summons (CPLR 304(a)). NEEDED: a person or records, by subpoena (2301)."
+   "w": "IN: the party sued, by summons (CPLR 304(a)). NEEDED: a person or records, by subpoena (2301).",
+   "ex": false
   },
   {
    "lv": 5,
@@ -1917,7 +1923,8 @@ window.QBANK = {
    ],
    "a": "Court",
    "h": "The court signs its own summons.",
-   "w": "Signed by a judge or by the clerk of the court."
+   "w": "Signed by a judge or by the clerk of the court.",
+   "ex": false
   },
   {
    "lv": 1,
@@ -2086,7 +2093,8 @@ window.QBANK = {
    ],
    "a": "When the hearing began",
    "h": "The second clock starts with the hearing.",
-   "w": "Concluded within 90 days of its commencement."
+   "w": "Concluded within 90 days of its commencement.",
+   "ex": false
   },
   {
    "lv": 2,
@@ -2282,7 +2290,8 @@ window.QBANK = {
    ],
    "a": "Sentence",
    "h": "The trick's last word.",
-   "w": "The YO determination is made at the time of pronouncing sentence."
+   "w": "The YO determination is made at the time of pronouncing sentence.",
+   "ex": false
   },
   {
    "lv": 2,
@@ -2386,7 +2395,8 @@ window.QBANK = {
    ],
    "a": "The court orders a PSI",
    "h": "Investigate first.",
-   "w": "Upon conviction, the court must order a pre-sentence investigation."
+   "w": "Upon conviction, the court must order a pre-sentence investigation.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -2399,7 +2409,8 @@ window.QBANK = {
    ],
    "a": "The written PSI report",
    "h": "The report is the basis.",
-   "w": "After receipt of a written report of the investigation, the court must determine whether the youth is a YO."
+   "w": "After receipt of a written report of the investigation, the court must determine whether the youth is a YO.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -2465,7 +2476,8 @@ window.QBANK = {
    ],
    "a": "Seven",
    "h": "Not \"about a week.\"",
-   "w": "At least eight days before the appearance."
+   "w": "At least eight days before the appearance.",
+   "ex": false
   },
   {
    "lv": 1,
@@ -2674,7 +2686,8 @@ window.QBANK = {
    ],
    "a": "Seal",
    "h": "The trick's last word.",
-   "w": "The record shall be sealed."
+   "w": "The record shall be sealed.",
+   "ex": false
   },
   {
    "lv": 2,
@@ -2778,7 +2791,8 @@ window.QBANK = {
    ],
    "a": "The clerk waits 30 days to notify",
    "h": "The clerk doesn't wait.",
-   "w": "The clerk shall immediately notify."
+   "w": "The clerk shall immediately notify.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -2857,7 +2871,8 @@ window.QBANK = {
    ],
    "a": "Live",
    "h": "The trick's last word.",
-   "w": "The county in which the petitioner resides."
+   "w": "The county in which the petitioner resides.",
+   "ex": false
   },
   {
    "lv": 1,
@@ -2896,7 +2911,8 @@ window.QBANK = {
    ],
    "a": "To that city's police department",
    "h": "Follow where the petitioner lives now.",
-   "w": "If the petitioner resides within a city, with the police department of such city."
+   "w": "If the petitioner resides within a city, with the police department of such city.",
+   "ex": false
   },
   {
    "lv": 2,
@@ -2961,7 +2977,8 @@ window.QBANK = {
    ],
    "a": "It must follow the petitioner's residence",
    "h": "Wrong person's address.",
-   "w": "The county or city where the petitioner resides."
+   "w": "The county or city where the petitioner resides.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -3000,7 +3017,8 @@ window.QBANK = {
    ],
    "a": "The petitioner",
    "h": "The person who asked.",
-   "w": "Filed where the petitioner resides."
+   "w": "Filed where the petitioner resides.",
+   "ex": false
   }
  ],
  "amendonce": [
@@ -3028,7 +3046,8 @@ window.QBANK = {
    ],
    "a": "20 days",
    "h": "Twenty, not thirty.",
-   "w": "Within twenty days after its service."
+   "w": "Within twenty days after its service.",
+   "ex": false
   },
   {
    "lv": 1,
@@ -3053,7 +3072,8 @@ window.QBANK = {
    ],
    "a": "Three",
    "h": "Count them.",
-   "w": "Three windows."
+   "w": "Three windows.",
+   "ex": false
   },
   {
    "lv": 1,
@@ -3066,7 +3086,8 @@ window.QBANK = {
    ],
    "a": "Thirty",
    "h": "Both numbers are twenty.",
-   "w": "Twenty days, not thirty."
+   "w": "Twenty days, not thirty.",
+   "ex": false
   },
   {
    "lv": 2,
@@ -3079,7 +3100,8 @@ window.QBANK = {
    ],
    "a": "30 days after their response",
    "h": "Spot the wrong number.",
-   "w": "Twenty days after service, before the period for responding expires, or twenty days after a responding pleading."
+   "w": "Twenty days after service, before the period for responding expires, or twenty days after a responding pleading.",
+   "ex": false
   },
   {
    "lv": 2,
@@ -3092,7 +3114,8 @@ window.QBANK = {
    ],
    "a": "Service of a responding pleading",
    "h": "After their response.",
-   "w": "Within twenty days after service of a pleading responding to it."
+   "w": "Within twenty days after service of a pleading responding to it.",
+   "ex": false
   },
   {
    "lv": 2,
@@ -3131,7 +3154,8 @@ window.QBANK = {
    ],
    "a": "Before their time to respond expires",
    "h": "It is tied to their deadline.",
-   "w": "At any time before the period for responding to it expires."
+   "w": "At any time before the period for responding to it expires.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -3144,7 +3168,8 @@ window.QBANK = {
    ],
    "a": "January 21",
    "h": "Count 20 days.",
-   "w": "Within twenty days after its service. January 1 plus 20 days is January 21."
+   "w": "Within twenty days after its service. January 1 plus 20 days is January 21.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -3157,7 +3182,8 @@ window.QBANK = {
    ],
    "a": "March 2",
    "h": "Twenty days from the response.",
-   "w": "Within twenty days after service of a pleading responding to it. February 10 plus 20 days is March 2."
+   "w": "Within twenty days after service of a pleading responding to it. February 10 plus 20 days is March 2.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -3183,7 +3209,8 @@ window.QBANK = {
    ],
    "a": "No. Only one amendment without leave",
    "h": "Three windows, one fix.",
-   "w": "A party may amend once without leave of court within any of the three windows."
+   "w": "A party may amend once without leave of court within any of the three windows.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -3196,7 +3223,8 @@ window.QBANK = {
    ],
    "a": "Before their time to respond expires",
    "h": "No day count.",
-   "w": "At any time before the period for responding to it expires."
+   "w": "At any time before the period for responding to it expires.",
+   "ex": false
   }
  ],
  "childvoice": [
@@ -3745,7 +3773,8 @@ window.QBANK = {
    ],
    "a": "The rule says it must be in writing",
    "h": "One word makes it wrong.",
-   "w": "\"Such waiver must be in writing.\""
+   "w": "\"Such waiver must be in writing.\"",
+   "ex": false
   },
   {
    "lv": 3,
@@ -3784,7 +3813,8 @@ window.QBANK = {
    ],
    "a": "Superior court where the indictment is pending",
    "h": "Look at the context line.",
-   "w": "The card's context: a defendant waiving a jury trial in the superior court where the indictment is pending."
+   "w": "The card's context: a defendant waiving a jury trial in the superior court where the indictment is pending.",
+   "ex": false
   }
  ],
  "interest": [
@@ -3837,7 +3867,8 @@ window.QBANK = {
    ],
    "a": "Order, paired with docketing",
    "h": "Judgment-Entry, Order-Docketing.",
-   "w": "A judgment starts earning interest at entry; an order to pay starts at docketing as a judgment (CPLR 5003)."
+   "w": "A judgment starts earning interest at entry; an order to pay starts at docketing as a judgment (CPLR 5003).",
+   "ex": false
   },
   {
    "lv": 1,
@@ -4137,7 +4168,8 @@ window.QBANK = {
    ],
    "a": "Promptly",
    "h": "It is the timing word.",
-   "w": "Shall be made promptly."
+   "w": "Shall be made promptly.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -4150,7 +4182,8 @@ window.QBANK = {
    ],
    "a": "Returns",
    "h": "It is the place rule.",
-   "w": "The court in which the subpoena is returnable."
+   "w": "The court in which the subpoena is returnable.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -4307,7 +4340,8 @@ window.QBANK = {
    ],
    "a": "A party's motion during trial",
    "h": "Trigger, motion, outcome.",
-   "w": "During the trial, on motion of any party, the court may order a continuance or new trial."
+   "w": "During the trial, on motion of any party, the court may order a continuance or new trial.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -4372,7 +4406,8 @@ window.QBANK = {
    ],
    "a": "\"At any time during the trial ... any party\"",
    "h": "The trick quotes the rule.",
-   "w": "At any time during the trial, on motion of any party."
+   "w": "At any time during the trial, on motion of any party.",
+   "ex": false
   }
  ],
  "schoolnotice": [
@@ -4634,7 +4669,8 @@ window.QBANK = {
    ],
    "a": "Card",
    "h": "Think of paying by plastic.",
-   "w": "Money paid with a credit card."
+   "w": "Money paid with a credit card.",
+   "ex": false
   },
   {
    "lv": 2,
@@ -4738,7 +4774,8 @@ window.QBANK = {
    ],
    "a": "A three-item list from the rule",
    "h": "Count the items.",
-   "w": "Three forms of bail."
+   "w": "Three forms of bail.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -4751,7 +4788,8 @@ window.QBANK = {
    ],
    "a": "No. Three forms. That's it.",
    "h": "The card says it plainly.",
-   "w": "CPL 500.10(9) defines bail as three listed forms."
+   "w": "CPL 500.10(9) defines bail as three listed forms.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -4934,7 +4972,8 @@ window.QBANK = {
    ],
    "a": "Conditions and the length of the term",
    "h": "Two things.",
-   "w": "Modify the conditions or extend or reduce the term."
+   "w": "Modify the conditions or extend or reduce the term.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -4947,7 +4986,8 @@ window.QBANK = {
    ],
    "a": "Certain Penal Law violations",
    "h": "The context line limits it.",
-   "w": "Context: a local criminal court, only remaining counts charge specified Penal Law violations, before a plea or trial."
+   "w": "Context: a local criminal court, only remaining counts charge specified Penal Law violations, before a plea or trial.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -5171,7 +5211,8 @@ window.QBANK = {
    ],
    "a": "Notice of motion and supporting affidavits",
    "h": "The movant's papers go first.",
-   "w": "A notice of motion and supporting affidavits are served at least eight days before the hearing."
+   "w": "A notice of motion and supporting affidavits are served at least eight days before the hearing.",
+   "ex": false
   },
   {
    "lv": 1,
@@ -5352,7 +5393,8 @@ window.QBANK = {
    ],
    "a": "8 and 2; with a demand: 7 and 1",
    "h": "Eight and two, then seven and one.",
-   "w": "8 days (moving), 2 days (answering); with a 16-day demand: answers 7 days, replies 1 day."
+   "w": "8 days (moving), 2 days (answering); with a 16-day demand: answers 7 days, replies 1 day.",
+   "ex": false
   }
  ],
  "reargue": [
@@ -5418,7 +5460,8 @@ window.QBANK = {
    ],
    "a": "You overlooked or misread something",
    "h": "Same facts, sharper argument.",
-   "w": "Based on matters allegedly overlooked or misapprehended."
+   "w": "Based on matters allegedly overlooked or misapprehended.",
+   "ex": false
   },
   {
    "lv": 2,
@@ -5613,7 +5656,8 @@ window.QBANK = {
    ],
    "a": "Late",
    "h": "The explanation is for the delay.",
-   "w": "Reasonable justification for the failure to present such facts on the prior motion."
+   "w": "Reasonable justification for the failure to present such facts on the prior motion.",
+   "ex": false
   },
   {
    "lv": 2,
@@ -5808,7 +5852,8 @@ window.QBANK = {
    ],
    "a": "120 days",
    "h": "The card title has the number.",
-   "w": "No later than one hundred twenty days after the filing of the note of issue."
+   "w": "No later than one hundred twenty days after the filing of the note of issue.",
+   "ex": false
   },
   {
    "lv": 2,
@@ -6711,7 +6756,8 @@ window.QBANK = {
    ],
    "a": "Ten",
    "h": "It is on the card.",
-   "w": "Within ten days after such service or within the usual time, whichever is longer."
+   "w": "Within ten days after such service or within the usual time, whichever is longer.",
+   "ex": false
   },
   {
    "lv": 5,
