@@ -13,7 +13,7 @@ const EXAM_HISTORY_MAX = 20;
 /* every multiple-choice question on every card with a bank (style 'study'), plus the exam-style set written the way the
    test writes it (exam-questions.js, style 'exam'); true/false and generated skill games are left out */
 const examQuestions = () => (typeof window !== 'undefined' && Array.isArray(window.CQ_EXAM_QUESTIONS)) ? window.CQ_EXAM_QUESTIONS : [];
-const examOk = q => q && q.type !== 'tf' && Array.isArray(q.c) && q.c.length >= 3 && q.c.includes(q.a);
+const examOk = q => q && q.type !== 'tf' && q.ex !== false && Array.isArray(q.c) && q.c.length >= 3 && q.c.includes(q.a);
 function examPool(){
   const out = [], cardOf = {};
   CARDS.forEach(c => {
