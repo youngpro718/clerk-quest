@@ -70,9 +70,25 @@ const EXAM_TOPIC = {
  "s5_concept_felony_titan": "Penal Law §§ 10.00, 55.05: felonies and felony classes",
  "s5_concept_the_aces": "Penal Law § 55.05: felony classes",
  "s5_concept_triple_take": "Penal Law § 80.00: fines for felonies",
- "s5_concept_vault_voltage": "Penal Law § 80.00: fines for felonies"
+ "s5_concept_vault_voltage": "Penal Law § 80.00: fines for felonies",
+ "joinder": "CPLR 1001, 1002, 1003: necessary and permissive joinder of parties",
+ "instruments": "CPL §§ 1.20, 100.10: information, complaint and indictment",
+ "petition": "CPLR 304, 401, 402, 403: the petition and the notice of petition"
 };
 const examTopic = it => it && it.style !== 'exam' ? (EXAM_TOPIC[it.cardId] || '') : '';
+/* Card questions sometimes open with a card-style label ("Exam format.", "WHAT TRIGGERS IT?", "FIND THE INCORRECT STATEMENT
+   about ..."). The exam drops the shouted questions and the "Exam format." tag, and turns a shouted instruction into a normal
+   sentence. Done at display time, like the subject line, so attempts already in progress read cleanly too. */
+function examText(it){
+  let t = String(it && it.q || '');
+  if (!it || it.style === 'exam') return t;
+  t = t.replace(/^Exam format[.:]\s*/i, '');
+  t = t.replace(/^([A-Z][A-Z0-9 ,'’-]{3,}\?)\s+(?=\S)/, '');   // "WHAT STARTS THE CLOCK? The 60-day ..." -> "The 60-day ..."
+  const calm = m => m.charAt(0) + m.slice(1).toLowerCase();
+  t = t.replace(/^[A-Z][A-Z'’-]+(?: [A-Z][A-Z'’-]+)*(?=\.)/, calm);           // "CASH BAIL. Is it ..." -> "Cash bail. Is it ..."
+  t = t.replace(/^(?:[A-Z][A-Z'’-]+ ){2,}[A-Z][A-Z'’-]+(?= [a-z])/, calm);   // "FIND THE INCORRECT STATEMENT about" -> "Find the incorrect statement about"
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}
 
 const examQuestions = () => (typeof window !== 'undefined' && Array.isArray(window.CQ_EXAM_QUESTIONS)) ? window.CQ_EXAM_QUESTIONS : [];
 const examOk = q => q && q.type !== 'tf' && q.ex !== false && Array.isArray(q.c) && q.c.length >= 3 && q.c.includes(q.a);
@@ -208,7 +224,7 @@ const EXAM_SCREENS = {
       ${typeof weakReportHTML === 'function' ? weakReportHTML(Weak.since(L.startedAt, 'exam'), { sys:true }) : ''}
       ${weak.length ? `<h3>Cards to review</h3><div class="exr-weak">${weak.map(c => `<div class="exr-wrow"><span>${esc(c.name)}</span>${readBtn(c)}</div>`).join('')}</div>` : ''}
       ${missed.length ? `<h3>Review your answers</h3>${missed.map(m => { const L = v => 'ABCDEF'[m.it.c.indexOf(v)] + '. ' + esc(v);
-          return `<details class="exr-q"><summary>${m.i + 1}. ${examTopic(m.it) ? `<span class="exr-topic">${esc(examTopic(m.it))}</span> ` : ''}${esc(m.it.q)}</summary>
+          return `<details class="exr-q"><summary>${m.i + 1}. ${examTopic(m.it) ? `<span class="exr-topic">${esc(examTopic(m.it))}</span> ` : ''}${esc(examText(m.it))}</summary>
           ${m.it.st ? `<ol class="exr-st">${m.it.st.map(t => `<li>${esc(t)}</li>`).join('')}</ol>` : ''}
           <p><em>Your answer:</em> ${m.ans === undefined ? 'No answer' : L(m.ans)}</p>
           <p class="exr-correct">The correct response is ${L(m.it.a)}</p>
@@ -260,7 +276,7 @@ function examRender(){
         aria-label="Question ${k + 1}${x.answers[k] !== undefined ? ', answered' : ', blank'}${x.flags[k] ? ', flagged' : ''}">${k + 1}</button>`).join('')}</div>
       <p class="ex-key"><span class="done"></span> answered <span class="flag"></span> flagged <span></span> blank</p>
       <button class="ex-primary" data-act="ex-submit-ask">Submit exam</button><button class="ex-secondary" data-act="ex-map">Back to the question</button></section>`;
-  else main = `<section class="ex-q"><p class="ex-num">${i + 1}.</p>${examTopic(it) ? `<p class="ex-topic">${esc(examTopic(it))}</p>` : ''}<p class="ex-text">${esc(it.q)}</p>
+  else main = `<section class="ex-q"><p class="ex-num">${i + 1}.</p>${examTopic(it) ? `<p class="ex-topic">${esc(examTopic(it))}</p>` : ''}<p class="ex-text">${esc(examText(it))}</p>
       ${it.st ? `<ol class="ex-st">${it.st.map(t => `<li>${esc(t)}</li>`).join('')}</ol>` : ''}
       <div class="ex-choices" role="radiogroup" aria-label="Answer choices">${it.c.map((c, k) => `<button class="ex-choice ${chosen === c ? 'on' : ''}" role="radio" aria-checked="${chosen === c}" aria-label="${'ABCDEF'[k]}: ${esc(c)}" data-act="ex-choose" data-k="${k}">
         <span class="ex-letter">${'ABCDEF'[k]}.</span><span class="ex-ctext">${esc(c)}</span></button>`).join('')}</div></section>`;

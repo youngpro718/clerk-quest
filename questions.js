@@ -326,7 +326,8 @@ window.QBANK = {
    ],
    "a": "Tuesday",
    "h": "Skip the weekend AND the holiday.",
-   "w": "After 4:30 PM means the next business day. Saturday and Sunday are not business days, and Monday is a holiday, so the stamp shows Tuesday."
+   "w": "After 4:30 PM means the next business day. Saturday and Sunday are not business days, and Monday is a holiday, so the stamp shows Tuesday.",
+   "ex": false
   },
   {
    "lv": 5,
@@ -339,7 +340,8 @@ window.QBANK = {
    ],
    "a": "Tuesday",
    "h": "Count back two business days from Thursday.",
-   "w": "Two business days before Thursday is Tuesday. Wednesday would be only one business day before."
+   "w": "Two business days before Thursday is Tuesday. Wednesday would be only one business day before.",
+   "ex": false
   },
   {
    "lv": 5,
@@ -352,7 +354,8 @@ window.QBANK = {
    ],
    "a": "$120",
    "h": "Only exhibits OVER 5 cost extra.",
-   "w": "2 motions × $45 = $90. The first motion has no extra exhibits. The second has 3 over the limit × $10 = $30. Total: $120."
+   "w": "2 motions × $45 = $90. The first motion has no extra exhibits. The second has 3 over the limit × $10 = $30. Total: $120.",
+   "ex": false
   },
   {
    "lv": 5,
@@ -365,7 +368,8 @@ window.QBANK = {
    ],
    "a": "C, A, B",
    "h": "Match each case to its rule number.",
-   "w": "C fits rule 1, A fits rule 2, B fits rule 3. So: C, A, B."
+   "w": "C fits rule 1, A fits rule 2, B fits rule 3. So: C, A, B.",
+   "ex": false
   },
   {
    "lv": 5,
@@ -378,7 +382,8 @@ window.QBANK = {
    ],
    "a": "C",
    "h": "Whose exhibit is it?",
-   "w": "Defendant's exhibits use letters. A and B are taken, so the next one is C."
+   "w": "Defendant's exhibits use letters. A and B are taken, so the next one is C.",
+   "ex": false
   }
  ],
  "summons": [
@@ -635,9 +640,9 @@ window.QBANK = {
     "Yes. A neighbor is a suitable person",
     "Yes, if a copy is also mailed",
     "No. Only a family member qualifies",
-    "No. It must be at Ray's home or workplace"
+    "No. It must be at the defendant's home or workplace"
    ],
-   "a": "No. It must be at Ray's home or workplace",
+   "a": "No. It must be at the defendant's home or workplace",
    "h": "Where matters as much as who.",
    "w": "CPLR 308(2): delivery is to a person of suitable age and discretion at the actual place of business, dwelling place or usual place of abode of the person to be served."
   },
@@ -1522,7 +1527,7 @@ window.QBANK = {
   },
   {
    "lv": 3,
-   "q": "Order with the no-payment direction is entered Sept 10. Which payment date breaks the 30-day rule?",
+   "q": "Under CPLR 5011, an order directing payment of damages to an incarcerated individual is entered Sept 10. Which payment date breaks the 30-day hold?",
    "c": [
     "October 11",
     "September 25",
@@ -1732,7 +1737,7 @@ window.QBANK = {
   },
   {
    "lv": 3,
-   "q": "Which claim about these two papers is FALSE?",
+   "q": "Which claim about a summons and a subpoena is FALSE?",
    "c": [
     "A subpoena starts the lawsuit",
     "A summons notifies a defendant",
@@ -1793,7 +1798,8 @@ window.QBANK = {
    ],
    "a": "What the case needs",
    "h": "Testimony or records.",
-   "w": "Testimony or records: a subpoena requires testimony, and a duces tecum requires papers (CPLR 2301)."
+   "w": "Testimony or records: a subpoena requires testimony, and a duces tecum requires papers (CPLR 2301).",
+   "ex": false
   },
   {
    "lv": 4,
@@ -2425,7 +2431,8 @@ window.QBANK = {
    ],
    "a": "Upon conviction",
    "h": "What triggers it?",
-   "w": "Upon conviction of an eligible youth."
+   "w": "Upon conviction of an eligible youth.",
+   "ex": false
   }
  ],
  "eightdays": [
@@ -2492,7 +2499,8 @@ window.QBANK = {
    ],
    "a": "The Family Court Act",
    "h": "Look at the section name: FCA.",
-   "w": "The card's context: Family Court Act Article 4, service of a summons and petition."
+   "w": "The card's context: Family Court Act Article 4, service of a summons and petition.",
+   "ex": false
   },
   {
    "lv": 2,
@@ -3970,7 +3978,7 @@ window.QBANK = {
     "A money judgment bears interest from entry",
     "Order interest starts when it is signed",
     "A docketed order bears interest from docketing",
-    "J goes with E, O goes with D"
+    "A money judgment's interest does not wait for docketing"
    ],
    "a": "Order interest starts when it is signed",
    "h": "One statement breaks the pairing.",
@@ -3991,7 +3999,7 @@ window.QBANK = {
   },
   {
    "lv": 3,
-   "q": "An order is docketed June 2. The party says interest ran from entry on May 28. Who is right?",
+   "q": "An order to pay money is docketed as a judgment June 2. The party says interest ran from entry on May 28. Is the party right?",
    "c": [
     "Yes. Entry controls orders too",
     "Yes, if entry came first",
@@ -4570,7 +4578,7 @@ window.QBANK = {
   },
   {
    "lv": 3,
-   "q": "Under 19 plus sentenced equals school is told. Which fact is NOT part of the trigger?",
+   "q": "Under CPL 380.90(2), which fact is NOT part of what triggers notice to the school?",
    "c": [
     "The student's age",
     "Enrollment in a school",
@@ -6509,7 +6517,7 @@ window.QBANK = {
  "appeal30": [
   {
    "lv": 1,
-   "q": "An appeal as of right must be taken within how many days after service?",
+   "q": "Under CPLR 5513(a), an appeal as of right must be taken within how many days after service of the judgment or order with notice of entry?",
    "c": [
     "10 days",
     "60 days",
