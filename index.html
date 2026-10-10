@@ -1405,7 +1405,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <div class="flash" id="flash"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
-<script src="cloud-sync.js?v=528f528d"></script>
+<script src="cloud-sync.js?v=280b2aa4"></script>
 <script src="study.js?v=c0c0a01c"></script>
 <script src="economy.js?v=8b2bf044"></script>
 <script src="store.js?v=6b699b76"></script>
@@ -1420,11 +1420,13 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="account.js?v=833997ea"></script>
 <script src="admin.js?v=049577e1"></script>
 <script src="evolve.js?v=b5f0e3a5"></script>
-<script src="stickers.js?v=70340509"></script>
+<script src="stickers.js?v=b5b91566"></script>
 <script src="dockets.js?v=32fec8b7"></script>
 <script src="hearing.js?v=a7e3ecd9"></script>
 <script src="weakness.js?v=f19e3e69"></script>
-<script src="weak-ui.js?v=aaf640e3"></script>
+<script src="weak-ui.js?v=b8614c5a"></script>
+<script src="pattern-lessons.js?v=59450fe3"></script>
+<script src="pattern-lessons-ui.js?v=e57fb092"></script>
 <script src="today.js?v=38a1f761"></script>
 <script src="exam.js?v=5ddc4f39"></script>
 <script src="exam-questions.js?v=9a46dfce"></script>
@@ -3608,7 +3610,7 @@ const SCREENS = {
     return { title:'Packs', body:`
       <div class="packs-hero"><img src="${nextPackArt()}" alt="Becoming a Clerk card pack" class="${S.packs ? 'bob' : 'dim'}">
         <b>${S.packs ? S.packs + ' pack' + (S.packs > 1 ? 's' : '') + ' ready' : 'No packs right now'}</b>
-        <small>${S.packs ? (S.packsOpened ? 'Pick from 3 series packs each time you open one: 3 cards, and sometimes a trick card or a sticker.' : `Your first pack is a Series ${nextSeries} pack: 3 cards, and sometimes a trick card or a sticker.`) : 'Your first finished round each day earns a pack. Quests can earn more.'}</small></div>
+        <small>${S.packs ? (S.packsOpened ? 'Pick from 3 series packs each time you open one: 3 cards, and sometimes a trick card' + (binders().length ? ' or a sticker.' : '.') : `Your first pack is a Series ${nextSeries} pack: 3 cards, and sometimes a trick card.`) : 'Your first finished round each day earns a pack. Quests can earn more.'}</small></div>
       ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN A PACK</button>` : `<button class="btn-big" data-act="tab" data-tab="study">${PLAY_ICON} STUDY TO EARN A PACK</button>`}
       <div class="list" style="margin-top:18px">
         <div class="row"><span class="k">Packs opened</span><span class="v">${S.packsOpened}</span></div>
@@ -3692,7 +3694,7 @@ const SCREENS = {
       ${item(ICO('thermo_snow') + ' Cold cases', 'Cards you haven\'t studied in a while go cold (2 days at Level 1, up to 21 days when mastered). One correct answer reopens the case for a +' + COLD_BONUS + ' XP bonus.', 'cold')}
       ${item(ICO('mastered') + ' Levels and Mastered', 'Right answers fill a card\'s XP bar. It levels up, and at the top it is Mastered. That is a game milestone for the card, not a promise about the exam. Cards you leave alone go cold, so come back to them.', 'mastered')}
       ${item(ICO('memory') + ' Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).', 'tricks')}
-      ${item(ICO('series2') + ' Series', 'There are five series, each with its own art style and pack. A series pack holds cards from that series, and sometimes a trick card or a sticker. Collect every card in a series to stamp it COMPLETE.', 'series')}
+      ${item(ICO('series2') + ' Series', 'There are five series, each with its own art style and pack. A series pack holds cards from that series, and sometimes a trick card. Once you make a binder, packs can hold a bonus sticker too. Collect every card in a series to stamp it COMPLETE.', 'series')}
       ${item(ICO('subject') + ' Official sources', 'Rule cards are built only from the rule text quoted in the NYS Unified Court System Court Clerk sample questions and cite their source. Other questions are sample content. Fact-check before relying on them.', 'sources')}
       </div>
       <p class="own-note">© 2026 Jack Duchatelier. All rights reserved.</p>` };
@@ -4141,11 +4143,11 @@ function confetti(host){
   }
 }
 
-/* ---- bonus stickers: about 1 in 3 packs (your first one always), about 1 in 4 of them holo ---- */
+/* ---- bonus stickers: only once you have a binder (stickerDrops in stickers.js): the first one is guaranteed, then about 1 pack in 6; about 1 in 4 of them holo ---- */
 const STICKERS = [ { id:'gavel', name:'Tired Gavel' }, { id:'summons', name:'Summons on the Go' }, { id:'motion', name:'Motion on the Move' } ];
 const stickerList = () => (S.stickers = Array.isArray(S.stickers) ? S.stickers : []);
 function rollSticker(){
-  if (stickerList().length && Math.random() >= 1 / 3) return null;
+  if (!stickerDrops(stickerList().length > 0, binders().length, Math.random())) return null;
   const st = { uid:'s' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), id:pick(STICKERS).id, holo:Math.random() < .25, at:Date.now() };
   stickerList().push(st); return st;   // saved right away (the Sticker Book shows it), even if the pack is closed early
 }
@@ -4614,7 +4616,7 @@ document.addEventListener('keydown', e => {
   else if (!e.shiftKey && (i === f.length - 1 || i < 0)) { e.preventDefault(); f[0].focus(); }
 });
 /* The full-screen layers (pack opening, reward card, zoom, level-up) get the same treatment as sheets. */
-const A11Y_LAYERS = '.pk,.rw-ov,.zoom,.lu';
+const A11Y_LAYERS = '.pk,.rw-ov,.zoom,.lu,#pl-root';
 new MutationObserver(ms => ms.forEach(m => {
   m.addedNodes.forEach(n => { if (n.nodeType === 1 && n.matches(A11Y_LAYERS) && !n._a11y) {
     n._a11y = true; if (!A11Y.last) A11Y.last = document.activeElement; A11Y.hide(true);

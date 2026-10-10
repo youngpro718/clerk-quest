@@ -15,7 +15,8 @@ function weakRow(id){
 function weakSpotsHTML(){
   const p = Weak.profile(); if (!p.cards.length) return '';
   const top = p.patterns[0];
-  const line = top ? `<p class="wk-line">You keep missing <b>${esc(Weak.PATTERN_PHRASE[top.key])}</b> questions<small>${top.recent} miss${top.recent === 1 ? '' : 'es'} this month</small></p>` : '';
+  const line = top ? `<p class="wk-line">You keep missing <b>${esc(Weak.PATTERN_PHRASE[top.key])}</b> questions<small>${top.recent} miss${top.recent === 1 ? '' : 'es'} this month</small></p>
+    ${typeof plBtn === 'function' ? plBtn(top.key) : ''}` : '';
   return `<section class="wk" aria-label="Your weak spots"><h2>Your weak spots</h2>${line}
     ${p.cards.slice(0, WEAK_TODAY_MAX).map(c => weakRow(c.id)).join('')}</section>`;
 }
@@ -61,6 +62,7 @@ function weakReportHTML(entries, opts){
   const rows = cards.map(c => { const h = weakHook(c); return `<div class="wk-rrow"><b>${esc(c.name)}</b>${h ? `<small>${esc(h)}</small>` : ''}</div>`; }).join('');
   const ids = cards.filter(c => owned(c) && canStudyCard(c.id)).map(c => c.id);
   return `<div class="wk-report ${opts && opts.sys ? 'sys' : ''}"><h3>${head}</h3>${rows}
+    ${r.key && typeof plBtn === 'function' ? plBtn(r.key) : ''}
     ${ids.length ? `<button class="btn-big gold" data-act="weak-drill-these" data-ids="${ids.join(',')}">${PLAY_ICON} DRILL THESE</button>` : ''}</div>`;
 }
 document.addEventListener('click', e => {
@@ -73,6 +75,8 @@ const WEAK_CSS = `
 .wk h2{margin:0 0 6px;font:20px/1.1 "Bangers";letter-spacing:.08em;font-weight:400}
 .wk-line{margin:0 0 8px;font:19px/1.2 "Patrick Hand"}
 .wk-line small{display:block;font-size:15px;opacity:.7}
+.wk .pl-open{margin:0 0 8px;width:100%;min-height:44px}
+.wk-report .pl-open{width:100%;margin:6px 0;min-height:44px}
 .wk-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:.5px solid var(--line)}
 .wk-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .wk-main b{font:19px/1.15 "Patrick Hand";font-weight:400}

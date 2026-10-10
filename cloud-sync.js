@@ -43,7 +43,7 @@
       Object.values(state.cards).filter(c => c && c.owned).length * 3;
   };
   /* Whichever copy wins, nothing the player wrote or built is thrown away: the losing copy's notes, highlights,
-     saved questions, notebook pages, binders, Docket records, Readiness history and weak-point misses are added to the winner. Same-id items keep the
+     saved questions, notebook pages, binders, Docket records, Readiness history, weak-point misses and finished pattern lessons are added to the winner. Same-id items keep the
      winner's version, except a rule note, which keeps whichever was written last. Returns [merged, changed]. */
   function keepBoth(win, lose) {
     const out = JSON.parse(JSON.stringify(win)), before = JSON.stringify(out);
@@ -72,6 +72,11 @@
       const key = m => m && [m.card, m.q, m.t].join('|'), mine = Array.isArray(out.misses) ? out.misses : [], have = new Set(mine.map(key));
       const all = [...mine, ...lose.misses.filter(m => m && !have.has(key(m)))].sort((x, y) => (x.t || 0) - (y.t || 0));
       out.misses = all.slice(-300);
+    }
+    // Finished pattern lessons: newest finish per pattern
+    if (lose.patternLessons && typeof lose.patternLessons === 'object' && Object.keys(lose.patternLessons).length) {
+      out.patternLessons = out.patternLessons && typeof out.patternLessons === 'object' ? out.patternLessons : {};
+      Object.entries(lose.patternLessons).forEach(([k, t]) => { if (Number.isFinite(+t) && +t > (+out.patternLessons[k] || 0)) out.patternLessons[k] = +t; });
     }
     return [out, JSON.stringify(out) !== before];
   }

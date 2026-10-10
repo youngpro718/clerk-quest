@@ -5,6 +5,11 @@
    coverHTML, currentScreenEl). Each sticker is { uid, id, holo, at, on?, x?, y?, r? } in S.stickers; on is a binder id,
    x/y the sticker's center on the cover in %, r its tilt in degrees. */
 
+/* does this pack hold a bonus sticker? None until the player has a binder of their own (that is where stickers go); the first one
+   after that is guaranteed; then about 1 pack in 6. r is a random number in [0, 1). */
+const STICKER_ODDS = 1 / 6;
+const stickerDrops = (haveStickers, binderCount, r) => binderCount > 0 && (!haveStickers || r < STICKER_ODDS);
+
 const stickerInfo = id => (typeof STICKERS !== 'undefined' ? STICKERS : []).find(x => x.id === id) || { id, name:'Sticker' };
 const stickerOn = s => s.on && binderById(s.on) ? s.on : null;   // a deleted binder drops its stickers back in the book
 const stickerByUid = uid => stickerList().find(s => s.uid === uid);
