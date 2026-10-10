@@ -43,7 +43,7 @@
       Object.values(state.cards).filter(c => c && c.owned).length * 3;
   };
   /* Whichever copy wins, nothing the player wrote or built is thrown away: the losing copy's notes, highlights,
-     saved questions, notebook pages, binders, Docket records and Readiness history are added to the winner. Same-id items keep the
+     saved questions, notebook pages, binders, Docket records, Readiness history and weak-point misses are added to the winner. Same-id items keep the
      winner's version, except a rule note, which keeps whichever was written last. Returns [merged, changed]. */
   function keepBoth(win, lose) {
     const out = JSON.parse(JSON.stringify(win)), before = JSON.stringify(out);
@@ -66,6 +66,12 @@
     if (lose.recall && typeof lose.recall === 'object') {
       out.recall = out.recall && typeof out.recall === 'object' ? out.recall : {};
       Object.entries(lose.recall).forEach(([k, r]) => { if (r && (!out.recall[k] || (r.last || 0) > (out.recall[k].last || 0))) out.recall[k] = r; });
+    }
+    // Weak points: keep every miss from both copies once, oldest first, newest 300
+    if (Array.isArray(lose.misses) && lose.misses.length) {
+      const key = m => m && [m.card, m.q, m.t].join('|'), mine = Array.isArray(out.misses) ? out.misses : [], have = new Set(mine.map(key));
+      const all = [...mine, ...lose.misses.filter(m => m && !have.has(key(m)))].sort((x, y) => (x.t || 0) - (y.t || 0));
+      out.misses = all.slice(-300);
     }
     return [out, JSON.stringify(out) !== before];
   }

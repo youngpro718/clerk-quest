@@ -183,15 +183,18 @@ function reviewResults(){
   if (S.today) S.today.reviewDone = true;
   save();
   view = { name:'results' };
-  const rows = L.queue.map((id, i) => { const c = byId(id); return c ? `<div class="rv-row"><span class="rv-mark ${sess.results[i] ? 'ok' : 'miss'}">${ICO(sess.results[i] ? 'check' : 'thermo_snow')}</span>
+  const uniq = [...new Set(L.queue)], won = id => L.queue.every((q, i) => q !== id || sess.results[i]);   // a drill can repeat a card: one row each
+  const rows = uniq.map(id => { const c = byId(id); return c ? `<div class="rv-row"><span class="rv-mark ${won(id) ? 'ok' : 'miss'}">${ICO(won(id) ? 'check' : 'thermo_snow')}</span>
     <span class="rv-main"><b>${esc(c.name)}</b><small>${esc(Recall.dueText(id))}</small></span>${Recall.pips(id)}</div>` : ''; }).join('');
   app.innerHTML = `
     <div class="results lesson review">
       <h1>REVIEW DONE</h1>
       <div class="score">${correct} of ${total}</div>
       <div class="sub">right · your recall dots are updated</div>
+      ${uniq.some(id => Weak.backOnTrack(sess, id)) ? `<div class="sub">Back on track ✓</div>` : ''}
       <div class="rchips"><span class="chip">+${sess.xp} XP</span>${sess.coins ? `<span class="chip coin">+${sess.coins} ${COIN}</span>` : ''}
         ${sess.packGiven ? `<span class="chip">${ICO('pack')} +1 DAILY PACK</span>` : ''}</div>
+      ${weakReportHTML(Weak.since(sess.startedAt))}
       <div class="panel rv-list">${rows}</div>
       <div class="stack">
         ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN YOUR PACK</button>` : ''}

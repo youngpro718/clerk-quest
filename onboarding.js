@@ -12,44 +12,31 @@ function onb(){
 }
 function onbFlag(k){ const o = onb(); if (o[k]) return; o[k] = Date.now(); save(); }
 
-/* ---------- welcome: 3 screens, shown once ---------- */
-const WELCOME = [
-  { art:'welcome_1', h:'Prepare for the court clerk exam.', p:'Study New York law with rule cards, lessons and practice questions. Source details appear with each rule; Memory Tricks help you remember.' },
-  { art:'welcome_2', h:'Cards grow as you learn.', p:'Right answers earn XP. Discover new color and characters that break out of their frames. Return to study before frost settles in.' },
-  { art:'welcome_3', h:'Read it. Mark it. Keep it.', p:'Read each rule, highlight what matters, write notes, and save questions for later.' },
-];
-function welcomeVisualHTML(i){
-  const preview = (c, level) => cardEl(c, {owned:false,level,xp:0,last:0,mastered:false}, {}, 'wl-card');
-  if (i === 0) {
-    const cards = [byId('interest'), byId('eightback'), CARDS.find(c=>c.series===5), CARDS.find(c=>c.series===4), byId('gavel')];
-    return `<div class="wl-visual wl-fan" aria-label="Five distinct card series">${cards.map((c,k)=>`<div style="--angle:${[-18,-9,9,18,0][k]}deg;--pos:${[22,36,64,78,50][k]}%;--layer:${k+1}">${preview(c,1)}</div>`).join('')}</div>`;
-  }
-  if (i === 1) return `<div class="wl-visual wl-levels" aria-label="Card progression from level one to level three">${[1,2,3].map(level=>`<div>${preview(byId('eightback'),level)}<b>LEVEL ${level}</b></div>`).join('')}</div>`;
-  return `<div class="wl-visual wl-notebook"><span>YOUR STUDY FILE</span><h3>Notice of motion</h3><p>A notice of motion and supporting affidavits shall be served <mark>at least eight days</mark> before the time at which the motion is noticed to be heard.</p><small>CPLR 2214(b) · excerpt</small><div class="wl-note">✎ My note: Eight days out. Two days back.</div></div>`;
+/* ---------- welcome: one screen, shown once (the rest is taught by Getting Started) ---------- */
+const WELCOME = { h:'Prepare for the court clerk exam.', p:'Study New York law with rule cards, lessons and practice questions. Memory Tricks help you remember.' };
+function welcomeVisualHTML(){
+  const preview = c => cardEl(c, {owned:false,level:1,xp:0,last:0,mastered:false}, {}, 'wl-card');
+  const cards = [byId('interest'), byId('eightback'), CARDS.find(c=>c.series===5), CARDS.find(c=>c.series===4), byId('gavel')];
+  return `<div class="wl-visual wl-fan" aria-label="Five distinct card series">${cards.map((c,k)=>`<div style="--angle:${[-18,-9,9,18,0][k]}deg;--pos:${[22,36,64,78,50][k]}%;--layer:${k+1}">${preview(c)}</div>`).join('')}</div>`;
 }
-function welcomeHTML(i){
-  const w = WELCOME[i], last = i === WELCOME.length - 1;
-  return `<div class="wl"><button class="wl-skip" data-act="wl-skip">Skip</button>
-    ${brandHTML('small')}${welcomeVisualHTML(i)}<h2>${esc(w.h)}</h2><p>${esc(w.p)}</p>
-    <div class="wl-dots">${WELCOME.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div>
-    <button class="btn-big gold" data-act="${last ? 'wl-pack' : 'wl-next'}" data-i="${i + 1}">${last ? `${ICO('pack')} OPEN MY FIRST PACK` : 'NEXT →'}</button>
+function welcomeHTML(){
+  return `<div class="wl">${brandHTML('small')}${welcomeVisualHTML()}<h2>${esc(WELCOME.h)}</h2><p>${esc(WELCOME.p)}</p>
+    <button class="btn-big gold" data-act="wl-pack">${ICO('pack')} OPEN MY FIRST PACK</button>
     ${!wlPreview && typeof cloudUser === 'function' && !cloudUser() ? `<button class="wl-signin" data-act="wl-signin">I already have an account · Sign in</button>` : ''}</div>`;
 }
-function showWelcome(i){
+function showWelcome(){
   let el = document.getElementById('wl-root');
   if (!el) { el = document.createElement('div'); el.id = 'wl-root'; document.body.appendChild(el); }
   document.getElementById('shell')?.setAttribute('aria-hidden', 'true');
-  el.innerHTML = welcomeHTML(i);
+  el.innerHTML = welcomeHTML();
 }
 let wlPreview = false;   // the admin view replays the welcome without touching the save
-function previewWelcome(){ wlPreview = true; showWelcome(0); }
+function previewWelcome(){ wlPreview = true; showWelcome(); }
 function endWelcome(){ document.getElementById('shell')?.removeAttribute('aria-hidden'); if (wlPreview) { wlPreview = false; document.getElementById('wl-root')?.remove(); return; } onbFlag('welcomed'); const el = document.getElementById('wl-root'); if (el) el.remove(); refresh(); }
-function maybeWelcome(){ if (!onb().welcomed) showWelcome(0); }
+function maybeWelcome(){ if (!onb().welcomed) showWelcome(); }
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if (!t) return;
   switch (t.dataset.act) {
-    case 'wl-next': showWelcome(+t.dataset.i); break;
-    case 'wl-skip': endWelcome(); break;
     case 'wl-signin': endWelcome(); openSignIn('signin'); break;
     case 'wl-pack': { const pv = wlPreview; endWelcome(); if (!pv && S.packs) openPack(); break; }
   }
@@ -164,19 +151,14 @@ document.addEventListener('click', e => {
 const ONB_CSS = `
 #wl-root{position:fixed;inset:0;z-index:900;background:var(--bg);display:flex;overflow-y:auto}
 .wl{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:calc(48px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom));text-align:center;color:var(--paper)}
-.wl-skip{position:absolute;top:calc(12px + env(safe-area-inset-top));right:16px;padding:8px;border:0;background:none;color:var(--sub);font:19px "Patrick Hand"}
 .wl-visual{width:min(100%,360px);height:245px;position:relative;margin:12px 0 0;pointer-events:none}
 .wl-fan>div{position:absolute;left:var(--pos);top:20px;width:130px;transform:translateX(-50%) rotate(var(--angle));z-index:var(--layer)}
 .wl .wl-card{width:130px;height:182px;font-size:8px}
-.wl-levels{display:flex;align-items:center;justify-content:center;gap:9px}
-.wl-levels>div{width:104px}.wl-levels .wl-card{width:104px;height:146px}.wl-levels b{display:block;margin-top:18px;font:14px var(--ui);color:var(--mustard)}
-.wl-notebook{height:auto;min-height:215px;background:#f0e4ca;color:#242d36;text-align:left;padding:18px 20px;border:2px solid #a83b35;border-radius:8px;box-shadow:7px 7px 0 #101a24;background-image:repeating-linear-gradient(transparent,transparent 25px,#b7c5ca 26px)}
-.wl-notebook>span{font:10px var(--ui);letter-spacing:.14em}.wl-notebook h3{font:25px "Bangers";margin:9px 0}.wl .wl-notebook p{font:17px/1.5 "Patrick Hand";color:#242d36}.wl-notebook small{font:11px var(--ui)}.wl-notebook mark{background:#e3b23c}.wl-note{margin-top:12px;border-top:1px solid #a83b35;padding-top:9px;font:16px "Patrick Hand"}
-@media(max-height:680px){.wl{gap:8px;padding-top:38px}.wl-visual{height:190px}.wl-fan>div{top:5px}.wl .wl-notebook{height:auto;min-height:180px}.wl h2{font-size:26px}.wl p{font-size:17px}}
+@media(max-height:680px){.wl{gap:8px;padding-top:38px}.wl-visual{height:190px}.wl-fan>div{top:5px}.wl h2{font-size:26px}.wl p{font-size:17px}}
 
 .wl h2{margin:6px 0 0;max-width:340px;font:400 30px/1.05 "Bangers";letter-spacing:.04em;text-wrap:balance}
 .wl p{margin:0;max-width:340px;font:19px/1.3 "Patrick Hand";color:var(--sub)}
-.wl-dots{display:flex;gap:6px;margin:6px 0} .wl-dots i{width:8px;height:8px;border-radius:4px;background:var(--line)} .wl-dots i.on{background:var(--mustard)}
+
 .wl .btn-big{width:100%;max-width:360px}
 .gs{margin:0 0 14px;padding:14px;border-radius:16px;background:var(--bg2);border:.5px solid var(--line)}
 .gs.suggestion{padding:4px 2px 8px;background:transparent;border:0}

@@ -150,7 +150,7 @@ const ACCOUNT_CSS = `
 .login-x{position:absolute;top:calc(12px + env(safe-area-inset-top));right:14px;min-height:40px;padding:0 14px;border:0;border-radius:20px;background:var(--bg2);color:var(--mustard);font:18px "Patrick Hand"}
 .guest-bar{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:40px;margin:-4px 0 12px;border:0;border-radius:12px;background:rgba(143,179,209,.12);color:var(--sub);font:17px "Patrick Hand"}
 .guest-bar b{color:var(--mustard);font-weight:400;text-decoration:underline}
-.wl-signin{display:block;margin:12px auto 0;border:0;background:none;color:var(--mustard);font:18px "Patrick Hand";text-decoration:underline}
+.wl-signin{display:block;width:100%;max-width:360px;min-height:48px;margin:4px auto 0;padding:0 16px;border-radius:14px;border:1px solid var(--mustard);background:transparent;color:var(--paper);font:20px/1 "Patrick Hand"}
 .login-wall{margin:0 0 22px;text-align:center;font:20px/1.35 "Patrick Hand";color:var(--paper)}
 .login-wall b{display:block;font:400 30px/1.1 "Bangers";letter-spacing:.05em;color:var(--mustard)}
 .acct-sub{margin:0 0 14px;font:19px/1.3 "Patrick Hand";color:var(--sub)}

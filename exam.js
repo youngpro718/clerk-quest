@@ -68,7 +68,12 @@ function scoreExam(x){
 /* score it, feed recall (answered questions only), keep it for the results page, and add it to the history */
 function submitExam(now = Date.now()){
   const x = S.exam; if (!x) return null;
-  x.items.forEach((it, i) => { if (x.answers[i] !== undefined) Recall.record(it.cardId, x.answers[i] === it.a, false); });
+  x.items.forEach((it, i) => {
+    if (x.answers[i] === undefined) return;
+    const ok = x.answers[i] === it.a;
+    Recall.record(it.cardId, ok, false);
+    if (!ok) Weak.logMiss(it.cardId, it.q, x.answers[i], 'exam', false, now);
+  });
   const sc = scoreExam(x);
   const rec = { at:now, n:x.n, right:sc.right, total:sc.total, ms:Math.min(now, x.deadline) - x.startedAt, bySet:sc.bySet };
   S.examHistory = [rec, ...(Array.isArray(S.examHistory) ? S.examHistory : [])].slice(0, EXAM_HISTORY_MAX);
@@ -138,6 +143,7 @@ const EXAM_SCREENS = {
       <h3>By subject</h3>
       <table class="exr-table"><thead><tr><th>Subject</th><th>Right</th><th>%</th></tr></thead><tbody>
         ${subjects.map(x => `<tr><td>${esc(titleCase(x.s))}</td><td>${x.ok} / ${x.t}</td><td>${exPct(x.ok, x.t)}%</td></tr>`).join('')}</tbody></table>
+      ${typeof weakReportHTML === 'function' ? weakReportHTML(Weak.since(L.startedAt, 'exam'), { sys:true }) : ''}
       ${weak.length ? `<h3>Cards to review</h3><div class="exr-weak">${weak.map(c => `<div class="exr-wrow"><span>${esc(c.name)}</span>${readBtn(c)}</div>`).join('')}</div>` : ''}
       ${missed.length ? `<h3>Review your answers</h3>${missed.map(m => { const L = v => 'ABCDEF'[m.it.c.indexOf(v)] + '. ' + esc(v);
           return `<details class="exr-q"><summary>${m.i + 1}. ${esc(m.it.q)}</summary>

@@ -1163,8 +1163,12 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .home-cards{margin-top:14px}
 .home-cards .sec-h{margin-top:0}
 .home-rewards-label{margin-top:16px}
-.home-save{margin:16px 0 2px;background:transparent;border:1px solid rgba(143,179,209,.3)}
-.home-save b{text-decoration:none}
+.home-save-top{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;margin:0 0 16px;padding:10px 14px;border-radius:16px;border:1px solid var(--mustard);background:rgba(227,178,60,.08);color:var(--paper);text-align:left}
+.home-save-top>span:first-child{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.home-save-top b{font:19px/1.15 "Patrick Hand";font-weight:400}
+.home-save-top small{font:15px/1.15 "Patrick Hand";opacity:.75}
+.home-save-top .hs-go{display:flex;align-items:center;gap:6px;font:17px/1 "Patrick Hand";color:var(--mustard);white-space:nowrap}
+.home-save-top .chev{width:8px;height:13px}
 .home-weekly{margin-top:14px}
 .home-weekly .dk-home{min-height:60px;margin-bottom:10px;padding:7px 10px;border-color:rgba(207,59,42,.34);background:rgba(207,59,42,.07)}
 .home-weekly .dk-home img{width:42px}
@@ -1401,7 +1405,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <div class="flash" id="flash"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
-<script src="cloud-sync.js?v=b8aec09d"></script>
+<script src="cloud-sync.js?v=528f528d"></script>
 <script src="study.js?v=c0c0a01c"></script>
 <script src="economy.js?v=8b2bf044"></script>
 <script src="store.js?v=6b699b76"></script>
@@ -1412,15 +1416,17 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="card-title-art.js?v=e1304f60"></script>
 <script src="card-caption-art.js?v=54f165ad"></script>
 <script src="binder.js?v=dcc2617f"></script>
-<script src="onboarding.js?v=22f27a83"></script>
-<script src="account.js?v=5042effc"></script>
+<script src="onboarding.js?v=c32395d0"></script>
+<script src="account.js?v=833997ea"></script>
 <script src="admin.js?v=049577e1"></script>
 <script src="evolve.js?v=b5f0e3a5"></script>
 <script src="stickers.js?v=70340509"></script>
 <script src="dockets.js?v=32fec8b7"></script>
 <script src="hearing.js?v=a7e3ecd9"></script>
-<script src="today.js?v=8dfb2c73"></script>
-<script src="exam.js?v=0d1962e5"></script>
+<script src="weakness.js?v=f19e3e69"></script>
+<script src="weak-ui.js?v=aaf640e3"></script>
+<script src="today.js?v=38a1f761"></script>
+<script src="exam.js?v=5ddc4f39"></script>
 <script src="exam-questions.js?v=9a46dfce"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="packfield.js?v=b72b00a2"></script>
@@ -3180,7 +3186,7 @@ function genSequence(c, lv){
   return { type:'mc', q:`Which list is in the CORRECT order? (Hint: "${m.sentence}")`, opts:shuffle([right, ...shuffle(perms).slice(0,3)]), a:right,
     h:'Say the memory trick out loud, one word at a time.', w:table(idx), raw:true };
 }
-function nextQuestion(c, lv, used){
+function nextQuestion(c, lv, used, prefer){
   if (c.mnemonic) {
     const useBank = c.bank && c.bank.some(q => q.lv === lv) && Math.random() < .4;
     if (!useBank && (c.gen === 'sequence' || Math.random() < .4)) return genSequence(c, lv);
@@ -3189,7 +3195,8 @@ function nextQuestion(c, lv, used){
   if (c.gen === 'alpha') return genAlpha(lv);
   // A round is 5 questions but a level may hold only 3: never repeat inside a round. Use this level first,
   // then stretch to a harder one, then look back at an easier one, and only repeat when the whole bank is used up.
-  let pool = c.bank.filter(q => q.lv === lv && !used.has(q.q));
+  let pool = prefer && prefer.length ? c.bank.filter(q => prefer.includes(q.q) && !used.has(q.q)) : [];   // a drill: the missed questions first
+  if (!pool.length) pool = c.bank.filter(q => q.lv === lv && !used.has(q.q));
   if (!pool.length) pool = c.bank.filter(q => q.lv > lv && !used.has(q.q));
   if (!pool.length) pool = c.bank.filter(q => q.lv < lv && !used.has(q.q));
   if (!pool.length) pool = c.bank.filter(q => q.lv === lv);
@@ -3456,6 +3463,8 @@ const SCREENS = {
       right:`<button class="nb-avatar" data-act="tab" data-tab="profile" aria-label="Profile, level ${playerLevel()}">${ring((S.stats.xp % 250) / 250, 'L' + playerLevel(), 40)}</button>`,
       body:`
         ${typeof todayHTML === 'function' ? todayHTML() : ''}
+        ${typeof cloudUser === 'function' && !cloudUser() ? `<button class="home-save-top" data-act="cloud-signin" data-tab="signin"><span><b>Save your progress</b><small>Free account · keep your cards on every device</small></span><span class="hs-go">Sign in ${chev}</span></button>` : ''}
+        ${typeof weakSpotsHTML === 'function' ? weakSpotsHTML() : ''}
         <div class="sec-h home-rewards-label"><span>Rewards &amp; collection</span></div>
         <div class="tiles">
           <button class="tile2" data-act="tab" data-tab="quests">${ring(DAILY_QUESTS.filter(q => questState(q, 'daily').done).length / 3, DAILY_QUESTS.filter(q => questState(q, 'daily').done).length + '/3', 52, '#5fd47a')}<span><b>Daily Quests</b><small>${claimableCount() ? claimableCount() + ' reward' + (claimableCount() > 1 ? 's' : '') + ' ready' : 'Earn free packs'}</small></span>${claimableCount() ? `<i class="dot-badge">${claimableCount()}</i>` : ''}</button>
@@ -3465,7 +3474,6 @@ const SCREENS = {
         </div>
         <div class="sec-h"><span>${recent.length ? 'Recently Studied' : 'Your Cards'}</span><button data-act="tab" data-tab="collection">See All</button></div>
         <div class="carousel">${car.map(c => miniCard(c)).join('')}</div>
-        ${typeof cloudUser === 'function' && !cloudUser() ? `<button class="guest-bar home-save" data-act="cloud-signin" data-tab="signin"><b>Save your progress</b> · Sign in</button>` : ''}
         ${showInstallTip() ? `<button class="a2hs-mini" data-act="a2hs-show">${ICO('install')} Add Becoming a Clerk to your Home Screen ${chev}</button>` : ''}`,
     };
   },
@@ -3811,7 +3819,7 @@ function switchTab(id){
 function refresh(){ saveScroll(); showScreen('none'); checkSeriesGoals(); }   // re-render the current screen in place (keeps scroll)
 
 /* ---- study session ---- */
-function startSession(id, lesson){
+function startSession(id, lesson, opts){
   if (lesson) {
     const queue = (Array.isArray(lesson.queue) ? lesson.queue : []).filter(canStudyCard);
     if (!queue.length) { missingSheet(id); return false; }
@@ -3822,8 +3830,10 @@ function startSession(id, lesson){
   if (typeof guestWallDue === 'function' && guestWallDue()) { guestWall(); return; }   // a guest signs up before a second round
   openSessionLayer();
   sess = { id, i:0, results:[], xp:0, used:new Set(), startLevel:S.cards[id].level, startXP:S.cards[id].xp, wasCold:isCold(S.cards[id]), reopened:false, lesson:lesson || null };
+  sess.startedAt = Date.now();
+  if (opts) { sess.prefer = opts.prefer || null; sess.drill = !!opts.drill; sess.box0 = Object.fromEntries((opts.prefer ? Object.keys(opts.prefer) : [id]).map(k => [k, ((S.recall || {})[k] || {}).box || 0])); }
   if (sess.wasCold) tipOnce('cold');
-  sess.q = nextQuestion(c, S.cards[id].level, sess.used);
+  sess.q = nextQuestion(c, S.cards[id].level, sess.used, sess.prefer && sess.prefer[c.id]);
   sess.hint = false; sess.freeHint = false; sess.answered = null;
   view = { name:'study' };
   const st = S.cards[id];
@@ -4018,6 +4028,7 @@ function answer(v){
   let gain = 0, coins = 0;
   S.stats.answered++; sess.results[sess.i] = ok;
   Recall.record(sess.id, ok, !!sess.hint);
+  if (!ok) Weak.logMiss(sess.id, sess.q.q, v, 'round', !!sess.hint);
   if (ok) {
     S.stats.correct++; daily().correct++; if (c.trickType) daily().trick++;
     gain = Math.round(REWARD[st.level-1] * (hintCosts() ? .5 : 1)) * (doubleXPOn() ? 2 : 1);   // boosts: free hint, double XP
@@ -4062,7 +4073,7 @@ function advance(){
     sess.id = nextId; sess.wasCold = isCold(S.cards[sess.id]); sess.reopened = false;
   }   // each lesson question can be a different card
   const c = byId(sess.id);
-  sess.q = nextQuestion(c, S.cards[sess.id].level, sess.used);
+  sess.q = nextQuestion(c, S.cards[sess.id].level, sess.used, sess.prefer && sess.prefer[c.id]);
   sess.hint = false; sess.freeHint = false; sess.answered = null; sess.display = null;
   // refresh the front face too (hidden, but keeps level in sync)
   document.querySelector('.face.front').innerHTML = cardEl(c, S.cards[sess.id]);
@@ -4561,7 +4572,9 @@ function renderResults(){
       <h1>SESSION ADJOURNED</h1>
       <div class="score">${correct} / ${SESSION_LEN}</div>
       <div class="sub">correct answers</div>
+      ${Weak.backOnTrack(sess) ? `<div class="sub">Back on track ✓</div>` : ''}
       <div class="rchips"><span class="chip">+${sess.xp} XP</span>${sess.coins ? `<span class="chip coin">+${sess.coins} ${COIN}</span>` : ''}${sess.streakCoins ? `<span class="chip" style="background:#ffd9a8">${ICO('streak')} ${S.streak.days}-DAY STREAK</span>` : ''}${claimableCount() ? `<span class="chip" style="background:#bfe8c4">${ICO('trophy')} QUEST REWARD READY</span>` : ''}${sess.reopened ? `<span class="chip" style="background:#bfe0ff">${ICO('streak')} CASE REOPENED</span>` : ''}${leveled ? `<span class="chip">${ICO('star')} LEVEL ${sess.startLevel} → ${st.level}</span>` : ''}${sess.packGiven ? `<span class="chip">${ICO('pack')} +1 DAILY PACK</span>` : ''}</div>
+      ${weakReportHTML(Weak.since(sess.startedAt))}
       <div class="rcard">${cardEl(c, st)}</div>
       <div class="panel">
         <b>${esc(c.name)}</b> · Level ${st.level}
