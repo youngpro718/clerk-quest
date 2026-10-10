@@ -192,25 +192,18 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 @media (prefers-reduced-motion:reduce){.cert-stamp{animation:none}}
 /* version decorations on the card face (verDecorHTML) */
 .vd{position:absolute;pointer-events:none;z-index:8}
-.vd-shine{inset:1.3% 1.7% 1.6%;border-radius:5cqw;mix-blend-mode:screen;
-  background:linear-gradient(115deg,transparent 38%,rgba(225,236,255,.55) 47%,rgba(255,255,255,.18) 52%,transparent 60%);background-size:300% 100%;animation:foil 5s linear infinite}
 .vd-seal{width:20%;right:2%;top:65%;transform:rotate(-10deg);filter:drop-shadow(0 .6cqw .8cqw rgba(0,0,0,.45))}
 .vd-tape{width:30%;left:35%;top:-1.2%;transform:rotate(-3deg);opacity:.92}
 .vd-clip{width:12%;left:-2.5%;top:20%;transform:rotate(-14deg);filter:drop-shadow(0 .4cqw .5cqw rgba(0,0,0,.4))}
 .vd-tag{width:25%;left:1%;top:40%;transform:rotate(-12deg);filter:drop-shadow(0 .6cqw .8cqw rgba(0,0,0,.45))}
-.card.ver-certified{--glow:0 0 3cqw rgba(200,220,255,.55)}
-.card.ver-exhibit{--glow:0 0 3cqw rgba(255,190,80,.6)}
-.card.ver-gold{--glow:0 0 4.5cqw rgba(255,200,60,.75)}
 .card.ver-gold .stampimg.mastered{display:none}   /* the Gold Seal replaces the MASTERED stamp */
 /* gold frames are light: the small labels switch to dark ink with a pale halo so they stay readable */
 .card.ver-gold :is(.t.num,.t.xpstrip,.t.cat,.t.rar,.t.set,.t.lvl),.card.ver-gold :is(.t.num,.t.xpstrip,.t.cat,.t.rar,.t.set,.t.lvl) :not(.gem){
   color:#2b1b06!important;-webkit-text-stroke:0!important;text-shadow:0 0 .45cqw rgba(255,246,214,.95),0 0 .18cqw rgba(255,246,214,1)!important}
 .card.ver-gold .t.lvl .stars .on{color:#8a5200!important}.card.ver-gold .t.lvl .stars .off{color:rgba(43,27,6,.35)!important}
 .card.ver-gold .t.xpstrip i{background:rgba(43,27,6,.25)!important}
-.vd-shine.gold{background-image:linear-gradient(115deg,transparent 36%,rgba(255,232,150,.55) 46%,rgba(255,200,80,.25) 52%,transparent 62%);animation-duration:4s}
 .vd-goldseal{width:17%;right:2%;top:62%;transform:rotate(8deg);filter:drop-shadow(0 .6cqw .8cqw rgba(0,0,0,.5))}
 .pk-badge.v-gold{background:#f3cf55}
-@media (prefers-reduced-motion:reduce){.vd-shine{animation:none;background-position:50% 0}}
 .pk-badge.v-certified{background:#d9e3ec} .pk-badge.v-exhibit{background:#ffd23f}
 .v-filed{background:var(--common)} .v-certified{background:#8fa3b3} .v-exhibit{background:#cf3b2a} .v-gold{background:#e3b23c}
 .r-common{background:var(--common)} .r-uncommon{background:var(--uncommon)} .r-rare{background:var(--rare)} .r-epic{background:var(--epic)} .r-legendary{background:var(--legendary)}
@@ -230,13 +223,50 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 /* ----- card glow system -----
    A soft glow lives on a pseudo-element hugging the visible card (cheap box-shadow, no filters). */
 .card{isolation:isolate}
-.card::after{content:"";position:absolute;inset:1.3% 1.7% 1.6%;border-radius:5cqw;z-index:-1;pointer-events:none;box-shadow:var(--glow,none);transition:box-shadow .4s}
-.card.lv2{--glow:0 0 2.2cqw rgba(255,255,255,.25)}
-.card.special{--glow:0 0 3cqw rgba(190,120,255,.75)}
-.card.cold{--glow:0 0 3cqw rgba(140,200,255,.8)}
+.card::after{content:"";position:absolute;inset:1.3% 1.7% 1.6%;border-radius:5cqw;z-index:-1;pointer-events:none;
+  box-shadow:var(--st-glow,0 0 0 0 transparent),0 0 var(--fx-blur,0cqw) rgba(var(--fx-rgb,255,244,214),var(--fx-a,0)),0 0 0 var(--fx-rim,0cqw) rgba(var(--fx-rgb,255,244,214),calc(var(--fx-a,0) * .8));transition:box-shadow .4s}
+.card.special{--st-glow:0 0 3cqw rgba(190,120,255,.75)}
+.card.cold{--st-glow:0 0 3cqw rgba(140,200,255,.8)}
 /* almost leveled up: a warm glow when a card is 70%+ of the way to its next level */
-.card.charged{--glow:0 0 4.5cqw rgba(255,214,90,.75)}
-@keyframes holo{to{background-position:400% 0}}
+.card.charged{--st-glow:0 0 4.5cqw rgba(255,214,90,.75)}
+/* level and version glow: strength and motion come from the level, colour and style from the version (card-fx.js); animation only on big or live cards */
+@property --fx-ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+.fx-edge,.fx-sp{display:none}
+.card:is(.tilt3d,.fx-live) .fx-edge{display:block;position:absolute;inset:1.3% 1.7% 1.6%;border-radius:5cqw;z-index:-1;pointer-events:none;
+  background:conic-gradient(from var(--fx-ang),transparent 0 72%,rgba(var(--fx-rgb),.95) 88%,transparent 100%);filter:blur(1.1cqw);animation:fxspin 6s linear infinite}
+.card:is(.tilt3d,.fx-live) .fx-sp{display:block;position:absolute;width:3cqw;height:3cqw;z-index:9;pointer-events:none;translate:-50% -50%;
+  background:radial-gradient(circle,#fff 0 18%,rgba(var(--fx-rgb),.9) 32%,transparent 62%);animation:fxtwinkle 2.6s ease-in-out infinite;animation-delay:var(--d,0s)}
+.card:is(.tilt3d,.fx-live).fx-pulse::after{animation:fxpulse 2.8s ease-in-out infinite}
+.card.fx-v-gold:is(.tilt3d,.fx-live).fx-pulse::after{animation-duration:2.1s}
+.card.fx-v-exhibit:is(.tilt3d,.fx-live).fx-pulse::after{animation:fxflicker 1.9s steps(1,end) infinite}
+@keyframes fxspin{to{--fx-ang:360deg}}
+@keyframes fxpulse{50%{opacity:.62}}
+@keyframes fxflicker{0%,100%{opacity:1}22%{opacity:.78}38%{opacity:.95}61%{opacity:.7}80%{opacity:.92}}
+@keyframes fxtwinkle{0%,100%{opacity:0;scale:.4}50%{opacity:1;scale:1}}
+@media (prefers-reduced-motion:reduce){.card.fx-pulse::after,.card .fx-edge,.card .fx-sp{animation:none!important}.card .fx-sp{opacity:.8}}
+html.cq-reduce-motion .card.fx-pulse::after,html.cq-reduce-motion .card .fx-edge,html.cq-reduce-motion .card .fx-sp{animation:none!important}
+/* holographic foil (card-fx.js): a ramp seen through a pattern, kept off text by the per-look safe-area mask; follows tilt (--mx) and sweeps on its own (--hx) on big or live cards */
+@property --hx{syntax:'<number>';inherits:false;initial-value:.35}
+.holo-wrap{position:absolute;inset:0;z-index:6;pointer-events:none;-webkit-mask:var(--holo-mask,none) center/100% 100% no-repeat;mask:var(--holo-mask,none) center/100% 100% no-repeat}
+.holo{position:absolute;inset:calc(1.3% + (1 - var(--holo-area,1)) * 22%) calc(1.7% + (1 - var(--holo-area,1)) * 22%) calc(1.6% + (1 - var(--holo-area,1)) * 22%);border-radius:5cqw;opacity:var(--holo-op,0);mix-blend-mode:screen;
+  --hp:calc(var(--hx) * 100% + var(--mx,0) * 40%)}
+.ramp-silver{--r1:#dfe9ff;--r2:#a9c3ff;--r3:#ffffff;--r4:#b7c9e8;--r5:#e8f0ff}
+.ramp-rainbow{--r1:#ff9fc8;--r2:#ffd69a;--r3:#a6ffc6;--r4:#9fd8ff;--r5:#c9a6ff}
+.ramp-ember{--r1:#ff9a6a;--r2:#ffcf8a;--r3:#fff3c4;--r4:#ffae7a;--r5:#e0765a}
+.ramp-gold{--r1:#fff0a0;--r2:#ffc83a;--r3:#fff7cf;--r4:#e3a21d;--r5:#ffd96a}
+.holo-sheen{background:linear-gradient(115deg,transparent 30%,var(--r1) 42%,var(--r3) 50%,var(--r2) 58%,transparent 70%);background-size:300% 100%;background-position:var(--hp) 50%}
+.holo-diamonds{background:linear-gradient(115deg,var(--r1),var(--r2),var(--r3),var(--r4),var(--r1));background-size:300% 100%;background-position:var(--hp) 50%;mix-blend-mode:overlay;
+  -webkit-mask:repeating-linear-gradient(45deg,#000 0 .35cqw,transparent .35cqw 3cqw),repeating-linear-gradient(-45deg,#000 0 .35cqw,transparent .35cqw 3cqw);mask:repeating-linear-gradient(45deg,#000 0 .35cqw,transparent .35cqw 3cqw),repeating-linear-gradient(-45deg,#000 0 .35cqw,transparent .35cqw 3cqw)}
+.holo-dots{background:linear-gradient(115deg,var(--r1),var(--r2),var(--r3),var(--r4),var(--r5),var(--r1));background-size:300% 100%;background-position:var(--hp) 50%;mix-blend-mode:overlay;
+  -webkit-mask:radial-gradient(circle,#000 0 .3cqw,transparent .36cqw) 0 0/2.2cqw 2.2cqw;mask:radial-gradient(circle,#000 0 .3cqw,transparent .36cqw) 0 0/2.2cqw 2.2cqw}
+.holo-starburst{background:linear-gradient(115deg,var(--r1),var(--r2),var(--r3),var(--r4),var(--r5),var(--r1));background-size:300% 100%;background-position:var(--hp) 50%;mix-blend-mode:soft-light;
+  -webkit-mask:repeating-conic-gradient(from 0deg at 50% 45%,#000 0 .9deg,transparent .9deg 9deg);mask:repeating-conic-gradient(from 0deg at 50% 45%,#000 0 .9deg,transparent .9deg 9deg)}
+.holo-scales{background:linear-gradient(115deg,var(--r1),var(--r2),var(--r3),var(--r4),var(--r1));background-size:300% 100%;background-position:var(--hp) 50%;mix-blend-mode:overlay;
+  -webkit-mask:radial-gradient(circle at 50% 100%,transparent 0 .9cqw,#000 .95cqw 1.35cqw,transparent 1.4cqw) 0 0/3.2cqw 2.2cqw;mask:radial-gradient(circle at 50% 100%,transparent 0 .9cqw,#000 .95cqw 1.35cqw,transparent 1.4cqw) 0 0/3.2cqw 2.2cqw}
+.card:is(.tilt3d,.fx-live) .holo{animation:holosweep calc(7s / var(--holo-speed,1)) linear infinite alternate}
+@keyframes holosweep{from{--hx:0}to{--hx:1}}
+@media (prefers-reduced-motion:reduce){.card .holo{animation:none!important}}
+html.cq-reduce-motion .holo{animation:none!important}
 @keyframes goldglow{0%,100%{filter:drop-shadow(0 0 1.4cqw rgba(255,200,60,.7))}50%{filter:drop-shadow(0 0 3.2cqw rgba(255,210,80,1))}}
 .card.locked{filter:grayscale(1) brightness(.7)}
 
@@ -442,11 +472,20 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .card .cc-title{left:0;top:0;width:100%;height:100%;z-index:4}
 .card.look-cc .t.cc{z-index:5;display:flex;align-items:center;justify-content:center;text-align:center;color:#1d1b17;font-family:"Bangers",sans-serif;letter-spacing:.04em}
 .card.look-cc .t.cc.num{font-size:calc(5.4cqw*var(--fit,1))}
-.card.look-cc .t.cc.cat{color:#f1e5c9;font-size:calc(3.8cqw*var(--fit,1));letter-spacing:.16em}
+.card.look-cc .t.cc.cat{color:#ffe27a;background:#0b0d12;border-radius:.6cqw;font-size:calc(3.8cqw*var(--fit,1));letter-spacing:.1em;text-shadow:0 .2cqw 0 #000}   /* bright on a solid dark backing: the frame's strip is speckled */
+.card.look-cc .t.cc.rar{flex-direction:row;gap:.9cqw}
+.card.look-cc .cc-gem{width:6.8cqw;height:6.8cqw;flex:none;border:.35cqw solid #1d1b17;box-shadow:inset 0 .3cqw .3cqw rgba(255,255,255,.55),inset 0 -.5cqw .5cqw rgba(0,0,0,.3),0 .25cqw .3cqw rgba(0,0,0,.35);background-image:radial-gradient(circle at 34% 26%,rgba(255,255,255,.7),transparent 56%)}
+.card.look-cc .cc-gem svg{width:70%;height:70%;fill:#fff;stroke:rgba(29,27,23,.85);stroke-width:1.5;stroke-linejoin:round;paint-order:stroke;flex:none}
+.card.look-cc .cc-ver{white-space:nowrap;line-height:1}
+.card.look-cc.ver-gold :is(.t.cat,.t.set),.card.look-cc.ver-gold :is(.t.cat,.t.set) :not(.gem){text-shadow:0 .2cqw 0 #000!important}   /* the generic Gold Seal rule turns labels dark ink for light frames; this frame's strip and set plate stay dark */
+.card.look-cc.ver-gold .t.cat,.card.look-cc.ver-gold .t.cat :not(.gem){color:#ffe27a!important}
+.card.look-cc.ver-gold .t.set,.card.look-cc.ver-gold .t.set :not(.gem){color:#f1e5c9!important}
+.card.look-cc .cc-star{width:1.1em;height:1.1em;margin-right:.14em;fill:#f7c53a;stroke:#1d1b17;stroke-width:1.7;stroke-linejoin:round;paint-order:stroke;flex:none}
 .card.look-cc .t.cc.xpstrip{flex-direction:column;gap:.5cqw;font-size:calc(2.6cqw*var(--fit,1))}
 .card.look-cc .t.cc.xpstrip i{display:block;width:88%;height:20%;border-radius:2cqw;background:rgba(29,27,23,.18);overflow:hidden}
 .card.look-cc .t.cc.xpstrip i b{display:block;height:100%;background:#cf3b2a}
-.card.look-cc .t.cc.quote{font-family:"Patrick Hand",cursive;font-size:4.9cqw;line-height:1.15;letter-spacing:0;padding:0 5%}
+.card.look-cc .t.cc.quote{font-family:"Patrick Hand",cursive;font-size:7cqw;line-height:1.15;letter-spacing:0;padding:0 5%}
+.card.look-cc .t.cc.quote.long{font-size:6.2cqw}   /* the longest quotes (over 29 characters) stay on one line */
 .card.look-cc .t.cc.set{flex-direction:column;color:#f1e5c9;font-size:calc(3cqw*var(--fit,1))}
 .card.look-cc .t.cc.set hr{width:60%;margin:.4cqw 0;border:0;border-top:1px solid rgba(241,229,201,.5)}
 .card.look-cc .t.cc.set small{font-size:calc(2cqw*var(--fit,1));opacity:.8}
@@ -745,7 +784,7 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
   -webkit-mask-image:radial-gradient(ellipse 72% 68% at 50% 48%,transparent 0 var(--frost-hole),rgba(0,0,0,.28) calc(var(--frost-hole) + 7%),#000 calc(var(--frost-hole) + 15%));
   mask-image:radial-gradient(ellipse 72% 68% at 50% 48%,transparent 0 var(--frost-hole),rgba(0,0,0,.28) calc(var(--frost-hole) + 7%),#000 calc(var(--frost-hole) + 15%))}
 .frost-status{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-.card.cold{--glow:0 0 3cqw rgba(140,200,255,.8)}
+.card.cold{--st-glow:0 0 3cqw rgba(140,200,255,.8)}
 .stampimg.mastered{width:52%;right:2%;top:57%;--rot:-10deg}
 .card:has(> .framebreak-character) > .stampimg.mastered{z-index:10}   /* never hidden behind a pop-out character (spec 2026-10-06 §2) */
 @keyframes slamimg{0%{transform:rotate(var(--rot)) scale(2.2);opacity:0}100%{transform:rotate(var(--rot)) scale(1);opacity:1}}
@@ -1257,10 +1296,8 @@ button.row:active,.gcard:active,.mini:active,.tile2:active,.hero:active,.quick:a
 .summary b{display:block;font-weight:400;font-size:19px}
 .summary small{display:block;font:13px var(--ui);color:var(--sub)}
 .cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px}
-.cgrid.two{grid-template-columns:repeat(2,minmax(0,220px));justify-content:center}
 @media (min-width:700px){.cgrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
 .gcard{background:none;border:0;padding:0}
-.gl small{display:block;text-align:center;font:13px var(--ui);color:var(--sub);margin-top:6px}
 
 /* card page */
 .cd-top{display:flex;flex-direction:column;align-items:center;padding-top:6px}
@@ -1471,7 +1508,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="cloud-sync.js?v=280b2aa4"></script>
 <script src="study.js?v=c0c0a01c"></script>
 <script src="economy.js?v=8b2bf044"></script>
-<script src="store.js?v=15540b15"></script>
+<script src="store.js?v=22affdd3"></script>
 <script src="study/quick-reference/quick-reference.js?v=0128f417"></script>
 <script src="study/quick-reference/series-lessons.js?v=55eee161"></script>
 <script src="curriculum-pilot.js?v=9e0d75af"></script>
@@ -1481,11 +1518,12 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="binder.js?v=dcc2617f"></script>
 <script src="onboarding.js?v=c32395d0"></script>
 <script src="account.js?v=833997ea"></script>
-<script src="admin.js?v=4ca7ae06"></script>
-<script src="evolve.js?v=b5f0e3a5"></script>
+<script src="admin.js?v=ee99a53f"></script>
+<script src="evolve.js?v=15832c8c"></script>
 <script src="stickers.js?v=b5b91566"></script>
 <script src="dockets.js?v=32fec8b7"></script>
 <script src="hearing.js?v=a7e3ecd9"></script>
+<script src="card-fx.js?v=9632c1a0"></script>
 <script src="jigsaw.js?v=f2cee497"></script>
 <script src="lookalike-cards.js?v=24237958"></script>
 <script src="weakness.js?v=f19e3e69"></script>
@@ -1494,7 +1532,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="pattern-lessons-ui.js?v=3ace01b8"></script>
 <script src="today.js?v=38a1f761"></script>
 <script src="exam.js?v=4f7f08c3"></script>
-<script src="exam-questions.js?v=9a46dfce"></script>
+<script src="exam-questions.js?v=37d27577"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="packfield.js?v=b72b00a2"></script>
 <script src="sticker3d.js?v=90437e9d"></script>
@@ -2512,7 +2550,7 @@ const rollVersion = () => { const r = Math.random(); return r < PACK_VER_ODDS.ex
 /* Certified: a raised seal and a silver shine. Exhibit: mounted like evidence, with tape, a clip and an EXHIBIT tag. */
 function verDecorHTML(st){
   const v = verOf(st);
-  if (v === 'certified') return `<div class="vd vd-shine"></div><img class="vd vd-seal" src="art/ver_certified_seal.webp" alt="Certified seal">`;
+  if (v === 'certified') return `<img class="vd vd-seal" src="art/ver_certified_seal.webp" alt="Certified seal">`;
   if (v === 'gold') return `<img class="vd vd-goldseal" src="art/ver_gold_seal.webp" alt="Gold Seal">`;
   if (v === 'exhibit') return `<img class="vd vd-tape" src="art/ver_exhibit_tape.webp" alt=""><img class="vd vd-clip" src="art/ver_exhibit_clip.webp" alt=""><img class="vd vd-tag" src="art/ver_exhibit_tag.webp" alt="Exhibit tag">`;
   return '';
@@ -2780,10 +2818,18 @@ function s3ArtHTML(c, lv){
   const character = lv < maxL(c) ? s3CharacterLayers(c, lv) : '';
   return `${bg ? `<img class="s3-bg" src="${bg}" alt="">` : '<div class="art-back"></div>'}<div class="s3-bgshade"></div>${character}`;
 }
-/* the courtroom-comic look (look:'cc'): kit layers from back to front are the background, the cast, the shared frame and the
+/* the courtroom-comic look (look:'cc'): kit layers from back to front are the background, the cast, the frame (a gold one for Gold Seal) and the
    title lettering; the number, category, XP, caption and footer are live text on the frame's blank panels (1024 x 1536 grid) */
 /* Series 6 front-card titles: the artistic lockup (assets/series6/titles) is fitted into the yellow banner's lettering area on art/cc_frame.webp,
    scaled to fit and centred; S6_QUESTION_TITLE_ART holds each lockup's file, size and ink box. A card without a lockup keeps the kit's SVG title. */
+/* A Memory Trick number is "★28": the star is drawn (a font has no star of the right size, so the character came out squeezed).
+   The version gem (lower left) uses the same drawn star inside a round, glossy gem. */
+const CC_STAR_PATH = 'M12 1.6l3.1 6.7 7.3.9-5.4 5 1.4 7.2L12 17.6l-6.4 3.8L7 14.2 1.6 9.2l7.3-.9z';
+const ccNumHTML = num => /^★/.test(num)
+  ? `<svg class="cc-star" viewBox="0 0 24 24" aria-hidden="true"><path d="${CC_STAR_PATH}"/></svg><span>${esc(num.slice(1))}</span>`
+  : esc(num);
+const ccBadgeHTML = st => { const v = verOf(st), l = VERSIONS[v].label;
+  return `<span class="gem cc-gem v-${v}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${CC_STAR_PATH}"/></svg></span><span class="cc-ver" style="font-size:${l.length > 6 ? '2.5cqw' : '3cqw'}">${l}</span>`; };
 const CC_TITLE_BOX = [126, 112, 898, 304];   // the banner is yellow from about y 103 to 309 at the middle and 115 to 302 near its ends
 function ccLockupHTML(c){
   const t = S6_QUESTION_TITLE_ART[c.id]; if (!t) return '';
@@ -2810,16 +2856,17 @@ function frontCCHTML(c, st, opt = {}){
   const pop = brk && (opt.newStar || 0) === lv ? ' cc-popin' : '';   // the pop plays once, on the level-up to the max level
   const spot = brk ? `<div class="cc-spot${pop}"></div>` : '';   // stage lighting behind the cast at the max level
   const cast = `<img class="cc-cast${brk ? ' framebreak-character cc-break' + pop : ''}" src="${artSrc(a.cast)}" alt="${esc(c.name)} artwork, level ${lv}">`;
+  const frame = verOf(st) === 'gold' ? 'art/cc_frame_gold.webp' : 'art/cc_frame.webp';   // Gold Seal has its own gold frame, same panels
   return `
     ${jig}${spot}${cast}
-    <img class="frame cc-frame" src="art/cc_frame.webp" alt="">
+    <img class="frame cc-frame" src="${frame}" alt="">
     ${ccLockupHTML(c) || `<img class="cc-title" src="${artSvg(a.title)}" alt="${esc(c.name)}">`}
-    ${brk ? panelsOverHTML('art/cc_frame.webp', 'cc') : ''}
-    <div class="t num cc meta" style="${P(40, 38, 158, 92)}">${c.num}</div>
+    ${brk ? panelsOverHTML(frame, 'cc') : ''}
+    <div class="t num cc meta" style="${P(40, 38, 158, 92)}">${ccNumHTML(c.num)}</div>
     <div class="t cat cc meta" style="${P(190, 28, 778, 89)}">${esc(c.category)}</div>
     <div class="t xpstrip cc meta" style="${P(792, 30, 985, 98)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
-    <div class="t quote cc" style="${P(63, 1165, 967, 1347)}">“${esc(c.quote || '')}”</div>
-    <div class="t rar cc meta" style="${P(41, 1390, 250, 1479)}">${verBadge(st, 'calc(2.65cqw*var(--fit,1))', 'calc(2.15cqw*var(--fit,1))', '')}</div>
+    <div class="t quote cc${(c.quote || '').length > 29 ? ' long' : ''}" style="${P(63, 1165, 967, 1347)}">“${esc(c.quote || '')}”</div>
+    <div class="t rar cc meta" style="${P(41, 1390, 250, 1479)}">${ccBadgeHTML(st)}</div>
     <div class="t set cc meta" style="${P(275, 1390, 718, 1478)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl cc meta" style="${P(757, 1390, 985, 1481)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
@@ -2938,7 +2985,8 @@ function frostHTML(c, st, now=Date.now()){
 function cardEl(c, st, opt={}, extraClass=''){
   const now = Date.now(), cold = isCold(st, now), deadline = coldAfter(st), last = Number.isFinite(+st.last) ? +st.last : 0;
   const charged = !cold && !st.mastered && st.level < maxL(c) && st.xp / NEED[st.level-1] >= .7;   // almost leveled up
-  return `<div class="card series${c.series || 1} ${c.look ? 'look-' + c.look : ''} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} ${c.illustratedMnemonic ? 'illustrated-mnemonic' : ''} ${typeof isEvolvedView === 'function' && isEvolvedView(c, st) ? 'evolved' : ''} lv${st.level} ver-${verOf(st)} ${sleeveOf(c) ? 'sleeved' : ''} ${c.trickType?'special':''} ${cold?'cold':''} ${charged?'charged':''} ${extraClass}" ${sleeveOf(c) ? `style="--sl:${sleeveScale(sleeveOf(c))}"` : ''} data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${frontHTML(c, st, opt)}${verDecorHTML(st)}${decoHTML(c)}${frostHTML(c, st, now)}</div>`;
+  const fx = fxMarkup(verOf(st), st.level, maxL(c));   // glow and foil for this level and version (card-fx.js)
+  return `<div class="card series${c.series || 1} ${c.look ? 'look-' + c.look : ''} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} ${c.illustratedMnemonic ? 'illustrated-mnemonic' : ''} ${typeof isEvolvedView === 'function' && isEvolvedView(c, st) ? 'evolved' : ''} lv${st.level} ver-${verOf(st)} ${fx.cls} ${sleeveOf(c) ? 'sleeved' : ''} ${c.trickType?'special':''} ${cold?'cold':''} ${charged?'charged':''} ${extraClass}" style="${fx.style}${sleeveOf(c) ? `--sl:${sleeveScale(sleeveOf(c))};` : ''}" data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${frontHTML(c, st, opt)}${fx.html}${verDecorHTML(st)}${decoHTML(c)}${frostHTML(c, st, now)}</div>`;
 }
 
 
@@ -3868,17 +3916,6 @@ const SCREENS = {
         <button class="row danger" data-act="resetall"><span class="th emo gi">${ICO('warning')}</span><span class="row-main"><b>Reset all progress</b></span></button>
       </div>
       <p class="own-note">© 2026 Jack Duchatelier. All rights reserved.<br>Becoming a Clerk, its characters, artwork, and original writing may not be copied or reused without permission. Quoted law text belongs to the State of New York.</p>` };
-  },
-
-  glows(){
-    if (!ADM.is) return { title:'Card Glows', body:'<p class="empty">Admins only.</p>' };
-    // The glows a card can have today (see the card glow system CSS): level 2, Memory Trick, cold, and almost leveled up
-    const g = byId('gavel'), trick = CARDS.find(c => c.trickType && !c.series) || g;
-    const cell = (c, st, label) => `<div class="gl">${neutralRender(() => cardEl(c, st))}<small>${label}</small></div>`;
-    return { title:'Card Glows', body:`<p class="st-note">Every glow a card can show. Levels 3 to 5 have no glow of their own.</p><div class="cgrid two">
-      ${cell(g, admFixture(g, 1, 'normal'), 'No glow (level 1)')}${cell(g, admFixture(g, 2, 'normal'), 'Level 2 · faint white')}
-      ${cell(g, admFixture(g, 3, 'charged'), 'Almost leveled up · gold')}${cell(trick, admFixture(trick, 1, 'normal'), 'Memory Trick · purple')}
-      ${cell(g, admFixture(g, 3, 'cold'), 'Cold · blue')}</div>` };
   },
 };
 function playerTitle(){
@@ -4997,7 +5034,7 @@ document.addEventListener('click', e => {
     case 'tab': closeSheet(true); switchTab(t.dataset.tab); break;
     case 'back': goBack(); break;
     case 'push': {
-      const target = t.dataset.s || '', restricted = /^admin/.test(target) || target === 'rewardpreview' || target === 'glows';
+      const target = t.dataset.s || '', restricted = /^admin/.test(target) || target === 'rewardpreview';
       if (restricted && !ADM.is) { toast('Admins only'); break; }
       const p = {}; if (id) p.id = id; if (t.dataset.g) p.g = t.dataset.g; closeSheet(true); push(target, p); break;
     }
@@ -5084,6 +5121,8 @@ document.addEventListener('click', e => {
   }
 });
 
+document.head.insertAdjacentHTML('beforeend', '<style id="holo-masks">' + holoMaskCSS() + '</style>');   // per-look foil safe areas (card-fx.js)
+
 /* ================= START ================= */
 const SPLASH_AT = Date.now();
 let splashPct = 8;
@@ -5104,7 +5143,7 @@ probeArt().then(async () => {
   splashSet(60, 'Shuffling the cards…');
   try { if (window.CQCloud) await CQCloud.init(); }
   catch (error) { console.warn('Cloud save unavailable:', error); }
-  if (/[?&]demo=glows/.test(location.search)) { nav.tab = 'profile'; nav.stacks.profile = [{s:'profile', p:{}}, {s:'glows', p:{}}]; }
+  if (/[?&]demo=lab/.test(location.search)) { nav.tab = 'profile'; nav.stacks.profile = [{s:'profile', p:{}}, {s:'adminvisuals', p:{}}]; }   // admins only: the screen checks
   splashSet(85, 'Setting up your desk…');
   history.replaceState({}, '');
   showScreen('none');

@@ -6,7 +6,7 @@
 
 const ADM = { is:false, checking:false, players:null, loading:false, err:'', checkSeq:0, playerSeq:0, quizChoice:null };
 const adminDenied = title => ({ title:title || 'Admin', body:'<p class="empty">Admins only.</p>' });
-const adminRoute = s => /^admin/.test(s || '') || s === 'rewardpreview' || s === 'glows';
+const adminRoute = s => /^admin/.test(s || '') || s === 'rewardpreview';
 function adminRefreshOrExit(){
   if (typeof topEntry !== 'function') return;
   const en = topEntry(); if (!en) return;
@@ -203,6 +203,37 @@ function ruleHTML(c){   // display only: no highlighting, no "read" credit
   return '';
 }
 
+/* ---------- Card Visual Lab: pick a card, compare every level and version, and try foil settings ---------- */
+const LAB = { id:null, series:null, lv:null, ver:null, tier:'gold', fx:{}, live:false };   // fx: version -> playground holo settings, in memory only
+const labVers = () => Object.keys(VERSIONS);   // admin.js loads before the main script, so VERSIONS is read when used
+const labCard = () => byId(LAB.id) || CARDS.find(c => c.series === 6) || CARDS[0];
+const labRender = (c, lv, ver, live) => withFxPlay(LAB.fx, () => neutralRender(() => cardEl(c, admFixture(c, lv, 'normal', ver), {}, live ? 'fx-live' : '')));
+function labGridHTML(c, live){
+  const cols = maxL(c), cell = (lv, v) => `<button class="lab-cell${lv === LAB.lv && v === LAB.ver ? ' on' : ''}" data-act="lab-cell" data-lv="${lv}" data-ver="${v}" aria-label="${esc(c.name)} level ${lv}, ${esc(titleCase(VERSIONS[v].label))}">${labRender(c, lv, v, live)}</button>`;
+  return `<div class="lab-grid" style="--cols:${cols}"><span></span>${Array.from({ length:cols }, (_, i) => `<b class="lab-h">L${i + 1}</b>`).join('')}${
+    labVers().map(v => `<b class="lab-v">${esc(titleCase(VERSIONS[v].label))}</b>${Array.from({ length:cols }, (_, i) => cell(i + 1, v)).join('')}`).join('')}</div>`;
+}
+function labPreviewHTML(c){
+  const lv = Math.min(LAB.lv || maxL(c), maxL(c)), ver = LAB.ver || LAB.tier;
+  return `<div class="lab-big">${labRender(c, lv, ver, true)}</div><p class="st-note c">Level ${lv} · ${esc(titleCase(VERSIONS[ver].label))}. Tap any card below to show it here.</p>`;
+}
+function labPlaygroundHTML(){
+  const cur = Object.assign({}, FX_VERSIONS[LAB.tier].holo, LAB.fx[LAB.tier] || {}), chip = (act, v, label, on) => `<button class="${on ? 'on' : ''}" data-act="${act}" data-v="${v}">${esc(label)}</button>`;
+  const slider = (k, min, max, step) => `<label class="lab-range"><span>${titleCase(k)} <output>${cur[k]}</output></span><input type="range" data-lab-range="${k}" min="${min}" max="${max}" step="${step}" value="${cur[k]}"></label>`;
+  return `<div class="sec-h"><span>Effects playground</span></div>
+    <p class="st-note">Change a version's foil and watch the cards above. Nothing is permanent until you copy the settings and ask for them to be locked in.</p>
+    <div class="lab-k">Version</div><div class="adm-modes adm-vers">${labVers().map(v => chip('lab-tier', v, titleCase(VERSIONS[v].label), v === LAB.tier)).join('')}</div>
+    <div class="lab-k">Pattern</div><div class="adm-modes">${['none', ...HOLO_PATTERNS].map(p => chip('lab-pattern', p, titleCase(p), cur.pattern === p)).join('')}</div>
+    <div class="lab-k">Colour</div><div class="adm-modes">${Object.keys(HOLO_RAMPS).map(r => chip('lab-ramp', r, titleCase(r), cur.ramp === r)).join('')}</div>
+    ${slider('strength', 0, 1, .05)}${slider('area', 0, 1, .05)}${slider('speed', .25, 3, .25)}
+    <div class="lab-k">Movement</div><div class="adm-modes">${chip('lab-drive', 'tilt', 'Follows tilt', cur.drive === 'tilt')}${chip('lab-drive', 'auto', 'Sweeps on its own', cur.drive === 'auto')}</div>
+    <div class="lab-acts"><button class="sk-btn" data-act="lab-copy">Copy settings</button><button class="sheet-cancel" data-act="lab-reset">Reset all</button></div>`;
+}
+function labRepaint(){   // redraw only the cards, in place, so a slider keeps focus while it is dragged
+  const host = typeof currentScreenEl === 'function' && currentScreenEl() && currentScreenEl().querySelector('.lab-previews');
+  if (host) { const c = labCard(); host.innerHTML = labPreviewHTML(c) + labGridHTML(c, LAB.live); }
+}
+
 Object.assign(ADMIN_SCREENS, {
   admincards(){
     return adminScreen('All Cards', () => {
@@ -259,7 +290,7 @@ Object.assign(ADMIN_SCREENS, {
     return adminScreen('Tester Workspace', () => ({ title:'Tester Workspace', body:`
       <div class="adm-hero tester"><span>${ICO('sparkle')}</span><div><b>Isolated preview lab</b><small>Fixtures do not change your save or sync to the cloud</small></div></div>
       <div class="sec-h"><span>Cards &amp; learning</span></div><div class="list">
-        <button class="row" data-act="push" data-s="adminvisuals"><span class="th emo gi">${ICO('cards')}</span><span class="row-main"><b>Card visual lab</b><small>Series, levels, color, frame break, frost, foil, and glows</small></span>${chev}</button>
+        <button class="row" data-act="push" data-s="adminvisuals"><span class="th emo gi">${ICO('cards')}</span><span class="row-main"><b>Card visual lab</b><small>Every level and version side by side, plus the glow and foil playground</small></span>${chev}</button>
         <button class="row" data-act="push" data-s="adminquiz"><span class="th emo gi">${ICO('read')}</span><span class="row-main"><b>Quiz interaction</b><small>Answer a disposable question fixture</small></span>${chev}</button>
       </div>
       <div class="sec-h"><span>Rewards &amp; flows</span></div><div class="list">
@@ -281,16 +312,15 @@ Object.assign(ADMIN_SCREENS, {
   },
   adminvisuals(){
     return adminScreen('Card Visual Lab', () => {
-      const series = [...new Set(CARDS.map(c => c.series || 1))].sort((a,b) => a-b);
-      const samples = series.map(n => CARDS.find(c => (c.series || 1) === n && (FRAME_BREAK_CARDS.has(c.id) || c.frameBreak)) || CARDS.find(c => (c.series || 1) === n)).filter(Boolean);
-      const s3 = CARDS.find(c => c.series === 3), frame = CARDS.find(c => (FRAME_BREAK_CARDS.has(c.id) || c.frameBreak) && c.cutout);
-      return { title:'Card Visual Lab', body:`<p class="st-note">Tap a sample to inspect every level and switch among the four versions (Filed, Certified, Exhibit, Gold Seal) and the clean, charged, frosted, cold, and mastered states.</p>
-        <div class="sec-h"><span>Series coverage</span></div><div class="adm-gallery">${samples.map(c => `<button data-act="push" data-s="admincard" data-id="${c.id}">${admCardPreview(c, Math.min(2,maxL(c)), 'normal')}<small>Series ${c.series || 1}</small></button>`).join('')}</div>
-        <div class="sec-h"><span>Required effects</span></div><div class="list">
-          ${s3 ? `<button class="row" data-act="push" data-s="admincard" data-id="${s3.id}">${admThumb(s3,2)}<span class="row-main"><b>Progressive color</b><small>Series 3 paint stages across levels</small></span>${chev}</button>` : ''}
-          ${frame ? `<button class="row" data-act="push" data-s="admincard" data-id="${frame.id}">${admThumb(frame,maxL(frame))}<span class="row-main"><b>Frame break &amp; motion</b><small>Max-level cutout and device tilt</small></span>${chev}</button>` : ''}
-          <button class="row" data-act="push" data-s="glows"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Card glows</b><small>Level 2, almost leveled up, Memory Trick, and cold</small></span>${chev}</button>
-        </div>` };
+      const c = labCard(), series = [...new Set(CARDS.map(x => x.series || 1))].sort((x, y) => x - y), on = LAB.series || c.series || 1;
+      const list = CARDS.filter(x => (x.series || 1) === on);
+      return { title:'Card Visual Lab', body:`<p class="st-note">Pick a card, then compare every level and version at once. The glow and foil here are the real ones, so what you see is what players see.</p>
+        <div class="adm-modes">${series.map(n => `<button class="${n === on ? 'on' : ''}" data-act="lab-series" data-v="${n}">Series ${n}</button>`).join('')}</div>
+        <div class="adm-modes lab-cards">${list.map(x => `<button class="${x.id === c.id ? 'on' : ''}" data-act="lab-pick" data-id="${x.id}">${esc(x.name)}</button>`).join('')}</div>
+        <div class="lab-previews">${labPreviewHTML(c)}${labGridHTML(c, LAB.live)}</div>
+        <div class="lab-acts"><button class="${LAB.live ? 'on' : ''}" data-act="lab-live" aria-pressed="${LAB.live}">${LAB.live ? 'Grid moving: on' : 'Grid moving: off'}</button>
+          <button data-act="push" data-s="admincard" data-id="${c.id}">Questions and states</button></div>
+        ${labPlaygroundHTML()}` };
     });
   },
   adminquiz(p){
@@ -350,6 +380,19 @@ document.addEventListener('click', e => {
     case 'adm-pack-add': if (ADM.is) { S.packs += 5; save(); refresh(); toast('5 packs added', 'pack'); } break;
     case 'adm-quiz-answer': ADM.quizChoice = +t.dataset.i; refresh(); break;
     case 'adm-quiz-reset': ADM.quizChoice = null; refresh(); break;
+    case 'lab-pick': Object.assign(LAB, { id:t.dataset.id, lv:null, ver:null }); refresh(); break;
+    case 'lab-series': Object.assign(LAB, { series:+t.dataset.v, id:(CARDS.find(c => (c.series || 1) === +t.dataset.v) || {}).id, lv:null, ver:null }); refresh(); break;
+    case 'lab-cell': { LAB.lv = +t.dataset.lv; LAB.ver = t.dataset.ver; labRepaint();
+      const big = currentScreenEl() && currentScreenEl().querySelector('.lab-big'); if (big) big.scrollIntoView({ block:'nearest', behavior:'smooth' }); break; }
+    case 'lab-live': LAB.live = !LAB.live; refresh(); break;
+    case 'lab-tier': LAB.tier = t.dataset.v; refresh(); break;
+    case 'lab-pattern': case 'lab-ramp': case 'lab-drive':
+      (LAB.fx[LAB.tier] = LAB.fx[LAB.tier] || {})[t.dataset.act.slice(4)] = t.dataset.v; refresh(); break;
+    case 'lab-reset': LAB.fx = {}; refresh(); break;
+    case 'lab-copy': { const json = JSON.stringify(Object.fromEntries(labVers().map(v => [v, Object.assign({}, FX_VERSIONS[v].holo, LAB.fx[v] || {})])), null, 2);
+      const sheet = () => openSheet(`<h3>Copy these settings</h3><textarea class="lab-json" readonly rows="12">${esc(json)}</textarea><button class="sheet-cancel" data-act="sheet-close">Close</button>`);
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(json).then(() => toast('Settings copied', 'check'), sheet); else sheet();
+      break; }
     case 'adm-screen': { const v = t.dataset.v;
       if (v === 'startup' && typeof previewStartupSplash === 'function') previewStartupSplash();
       else if (v === 'startup') openSheet(`<div class="adm-loading"><div class="home-logo">BECOMING <span>A CLERK</span></div><p>Study for the New York court clerk exam.</p><div class="sp-bar"><i style="width:62%"></i></div><small>Shuffling the cards…</small></div><button class="sheet-cancel" data-act="sheet-close">Close preview</button>`);
@@ -360,6 +403,13 @@ document.addEventListener('click', e => {
       else openSheet(tipSheetHTML(v.slice(4)));
       break; }
   }
+});
+
+document.addEventListener('input', e => {   // playground sliders: change the working copy and redraw the cards only
+  const r = e.target.closest && e.target.closest('[data-lab-range]'); if (!r || !ADM.is) return;
+  (LAB.fx[LAB.tier] = LAB.fx[LAB.tier] || {})[r.dataset.labRange] = +r.value;
+  const out = r.parentNode.querySelector('output'); if (out) out.textContent = r.value;
+  labRepaint();
 });
 
 const ADMIN_CSS = `
@@ -389,5 +439,13 @@ const ADMIN_CSS = `
 .adm-pack{text-align:center;padding:18px;border-radius:17px;background:var(--bg2)}.adm-pack img{display:block;width:min(45%,180px);max-height:230px;object-fit:contain;margin:0 auto 9px}.adm-pack b,.adm-pack small{display:block}.adm-pack b{font:400 22px "Bangers";letter-spacing:.05em}.adm-pack small{font:13px var(--ui);color:var(--sub);margin-top:4px}.adm-pulls{display:grid;grid-template-columns:repeat(3,minmax(0,200px));justify-content:center;gap:8px;margin-top:14px}.adm-pulls>div{min-width:0;text-align:center}.adm-pulls small{display:block;font:11px/1.2 var(--ui);color:var(--sub);margin-top:5px}.adm-back{width:100%;aspect-ratio:1024/1536;object-fit:cover;border-radius:6%/4%}
 .adm-loading{text-align:center;padding:14px 4px}.adm-loading>.ico{width:64px;height:64px}.adm-loading h3{font:400 27px "Bangers";letter-spacing:.05em}.adm-loading p,.adm-loading small{color:var(--sub)}.adm-loading .sp-bar{position:relative;inset:auto;width:100%;margin:14px 0}.adm-result{padding:0}.adm-result .score{font-size:60px}.adm-result .panel{margin-top:14px}
 .adm-save-card{display:grid;grid-template-columns:46px 1fr;gap:10px 12px;padding:10px 12px;border-bottom:.5px solid var(--line)}.adm-save-card:last-child{border-bottom:0}.adm-save-card>span{min-width:0}.adm-save-card>span b,.adm-save-card>span small{display:block}.adm-save-card>span b{font:18px "Patrick Hand"}.adm-save-card>span small{font:12px var(--ui);color:var(--sub)}.adm-save-card>div{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.adm-save-card>div button{min-height:36px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.05);color:var(--paper);font:14px var(--ui)}.adm-save-card>div button:disabled{opacity:.4}
+.lab-grid{display:grid;grid-template-columns:auto repeat(var(--cols),minmax(52px,1fr));gap:6px;align-items:center;overflow-x:auto;margin:6px 0 12px;padding:4px 2px}
+.lab-h,.lab-v{font:400 15px "Bangers";letter-spacing:.06em;color:var(--sub);text-align:center}.lab-v{writing-mode:vertical-rl;transform:rotate(180deg);font-size:13px}
+.lab-cell{background:none;border:0;padding:3px;min-width:0;border-radius:8px}.lab-cell .card{width:100%}.lab-cell.on{outline:2px solid var(--mustard);outline-offset:1px}
+.lab-big{width:min(56%,230px);margin:6px auto 4px}.lab-big .card{width:100%}
+.lab-k{margin:10px 0 5px;font:12px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--sub)}
+.lab-range{display:grid;gap:4px;margin:10px 0}.lab-range span{display:flex;justify-content:space-between;color:var(--sub);font:14px var(--ui)}.lab-range input{width:100%;accent-color:var(--mustard)}
+.lab-acts{display:flex;gap:8px;margin:4px 0 12px}.lab-acts>button{flex:1;min-height:40px}.lab-acts>button:not(.sk-btn):not(.sheet-cancel){border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--sub);font:14px var(--ui)}.lab-acts>button.on{background:var(--paper);border-color:var(--paper);color:var(--ink)}
+.lab-acts .sheet-cancel{margin:0}.lab-json{width:100%;box-sizing:border-box;font:12px "Courier Prime",monospace;background:var(--bg2);color:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px}
 `;
 document.head.insertAdjacentHTML('beforeend', `<style>${ADMIN_CSS}</style>`);

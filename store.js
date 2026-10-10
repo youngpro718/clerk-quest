@@ -348,8 +348,6 @@ const STORE_CSS = `
 .sty-btn{flex:none;min-height:34px;padding:0 14px;border-radius:17px;border:0;background:rgba(255,255,255,.1);color:var(--paper);font:600 14px var(--ui)}
 .sty-btn.buy{background:var(--mustard);color:var(--ink)} .sty-btn.on{background:rgba(111,168,110,.25);color:#bfe0b5}
 .sty-btn .ico{width:16px;height:16px;vertical-align:-3px} .sty-btn[disabled]{opacity:.45}
-.holo{position:absolute;inset:0;z-index:2;pointer-events:none;background-size:160% 160%;mix-blend-mode:color-dodge;opacity:.26;animation:holo 6s ease-in-out infinite alternate}
-@keyframes holo{from{background-position:0% 0%}to{background-position:100% 100%}}
 .cd-card{position:relative;perspective:1200px;cursor:pointer;isolation:isolate}
 .cd-card .card,.cd-card .cd-back{transition:transform .6s cubic-bezier(.3,.8,.3,1);backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .cd-card .cd-back{position:absolute;inset:0;transform:rotateY(180deg);border-radius:6%/4%;overflow:hidden}

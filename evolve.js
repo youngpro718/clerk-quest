@@ -169,7 +169,7 @@ const EVOLVE_CSS = `
 .evo-old > :is(.framebreak-character,.frame-metadata,.frame.panels-top,.stampimg,.mn-badge.framebreak-memory){display:none}
 .card > .evo-rim{inset:0;width:100%;height:100%;z-index:12;pointer-events:none}
 .card.evolved > .stampimg.mastered,.card.evolved > .vd{z-index:13}
-.card.evolved.lv4.ver-filed:not(.cold):not(.charged){--glow:0 0 2.6cqw rgba(225,235,255,.4)}
+.card.evolved.lv4.ver-filed:not(.cold):not(.charged){--st-glow:0 0 2.6cqw rgba(225,235,255,.4)}
 /* the evolved frame's XP strip and level plate are dark: light lettering, also on Gold Seal (which darkens text) */
 .card.evolved > :is(.t.xpstrip,.t.lvl),.card.evolved > :is(.t.xpstrip,.t.lvl) :not(.gem){color:#f6ecd2!important;-webkit-text-stroke:0!important;text-shadow:0 .2cqw .5cqw rgba(0,0,0,.85)!important}
 .card.evolved > .t.lvl .stars .on{color:#ffd45a!important}.card.evolved > .t.lvl .stars .off{color:rgba(246,236,210,.35)!important}
