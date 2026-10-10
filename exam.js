@@ -73,7 +73,13 @@ const EXAM_TOPIC = {
  "s5_concept_vault_voltage": "Penal Law § 80.00: fines for felonies",
  "joinder": "CPLR 1001, 1002, 1003: necessary and permissive joinder of parties",
  "instruments": "CPL §§ 1.20, 100.10: information, complaint and indictment",
- "petition": "CPLR 304, 401, 402, 403: the petition and the notice of petition"
+ "petition": "CPLR 304, 401, 402, 403: the petition and the notice of petition",
+ "whoenters": "CPLR 1006, 1007, 1012, 1013: interpleader, third-party practice and intervention",
+ "courts": "CPL §§ 10.10, 10.30: superior and local criminal courts",
+ "appearance": "CPL § 110.10: requiring a defendant's appearance for arraignment",
+ "jurynumbers": "CPLR 4104, 4109, 4113; CPL 270.05, 270.25, 360.10: jury size, verdicts and peremptory challenges",
+ "endearly": "CPLR 3211, 3212, 3213, 3216, 3217: dismissal, summary judgment and discontinuance",
+ "sworn": "CPLR 2105, 2106, 2309, 3020, 3022: affirmations, oaths, verifications and certified copies"
 };
 const examTopic = it => it && it.style !== 'exam' ? (EXAM_TOPIC[it.cardId] || '') : '';
 /* Card questions sometimes open with a card-style label ("Exam format.", "WHAT TRIGGERS IT?", "FIND THE INCORRECT STATEMENT

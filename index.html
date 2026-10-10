@@ -433,6 +433,25 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .framebreak-character.series45.series4{left:13%;top:14%;width:74%;height:66%;transform:translate3d(0,0,0) rotate(-3deg) scale(1)}
 .framebreak-character.series45.series5{left:8%;top:25%;width:84%;height:62%;transform:translate3d(0,0,0) rotate(3deg) scale(1)}   /* starts under the title so the title never hides the head */
 .card.series4 .stampimg.mastered,.card.series5 .stampimg.mastered{z-index:8}
+/* the courtroom-comic look (frontCCHTML): layers back to front are bg, cast, frame, title, live labels */
+.card.look-cc{isolation:isolate}
+.card .cc-bgimg,.card .cc-cast,.card .cc-title{position:absolute;pointer-events:none}
+.card .cc-bgimg{left:2.3%;top:20.8%;width:95.4%;height:54%;object-fit:cover;z-index:1}
+.card .cc-cast{left:3.2%;top:24%;width:93.6%;height:49%;object-fit:contain;z-index:2}
+.card .cc-frame{z-index:3}
+.card .cc-title{left:0;top:0;width:100%;height:100%;z-index:4}
+.card.look-cc .t.cc{z-index:5;display:flex;align-items:center;justify-content:center;text-align:center;color:#1d1b17;font-family:"Bangers",sans-serif;letter-spacing:.04em}
+.card.look-cc .t.cc.num{font-size:calc(5.4cqw*var(--fit,1))}
+.card.look-cc .t.cc.cat{color:#f1e5c9;font-size:calc(3.8cqw*var(--fit,1));letter-spacing:.16em}
+.card.look-cc .t.cc.xpstrip{flex-direction:column;gap:.5cqw;font-size:calc(2.6cqw*var(--fit,1))}
+.card.look-cc .t.cc.xpstrip i{display:block;width:88%;height:20%;border-radius:2cqw;background:rgba(29,27,23,.18);overflow:hidden}
+.card.look-cc .t.cc.xpstrip i b{display:block;height:100%;background:#cf3b2a}
+.card.look-cc .t.cc.quote{font-family:"Patrick Hand",cursive;font-size:4.9cqw;line-height:1.15;letter-spacing:0;padding:0 5%}
+.card.look-cc .t.cc.set{flex-direction:column;color:#f1e5c9;font-size:calc(3cqw*var(--fit,1))}
+.card.look-cc .t.cc.set hr{width:60%;margin:.4cqw 0;border:0;border-top:1px solid rgba(241,229,201,.5)}
+.card.look-cc .t.cc.set small{font-size:calc(2cqw*var(--fit,1));opacity:.8}
+.card.look-cc .t.cc.lvl{flex-direction:column;font-size:calc(2.8cqw*var(--fit,1))}
+.card.look-cc .stampimg.mastered{z-index:8}
 html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0) rotate(0deg) scale(1)!important}
 .series-badge{z-index:6;object-fit:contain;transform:rotate(8deg);filter:drop-shadow(0 .5cqw .5cqw rgba(0,0,0,.45));pointer-events:none}
 .series{z-index:6;display:flex;align-items:center;justify-content:center;font-family:"Bangers";letter-spacing:.1em;font-size:3.8cqw;color:#fff5dc;
@@ -1423,12 +1442,13 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="stickers.js?v=b5b91566"></script>
 <script src="dockets.js?v=32fec8b7"></script>
 <script src="hearing.js?v=a7e3ecd9"></script>
+<script src="lookalike-cards.js?v=6bef9c2d"></script>
 <script src="weakness.js?v=f19e3e69"></script>
 <script src="weak-ui.js?v=b8614c5a"></script>
 <script src="pattern-lessons.js?v=bd455b9f"></script>
 <script src="pattern-lessons-ui.js?v=3ace01b8"></script>
 <script src="today.js?v=38a1f761"></script>
-<script src="exam.js?v=cbc77ab9"></script>
+<script src="exam.js?v=4f7f08c3"></script>
 <script src="exam-questions.js?v=9a46dfce"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="packfield.js?v=b72b00a2"></script>
@@ -2226,6 +2246,9 @@ function series45Card(raw, i){
   }, raw, { series, source, art:`series${series}_${slug}`, asset:raw.asset || `assets/series${series}/characters/${slug}.png` });
 }
 CARDS.push(...SERIES45_SOURCE_CARDS.filter(c => c && (Number(c.series) === 4 || Number(c.series) === 5)).map(series45Card));
+/* the look-alikes pilot set (lookalike-cards.js): finished cards only, unless the page is opened with ?ccdrafts=1 */
+const LOOKALIKE_DATA = window.CQ_LOOKALIKES || { cards:[] };
+CARDS.push(...LOOKALIKE_DATA.cards.filter(c => c && (LOOKALIKE_DATA.includeDrafts || !c.draft)).map(lookalikeCard));
 
 const SERIES3_IDS = new Set(['eightback','reargue','renew','sj120','undodefault','freeze','appeal30']);
 const SERIES3_BACKGROUNDS = {
@@ -2548,8 +2571,9 @@ function save(){
    The card uses the highest stage it has; missing stages get sticker jokes on top. */
 const ART = {};
 function probeArt(){
+  CARDS.forEach(c => { if (c.look === 'cc') c.asset = artSrc(c.ccArt.cast); });   // the look-alike set's cast doubles as its card art (thumbnails, Today hero)
   // The published build lists its art files up front, so nothing has to be guessed.
-  if (window.ART_MANIFEST) { CARDS.forEach(c => { ART[c.id] = window.ART_MANIFEST[c.art] || {}; }); return Promise.resolve(); }
+  if (window.ART_MANIFEST) { CARDS.forEach(c => { ART[c.id] = window.ART_MANIFEST[c.art] || (c.look === 'cc' ? { 1:c.asset } : {}); }); return Promise.resolve(); }
   const jobs = [];
   CARDS.forEach(c => {
     ART[c.id] = {};
@@ -2689,6 +2713,24 @@ function s3ArtHTML(c, lv){
   const character = lv < maxL(c) ? s3CharacterLayers(c, lv) : '';
   return `${bg ? `<img class="s3-bg" src="${bg}" alt="">` : '<div class="art-back"></div>'}<div class="s3-bgshade"></div>${character}`;
 }
+/* the courtroom-comic look (look:'cc'): kit layers from back to front are the background, the cast, the shared frame and the
+   title lettering; the number, category, XP, caption and footer are live text on the frame's blank panels (1024 x 1536 grid) */
+function frontCCHTML(c, st, opt = {}){
+  const lv = st.level, need = NEED[lv - 1], pct = st.mastered ? 100 : Math.min(100, st.xp / need * 100), a = c.ccArt;
+  return `
+    <img class="cc-bgimg" src="${artSrcJpg(a.bg)}" alt="">
+    <img class="cc-cast" src="${artSrc(a.cast)}" alt="${esc(c.name)} artwork">
+    <img class="frame cc-frame" src="art/cc_frame.webp" alt="">
+    <img class="cc-title" src="${artSvg(a.title)}" alt="${esc(c.name)}">
+    <div class="t num cc meta" style="${P(40, 38, 158, 92)}">${c.num}</div>
+    <div class="t cat cc meta" style="${P(190, 28, 778, 89)}">${esc(c.category)}</div>
+    <div class="t xpstrip cc meta" style="${P(792, 30, 985, 98)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
+    <div class="t quote cc" style="${P(63, 1165, 967, 1347)}">“${esc(c.quote || '')}”</div>
+    <div class="t rar cc meta" style="${P(41, 1390, 250, 1479)}">${verBadge(st, 'calc(2.65cqw*var(--fit,1))', 'calc(2.15cqw*var(--fit,1))', '')}</div>
+    <div class="t set cc meta" style="${P(275, 1390, 718, 1478)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
+    <div class="t lvl cc meta" style="${P(757, 1390, 985, 1481)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
+    ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
+}
 function frontS3HTML(c, st, opt={}){
   const lv = st.level, need = NEED[lv-1];
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
@@ -2761,6 +2803,7 @@ function frontS45HTML(c, st, opt={}){
 }
 function frontHTML(c, st, opt={}){
   if (typeof isEvolvedView === 'function' && isEvolvedView(c, st)) return evolvedFrontHTML(c, st, opt);   // evolve.js
+  if (c.look === 'cc') return frontCCHTML(c, st, opt);
   if (c.series === 3) return frontS3HTML(c, st, opt);
   if (c.series === 4 || c.series === 5) return frontS45HTML(c, st, opt);
   const lv = st.level, need = NEED[lv-1];
@@ -2802,7 +2845,7 @@ function frostHTML(c, st, now=Date.now()){
 function cardEl(c, st, opt={}, extraClass=''){
   const now = Date.now(), cold = isCold(st, now), deadline = coldAfter(st), last = Number.isFinite(+st.last) ? +st.last : 0;
   const charged = !cold && !st.mastered && st.level < maxL(c) && st.xp / NEED[st.level-1] >= .7;   // almost leveled up
-  return `<div class="card series${c.series || 1} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} ${c.illustratedMnemonic ? 'illustrated-mnemonic' : ''} ${typeof isEvolvedView === 'function' && isEvolvedView(c, st) ? 'evolved' : ''} lv${st.level} ver-${verOf(st)} ${sleeveOf(c) ? 'sleeved' : ''} ${c.trickType?'special':''} ${cold?'cold':''} ${charged?'charged':''} ${extraClass}" ${sleeveOf(c) ? `style="--sl:${sleeveScale(sleeveOf(c))}"` : ''} data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${frontHTML(c, st, opt)}${verDecorHTML(st)}${decoHTML(c)}${frostHTML(c, st, now)}</div>`;
+  return `<div class="card series${c.series || 1} ${c.look ? 'look-' + c.look : ''} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} ${c.illustratedMnemonic ? 'illustrated-mnemonic' : ''} ${typeof isEvolvedView === 'function' && isEvolvedView(c, st) ? 'evolved' : ''} lv${st.level} ver-${verOf(st)} ${sleeveOf(c) ? 'sleeved' : ''} ${c.trickType?'special':''} ${cold?'cold':''} ${charged?'charged':''} ${extraClass}" ${sleeveOf(c) ? `style="--sl:${sleeveScale(sleeveOf(c))}"` : ''} data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${frontHTML(c, st, opt)}${verDecorHTML(st)}${decoHTML(c)}${frostHTML(c, st, now)}</div>`;
 }
 
 
@@ -2811,7 +2854,7 @@ function cardEl(c, st, opt={}, extraClass=''){
    Sizes are in cqw, so one measurement on a hidden 300px card holds at every card size; results are cached
    by series + label + text. Runs as cards are added, before they paint. */
 const LabelFit = (() => {
-  const SEL = '.t.meta.s45.xpstrip, .t.meta.s45.cat, .t.meta.s45.set', FLOOR = 3.6, MAX = 2.4, cache = new Map();   // FLOOR: smallest legible size, in cqw
+  const SEL = '.t.meta.s45.xpstrip, .t.meta.s45.cat, .t.meta.s45.set, .t.meta.cc.xpstrip, .t.meta.cc.cat, .t.meta.cc.set', FLOOR = 3.6, MAX = 2.4, cache = new Map();   // FLOOR: smallest legible size, in cqw
   let stage = null;
   // The text itself (not just its line boxes) must fill no more than 95% of the box width and 90% of its height.
   const range = document.createRange();
@@ -2834,7 +2877,7 @@ const LabelFit = (() => {
     const els = root.matches && root.matches(SEL) ? [root] : root.querySelectorAll ? root.querySelectorAll(SEL) : [];
     els.forEach(el => {
       const card = el.closest('.card'); if (!card) return;
-      const series = (card.className.match(/\bseries\d\b/) || ['series1'])[0];
+      const series = card.classList.contains('look-cc') ? 'series1 look-cc' : (card.className.match(/\bseries\d\b/) || ['series1'])[0];
       const key = series + '|' + el.className + '|' + el.textContent;
       if (!cache.has(key)) cache.set(key, measure(el, `card ${series}`));
       el.style.setProperty('--fit', cache.get(key));
@@ -3323,6 +3366,8 @@ function groupLabel(g){
 /* Hand-drawn UI icons (art/icon_*.webp). The build rewrites these paths to .webp. */
 const ICO = (name, cls = '') => `<img class="ico ${cls}" src="art/icon_${name}.webp" alt="">`;
 const artSrc = name => `art/${name}.webp`;
+const artSrcJpg = name => `art/${name}.webp`;   // opaque backgrounds (the look-alike set); the build rewrites these to .webp like artSrc
+const artSvg = name => `art/${name}.svg`;      // vector titles are copied as they are
 const stickerArtSrc = id => ['summons','motion'].includes(id) ? artSrc('character_' + id + '_1') : artSrc('sticker_' + id);
 /* Pack art follows the newest series inside: Series 3, then Series 2, then the original pack */
 const packArtFor = cards => { const series = Math.max(1, ...cards.map(c => c && Number(c.series) || 1)); return artSrc(series === 1 ? 'pack' : `pack_s${series}`); };
@@ -4246,12 +4291,12 @@ function nextPackSeries(){
   return SERIES_DEFS[SERIES_DEFS.length - 1].n;
 }
 const nextPackArtSrc = () => seriesPackArt(nextPackSeries());
-/* A pack draws only from the series on its wrapper. The 12 trick cards that belong to no series are sprinkled into every pack. */
-function drawPack(n = nextPackSeries()){
+/* A pack draws only from the series on its wrapper. The 12 trick cards that belong to no series are sprinkled into every pack; the look-alike set (lookalike-cards.js) joins them after a player's first three packs. */
+function drawPack(n = nextPackSeries(), before = S.packsOpened){   // before: packs this player had opened BEFORE this one (openPack counts a free pack first, so it passes the count minus one)
   const d = seriesDef(n), owned = c => S.cards[c.id].owned;
-  const pool = CARDS.filter(d.test), tricks = CARDS.filter(c => c.trickType && !c.series);
+  const pool = CARDS.filter(d.test), tricks = CARDS.filter(c => c.trickType && !c.series && lookalikeEligible(c, before));
   const picks = []; const take = c => { if (c && picks.length < 3 && !picks.includes(c)) picks.push(c); };
-  const fits = c => c && !owned(c) && (d.test(c) || (c.trickType && !c.series));   // promises from older saves count only if the card belongs in this pack
+  const fits = c => c && !owned(c) && (d.test(c) || (c.trickType && !c.series && lookalikeEligible(c, before)));   // promises from older saves count only if the card belongs in this pack
   const promised = [].concat(S.guarantee || []).filter(id => fits(byId(id)));
   if (promised.length) { promised.slice(0, 3).forEach(id => take(byId(id)));
     const left = [].concat(S.guarantee || []).filter(id => !picks.some(c => c.id === id)); S.guarantee = left.length ? left : null; }
@@ -4431,7 +4476,7 @@ function openPack(opts = {}){
   if (!opts.pulls) S.packs--;
   const pv = !!opts.preview;   // an admin test pack: sample cards, and nothing is spent, awarded or saved
   const first = !pv && S.packsOpened === 0; if (!pv) S.packsOpened++;
-  const pulls = opts.pulls || drawPack(opts.series || undefined);
+  const pulls = opts.pulls || drawPack(opts.series || undefined, S.packsOpened - (pv ? 0 : 1));   // packs opened before this one (a preview pack was not counted above)
   const rank = p => VERSIONS[p.ver || 'filed'].n * 2 + (p.isNew ? 1 : 0);
   pulls.sort((a, b) => rank(a) - rank(b));   // like a real booster: the best card is saved for last
   const bonus = pv ? null : rollSticker();   // every pack can hold a bonus sticker, bought ones too
