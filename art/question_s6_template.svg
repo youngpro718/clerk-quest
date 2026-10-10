@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1792" viewBox="0 0 1024 1792" role="img" aria-label="Blank courtroom comic question face">
+  <defs>
+    <pattern id="edgeDots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="2.5" fill="#d7a71d" opacity=".62"/></pattern>
+    <clipPath id="frame"><rect x="12" y="12" width="1000" height="1768" rx="58"/></clipPath>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="1024" height="1792" fill="#0f3851"/>
+    <rect x="36" y="36" width="952" height="1720" rx="46" fill="#f2dfb7" stroke="#111820" stroke-width="16"/>
+    <rect x="60" y="60" width="904" height="1672" rx="30" fill="#fff0cc" stroke="#d7a71d" stroke-width="8"/>
+    <path d="M60 60h904v34H60zM60 1698h904v34H60z" fill="url(#edgeDots)"/>
+    <!-- Four independent blank header plates, matched to the live regions. -->
+    <path d="M48 48h194l10 14-6 88-12 10H58l-12-12-3-85z" fill="#111820"/>
+    <path d="M58 57h174l8 10-5 73-8 8H65l-8-7-3-72z" fill="#b63b32" stroke="#d7a71d" stroke-width="5"/>
+    <path d="M58 150h184l9 12-5 70-12 9H67l-11-10-3-68z" fill="#111820"/>
+    <path d="M68 159h162l7 8-4 55-7 7H74l-7-6-3-55z" fill="#f2dfb7" stroke="#b63b32" stroke-width="5"/>
+    <path d="M244 50h544l12 15-7 201-15 13H257l-15-13-4-198z" fill="#111820"/>
+    <path d="M256 62h520l10 10-6 184-10 10H266l-10-9-4-183z" fill="#fff0cc" stroke="#d7a71d" stroke-width="6"/>
+    <path d="M780 48h198l10 14-6 112-13 10H792l-13-12-4-108z" fill="#111820"/>
+    <path d="M791 58h175l8 9-5 96-8 8H799l-8-8-3-94z" fill="#f2dfb7" stroke="#b63b32" stroke-width="5"/>
+    <path d="M815 174h156l10 13-5 87-12 10H826l-12-11-3-84z" fill="#111820"/>
+    <path d="M826 184h134l7 8-4 72-7 7H833l-7-7-3-70z" fill="#f2dfb7" stroke="#d7a71d" stroke-width="5"/>
+    <path d="M62 278h900v36H62zM62 1414h900v36H62z" fill="#0f3851" stroke="#111820" stroke-width="7"/>
+    <path d="M64 296h896M64 1432h896" stroke="#b63b32" stroke-width="6"/>
+    <!-- Edge-only comic accents stay outside all live writing regions. -->
+    <path d="M72 342h18v54H72zM934 342h18v54h-18zM72 1328h18v54H72zM934 1328h18v54h-18z" fill="#d7a71d" stroke="#111820" stroke-width="5"/>
+  </g>
+  <rect x="12" y="12" width="1000" height="1768" rx="58" fill="none" stroke="#111820" stroke-width="20"/>
+</svg>

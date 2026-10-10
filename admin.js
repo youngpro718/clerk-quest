@@ -206,13 +206,14 @@ function ruleHTML(c){   // display only: no highlighting, no "read" credit
 Object.assign(ADMIN_SCREENS, {
   admincards(){
     return adminScreen('All Cards', () => {
-    // The game's own series (same names and membership as the Collection), then the Memory Tricks that sit outside every series
-    const loose = CARDS.filter(c => !SERIES_DEFS.some(d => d.test(c)));
+    // The game's own series (same names and membership as the Collection), then the add-on pack(s) that sit outside every series
     const groups = SERIES_DEFS.map(d => { const list = CARDS.filter(d.test);
       return { g:d.label + (list.length && list.every(c => c.trickType) ? ' · Memory Tricks' : ''), list }; })
-      .concat([{ g:'Memory Tricks · not in a series', list:loose }]);
+      .concat(ADDON_PACKS.map(d => ({ g:d.label + ' · add-on pack', list:CARDS.filter(d.test) })));
+    const stray = CARDS.filter(c => ![...SERIES_DEFS, ...ADDON_PACKS].some(d => d.test(c)));
+    if (stray.length) groups.push({ g:'Not in any pack', list:stray });
     const tricks = CARDS.filter(c => c.trickType), where = groups.filter(x => x.list.some(c => c.trickType))
-      .map(x => `${x.list.filter(c => c.trickType).length} ${x.list === loose ? 'not in a series' : 'in ' + x.g.split(' · ')[0]}`);
+      .map(x => `${x.list.filter(c => c.trickType).length} in ${x.g.endsWith(' · add-on pack') ? 'the ' + x.g.replace(' · ', ' ') : x.g.split(' · ')[0]}`);
     return { title:'All Cards', body:`<p class="st-note">Every card, including ones you don't own. Tap one to see each level, version, visual state, rule, and every question.</p>
       <p class="st-note">${tricks.length} are Memory Tricks: ${where.join(', ')}.</p>
       ${groups.map(({ g, list }) => { return list.length ? `<div class="sec-h"><span>${esc(g)}</span><span class="adm-count">${list.length}</span></div>
@@ -312,7 +313,7 @@ Object.assign(ADMIN_SCREENS, {
         <div class="adm-pulls">${pulls.map((c,i) => `<div>${i===0?`<img class="adm-back" src="${backSrc()}" alt="Card back">`:admCardPreview(c,Math.min(2,maxL(c)),'normal')}<small>${['Card back / duplicate','New card','Memory Trick'][i]}</small></div>`).join('')}</div>
         <div class="sec-h"><span>Open a test pack</span></div>
         <p class="st-note">The real pack opening with sample cards from that series. Nothing is spent, awarded or saved.</p>
-        <div class="adm-packs-open">${SERIES_DEFS.map(d => `<button data-act="adm-pack-open" data-v="${d.n}"><img src="${seriesPackArt(d.n)}" alt=""><small>Series ${d.n}</small></button>`).join('')}</div>
+        <div class="adm-packs-open">${SERIES_DEFS.concat(ADDON_PACKS).map(d => `<button data-act="adm-pack-open" data-v="${d.n}"><img src="${packArtOf(d.n)}" alt=""><small>${ADDON_PACKS.includes(d) ? 'Add-on' : 'Series ' + d.n}</small></button>`).join('')}</div>
         <div class="list" style="margin-top:12px"><button class="row" data-act="adm-pack-add"><span class="th emo gi">${ICO('pack')}</span><span class="row-main"><b>Add 5 real packs</b><small>To your own account, to try Pick Your Pack (${S.packs} waiting now)</small></span></button></div>
         <div class="sec-h"><span>Reward cards</span></div><div class="list"><button class="row" data-act="push" data-s="rewardpreview"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Landmark cards (Hot Docket)</b><small>Filed, Certified, backs, and one-chance quiz previews</small></span>${chev}</button></div>` };
     });
@@ -342,9 +343,10 @@ document.addEventListener('click', e => {
     case 'adm-ver': { const en = topEntry(); en.p = { ...en.p, ver:t.dataset.v }; refresh(); break; }
     case 'adm-reroll': refresh(); break;
     case 'adm-pack-open': {   // sample pulls: a new card, a duplicate, and a Certified one last, like a real pack's order
-      const n = +t.dataset.v, pool = shuffle(CARDS.filter(seriesDef(n).test));
+      const d = packDef(t.dataset.v), addon = ADDON_PACKS.includes(d), pool = shuffle(CARDS.filter(d.test));
       const pulls = pool.slice(0, 3).map((c, i) => ({ c, isNew:i !== 1, ver:i === 2 ? 'certified' : null, newVer:i === 2, coins:i === 1 ? 5 : 0, st:admFixture(c, 1, 'normal', i === 2 ? 'certified' : 'filed') }));
-      pulls.series = n; openPack({ pulls, series:n, preview:true, chosen:true }); break; }
+      if (addon) pulls.addon = d.n; else pulls.series = d.n;
+      openPack({ pulls, ...(addon ? { addon:d.n } : { series:d.n }), preview:true, chosen:true }); break; }
     case 'adm-pack-add': if (ADM.is) { S.packs += 5; save(); refresh(); toast('5 packs added', 'pack'); } break;
     case 'adm-quiz-answer': ADM.quizChoice = +t.dataset.i; refresh(); break;
     case 'adm-quiz-reset': ADM.quizChoice = null; refresh(); break;

@@ -114,16 +114,23 @@ const emblemSrc = set => artSrc('emblem_' + (EMBLEM[set] || 'courtterms'));
 
 const cardPrice = c => c.rarity === 'common' ? PRICE.deckCommon : c.rarity === 'uncommon' ? PRICE.deckUncommon : PRICE.deckRare;
 /* Each series has its own pack entry and Complete Deck. A pack only draws from the series on its wrapper.
-   The 12 trick cards that belong to no series are sprinkled into every series pack (see drawPack in index.html). */
+   The loose trick cards (no series) come only from the Memory Tricks add-on pack (ADDON_PACKS below). */
 const SERIES_DEFS = [
   { n:1, label:'Series 1', test:c => !c.series && !c.trickType, pack:'pack',    deck:'deck_s1' },
   { n:2, label:'Series 2', test:c => c.series === 2,           pack:'pack_s2', deck:'deck_s2' },
   { n:3, label:'Series 3', test:c => c.series === 3,           pack:'pack_s3', deck:'deck_s3' },
   { n:4, label:'Series 4 · Doodle Files', test:c => c.series === 4, pack:'pack_s4', deck:'deck_s4' },
   { n:5, label:'Series 5 · Vintage Heroes', test:c => c.series === 5, pack:'pack_s5', deck:'deck_s5' },
+  { n:6, label:'Series 6 · Look-alike Rules', test:c => c.series === 6, pack:'pack_s6', deck:'deck_s6' },
 ];
 const seriesDef = n => SERIES_DEFS.find(d => d.n === +n);
 const seriesPackArt = n => artSrc(seriesDef(n).pack);
+/* Add-on packs belong to no series (no deck, goals or card back). The Memory Tricks pack holds the loose tricks. */
+const ADDON_PACKS = [
+  { n:'tricks', label:'Memory Tricks', test:c => !!c.trickType && !c.series, pack:'pack_tricks' },
+];
+const packDef = k => SERIES_DEFS.find(d => String(d.n) === String(k)) || ADDON_PACKS.find(d => d.n === k);
+const packArtOf = k => artSrc(packDef(k).pack);
 function storeSeries(){
   return SERIES_DEFS.map(d => { const cards = CARDS.filter(d.test), missing = cards.filter(c => !owned(c));
     return { ...d, cards, missing, deckPrice:missing.reduce((n, c) => n + cardPrice(c), 0) }; });
@@ -139,6 +146,11 @@ function storeSubjects(){
     return { set, label:titleCase(set), cards, missing, buyable, deckPrice:buyable.reduce((n, c) => n + cardPrice(c), 0) };
   }).sort((a, b) => b.cards.length - a.cards.length || a.label.localeCompare(b.label));
 }
+
+function storeAddons(){
+  return ADDON_PACKS.map(d => { const cards = CARDS.filter(d.test); return { ...d, cards, missing:cards.filter(c => !owned(c)) }; });
+}
+const storePackList = () => storeSeries().concat(storeAddons());
 
 const deckArt = s => `<span class="st-art deck"><img src="${artSrc('deck_box')}" alt="">
   <span class="st-lab deck"><img src="${emblemSrc(s.set)}" alt=""><b>${esc(s.label)}</b></span></span>`;
@@ -156,13 +168,17 @@ function storeHTML(){
   }).join('');
   const packs = ser.map(d => `<button class="st-item" data-act="st-pack" data-set="${d.n}">${seriesPackImg(d)}
       <span class="st-name">${esc(d.label)} Pack</span><span class="st-sub">3 cards from ${esc(d.label)} · ${storePacksLeft()} left this week</span>${priceTag(PRICE.subjectPack, coins >= PRICE.subjectPack)}</button>`).join('');
+  const addons = storeAddons().map(d => `<button class="st-item" data-act="st-pack" data-set="${d.n}">${seriesPackImg(d)}
+      <span class="st-name">${esc(d.label)} Pack</span><span class="st-sub">3 trick cards · ${storePacksLeft()} left this week</span>${priceTag(PRICE.subjectPack, coins >= PRICE.subjectPack)}</button>`).join('');
   const boostRows = BOOSTS.map(b => { const ok = boostUsable(b);
     return `<button class="row st-boost ${ok ? '' : 'off'}" data-act="st-boost" data-set="${b.id}"><span class="st-bimg"><img src="${artSrc(b.art)}" alt=""></span>
       <span class="row-main"><b>${esc(b.name)}</b><small>${esc(boostStatus(b))}</small></span>${ok ? priceTag(b.price, coins >= b.price) : ''}</button>`; }).join('');
   return `<img class="st-banner" src="${artSrc('store_banner')}" alt="The Clerk's Counter">
     <button class="st-balance" data-act="coins-info"><img src="${artSrc('coin_big')}" alt=""><span><b>${coins.toLocaleString()}</b><small>coins · how to earn more</small></span>${chev}</button>
-    <div class="sec-h"><span>Series Packs</span></div><p class="st-note">Each pack holds cards from its own series, and some hold a trick card or a sticker. Duplicates turn into Copies and a few coins.</p>
+    <div class="sec-h"><span>Series Packs</span></div><p class="st-note">Each pack holds cards from its own series, and some hold a sticker. Duplicates turn into Copies and a few coins.</p>
     <div class="st-grid">${packs}</div>
+    <div class="sec-h"><span>Add-on Packs</span></div><p class="st-note">Not a series: three Memory Trick cards that help you tell look-alike rules apart. They share the weekly limit with series packs.</p>
+    <div class="st-grid">${addons}</div>
     <div class="sec-h"><span>Copies</span></div><p class="st-note">Collect ${COPIES_TO_CERTIFY} Copies to certify any card you own. Duplicate cards give Copies too. You have ${copies()}.</p>
     <div class="list"><button class="row" data-act="st-copy"><span class="st-bimg"><img src="art/copy.webp" alt=""></span>
       <span class="row-main"><b>1 Copy</b><small>${copyBuysLeft() ? `${copyBuysLeft()} left this week` : 'Sold out until Monday'}</small></span>${copyBuysLeft() ? priceTag(PRICE.copy, coins >= PRICE.copy) : ''}</button></div>
@@ -179,7 +195,7 @@ function storeHTML(){
       <button class="row" data-act="sty-pick" data-set="stamp"><span class="st-bimg"><img src="art/deco_stamp_ordered.webp" alt=""></span><span class="row-main"><b>Rubber Stamps</b><small>Received, Urgent, So Ordered and more · 60 each</small></span>${chev}</button>
       <button class="row" data-act="sty-pick" data-set="sleeve"><span class="st-bimg"><img src="art/deco_sleeve_manila.webp" alt=""></span><span class="row-main"><b>Card Sleeves</b><small>Manila, Red Tape, Navy, Ledger · 120 each</small></span>${chev}</button>
     </div>
-    <div class="sec-h"><span>Card Backs</span></div><p class="st-note">One back for your whole collection. See it in packs, or tap a card on its page to flip it. With Classic, each series shows its own back, and getting every card in a series to Certified earns that series an exclusive back that can't be bought.</p>
+    <div class="sec-h"><span>Card Backs</span></div><p class="st-note">One back for your whole collection. See it in packs, or tap a card on its page to flip it. With Classic, each series shows its own back, and in Series 1 to 5 getting every card to Certified earns that series an exclusive back that can't be bought.</p>
     ${backStyleHTML()}
     <div class="sec-h"><span>Binder Covers</span></div><p class="st-note">Dress up your binders. Put a cover on from a binder's ••• menu. Extra pages are added inside each binder.</p>
     <div class="st-grid backs">${COVERS.filter(cv => cv.price).map(cv => { const have = ownedCovers().includes(cv.id);
@@ -209,10 +225,10 @@ function deckSheet(n){
     note:`Every ${esc(d.label)} card, rares included. You only pay for the ones you don't have.` });
 }
 function packSheet(n){
-  const d = storeSeries().find(x => x.n === +n); if (!d) return;
+  const d = storePackList().find(x => String(x.n) === String(n)); if (!d) return;
   const left = storePacksLeft();
   buySheet({ title:d.label + ' Pack', art:seriesPackImg(d), price:PRICE.subjectPack, act:'st-buy-pack', set:d.n, locked:!left,
-    note:`${left ? `${left} of ${PRICE.packsPerWeek} store packs left this week. ` : `You have bought this week's ${PRICE.packsPerWeek} store packs. Your daily pack is still free. `}3 cards, all from ${esc(d.label)}, sometimes with a trick card or a sticker. ${d.missing.length ? `${d.missing.length} of the ${d.cards.length} ${esc(d.label)} cards are new to you.` : 'You own every card in this series, so each card turns into coins.'}` });
+    note:`${left ? `${left} of ${PRICE.packsPerWeek} store packs left this week. ` : `You have bought this week's ${PRICE.packsPerWeek} store packs. Your daily pack is still free. `}3 cards, all from ${esc(d.label)}, sometimes with a sticker. ${d.missing.length ? `${d.missing.length} of the ${d.cards.length} ${esc(d.label)} cards are new to you.` : 'You own every card in this series, so each card turns into coins.'}` });
 }
 const copyBuysLeft = () => { const w = S.copyBuys; return !w || w.week !== weekKey() ? PRICE.copiesPerWeek : Math.max(0, PRICE.copiesPerWeek - w.n); };
 function copySheet(){
@@ -236,12 +252,13 @@ function buyDeck(n){
     <button class="btn-big gold" data-act="sheet-close">NICE</button>`);
 }
 function buyPack(n){
-  const d = seriesDef(n); if (!d) return;
+  const d = packDef(n); if (!d) return;
   if (!storePacksLeft()) { toast(`You have bought this week's ${PRICE.packsPerWeek} store packs`, 'pack'); return; }
   if (!spendCoins(PRICE.subjectPack, `${d.label} Pack`)) return;
   S.storePacks = { week:weekKey(), n:PRICE.packsPerWeek - storePacksLeft() + 1 };
   closeSheet(true);
-  openPack({ pulls:drawPack(d.n), img:seriesPackArt(d.n), hint:`A ${d.label} pack! Tap it to tear it open.` });
+  const pulls = ADDON_PACKS.includes(d) ? drawAddonPack(d.n) : drawPack(d.n);
+  openPack({ pulls, img:packArtOf(d.n), hint:`A ${d.label} pack! Tap it to tear it open.` });
 }
 
 document.addEventListener('click', e => {

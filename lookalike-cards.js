@@ -3,8 +3,6 @@
    index.html turns each raw card into a card with lookalikeCard() and pushes it into CARDS. This file holds no file extensions on
    purpose: build_site.py only rewrites whole art/... literals, so the page builds the URLs from the art names. A card with draft:true is
    never in CARDS (unless the page is opened with ?ccdrafts=1 for development) and never in a pack. */
-const LOOKALIKE_FROM_PACK = 3;   // the new cards stay out of a player's first three packs
-const lookalikeEligible = (c, packsOpened) => !c.look || (!c.draft && packsOpened >= LOOKALIKE_FROM_PACK);
 const lookalikeTitleLines = name => {
   const words = String(name || '').toUpperCase().split(/\s+/), cut = Math.max(1, Math.ceil(words.length / 2));
   return [words.slice(0, cut).join(' '), words.slice(cut).join(' ') || words.slice(0, cut).join(' ')];
@@ -12,7 +10,7 @@ const lookalikeTitleLines = name => {
 function lookalikeCard(raw){
   const id = raw.id, lines = lookalikeTitleLines(raw.name);
   return Object.assign({
-    look:'cc', trickType:'difference', set:'LOOK-ALIKES', category:'MEMORY TRICK', maxLevel:3, rarity:'uncommon', icon:'court', emoji:'',
+    look:'cc', series:6, trickType:'difference', set:'LOOK-ALIKES', category:'MEMORY TRICK', maxLevel:3, rarity:'uncommon', icon:'court', emoji:'',
     stickers:{}, cutout:true, canonicalCharacter:true, art:'cc_' + id,
     ccArt:{ bg:'cc_' + id + '_bg', cast:'cc_' + id + '_1', title:'cc_' + id + '_title' },   // art NAMES: index.html builds the URLs (artSrc, artSrcJpg, artSvg) so the build can rewrite them to WebP
     l1:lines[0], l2:lines[1], lore:[], bank:[], related:[],

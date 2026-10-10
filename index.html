@@ -435,8 +435,8 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .card.series4 .stampimg.mastered,.card.series5 .stampimg.mastered{z-index:8}
 /* the courtroom-comic look (frontCCHTML): layers back to front are bg, cast, frame, title, live labels */
 .card.look-cc{isolation:isolate}
-.card .cc-bgimg,.card .cc-cast,.card .cc-title{position:absolute;pointer-events:none}
-.card .cc-bgimg{left:2.3%;top:20.8%;width:95.4%;height:54%;object-fit:cover;z-index:1}
+.card .cc-jig,.card .cc-cast,.card .cc-title{position:absolute;pointer-events:none}
+.card .cc-jig{left:2.3%;top:20.8%;width:95.4%;height:54%;z-index:1}
 .card .cc-cast{left:3.2%;top:24%;width:93.6%;height:49%;object-fit:contain;z-index:2}
 .card .cc-frame{z-index:3}
 .card .cc-title{left:0;top:0;width:100%;height:100%;z-index:4}
@@ -452,6 +452,20 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .card.look-cc .t.cc.set small{font-size:calc(2cqw*var(--fit,1));opacity:.8}
 .card.look-cc .t.cc.lvl{flex-direction:column;font-size:calc(2.8cqw*var(--fit,1))}
 .card.look-cc .stampimg.mastered{z-index:8}
+.card .cc-cast.cc-break{left:2%;top:17%;width:96%;height:63%;object-position:50% 100%;z-index:7}   /* a little taller than the window: it stands up out of the frame, never over the lettering */
+.card .cc-lockup{position:absolute;pointer-events:none;z-index:4}
+.card .cc-lockup img{position:absolute;max-width:none}
+.card.look-cc:has(> .framebreak-character) > :is(.cc-title,.cc-lockup){z-index:9}   /* the title lettering always wins over the character */
+.card.look-cc:has(> .framebreak-character) > .stampimg.mastered{z-index:10}
+.cc-jig .jig-gap{fill:#07090d}
+.cc-jig .jig-grid{fill:none;stroke:rgba(255,255,255,.14);stroke-width:3}   /* the empty pieces stay readable as a puzzle */
+.cc-jig .jig-glow{fill:#ffd34a;stroke:#ffb92e;stroke-width:34;stroke-linejoin:round;animation:jigglow 1.6s ease-out both}
+.jig-new{animation:jigfade .8s ease-out both}
+@keyframes jigfade{from{opacity:0}to{opacity:1}}
+@keyframes jigglow{0%{opacity:0}30%{opacity:.95}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.jig-new,.jig-glow{animation:none}.cc-jig .jig-glow{opacity:0}}
+html.cq-reduce-motion .jig-new,html.cq-reduce-motion .jig-glow{animation:none}
+html.cq-reduce-motion .cc-jig .jig-glow{opacity:0}
 html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0) rotate(0deg) scale(1)!important}
 .series-badge{z-index:6;object-fit:contain;transform:rotate(8deg);filter:drop-shadow(0 .5cqw .5cqw rgba(0,0,0,.45));pointer-events:none}
 .series{z-index:6;display:flex;align-items:center;justify-content:center;font-family:"Bangers";letter-spacing:.1em;font-size:3.8cqw;color:#fff5dc;
@@ -576,6 +590,8 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .pk-s3 .pk-pattern{opacity:.65;background:repeating-linear-gradient(180deg,rgba(255,255,255,.6) 0 18px,transparent 18px 36px) left/34px 100% no-repeat,repeating-linear-gradient(180deg,rgba(255,255,255,.6) 0 18px,transparent 18px 36px) right/34px 100% no-repeat,radial-gradient(ellipse at 50% 0%,rgba(140,255,240,.45),transparent 60%)}
 .pk-s4 .pk-pattern{opacity:.55;background:linear-gradient(90deg,transparent 15%,rgba(255,80,70,.8) 15% calc(15% + 2px),transparent calc(15% + 2px)),repeating-linear-gradient(180deg,transparent 0 30px,rgba(150,200,255,.55) 30px 32px)}
 .pk-s5 .pk-pattern{opacity:.6;background:radial-gradient(circle,rgba(255,240,120,.8) 1.6px,transparent 2.4px) 0 0/12px 12px,repeating-conic-gradient(from 0deg at 50% 45%,rgba(255,80,60,.35) 0 6deg,transparent 6deg 18deg)}
+.pk-s6 .pk-pattern{opacity:.55;background:radial-gradient(circle,rgba(255,255,255,.7) 1.4px,transparent 2.2px) 0 0/16px 16px,repeating-linear-gradient(45deg,transparent 0 26px,rgba(255,215,90,.35) 26px 28px)}
+.pk-tricks .pk-pattern{background:radial-gradient(circle at 20% 30%,#f5c518 0 3px,transparent 4px) 0 0/70px 70px,radial-gradient(circle at 70% 60%,#fff 0 2px,transparent 3px) 0 0/90px 90px,repeating-linear-gradient(-35deg,transparent 0 30px,rgba(190,150,255,.25) 30px 32px)}
 .pk-vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 35%,rgba(0,0,0,.75) 100%)}
 /* the letter floor (packfield.js) fades in over the blurred art and takes the place of the pattern and rays */
 .pk-field{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;opacity:0;transition:opacity .45s}
@@ -847,6 +863,7 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 #back.question_s3{--qpanel:url(art/question_s3_question.svg);--tpanel:url(art/question_s3_table.svg);--epanel:url(art/question_s3_explanation.svg);--apanel:url(art/question_s3_answer.svg);--hpanel:url(art/question_s3_hint.svg);--ppanel:url(art/question_s3_points.svg);--xpanel:url(art/question_s3_progress.svg);--qaccent:#123d43;--qlabel:#8c2624;--qpaper:#f6e7c8}
 #back.question_s4{--qpanel:url(art/question_s4_question.svg);--tpanel:url(art/question_s4_table.svg);--epanel:url(art/question_s4_explanation.svg);--apanel:url(art/question_s4_answer.svg);--hpanel:url(art/question_s4_hint.svg);--ppanel:url(art/question_s4_points.svg);--xpanel:url(art/question_s4_progress.svg);--qaccent:#171719;--qlabel:#cf3b2a;--qpaper:#fbf6e8}
 #back.question_s5{--qpanel:url(art/question_s5_question.svg);--tpanel:url(art/question_s5_table.svg);--epanel:url(art/question_s5_explanation.svg);--apanel:url(art/question_s5_answer.svg);--hpanel:url(art/question_s5_hint.svg);--ppanel:url(art/question_s5_points.svg);--xpanel:url(art/question_s5_progress.svg);--qaccent:#243b5c;--qlabel:#b93835;--qpaper:#fff5d9}
+#back.question_s6{--qpanel:url(art/question_s6_question.svg);--tpanel:url(art/question_s6_table.svg);--epanel:url(art/question_s6_explanation.svg);--apanel:url(art/question_s6_answer.svg);--hpanel:url(art/question_s6_hint.svg);--ppanel:url(art/question_s6_points.svg);--xpanel:url(art/question_s6_progress.svg);--qaccent:#0f3851;--qlabel:#b63b32;--qpaper:#fff0cc}
 #back[class*="question_s"] .qtext{background:var(--qpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:2.6cqw 3cqw;line-height:1.06}   /* padding lines the text up with the panel art's inner frame */
 #back[class*="question_s"] .rec{background:var(--tpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:3cqw 3cqw 2cqw}
 #back[class*="question_s"] .ans{background-color:transparent;background-image:var(--apanel);background-position:center;background-size:100% 100%;background-repeat:no-repeat;border:0;border-radius:0;box-shadow:0 .65cqw 0 rgba(0,0,0,.28)}
@@ -865,7 +882,7 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 #back[class*="question_s"] .title{background:var(--qpaper);border:.35cqw solid var(--qlabel);border-radius:1.4cqw;padding:.8cqw;gap:.2cqw}
 #back[class*="question_s"] .bnum,#back[class*="question_s"] .lvtag{background:var(--qlabel);border:.35cqw solid var(--qaccent);border-radius:1.2cqw;color:#fff8e8;text-shadow:0 .25cqw 0 rgba(0,0,0,.35)}
 #back[class*="question_s"] .brar,#back[class*="question_s"] .bcat,#back[class*="question_s"] .icon,#back[class*="question_s"] .counter{color:#fff4d8;text-shadow:0 .3cqw .2cqw rgba(0,0,0,.7)}
-#back.question_s1 .brar,#back.question_s1 .bcat,#back.question_s1 .icon,#back.question_s1 .counter,#back.question_s2 .brar,#back.question_s2 .bcat,#back.question_s2 .icon,#back.question_s2 .counter,#back.question_s4 .brar,#back.question_s4 .bcat,#back.question_s4 .icon,#back.question_s4 .counter,#back.question_s5 .brar,#back.question_s5 .bcat,#back.question_s5 .icon,#back.question_s5 .counter{color:#211e18;text-shadow:none}
+#back.question_s1 .brar,#back.question_s1 .bcat,#back.question_s1 .icon,#back.question_s1 .counter,#back.question_s2 .brar,#back.question_s2 .bcat,#back.question_s2 .icon,#back.question_s2 .counter,#back.question_s4 .brar,#back.question_s4 .bcat,#back.question_s4 .icon,#back.question_s4 .counter,#back.question_s5 .brar,#back.question_s5 .bcat,#back.question_s5 .icon,#back.question_s5 .counter,#back.question_s6 .brar,#back.question_s6 .bcat,#back.question_s6 .icon,#back.question_s6 .counter{color:#211e18;text-shadow:none}
 #back.question_s2 .bnum,#back.question_s2 .lvtag,#back.question_s2 .nxtab{color:#211e18;text-shadow:none}
 #back.question_s2 .title{transform:rotate(-.5deg);box-shadow:.6cqw .7cqw 0 #17121e}
 #back.question_s4 .title{border-style:dashed;transform:rotate(.35deg)}
@@ -879,6 +896,26 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 #back[class*="question_s"] .hint > span:last-child{padding-top:.4cqw}
 #back[class*="question_s"] .hint b{font-size:3.6cqw;line-height:1.08;margin-bottom:.35cqw}
 #back[class*="question_s"] .bnum{font-size:5cqw;letter-spacing:0;white-space:nowrap}
+/* Series 6's courtroom-comic frame already draws the header and footer plates.
+   Let the authored lettering and live progress copy sit inside those plates without
+   adding another bordered box or touching the rough inked edges. */
+#back.question_s6 .title{background:none;border:0;border-radius:0;padding:1.3cqw 2cqw;gap:0}
+#back.question_s6 .title:has(.title-print){align-items:center;justify-content:center}
+#back.question_s6 .title-print{max-width:100%;max-height:100%}
+#back.question_s6 .qtext{padding:2.4cqw 3.4cqw}
+#back.question_s6 .ans .A{padding-left:1.2cqw;padding-right:1.8cqw}
+#back.question_s6 .hint{padding:1.7cqw 2.7cqw}
+#back.question_s6 .pts{padding:2cqw 1.8cqw 1.5cqw;gap:.45cqw}
+#back.question_s6 .pts .v{font-size:7.2cqw;gap:.7cqw}
+#back.question_s6 .pts .v.half{font-size:6.1cqw;gap:.45cqw}
+#back.question_s6 .pts .v.half s{font-size:3.15cqw}
+#back.question_s6 .pts .v svg{width:6.2cqw;height:6.2cqw;flex:none}
+#back.question_s6 .progress-surface{left:6.64%!important;top:80.25%!important;width:86.72%!important;height:13.17%!important}
+#back.question_s6 .nxtab{left:8.3%!important;top:80.42%!important;width:27.34%!important;height:4.35%!important;font-size:4.3cqw}
+#back.question_s6 .nxl{left:9.28%!important;top:84.43%!important;width:46.29%!important;height:9.04%!important;padding:1.5cqw 2.2cqw 2cqw;gap:1.05cqw;font-size:3.25cqw;line-height:1.05}
+#back.question_s6 .nxr{left:57.91%!important;top:81.36%!important;width:32.23%!important;height:11.72%!important;padding:2.4cqw 2.2cqw 1.9cqw 3cqw;font-size:2.8cqw;line-height:1.08;gap:.5cqw}
+#back.question_s6 .nxr b{font-size:2.8cqw;line-height:1.05;margin-bottom:.25cqw;gap:.55cqw}
+#back.question_s6 .nxr b svg{width:3.2cqw;height:3.2cqw;flex:none}
 .face.back{transform:rotateY(180deg)}
 /* only the side facing the player can be tapped */
 .flip:not(.flipped) .face.back, .flip.flipped .face.front{pointer-events:none}
@@ -1427,7 +1464,7 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="cloud-sync.js?v=280b2aa4"></script>
 <script src="study.js?v=c0c0a01c"></script>
 <script src="economy.js?v=8b2bf044"></script>
-<script src="store.js?v=6b699b76"></script>
+<script src="store.js?v=15540b15"></script>
 <script src="study/quick-reference/quick-reference.js?v=0128f417"></script>
 <script src="study/quick-reference/series-lessons.js?v=55eee161"></script>
 <script src="curriculum-pilot.js?v=9e0d75af"></script>
@@ -1437,12 +1474,13 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="binder.js?v=dcc2617f"></script>
 <script src="onboarding.js?v=c32395d0"></script>
 <script src="account.js?v=833997ea"></script>
-<script src="admin.js?v=049577e1"></script>
+<script src="admin.js?v=4ca7ae06"></script>
 <script src="evolve.js?v=b5f0e3a5"></script>
 <script src="stickers.js?v=b5b91566"></script>
 <script src="dockets.js?v=32fec8b7"></script>
 <script src="hearing.js?v=a7e3ecd9"></script>
-<script src="lookalike-cards.js?v=6bef9c2d"></script>
+<script src="jigsaw.js?v=f2cee497"></script>
+<script src="lookalike-cards.js?v=24237958"></script>
 <script src="weakness.js?v=f19e3e69"></script>
 <script src="weak-ui.js?v=b8614c5a"></script>
 <script src="pattern-lessons.js?v=bd455b9f"></script>
@@ -2411,7 +2449,7 @@ function frameFor(c, lv){
 const VERSIONS = { filed:{ n:0, label:'FILED' }, certified:{ n:1, label:'CERTIFIED' }, exhibit:{ n:2, label:'EXHIBIT' }, gold:{ n:3, label:'GOLD SEAL' } };
 const verOf = st => [].concat(st && st.vers || []).reduce((best, v) => VERSIONS[v] && VERSIONS[v].n > VERSIONS[best].n ? v : best, 'filed');
 const verLabel = st => VERSIONS[verOf(st)].label;
-/* Series goals: every card owned (COMPLETE stamp), every card Certified or better (that series' exclusive card back),
+/* Series goals: every card owned (COMPLETE stamp), every card Certified or better (that series' exclusive card back, Series 1 to 5),
    every card Gold Seal (the title "Clerk of Series N"). Rewards are worked out from the cards, so they can't drift. */
 const seriesCards = n => CARDS.filter(seriesDef(n).test);
 function seriesGoals(n){
@@ -2421,7 +2459,7 @@ function seriesGoals(n){
 }
 const SERIES_GOALS = [
   { k:'complete', have:'owned', img:'art/stamp_complete.webp', name:'Complete', how:'Collect every card', reward:n => `A COMPLETE stamp on Series ${n}` },
-  { k:'certified', have:'cert', img:'art/ver_certified_seal.webp', name:'Certified', how:'Every card Certified or better', reward:n => `The exclusive Series ${n} card back` },
+  { k:'certified', have:'cert', img:'art/ver_certified_seal.webp', name:'Certified', how:'Every card Certified or better', reward:n => n === 6 ? 'The Certified badge for Series 6' : `The exclusive Series ${n} card back` },
   { k:'golden', have:'gold', img:'art/ver_gold_seal.webp', name:'Gold Seal', how:'Every card Gold Seal', reward:n => `The title "Clerk of Series ${n}"` },
 ];
 const seriesTitles = () => SERIES_DEFS.filter(d => seriesGoals(d.n).golden).map(d => `Clerk of Series ${d.n}`);
@@ -2493,6 +2531,27 @@ function printedTitleHTML(c, boxRatio=750/220, firstWidth=62, secondWidth=62, ca
   const width = ratio >= boxRatio ? 100 : ratio/boxRatio*100;
   const height = ratio >= boxRatio ? boxRatio/ratio*100 : 100;
   return `<div class="title-fallback" aria-hidden="true">${titleLine(c, 1, firstWidth, Math.min(7.8,cap))}${titleLine(c, 2, secondWidth, cap)}</div><div class="title-print" style="width:${width}%;height:${height}%" role="img" aria-label="${esc(c.name)}"><img src="${artSrc(t.asset)}" alt="" decoding="async" style="width:${iw/w*100}%;height:${ih/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%"></div>`;
+}
+/* Approved Series 6 lockups are deliberately scoped to the question face. The
+   front cards keep their existing SVG title treatment. */
+const S6_QUESTION_TITLE_ART = {
+  joinder:{asset:'art/title_s6_joinder_v1.webp',size:[2172,724],ink:[29,26,2118,671]},
+  whoenters:{asset:'art/title_s6_whoenters_v6.webp',size:[1536,1024],ink:[66,31,1412,949]},
+  instruments:{asset:'art/title_s6_instruments_v1.webp',size:[1774,887],ink:[32,30,1725,836]},
+  courts:{asset:'art/title_s6_courts_v1.webp',size:[1942,809],ink:[18,12,1914,779]},
+  appearance:{asset:'art/title_s6_appearance_v1.webp',size:[1983,793],ink:[21,18,1942,759]},
+  jurynumbers:{asset:'art/title_s6_jurynumbers_v1.webp',size:[1774,887],ink:[46,86,1702,727]},
+  petition:{asset:'art/title_s6_petition_v1.webp',size:[1774,887],ink:[50,40,1708,829]},
+  endearly:{asset:'art/title_s6_endearly_v2.webp',size:[1774,887],ink:[33,3,1741,884]},
+  sworn:{asset:'art/title_s6_sworn_v1.webp',size:[2014,781],ink:[19,30,1983,735]}
+};
+function series6QuestionTitleHTML(c, boxRatio=564/206){
+  const t = S6_QUESTION_TITLE_ART[c.id];
+  if (!t) return `${titleLine(c, 1, 55, 7.2)}${titleLine(c, 2, 55, 7.6)}`;
+  const [x,y,w,h] = t.ink, [iw,ih] = t.size, ratio = w/h;
+  const width = ratio >= boxRatio ? 100 : ratio/boxRatio*100;
+  const height = ratio >= boxRatio ? boxRatio/ratio*100 : 100;
+  return `<div class="title-fallback" aria-hidden="true">${titleLine(c, 1, 55, 7.2)}${titleLine(c, 2, 55, 7.6)}</div><div class="title-print" style="width:${width}%;height:${height}%" role="img" aria-label="${esc(c.name)}"><img src="${t.asset}" alt="" decoding="async" style="width:${iw/w*100}%;height:${ih/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%"></div>`;
 }
 document.addEventListener('error', e => {
   const image = e.target, print = image.closest?.('.title-print');
@@ -2648,6 +2707,7 @@ const PANEL_BOXES = {   // title, caption, and the bottom row (feet tuck behind 
   s3:[[92,148,936,278],[250,1206,782,1292],[30,1312,996,1470]],
   s4:[[205,197,875,257],[205,292,875,352],[230,1148,860,1236],[120,1300,935,1436]],
   s5:[[140,203,890,423],[60,1320,966,1462]],
+  cc:[[0,0,1024,329],[0,1135,1024,1536]],   // Series 6: the header + title banner above the art window, and the caption + footer below it (tools/cc_panels.py)
 };
 /* How far (in % of the card's height) each pop-out character moves down so its head clears the title.
    Measured from each character's art on 2026-10-05; a card not listed needs no move. */
@@ -2715,13 +2775,37 @@ function s3ArtHTML(c, lv){
 }
 /* the courtroom-comic look (look:'cc'): kit layers from back to front are the background, the cast, the shared frame and the
    title lettering; the number, category, XP, caption and footer are live text on the frame's blank panels (1024 x 1536 grid) */
+/* Series 6 front-card titles: the artistic lockup (assets/series6/titles) is fitted into the yellow banner's lettering area on art/cc_frame.webp,
+   scaled to fit and centred; S6_QUESTION_TITLE_ART holds each lockup's file, size and ink box. A card without a lockup keeps the kit's SVG title. */
+const CC_TITLE_BOX = [126, 112, 898, 304];   // the banner is yellow from about y 103 to 309 at the middle and 115 to 302 near its ends
+function ccLockupHTML(c){
+  const t = S6_QUESTION_TITLE_ART[c.id]; if (!t) return '';
+  const [bx0, by0, bx1, by1] = CC_TITLE_BOX, bw = bx1 - bx0, bh = by1 - by0, [x, y, w, h] = t.ink, [iw, ih] = t.size;
+  const k = Math.min(bw / w, bh / h), fw = w * k, fh = h * k, left = bx0 + (bw - fw) / 2, top = by0 + (bh - fh) / 2;
+  return `<div class="cc-lockup" role="img" aria-label="${esc(c.name)}" style="${P(left, top, left + fw, top + fh)}"><img src="${t.asset}" alt="" decoding="async" style="width:${iw / w * 100}%;height:${ih / h * 100}%;left:${-x / w * 100}%;top:${-y / h * 100}%"></div>`;
+}
 function frontCCHTML(c, st, opt = {}){
   const lv = st.level, need = NEED[lv - 1], pct = st.mastered ? 100 : Math.min(100, st.xp / need * 100), a = c.ccArt;
+  /* Series 6 levels (jigsaw.js): the background picture is a jigsaw that fills in as the card levels up. Missing pieces are plain black with a
+     faint outline; pieces that just arrived fade in over a gold glow; a finished card is just the picture. Only the background is masked:
+     the cast stands whole on top, and at the max level it also breaks out of the frame. */
+  const max = maxL(c), uid = jigsawUid(), brk = lv >= max, arrived = jigsawArrived(lv, max, opt.newStar || 0);
+  const bgImg = `<image href="${artSrcJpg(a.bg)}" x="0" y="0" width="${JIG_W}" height="${JIG_H}" preserveAspectRatio="xMidYMid slice"`;
+  const jig = brk && !arrived.length
+    ? `<svg class="cc-jig" viewBox="0 0 ${JIG_W} ${JIG_H}" preserveAspectRatio="none" aria-hidden="true">${bgImg}/></svg>`
+    : `<svg class="cc-jig" viewBox="0 0 ${JIG_W} ${JIG_H}" preserveAspectRatio="none" aria-hidden="true">
+      <defs><mask id="jm${uid}" maskUnits="userSpaceOnUse" x="-60" y="-60" width="${JIG_W + 120}" height="${JIG_H + 120}">${jigsawMaskPaths(lv, max, opt.newStar || 0)}</mask>
+        <filter id="jg${uid}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="22"/></filter></defs>
+      <rect class="jig-gap" width="${JIG_W}" height="${JIG_H}"/>
+      <g class="jig-lines">${jigsawShapes(Array.from({ length:JIG_COLS * JIG_ROWS }, (_, i) => i), 'class="jig-grid"')}</g>
+      ${arrived.length ? `<g filter="url(#jg${uid})">${jigsawShapes(arrived, 'class="jig-glow"')}</g>` : ''}
+      ${bgImg} mask="url(#jm${uid})"/></svg>`;
+  const cast = `<img class="cc-cast${brk ? ' framebreak-character cc-break' : ''}" src="${artSrc(a.cast)}" alt="${esc(c.name)} artwork, level ${lv}">`;
   return `
-    <img class="cc-bgimg" src="${artSrcJpg(a.bg)}" alt="">
-    <img class="cc-cast" src="${artSrc(a.cast)}" alt="${esc(c.name)} artwork">
+    ${jig}${cast}
     <img class="frame cc-frame" src="art/cc_frame.webp" alt="">
-    <img class="cc-title" src="${artSvg(a.title)}" alt="${esc(c.name)}">
+    ${ccLockupHTML(c) || `<img class="cc-title" src="${artSvg(a.title)}" alt="${esc(c.name)}">`}
+    ${brk ? panelsOverHTML('art/cc_frame.webp', 'cc') : ''}
     <div class="t num cc meta" style="${P(40, 38, 158, 92)}">${c.num}</div>
     <div class="t cat cc meta" style="${P(190, 28, 778, 89)}">${esc(c.category)}</div>
     <div class="t xpstrip cc meta" style="${P(792, 30, 985, 98)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
@@ -3352,12 +3436,13 @@ const SERIES = [
   {g:'s3', label:'Series 3', icon:'series3'},
   {g:'s4', label:'Series 4', icon:'cards'},
   {g:'s5', label:'Series 5', icon:'cards'},
+  {g:'s6', label:'Series 6', icon:'cards'},
   {g:'tricks', label:'All Memory Tricks', icon:'memory'},
 ];
 function groupTest(g){
   if (g.startsWith('set:')) { const n = g.slice(4); return c => c.set === n; }
   return ({all:() => true, s1:c => !c.series && !c.trickType, s2:c => c.series === 2, s3:c => c.series === 3,
-    s4:c => c.series === 4, s5:c => c.series === 5, tricks:c => !!c.trickType})[g] || (() => true);
+    s4:c => c.series === 4, s5:c => c.series === 5, s6:c => c.series === 6, tricks:c => !!c.trickType})[g] || (() => true);
 }
 function groupLabel(g){
   if (g.startsWith('set:')) return titleCase(g.slice(4));
@@ -3376,7 +3461,8 @@ const hintCosts = () => !!(sess && sess.hint && !sess.freeHint);   // a free-hin
 const reverseSeries = c => Number(c?.series) || 1;
 const SERIES_BACKS = {
   1:'art/back_s1_template_v1.webp', 2:'art/back_s2_template_v1.webp',
-  3:'art/back_s3_archive_v1.webp', 4:'art/back_s4_template_v1.webp', 5:'art/back_s5_template_v1.webp'
+  3:'art/back_s3_archive_v1.webp', 4:'art/back_s4_template_v1.webp', 5:'art/back_s5_template_v1.webp',
+  6:'art/back_s6.webp'   // Series 6's emblem is its everyday back, not a reward
 };
 const SERIES_BACK_LABELS = {
   1:{src:'art/back_label_s1_v1.svg', label:'Series 1 Court Terms card back'},
@@ -3384,12 +3470,14 @@ const SERIES_BACK_LABELS = {
   4:{src:'art/back_label_s4_v1.svg', label:'Series 4 Criminal Procedure card back'},
   5:{src:'art/back_label_s5_v1.svg', label:'Series 5 Penal Law card back'}
 };
-const certifiedBack = n => SERIES_DEFS.some(d => d.n === n) && seriesGoals(n).certified ? `art/back_s${n}_certified.webp` : '';   // earned, never bought
-const backSrc = c => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : (certifiedBack(reverseSeries(c)) || SERIES_BACKS[reverseSeries(c)] || 'art/cardback.webp');
+const certifiedBack = n => n <= 5 && SERIES_DEFS.some(d => d.n === n) && seriesGoals(n).certified ? `art/back_s${n}_certified.webp` : '';   // earned, never bought
+const isTrickPackCard = c => !!c && ADDON_PACKS.some(a => a.test(c));   // the loose Memory Tricks (no series) have their own back
+const backSrc = c => (S.styles && S.styles.back) ? artSrc('back_' + S.styles.back) : isTrickPackCard(c) ? 'art/back_tricks.webp' : (certifiedBack(reverseSeries(c)) || SERIES_BACKS[reverseSeries(c)] || 'art/cardback.webp');
 function cardReverseHTML(c){
   const custom = !!(S.styles && S.styles.back), series = reverseSeries(c), themedS3 = series === 3 && !custom;
-  const label = !custom && SERIES_BACK_LABELS[series];
-  const backgroundAlt = custom ? 'Equipped custom card back' : themedS3 ? 'Series 3 court memory card back' : label ? '' : 'Card back';
+  const trickBack = !custom && isTrickPackCard(c);
+  const label = !custom && !trickBack && SERIES_BACK_LABELS[series];
+  const backgroundAlt = custom ? 'Equipped custom card back' : trickBack ? 'Memory Tricks card back' : themedS3 ? 'Series 3 court memory card back' : label ? '' : 'Card back';
   const lettering = label ? `<img class="reverse-labels" src="${label.src}" role="img" aria-label="${label.label}" alt="${label.label}">` : '';
   return `<img class="cbackimg" src="${backSrc(c)}" alt="${backgroundAlt}">${lettering}${themedS3 ? '<svg class="reverse-labels" viewBox="0 0 1024 1536" aria-hidden="true"><text x="512" y="245" text-anchor="middle" fill="#26221a" font-family="Bangers, sans-serif" font-size="88" letter-spacing="4">COURT MEMORY</text><text x="512" y="1247" text-anchor="middle" fill="#fff0ce" font-family="Bangers, sans-serif" font-size="62" letter-spacing="5">SERIES 3</text></svg>' : ''}`;
 }   // the card back in use
@@ -3946,7 +4034,7 @@ function paintStudy(anim){
     <div class="t bnum" style="${PB(62,62,228,152)}">${c.num}</div>
     <div class="t brar" style="${PB(72,158,228,220)}">${verLabel(S.cards[c.id])}</div>
     <div class="t title" style="${PB(262,72,772,262)}">
-      ${series === 3 ? printedTitleHTML(c, 510/190, 46, 33, 8.6) : `${titleLine(c, 1, 46, 8.2)}${titleLine(c, 2, 33, 8.6)}`}</div>
+      ${series === 3 ? printedTitleHTML(c, 510/190, 46, 33, 8.6) : series === 6 ? series6QuestionTitleHTML(c) : `${titleLine(c, 1, 46, 8.2)}${titleLine(c, 2, 33, 8.6)}`}</div>
     <div class="t bcat" style="${PB(794,60,968,168)}">${esc(c.category)}</div>
     <div class="t icon" style="${PB(836,168,950,270)}">${ICON[c.icon]}</div>
     <div class="t lvtag" style="${PB(66,284,328,392)}">LEVEL ${lv}</div>
@@ -4291,23 +4379,33 @@ function nextPackSeries(){
   return SERIES_DEFS[SERIES_DEFS.length - 1].n;
 }
 const nextPackArtSrc = () => seriesPackArt(nextPackSeries());
-/* A pack draws only from the series on its wrapper. The 12 trick cards that belong to no series are sprinkled into every pack; the look-alike set (lookalike-cards.js) joins them after a player's first three packs. */
-function drawPack(n = nextPackSeries(), before = S.packsOpened){   // before: packs this player had opened BEFORE this one (openPack counts a free pack first, so it passes the count minus one)
-  const d = seriesDef(n), owned = c => S.cards[c.id].owned;
-  const pool = CARDS.filter(d.test), tricks = CARDS.filter(c => c.trickType && !c.series && lookalikeEligible(c, before));
-  const picks = []; const take = c => { if (c && picks.length < 3 && !picks.includes(c)) picks.push(c); };
-  const fits = c => c && !owned(c) && (d.test(c) || (c.trickType && !c.series && lookalikeEligible(c, before)));   // promises from older saves count only if the card belongs in this pack
-  const promised = [].concat(S.guarantee || []).filter(id => fits(byId(id)));
-  if (promised.length) { promised.slice(0, 3).forEach(id => take(byId(id)));
-    const left = [].concat(S.guarantee || []).filter(id => !picks.some(c => c.id === id)); S.guarantee = left.length ? left : null; }
-  else if (S.packsOpened === 0 && tricks.some(c => !owned(c))) take(shuffle(tricks.filter(c => !owned(c)))[0]);   // the first pack shows a Memory Trick
-  else if (Math.random() < .34) take(shuffle(tricks.filter(c => !owned(c)))[0] || pickCard(tricks));          // about 1 pack in 3 carries a trick card
-  if (S.packsOpened < GUARANTEE_PACKS) take(shuffle(pool.filter(c => !owned(c) && !picks.includes(c)))[0] || shuffle(tricks.filter(c => !owned(c) && !picks.includes(c)))[0]);   // early packs hold something new
-  let guard = 0;
-  while (picks.length < 3 && guard++ < 60) take(pickCard(pool.filter(c => !picks.includes(c))));
+/* A series pack draws only from the series on its wrapper. The loose Memory Tricks come only from the Memory Tricks add-on pack. */
+function finishPack(picks, tag){
   const ver = rollVersion(), special = {};
   if (ver && picks.length) special[picks[Math.floor(Math.random() * picks.length)].id] = ver;
-  const out = resolvePulls(picks, special); out.series = d.n; return out;
+  return Object.assign(resolvePulls(picks, special), tag);
+}
+function drawPack(n = nextPackSeries(), before = S.packsOpened){   // before: packs opened BEFORE this one (openPack counts a free pack first, so it passes the count minus one)
+  const d = seriesDef(n), owned = c => S.cards[c.id].owned, pool = CARDS.filter(d.test);
+  const picks = []; const take = c => { if (c && picks.length < 3 && !picks.includes(c)) picks.push(c); };
+  const promised = [].concat(S.guarantee || []).filter(id => { const c = byId(id); return c && !owned(c) && d.test(c); });   // promises from older saves count only if the card belongs in this pack
+  if (promised.length) { promised.slice(0, 3).forEach(id => take(byId(id)));
+    const left = [].concat(S.guarantee || []).filter(id => !picks.some(c => c.id === id)); S.guarantee = left.length ? left : null; }
+  if (before < GUARANTEE_PACKS) take(shuffle(pool.filter(c => !owned(c) && !picks.includes(c)))[0]);   // the first five packs hold something new
+  let guard = 0;
+  while (picks.length < 3 && guard++ < 60) take(pickCard(pool.filter(c => !picks.includes(c))));
+  return finishPack(picks, { series:d.n });
+}
+function drawAddonPack(key){
+  const d = packDef(key), owned = c => S.cards[c.id].owned, pool = CARDS.filter(d.test);
+  const picks = []; const take = c => { if (c && picks.length < 3 && !picks.includes(c)) picks.push(c); };
+  const promised = [].concat(S.guarantee || []).filter(id => { const c = byId(id); return c && !owned(c) && d.test(c); });
+  promised.slice(0, 3).forEach(id => take(byId(id)));
+  if (S.guarantee) { const left = [].concat(S.guarantee).filter(id => !picks.some(c => c.id === id) && byId(id) && !owned(byId(id))); S.guarantee = left.length ? left : null; }   // paid promises and promises for cards you already own are cleared
+  take(shuffle(pool.filter(c => !owned(c) && !picks.includes(c)))[0]);   // a trick pack always holds something you don't have yet, while there is anything
+  let guard = 0;
+  while (picks.length < 3 && guard++ < 60) take(pickCard(pool.filter(c => !picks.includes(c))));
+  return finishPack(picks, { addon:d.n });
 }
 /* Picked cards → new cards join the collection, duplicates give a Copy and a few coins */
 function resolvePulls(picks, special = {}){
@@ -4432,11 +4530,11 @@ function packBadge(p){
 }
 /* Pick your pack: two packs from different series float side by side; tap the one you want. The mix changes every time.
    Series with cards still to find come first. The very first pack skips this (onboarding opens Series 1). */
-const PACK_TINT = { 1:'#e3b23c', 2:'#a77bff', 3:'#3fb5a8', 4:'#e0443a', 5:'#ffcc33' };   // each series' glow colour
+const PACK_TINT = { 1:'#e3b23c', 2:'#a77bff', 3:'#3fb5a8', 4:'#e0443a', 5:'#ffcc33', 6:'#3d6bff', tricks:'#a77bff' };   // each series' glow colour
 /* the word that rises out of the letter floor when a pack opens, in a colour taken from that pack's art that stands out
-   against the floor (which is tinted with PACK_TINT): red on gold, yellow on purple, cream on teal, white on red, red on yellow */
+   against the floor (which is tinted with PACK_TINT): red on gold, yellow on purple, cream on teal, white on red, red on yellow, red on blue */
 const PACK_WORD = { 1:{ word:'GAVEL', color:'#e8473a' }, 2:{ word:'MEMORY', color:'#f5c518' }, 3:{ word:'DOCKET', color:'#f0d9a0' },
-  4:{ word:'DOODLE', color:'#f4f1ea' }, 5:{ word:'HERO', color:'#ff5544' } };
+  4:{ word:'DOODLE', color:'#f4f1ea' }, 5:{ word:'HERO', color:'#ff5544' }, 6:{ word:'ALIKE', color:'#e8473a' }, tricks:{ word:'TRICK', color:'#f5c518' } };
 /* the other words hidden in the letter floor, word-search style; a pack gets the three whose colours sit furthest from its own word's */
 const FIELD_WORDS = [{ word:'CLERK', color:'#3d6bff' }, { word:'COURT', color:'#1fbf8f' }, { word:'JURY', color:'#ff8a1a' }, { word:'OATH', color:'#e85aa8' }, { word:'SEAL', color:'#ffd23a' }];
 function packFieldWords(n){
@@ -4446,14 +4544,16 @@ function packFieldWords(n){
   const tint = PACK_TINT[n] || '#e3b23c';
   return [own, ...FIELD_WORDS.filter(f => f.word !== own.word).sort((a, b) => Math.min(gap(b.color, own.color), gap(b.color, tint)) - Math.min(gap(a.color, own.color), gap(a.color, tint))).slice(0, 3)];
 }
+const allPacks = () => SERIES_DEFS.concat(ADDON_PACKS);
+const packTag = d => ADDON_PACKS.includes(d) ? 'Add-on' : `Series ${d.n}`;
 function choosePack(){
   if (S.packs <= 0 || document.querySelector('.pkc')) return;
-  const open = SERIES_DEFS.filter(d => CARDS.filter(d.test).some(c => !S.cards[c.id].owned)), done = SERIES_DEFS.filter(d => !open.includes(d));
+  const open = allPacks().filter(d => CARDS.filter(d.test).some(c => !S.cards[c.id].owned)), done = allPacks().filter(d => !open.includes(d));
   const picks = shuffle(open).concat(shuffle(done)).slice(0, 2);
   const ov = document.createElement('div'); ov.className = 'pkc';
   ov.innerHTML = `<div class="pkc-bg"></div><h2 class="pkc-h">PICK YOUR PACK</h2><p class="pkc-sub">${S.packs} pack${S.packs > 1 ? 's' : ''} ready · each one holds 3 cards from its series</p>
-    <div class="pkc-fan">${picks.map((d, i) => `<button class="pkc-pack" data-act="pkc-pick" data-set="${d.n}" style="--i:${i};--n:${picks.length};--tint:${PACK_TINT[d.n] || '#e3b23c'};--pack-mask:url('${seriesPackArt(d.n)}')" aria-label="Open a ${esc(d.label)} pack">
-      <img src="${seriesPackArt(d.n)}" alt=""><span>Series ${d.n}</span></button>`).join('')}</div>
+    <div class="pkc-fan">${picks.map((d, i) => `<button class="pkc-pack" data-act="pkc-pick" data-set="${d.n}" style="--i:${i};--n:${picks.length};--tint:${PACK_TINT[d.n] || '#e3b23c'};--pack-mask:url('${packArtOf(d.n)}')" aria-label="Open a ${esc(d.label)} pack">
+      <img src="${packArtOf(d.n)}" alt=""><span>${packTag(d)}</span></button>`).join('')}</div>
     <button class="sheet-cancel pkc-later" data-act="pkc-close">Not now</button>`;
   document.body.appendChild(ov); lockScroll();
   window.PackField?.preload();   // get the letter floor ready while you choose
@@ -4468,7 +4568,8 @@ document.addEventListener('pointerout', e => { const b = e.target.closest && e.t
 function pickPack(btn){
   const ov = btn.closest('.pkc'); if (!ov || ov._picked) return; ov._picked = true;
   btn.classList.add('chosen'); ov.classList.add('picked'); nativeFeedback('claim');
-  setTimeout(() => { ov.remove(); openPack({ series:+btn.dataset.set, chosen:true }); }, 520);
+  const k = btn.dataset.set;
+  setTimeout(() => { ov.remove(); openPack(ADDON_PACKS.some(a => a.n === k) ? { addon:k, chosen:true } : { series:+k, chosen:true }); }, 520);
 }
 function openPack(opts = {}){
   if (!opts.pulls && S.packs <= 0) return;
@@ -4476,20 +4577,21 @@ function openPack(opts = {}){
   if (!opts.pulls) S.packs--;
   const pv = !!opts.preview;   // an admin test pack: sample cards, and nothing is spent, awarded or saved
   const first = !pv && S.packsOpened === 0; if (!pv) S.packsOpened++;
-  const pulls = opts.pulls || drawPack(opts.series || undefined, S.packsOpened - (pv ? 0 : 1));   // packs opened before this one (a preview pack was not counted above)
+  const pulls = opts.pulls || (opts.addon ? drawAddonPack(opts.addon) : drawPack(opts.series || undefined, S.packsOpened - (pv ? 0 : 1)));   // packs opened before this one (a preview pack was not counted above)
   const rank = p => VERSIONS[p.ver || 'filed'].n * 2 + (p.isNew ? 1 : 0);
   pulls.sort((a, b) => rank(a) - rank(b));   // like a real booster: the best card is saved for last
   const bonus = pv ? null : rollSticker();   // every pack can hold a bonus sticker, bought ones too
   const coin = !pv && !first && Math.random() < 1 / 5;   // a Continuance: about 1 in 5 packs, bought ones too (never the first); reopens a missed Hot Docket
   if (coin) S.continuances = (S.continuances || 0) + 1;
   if (!pv) save();
-  const packImg = opts.img || (pulls.series ? seriesPackArt(pulls.series) : packArtFor(pulls.map(p => p.c)));
-  const packSeries = Number(pulls.series || opts.series || 0);
+  const packKey = pulls.addon || pulls.series || opts.addon || opts.series || 0;   // 6 for a series pack, 'tricks' for the add-on pack
+  const packImg = opts.img || (packKey ? packArtOf(packKey) : packArtFor(pulls.map(p => p.c)));
+  const packSeries = Number(packKey) || 0;
   const packLabel = opts.label || '';
   const label = packLabel ? `<span class="pk-label ${packSeries >= 4 ? `series45 s${packSeries}` : ''}">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(packLabel)}</b></span>` : '';
   lockScroll(); history.pushState({cq:'pack'}, '');
-  const ov = document.createElement('div'); ov.className = 'pk' + (packSeries ? ` pk-s${packSeries}` : '');
-  ov.style.setProperty('--tint', PACK_TINT[packSeries] || '#e3b23c');
+  const ov = document.createElement('div'); ov.className = 'pk' + (packSeries ? ` pk-s${packSeries}` : packKey ? ` pk-${packKey}` : '');
+  ov.style.setProperty('--tint', PACK_TINT[packKey] || '#e3b23c');
   const line = tearLine();
   ov.innerHTML = `<div class="pk-bg" style="background-image:url('${packImg}')"></div><div class="pk-pattern"></div><div class="pk-glow"></div><div class="pk-rays"></div><div class="pk-vig"></div>
     <div class="pk-stage"><div class="pk-floor"></div>
@@ -4506,7 +4608,7 @@ function openPack(opts = {}){
       </button>`).join('')}</div>
     </div>
     ${coin ? `<div class="pk-coin"><img src="${artSrc('continuance_coin')}" alt=""><span><b>+1 CONTINUANCE</b><small>Reopens a missed Hot Docket</small></span></div>` : ''}
-    <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Swipe across the top to rip it open.' : packSeries ? `A Series ${packSeries} pack! Swipe across the top to rip it open.` : 'Swipe across the top to rip it open.'}</p>
+    <p class="pk-hint">${opts.hint ? esc(opts.hint) : first ? 'Your first pack! Swipe across the top to rip it open.' : packSeries ? `A Series ${packSeries} pack! Swipe across the top to rip it open.` : packKey ? `A ${packDef(packKey).label} pack! Swipe across the top to rip it open.` : 'Swipe across the top to rip it open.'}</p>
     <button class="sheet-cancel pk-auto" data-act="pk-auto">Open for me</button>
     <button class="sheet-cancel pk-skip" data-act="pk-skip">Show all</button>
     <button class="btn-big gold pk-done" data-act="${bonus ? 'pk-sticker' : 'pk-done'}">${bonus ? 'OPEN YOUR BONUS STICKER' : 'COLLECT →'}</button>`;
@@ -4517,7 +4619,7 @@ function openPack(opts = {}){
   // the room: a floor of raised letters (packfield.js); until it's ready, or if it can't load, the blurred pack art stays
   if (window.PackField) {
     ov.classList.add('field-wait');
-    PackField.mount(ov, { tint:PACK_TINT[packSeries] || '#e3b23c', words:packFieldWords(packSeries) })
+    PackField.mount(ov, { tint:PACK_TINT[packKey] || '#e3b23c', words:packFieldWords(packKey) })
       .then(f => { ov._field = f; ov.classList.add('has-field'); ov.classList.remove('field-wait'); if (pk._done) f.tear(); })
       .catch(() => ov.classList.remove('field-wait'));   // no 3D: bring back the blurred pack art
   }
@@ -5004,9 +5106,9 @@ window.addEventListener('cq-cloud', e => {
   if (nav.tab === 'profile') refresh();
 });
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.
-['art/back_s1_template_v1.webp','art/back_s2_template_v1.webp','art/back_s3_archive_v1.webp','art/back_s4_template_v1.webp','art/back_s5_template_v1.webp','art/back_label_s1_v1.svg','art/back_label_s2_v1.svg','art/back_label_s4_v1.svg','art/back_label_s5_v1.svg','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_s4_v2.webp','art/frame_s5_v3.webp','art/caption_s5_short.webp','art/caption_s5_medium.webp','art/caption_s5_long.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/answer_button.webp']
+['art/back_s1_template_v1.webp','art/back_s2_template_v1.webp','art/back_s3_archive_v1.webp','art/back_s4_template_v1.webp','art/back_s5_template_v1.webp','art/back_label_s1_v1.svg','art/back_label_s2_v1.svg','art/back_label_s4_v1.svg','art/back_label_s5_v1.svg','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_s4_v2.webp','art/frame_s5_v3.webp','art/caption_s5_short.webp','art/caption_s5_medium.webp','art/caption_s5_long.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/back_tricks.webp','art/answer_button.webp']
   .forEach(src => { const i = new Image(); i.src = src; if (i.decode) i.decode().catch(() => {}); });
-for (let series = 1; series <= 5; series++) {
+for (let series = 1; series <= 6; series++) {
   ['template','question','answer','hint','points','progress','table','explanation'].forEach(part => {
     const i = new Image(); i.src = `art/question_s${series}_${part}.svg`; if (i.decode) i.decode().catch(() => {});
   });
