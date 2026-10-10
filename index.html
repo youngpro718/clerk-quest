@@ -452,7 +452,14 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .card.look-cc .t.cc.set small{font-size:calc(2cqw*var(--fit,1));opacity:.8}
 .card.look-cc .t.cc.lvl{flex-direction:column;font-size:calc(2.8cqw*var(--fit,1))}
 .card.look-cc .stampimg.mastered{z-index:8}
-.card .cc-cast.cc-break{left:2%;top:17%;width:96%;height:63%;object-position:50% 100%;z-index:7}   /* a little taller than the window: it stands up out of the frame, never over the lettering */
+.card .cc-cast.cc-break{object-position:center;z-index:7;scale:1.04;transform-origin:50% 92%;filter:drop-shadow(0 0 .8cqw rgba(255,226,150,.6)) drop-shadow(0 1.3cqw 1cqw rgba(0,0,0,.45))}   /* same box as levels 1 and 2 (no drop): stage lighting and a small lift instead */
+.card .cc-spot{position:absolute;left:2.3%;top:20.8%;width:95.4%;height:54%;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 58%,rgba(255,226,150,.34),rgba(255,200,90,.12) 46%,transparent 74%);mix-blend-mode:screen}
+.card .cc-cast.cc-popin{animation:ccpop .9s cubic-bezier(.2,1.3,.4,1) both}
+.card .cc-spot.cc-popin{animation:ccspot 1.3s ease-out both}
+@keyframes ccpop{0%{scale:1;filter:drop-shadow(0 0 0 rgba(255,226,150,0)) drop-shadow(0 .3cqw .3cqw rgba(0,0,0,.15))}45%{scale:1.09;filter:drop-shadow(0 0 2.6cqw rgba(255,232,160,1)) drop-shadow(0 1.8cqw 1.4cqw rgba(0,0,0,.5))}100%{scale:1.04}}
+@keyframes ccspot{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.cc-popin{animation:none}}
+html.cq-reduce-motion .cc-popin{animation:none}
 .card .cc-lockup{position:absolute;pointer-events:none;z-index:4}
 .card .cc-lockup img{position:absolute;max-width:none}
 .card.look-cc:has(> .framebreak-character) > :is(.cc-title,.cc-lockup){z-index:9}   /* the title lettering always wins over the character */
@@ -2800,9 +2807,11 @@ function frontCCHTML(c, st, opt = {}){
       <g class="jig-lines">${jigsawShapes(Array.from({ length:JIG_COLS * JIG_ROWS }, (_, i) => i), 'class="jig-grid"')}</g>
       ${arrived.length ? `<g filter="url(#jg${uid})">${jigsawShapes(arrived, 'class="jig-glow"')}</g>` : ''}
       ${bgImg} mask="url(#jm${uid})"/></svg>`;
-  const cast = `<img class="cc-cast${brk ? ' framebreak-character cc-break' : ''}" src="${artSrc(a.cast)}" alt="${esc(c.name)} artwork, level ${lv}">`;
+  const pop = brk && (opt.newStar || 0) === lv ? ' cc-popin' : '';   // the pop plays once, on the level-up to the max level
+  const spot = brk ? `<div class="cc-spot${pop}"></div>` : '';   // stage lighting behind the cast at the max level
+  const cast = `<img class="cc-cast${brk ? ' framebreak-character cc-break' + pop : ''}" src="${artSrc(a.cast)}" alt="${esc(c.name)} artwork, level ${lv}">`;
   return `
-    ${jig}${cast}
+    ${jig}${spot}${cast}
     <img class="frame cc-frame" src="art/cc_frame.webp" alt="">
     ${ccLockupHTML(c) || `<img class="cc-title" src="${artSvg(a.title)}" alt="${esc(c.name)}">`}
     ${brk ? panelsOverHTML('art/cc_frame.webp', 'cc') : ''}
