@@ -1,5 +1,5 @@
 /* Clerk Quest accounts. Try first, then sign up: a new player plays as a guest (welcome, first pack, first round).
-   When the first study round ends, the sign-up screen covers the app until there's an account (the guest's progress
+   When the first study round ends, the sign-up screen asks for an account (the guest's progress
    moves into it; see cloud-sync.js). A guest can also sign up any time from Settings. Email + password, forgotten-password reset, change password, sign out,
    and delete account (an App Store requirement). Loaded before the main script; everything here runs at call time
    and uses the app's globals (S, esc, push, refresh, topEntry, goBack, nav, toast, iosAlert, ICO, chev, maybeWelcome)
@@ -42,8 +42,9 @@ function showLogin(wall){
   let el = document.getElementById('login-root');
   if (!el) { el = document.createElement('div'); el.id = 'login-root'; document.body.appendChild(el); }
   if (wall) el.dataset.wall = '1';
-  const closable = !el.dataset.wall && !guestWallDue();
-  el.innerHTML = `<div class="login">
+  if (!el.dataset.opener) { loginOpener = document.activeElement; el.dataset.opener = '1'; }
+  const closable = true;   // always a way out: "Not now" (also Esc); the sign-up wall comes back after a couple more rounds
+  el.innerHTML = `<div class="login" role="dialog" aria-modal="true" aria-label="Create your account">
     ${brandHTML('small')}
     ${el.dataset.wall ? `<p class="login-wall"><b>Nice work!</b> Create your account to keep your cards and keep playing.</p>`
       : `<p class="login-tag">Study the court rules. Collect the cards.</p>`}
@@ -52,12 +53,28 @@ function showLogin(wall){
       : `<p class="acct-err">${ICO('warning')} Can't reach Becoming a Clerk right now. Check your connection, then try again.</p>
          <button class="btn-big gold" data-act="acct-retry">TRY AGAIN</button>`}</div>`;
 }
+let loginOpener = null;
 function hideLogin(){ const el = document.getElementById('login-root'); if (!el) return; el.remove(); refresh(); maybeWelcome(); }
+/* "Not now" / Esc: close the sign-up screen, remember how many rounds were done, and give focus back to what opened it */
+function dismissLogin(){
+  const el = document.getElementById('login-root'); if (!el) return;
+  if (el.dataset.wall) { try { localStorage.setItem(WALL_KEY, String(S.stats ? S.stats.sessions : 0)); } catch (e) {} }
+  el.remove(); refresh();
+  const o = loginOpener; loginOpener = null;
+  if (o && document.contains(o) && o.focus) { try { o.focus({preventScroll:true}); } catch (e) {} }
+}
 /* Signing in on purpose (Settings, Home, or the welcome): the same screen, with a way to close it */
 function openSignIn(tab){ Object.assign(acct, { tab:tab || 'signin', err:'', info:'' }); showLogin(false); }
-document.addEventListener('click', e => { if (e.target.closest('[data-act="acct-close"]')) { document.getElementById('login-root')?.remove(); refresh(); } });
-/* The guest wall: once a guest has finished a study round, they sign up (or sign in) to keep playing. */
-const guestWallDue = () => !cloudUser() && !!(S.stats && S.stats.sessions >= 1);
+document.addEventListener('click', e => { if (e.target.closest('[data-act="acct-close"]')) dismissLogin(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.getElementById('login-root')) { e.preventDefault(); dismissLogin(); } });
+/* The guest wall: once a guest has finished a study round, they are asked to sign up (or sign in) to keep playing; "Not now" lets them on for a couple more rounds. */
+const WALL_KEY = 'cq-wall-dismissed-at', WALL_GAP = 2;   // after "Not now" the wall returns once WALL_GAP more rounds are done
+const guestPlayed = () => !cloudUser() && !!(S.stats && S.stats.sessions >= 1);
+function guestWallDue(){
+  if (!guestPlayed()) return false;
+  let at = null; try { at = localStorage.getItem(WALL_KEY); } catch (e) {}
+  return at === null || S.stats.sessions >= Number(at) + WALL_GAP;
+}
 function guestWall(){ if (guestWallDue() && !document.getElementById('login-root')) { acct.tab = 'create'; showLogin(true); } }
 /* Called once at startup, after the cloud has loaded: guests play until their first round is done */
 function requireLogin(){ if (cloudUser()) maybeWelcome(); else if (guestWallDue()) guestWall(); else maybeWelcome(); }

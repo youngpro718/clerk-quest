@@ -4767,7 +4767,7 @@ function renderResults(){
         <button class="btn-big" data-act="study" data-id="${c.id}">&#9654;&#xFE0E; ONE MORE ROUND</button>
         ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} ${sess.packGiven ? 'OPEN YOUR DAILY PACK' : 'OPEN A PACK'}</button>` : ''}
         ${c.source && correct < SESSION_LEN ? `<button class="btn-big alt" data-act="read-rule" data-id="${c.id}">REVIEW THE RULE</button>` : ''}
-        ${typeof guestWallDue === 'function' && guestWallDue() ? `<button class="btn-big alt" data-act="cloud-signin" data-tab="create">SAVE MY PROGRESS</button>` : ''}
+        ${typeof guestPlayed === 'function' && guestPlayed() ? `<button class="btn-big alt" data-act="cloud-signin" data-tab="create">SAVE MY PROGRESS</button>` : ''}
         <button class="btn-big alt" data-act="session-close">Done</button>
       </div>
     </div>`;
