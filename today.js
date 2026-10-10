@@ -156,6 +156,31 @@ function todayHTML(){
     ${rest ? `<div class="td-list">${rest}</div>` : ''}</section>`;
 }
 
+/* daily quests live on Today now (no Quests tab): one row that opens the Quests screen */
+function questRowHTML(){
+  const n = DAILY_QUESTS.filter(q => questState(q, 'daily').done).length, k = claimableCount();
+  return `<button class="td-tile td-quests" data-act="push" data-s="quests">${ring(n / DAILY_QUESTS.length, n + '/' + DAILY_QUESTS.length, 44, '#5fd47a')}
+    <span class="td-main"><b>Daily quests · ${n} of ${DAILY_QUESTS.length}</b><small>${k ? k + ' reward' + (k > 1 ? 's' : '') + ' ready to claim' : 'Quests and milestones'}</small></span>
+    ${k ? `<i class="dot-badge in">${k}</i>` : ''}${chev}</button>`;
+}
+
+/* rewards strip right under the plan, only when there is something to claim: "2 packs to open · 1 quest reward".
+   Packs stay out of it while the plan still shows an unchecked "Open a pack" (owner's choice, 2026-10-10). */
+function rewardsStripText(packs, k, planPack){
+  const parts = [];
+  if (packs > 0 && !planPack) parts.push(packs + ' pack' + (packs > 1 ? 's' : '') + ' to open');
+  if (k > 0) parts.push(k + ' quest reward' + (k > 1 ? 's' : ''));
+  return parts.join(' · ');
+}
+function rewardsStripHTML(){
+  const planPack = todayPlan().items.some(it => it.kind === 'pack' && !itemDone(it));
+  const t = rewardsStripText(S.packs, claimableCount(), planPack); if (!t) return '';
+  const packs = S.packs > 0 && !planPack;
+  const art = packs ? `<span class="th td-art"><img src="${nextPackArt()}" alt=""></span>` : `<span class="th emo gi">${ICO('trophy')}</span>`;
+  return `<button class="td-tile td-rewards" ${packs ? 'data-act="pack-open"' : 'data-act="push" data-s="quests"'}>${art}
+    <span class="td-main"><b>${t}</b><small>${packs ? 'Tap to open a pack' : 'Tap to claim'}</small></span>${chev}</button>`;
+}
+
 /* what the hero or a tile opens */
 function todayGo(it){
   if (!it) return;
@@ -234,6 +259,8 @@ const TODAY_CSS = `
 .td-tick{width:24px;height:24px;flex:none;border-radius:12px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center}
 .td-tick .ico,.td-tick img{width:16px;height:16px}
 .td-tile.done .td-tick{border-color:#5fd47a;background:#5fd47a}
+.td-quests{margin:0 0 16px}
+.td-rewards{margin:0 0 16px;border:1px solid var(--mustard);background:rgba(227,178,60,.08)}
 .rv-list{display:flex;flex-direction:column;gap:8px}
 .rv-row{display:flex;align-items:center;gap:10px}
 .rv-mark{width:28px;height:28px;flex:none;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08)}

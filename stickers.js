@@ -26,21 +26,20 @@ function coverStickersHTML(b, skip){
     .map(s => stickerArtHTML(s, 'bd-stk', `left:${s.x}%;top:${s.y}%;--r:${s.r || 0}deg`)).join('');
 }
 
-/* ---------- Profile row ---------- */
-const profileStickerRow = () => stickerList().length ? `<button class="row" data-act="push" data-s="stickerbook"><span class="th emo gi">${ICO('sparkle')}</span>
-  <span class="row-main"><b>Sticker Book</b><small>${stickerList().length} sticker${stickerList().length === 1 ? '' : 's'}${stickerList().some(s => !stickerOn(s)) ? ` · ${stickerList().filter(s => !stickerOn(s)).length} to stick` : ''}</small></span>${chev}</button>` : '';
+/* the Sticker Book: its own screen, and the Stickers segment in Collection */
+function stickerBookHTML(){
+  const list = stickerList().slice().sort((a, b) => (!!stickerOn(a) - !!stickerOn(b)) || b.at - a.at);
+  return list.length
+    ? `<p class="st-note">Bonus stickers from your packs. Tap one to stick it on a binder cover.</p>
+       <div class="sk-grid">${list.map(s => { const b = stickerOn(s) && binderById(s.on);
+         return `<button class="sk-tile" data-act="sk-open" data-uid="${s.uid}">${stickerArtHTML(s)}
+           <span class="st-name">${esc(stickerInfo(s.id).name)}</span><span class="st-sub">${s.holo ? 'Holo' : 'Matte'} · ${b ? 'on ' + esc(b.name) : 'not stuck yet'}</span></button>`; }).join('')}</div>`
+    : `<p class="empty">No stickers yet. Some packs have a bonus sticker inside.</p>`;
+}
 
 /* ---------- screens ---------- */
 const STICKER_SCREENS = {
-  stickerbook(){
-    const list = stickerList().slice().sort((a, b) => (!!stickerOn(a) - !!stickerOn(b)) || b.at - a.at);
-    return { title:'Sticker Book', body: list.length
-      ? `<p class="st-note">Bonus stickers from your packs. Tap one to stick it on a binder cover.</p>
-         <div class="sk-grid">${list.map(s => { const b = stickerOn(s) && binderById(s.on);
-           return `<button class="sk-tile" data-act="sk-open" data-uid="${s.uid}">${stickerArtHTML(s)}
-             <span class="st-name">${esc(stickerInfo(s.id).name)}</span><span class="st-sub">${s.holo ? 'Holo' : 'Matte'} · ${b ? 'on ' + esc(b.name) : 'not stuck yet'}</span></button>`; }).join('')}</div>`
-      : `<p class="empty">No stickers yet. Some packs have a bonus sticker inside.</p>` };
-  },
+  stickerbook(){ return { title:'Sticker Book', body:stickerBookHTML() }; },
   stickerplace(p){
     const s = stickerByUid(p.uid), b = binderById(p.id);
     if (!s || !b) return { title:'Sticker', body:'<p class="empty">This sticker or binder is gone.</p>' };

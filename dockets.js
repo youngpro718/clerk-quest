@@ -209,6 +209,22 @@ function docketHomeHTML(){
   return `<button class="dk-home" data-act="push" data-s="docket" data-id="${d.id}"><img src="${artSrc('docket_folder')}" alt="">
     <span><em>HOT DOCKET</em><b>${esc(d.title)}</b><small>${sub}</small></span><i class="${n <= 2 ? 'soon' : ''}">${n} day${n === 1 ? '' : 's'} left</i></button>`;
 }
+/* Study → Practice: a compact row for this week's docket (or a reopened one), and a quiet row to the docket folder
+   (past dockets, Continuances, Landmark cards) when there is something in it. Nothing at all before the first docket. */
+function docketPracticeHTML(){
+  const d = liveDocket() || HOT_DOCKETS.find(x => docketState(x) === 'open');
+  const past = HOT_DOCKETS.filter(x => x !== d && ['done', 'missed'].includes(docketState(x))).length;
+  let live = '';
+  if (d) {
+    const r = dockets().find(x => x.id === d.id), rr = r && docketRec(d.id), n = daysLeft(d);
+    const sub = (rr ? `Level ${rr.level} · ${doneCount(rr.lv[rr.level])} of 4 done` : 'New this week') + (rr && rr.extended ? '' : ` · ${n} day${n === 1 ? '' : 's'} left`);
+    live = `<button class="row dk-row" data-act="push" data-s="docket" data-id="${d.id}"><span class="dk-thumb"><img src="${artSrc('docket_folder')}" alt=""></span>
+      <span class="row-main"><b>${esc(d.title)}</b><small>${sub}</small></span>${chev}</button>`;
+  }
+  const folder = past || continuances() ? `<button class="row dk-row" data-act="push" data-s="dockets"><span class="dk-thumb"><img src="${artSrc('dk_photo_learn')}" alt=""></span>
+      <span class="row-main"><b>Docket folder</b><small>${past} past docket${past === 1 ? '' : 's'} · ${continuances()} Continuance${continuances() === 1 ? '' : 's'}</small></span>${chev}</button>` : '';
+  return live || folder ? `<div class="sec-h"><span>Hot Dockets</span></div><div class="list">${live}${folder}</div>` : '';
+}
 function reopenMissed(id){
   const r = docketRec(id); if (continuances() < 1 || r.extended) return false;
   S.continuances = continuances() - 1;
@@ -249,7 +265,7 @@ function reopenDocket(id){
   save(); return true;
 }
 
-/* ---------- the Dockets tab (inside Collection) ---------- */
+/* ---------- the docket folder (its own screen, from Study → Practice → Docket folder) ---------- */
 function docketsTabHTML(){
   const rows = HOT_DOCKETS.filter(d => docketState(d) !== 'soon').map(d => { const r = dockets().find(x => x.id === d.id), rr = r && docketRec(d.id);
     const st = docketState(d);
@@ -265,7 +281,7 @@ function docketsTabHTML(){
     <div class="sec-h"><span>Your dockets</span></div><div class="list">${rows || '<p class="empty">Your first Hot Docket arrives soon.</p>'}</div>
     <div class="dk-coins"><img src="${artSrc('continuance_coin')}" alt=""><span><b>${continuances()} Continuance${continuances() === 1 ? '' : 's'}</b><small>${continuances() ? 'Spend one to retry a docket that ended without a reward card.' : 'Found in some packs. One lets you retry a docket that ended without a reward card.'}</small></span></div>
     ${won.length ? `<div class="sec-h"><span>Landmark cards</span></div><div class="dk-rewards">${won.map(r => rewardThumb(r)).join('')}</div>` : ''}
-    <p class="foot">A new Hot Docket arrives on your Home screen about once a week and stays open for a week. Finished ones stay in this folder as your record.</p>`;
+    <p class="foot">A new Hot Docket arrives on Today about once a week and stays open for a week. Finished ones stay in this folder as your record.</p>`;
 }
 /* How a won reward card looks: acing the one-chance quiz makes it the Super Rare (full color, holo), even from black and white */
 const rwLook = r => r.superRare ? 'rare super' : r.reward;
@@ -480,6 +496,7 @@ const quizButtonLabel = r => { const rw = DOCKET_REWARDS[docketDef(r.id).reward]
 
 /* ---------- screens ---------- */
 const DOCKET_SCREENS = {
+  dockets(){ return { title:'Hot Dockets', body:docketsTabHTML() }; },
   rewardpreview(){
     if (!(typeof ADM !== 'undefined' && ADM.is)) return { title:'Landmark Cards', body:'<p class="empty">Admins only.</p>' };
     return { title:'Landmark Cards', body:`<p class="st-note">Every Hot Docket reward, as players see it. Tap one to open it, flip it, and try the quiz. Previews don't save anything.</p>
