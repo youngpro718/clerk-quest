@@ -1,24 +1,45 @@
 /* Clerk Quest evolving cards (spec docs/superpowers/specs/2026-10-06-card-levels-evolve-design.md §1).
-   The six five-level cards transform at level 4 into new art: holo-silver frame at level 4, gold at level 5, with torn
-   scraps of the old card on both sides. It stays the same card; only the face changes. A card evolves only once its
+   The six five-level cards transform at level 4 into new art, with torn scraps of the old card on both sides; at level 5
+   the art just turns gold, with no scraps. Each card has a look (EVO_LOOKS): Series 1 cards move to the evolved
+   holo-silver and gold frames; the Series 3 cards and the Memory Trick card take silver versions of their own frame at
+   level 4 and their own gold frame at level 5, and tear along their own torn edges. It stays the same card; only the face changes. A card evolves only once its
    evolved art is listed in EVOLVE. The tear (peel reveal) plays once per card; S.cards[id].evoSeen records it and
    S.cards[id].evoArt === 'original' is the player's Original/Evolved switch.
    Loaded before the main script; uses the app's globals (maxL, NEED, P, esc, S, save, refresh, cardEl, ...) at call time. */
 
+const BG_PENDING = 'art/bg_gavel_evolved.webp';   // stand-in background until a card's own evolved background is drawn
 const EVOLVE = {
   gavel:{ char:'art/gavel_evolved.webp', bg:'art/bg_gavel_evolved.webp' },
+  paperjam:{ char:'art/paperjam_evolved.webp', bg:BG_PENDING },
+  missingfile:{ char:'art/missingfile_evolved.webp', bg:BG_PENDING },
+  svs:{ char:'art/svs_evolved.webp', bg:BG_PENDING, look:'trick' },
+  sj120:{ char:'art/sj120_evolved.webp', bg:BG_PENDING, look:'s3' },
+  appeal30:{ char:'art/appeal30_evolved.webp', bg:BG_PENDING, look:'s3' },
 };
-const EVO_FRAME = { 4:'art/frame_evolved_silver.webp', 5:'art/frame_evolved_gold.webp' };
+/* frames at level 4 and 5, and the suffix of the tear pictures (art/evolve_tear_{mask,center,rim}<tear>.webp, tools/evolve_assets.py) */
+const EVO_LOOKS = {
+  s1:{ frames:{ 4:'art/frame_evolved_silver.webp', 5:'art/frame_evolved_gold.webp' }, tear:'' },
+  s3:{ frames:{ 4:'art/frame_silver_s3.webp', 5:'art/frame_gold_s3.webp' }, tear:'_s3' },
+  trick:{ frames:{ 4:'art/frame_silver_trick.webp', 5:'art/frame_gold_trick.webp' }, tear:'_trick' },
+};
+const evoLookOf = c => (EVOLVE[c.id] && EVOLVE[c.id].look) || 's1';
+/* the card's classes when it shows evolved: its look, and gold-frame when a card with its own look is on its gold frame
+   (dark labels, as on Gold Seal; the Series 1 evolved frames have their own lettering rules below) */
+const evoCardClass = (c, st) => `evolved evo-${evoLookOf(c)}${evoLookOf(c) !== 's1' && evoFrameFor(c, st) === EVO_LOOKS[evoLookOf(c)].frames[5] ? ' gold-frame' : ''}`;
 
 const canEvolve = c => !!(c && EVOLVE[c.id] && maxL(c) === 5);
 const isEvolvedView = (c, st) => canEvolve(c) && !!st && st.level >= 4 && !!st.evoSeen && st.evoArt !== 'original';
-const evoFrameFor = st => st.level >= 5 ? EVO_FRAME[5] : EVO_FRAME[4];   // Gold Seal keeps the gold evolved frame
+/* Silver at 4 and gold at 5. Cards with their own look use their own silver and gold frames, and the gold one on Gold Seal at 4 too. */
+const evoFrameFor = (c, st) => { const look = evoLookOf(c), f = EVO_LOOKS[look].frames;
+  return st.level >= 5 || (look !== 's1' && verOf(st) === 'gold') ? f[5] : f[4]; };
 /* The old card that shows through the tear: the same card state (level, XP, version) with the original art. Its pop-out
    character and stamp are hidden by CSS (.evo-old), so the scraps read as the flat old card. */
 const scrapState = (c, st) => ({ ...st, evoArt:'original' });
 
 function evolvedFrontHTML(c, st, opt={}){
-  const lv = st.level, need = NEED[lv-1], e = EVOLVE[c.id], frame = evoFrameFor(st);
+  const lv = st.level, need = NEED[lv-1], e = EVOLVE[c.id], frame = evoFrameFor(c, st);
+  // a card with its own look is drawn by its own front, with the evolved art and frame swapped in
+  if (evoLookOf(c) !== 's1') return frontHTML(c, st, { ...opt, art:{ char:e.char, bg:e.bg }, frame }) + (lv < 5 ? evoScrapsHTML(c, st) : '');
   const pct = st.mastered ? 100 : Math.min(100, st.xp / need * 100);
   const pop = lv >= maxL(c);   // level 5: the evolved character steps out of the frame
   const alt = `${esc(c.name)} evolved artwork`;
@@ -39,15 +60,15 @@ function evolvedFrontHTML(c, st, opt={}){
     <div class="t rar" style="${P(82,1322,312,1448)}">${verBadge(st, 4.2, 3.3)}</div>
     <div class="t set" style="${P(352,1326,648,1448)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
     <div class="t lvl" style="${P(728,1322,944,1448)}"><span class="stars">${starsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
-    ${evoScrapsHTML(c, st)}
+    ${lv < 5 ? evoScrapsHTML(c, st) : ''}
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
 }
 
-/* The torn edges: the old card, stretched to the evolved outline, shown only through the tear mask, with the
-   white torn-paper rim on top. */
+/* The torn edges: the old card (stretched to the evolved outline on Series 1 cards), shown only through the look's
+   tear mask, with the white torn-paper rim on top. */
 function evoScrapsHTML(c, st){
   return `<div class="evo-scraps" aria-hidden="true"><div class="evo-old">${frontHTML(c, scrapState(c, st))}</div></div>
-    <img class="evo-rim" src="art/evolve_tear_rim.webp" alt="">`;
+    <img class="evo-rim" src="art/evolve_tear_rim${EVO_LOOKS[evoLookOf(c)].tear}.webp" alt="">`;
 }
 
 /* Original / Evolved switch on the card page, once the card has evolved. */
@@ -79,12 +100,12 @@ function showEvolvePeel(c, done, opts={}){
   delete st.evoArt;
   const old = scrapState(c, st);
   const ov = document.createElement('div');
-  ov.className = 'evo-peel'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', `${c.name} is evolving`);
+  ov.className = 'evo-peel evo-' + evoLookOf(c); ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', `${c.name} is evolving`);
   ov.innerHTML = `<div class="rays2"></div>
     <h2 class="ep-title">Something's under this card…</h2>
     <div class="ep-stage">
       <div class="ep-under">${cardEl(c, st)}</div>
-      <div class="ep-top"><div class="card series${c.series || 1} lv${old.level} ver-${verOf(old)}"><div class="evo-old">${frontHTML(c, old)}</div></div><i class="ep-shade"></i></div>
+      <div class="ep-top"><div class="card evo-${evoLookOf(c)} series${c.series || 1} lv${old.level} ver-${verOf(old)}"><div class="evo-old">${frontHTML(c, old)}</div></div><i class="ep-shade"></i></div>
       <div class="ep-gl"></div>
     </div>
     <p class="ep-hint">Drag up to tear it off</p>
@@ -164,6 +185,9 @@ function showEvolvePeel(c, done, opts={}){
 const EVOLVE_CSS = `
 .evo-scraps{inset:0;z-index:11;pointer-events:none;-webkit-mask:url(art/evolve_tear_mask.webp) 0 0/100% 100% no-repeat;mask:url(art/evolve_tear_mask.webp) 0 0/100% 100% no-repeat}
 .evo-old{position:absolute;left:-1.93%;top:-1.07%;width:103.96%;height:102.34%;container-type:inline-size}
+.card:is(.evo-s3,.evo-trick) .evo-old{left:0;top:0;width:100%;height:100%}   /* same frame as the old card: no stretch */
+.card.evo-s3 .evo-scraps{-webkit-mask-image:url(art/evolve_tear_mask_s3.webp);mask-image:url(art/evolve_tear_mask_s3.webp)}
+.card.evo-trick .evo-scraps{-webkit-mask-image:url(art/evolve_tear_mask_trick.webp);mask-image:url(art/evolve_tear_mask_trick.webp)}
 .evo-old > *{position:absolute}
 .evo-old .frame{inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
 .evo-old > :is(.framebreak-character,.frame-metadata,.frame.panels-top,.stampimg,.mn-badge.framebreak-memory){display:none}
@@ -171,9 +195,9 @@ const EVOLVE_CSS = `
 .card.evolved > .stampimg.mastered,.card.evolved > .vd{z-index:13}
 .card.evolved.lv4.ver-filed:not(.cold):not(.charged){--st-glow:0 0 2.6cqw rgba(225,235,255,.4)}
 /* the evolved frame's XP strip and level plate are dark: light lettering, also on Gold Seal (which darkens text) */
-.card.evolved > :is(.t.xpstrip,.t.lvl),.card.evolved > :is(.t.xpstrip,.t.lvl) :not(.gem){color:#f6ecd2!important;-webkit-text-stroke:0!important;text-shadow:0 .2cqw .5cqw rgba(0,0,0,.85)!important}
-.card.evolved > .t.lvl .stars .on{color:#ffd45a!important}.card.evolved > .t.lvl .stars .off{color:rgba(246,236,210,.35)!important}
-.card.evolved > .t.xpstrip i{background:rgba(246,236,210,.25)!important}
+.card.evolved.evo-s1 > :is(.t.xpstrip,.t.lvl),.card.evolved.evo-s1 > :is(.t.xpstrip,.t.lvl) :not(.gem){color:#f6ecd2!important;-webkit-text-stroke:0!important;text-shadow:0 .2cqw .5cqw rgba(0,0,0,.85)!important}
+.card.evolved.evo-s1 > .t.lvl .stars .on{color:#ffd45a!important}.card.evolved.evo-s1 > .t.lvl .stars .off{color:rgba(246,236,210,.35)!important}
+.card.evolved.evo-s1 > .t.xpstrip i{background:rgba(246,236,210,.25)!important}
 .evo-switch{display:flex;gap:4px;margin:10px auto 0;padding:3px;border-radius:18px;background:var(--bg2);border:.5px solid var(--line);width:max-content}
 .evo-switch button{min-height:32px;padding:0 14px;border:0;border-radius:15px;background:transparent;color:var(--sub);font:16px "Patrick Hand"}
 .evo-switch button.on{background:var(--mustard);color:var(--ink)}
@@ -187,6 +211,8 @@ const EVOLVE_CSS = `
 .ep-top{z-index:2;transform-origin:50% 0;transform-style:preserve-3d;backface-visibility:visible;
   -webkit-mask:url(art/evolve_tear_center.webp) 0 0/100% 100% no-repeat;mask:url(art/evolve_tear_center.webp) 0 0/100% 100% no-repeat}
 .ep-top > .card::after{display:none}
+.evo-peel.evo-s3 .ep-top{-webkit-mask-image:url(art/evolve_tear_center_s3.webp);mask-image:url(art/evolve_tear_center_s3.webp)}
+.evo-peel.evo-trick .ep-top{-webkit-mask-image:url(art/evolve_tear_center_trick.webp);mask-image:url(art/evolve_tear_center_trick.webp)}
 .ep-shade{position:absolute;inset:0;z-index:20;opacity:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.85))}
 .ep-anim,.ep-anim .ep-shade{transition-property:transform,opacity;transition-timing-function:cubic-bezier(.2,.8,.2,1)}
 .ep-hint{margin:0;position:relative;max-width:340px;text-align:center;font-size:18px;color:var(--paper)}

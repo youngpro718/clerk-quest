@@ -167,6 +167,35 @@ function neutralRender(make){
   S.styles = null; S.cards = {};
   try { return make(); } finally { S.styles = keep.styles; S.cards = keep.cards; }
 }
+/* Plays the game's own level-up (or mastered, or the level 4 tear) for a fixture card at this level and version. Nothing is saved. */
+function admReplay(id, lv, ver, mode){
+  const c = byId(id); if (!c) return;
+  const mastered = mode === 'mastered', st = admFixture(c, lv, mastered ? 'mastered' : 'normal', ver);
+  if (!mastered && st.level < 2) return;
+  if (st.level === 4) st.evoSeen = false;   // as on the day a player first reaches level 4, so evolving cards tear
+  showLevelUp(c.id, mastered ? { from:st.level, to:st.level, mastered:true } : { from:st.level - 1, to:st.level, mastered:false }, null, { st, render:neutralRender });
+}
+/* Weak points and pattern lessons need real misses, so they open inside the sandbox with sample ones (sandbox.js) */
+function admLearn(v){
+  if (Sandbox.on()) Sandbox.presets.weak(); else if (!Sandbox.enter('weak')) return;
+  if (v === 'weak') switchTab('home');
+  else if (v === 'drill') weakDrill(plDrillIds('difference'));
+  else plOpen(v);
+}
+/* Quick states: change the admin's own real save, each after a confirm. In the sandbox they change only the copy. */
+const ADM_QUICK = { coins:'add 500 coins', packs:'add 5 packs', own:'own every card', level:'move your player level to the next step', tips:'show the first-time tips and welcome again', weak:'clear your weak points and finished pattern lessons' };
+async function admQuick(a){
+  if (!ADM.is || !ADM_QUICK[a]) return;
+  if (!Sandbox.on() && !await iosAlert({ title:'Change your real save?', msg:`This will ${ADM_QUICK[a]} on your own account. It is saved and syncs.`,
+    buttons:[{ label:'Cancel', value:false, style:'bold' }, { label:'Change it', value:true, style:'destructive' }] })) return;
+  if (a === 'coins') earnCoins(500, 'Admin: quick state');
+  if (a === 'packs') S.packs = (S.packs || 0) + 5;
+  if (a === 'own') CARDS.forEach(c => { if (S.cards[c.id]) S.cards[c.id].owned = true; });
+  if (a === 'level') { const next = ({ 1:5, 5:10, 10:20 })[playerLevel()] || 1; S.stats.xp = (next - 1) * 250; }
+  if (a === 'tips') { const o = onb(); o.tips = {}; delete o.welcomed; }
+  if (a === 'weak') { S.misses = []; S.patternLessons = {}; }
+  save(); refresh(); toast((Sandbox.on() ? 'In the sandbox: ' : 'Done: ') + ADM_QUICK[a], 'check');
+}
 function admCardPreview(c, lv, mode, ver){
   return neutralRender(() => cardEl(c, admFixture(c, lv, mode, ver)));
 }
@@ -215,7 +244,9 @@ function labGridHTML(c, live){
 }
 function labPreviewHTML(c){
   const lv = Math.min(LAB.lv || maxL(c), maxL(c)), ver = LAB.ver || LAB.tier;
-  return `<div class="lab-big">${labRender(c, lv, ver, true)}</div><p class="st-note c">Level ${lv} · ${esc(titleCase(VERSIONS[ver].label))}. Tap any card below to show it here.</p>`;
+  const evolves = typeof canEvolve === 'function' && canEvolve(c), btn = (l, label) => `<button class="sk-btn" data-act="adm-replay" data-id="${c.id}" data-lv="${l}" data-ver="${ver}" data-mode="normal">${label}</button>`;
+  return `<div class="lab-big">${labRender(c, lv, ver, true)}</div><p class="st-note c">Level ${lv} · ${esc(titleCase(VERSIONS[ver].label))}. Tap any card below to show it here.</p>
+    <div class="lab-acts">${lv > 1 ? btn(lv, lv === 4 && evolves ? 'Replay the level 4 tear' : `Replay level-up to ${lv}`) : ''}${evolves && lv !== 4 ? btn(4, 'Replay the level 4 tear') : ''}</div>`;
 }
 function labPlaygroundHTML(){
   const cur = Object.assign({}, FX_VERSIONS[LAB.tier].holo, LAB.fx[LAB.tier] || {}), chip = (act, v, label, on) => `<button class="${on ? 'on' : ''}" data-act="${act}" data-v="${v}">${esc(label)}</button>`;
@@ -257,14 +288,17 @@ Object.assign(ADMIN_SCREENS, {
     const c = byId(p.id); if (!c) return { title:'Card', body:'' };
     const lv = Math.min(p.lv || 1, maxL(c)), mode = p.mode || 'normal', ver = VERSIONS[p.ver] ? p.ver : 'filed', { bank, made } = questionsFor(c, lv);
     const states = [['normal','Clean'],['charged','Charged'],['frost','Frost'],['cold','Cold'],['mastered','Mastered']];
+    const evolves = typeof canEvolve === 'function' && canEvolve(c);   // the evolving card (Series 1's gavel) tears at level 4
     const vers = Object.keys(VERSIONS).map(v => [v, titleCase(VERSIONS[v].label)]);
     return { title:c.name, right:made.length ? `<button class="nb-btn txt" data-act="adm-reroll">Shuffle</button>` : '', body:`
       <div class="adm-lvs">${Array.from({ length:maxL(c) }, (_, i) => `<button class="${i + 1 === lv ? 'on' : ''}" data-act="adm-lv" data-lv="${i + 1}">Level ${i + 1}</button>`).join('')}</div>
       <div class="adm-modes">${states.map(([v,label]) => `<button class="${v === mode ? 'on' : ''}" data-act="adm-mode" data-v="${v}">${label}</button>`).join('')}</div>
       <div class="adm-modes adm-vers">${vers.map(([v,label]) => `<button class="${v === ver ? 'on' : ''}" data-act="adm-ver" data-v="${v}">${label}</button>`).join('')}</div>
       <div class="adm-card"><div class="cd-card" data-act="cd-flip" aria-label="Tap to flip the card">${admCardPreview(c, lv, mode, ver)}<div class="cd-back">${neutralRender(() => cardReverseHTML(c))}</div></div></div>
-      <p class="st-note c">Tap the card to see its back.</p>
-      ${typeof canEvolve === 'function' && canEvolve(c) ? `<button class="sk-btn" data-act="adm-evo-peel" data-id="${c.id}">Replay the tear (level 4 evolve)</button>` : ''}
+      <p class="st-note c">Tap the card to see its back. ${window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches ? 'Move the pointer over it to tilt it.' : 'Tilt your phone to move the foil.'}</p>
+      <button class="sk-btn" data-act="adm-replay" data-id="${c.id}" data-lv="${lv}" data-ver="${ver}" data-mode="${mode}" ${lv < 2 && mode !== 'mastered' ? 'disabled' : ''}>${
+        mode === 'mastered' ? 'Replay mastered' : lv < 2 ? 'Level 1 has no level-up' : lv === 4 && evolves ? 'Replay the level 4 tear' : `Replay level-up to level ${lv}`}</button>
+      ${evolves && (lv !== 4 || mode === 'mastered') ? `<button class="sk-btn" data-act="adm-replay" data-id="${c.id}" data-lv="4" data-ver="${ver}" data-mode="normal">Replay the level 4 tear</button>` : ''}
       <p class="st-note c">${esc(c.num)} · ${esc(seriesLabel(c))} · ${esc(titleCase(c.set))} · ${esc(c.rarity || '')}</p>
       ${ruleHTML(c)}
       <div class="sec-h"><span>Level ${lv} questions</span><span class="adm-count">${bank.length}${made.length ? ' + samples' : ''}</span></div>
@@ -287,24 +321,28 @@ Object.assign(ADMIN_SCREENS, {
       <p class="st-note">Players read these in this order, then take a quiz of 2 questions per card. Tap a card for its rule and questions.</p>` };
   },
   admintester(){
-    return adminScreen('Tester Workspace', () => ({ title:'Tester Workspace', body:`
-      <div class="adm-hero tester"><span>${ICO('sparkle')}</span><div><b>Isolated preview lab</b><small>Fixtures do not change your save or sync to the cloud</small></div></div>
-      <div class="sec-h"><span>Cards &amp; learning</span></div><div class="list">
-        <button class="row" data-act="push" data-s="adminvisuals"><span class="th emo gi">${ICO('cards')}</span><span class="row-main"><b>Card visual lab</b><small>Every level and version side by side, plus the glow and foil playground</small></span>${chev}</button>
-        <button class="row" data-act="push" data-s="adminquiz"><span class="th emo gi">${ICO('read')}</span><span class="row-main"><b>Quiz interaction</b><small>Answer a disposable question fixture</small></span>${chev}</button>
-      </div>
-      <div class="sec-h"><span>Rewards &amp; flows</span></div><div class="list">
-        <button class="row" data-act="push" data-s="adminpacks"><span class="th emo gi">${ICO('pack')}</span><span class="row-main"><b>Packs &amp; rewards</b><small>Pack wrappers, pull states, and Hot Docket rewards</small></span>${chev}</button>
-        <button class="row" data-act="push" data-s="adminscreens"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>App screens</b><small>Startup, welcome, loading, result, finish, and tips</small></span>${chev}</button>
-        <button class="row" data-act="push" data-s="adminsave"><span class="th emo gi">${ICO('warning')}</span><span class="row-main"><b>Saved account controls</b><small>Explicit progress mutations for authenticated QA</small></span>${chev}</button>
-      </div>` }));
+    return adminScreen('Tester Workspace', () => {
+      const row = (s, icon, b, sm) => `<button class="row" data-act="push" data-s="${s}"><span class="th emo gi">${ICO(icon)}</span><span class="row-main"><b>${b}</b><small>${sm}</small></span>${chev}</button>`;
+      return { title:'Tester Workspace', body:`
+      <div class="adm-hero tester"><span>${ICO('sparkle')}</span><div><b>Preview lab</b><small>Nothing here changes your save, except under Your save, where each row says so</small></div></div>
+      <div class="sec-h"><span>Cards</span></div><div class="list">${row('adminvisuals', 'cards', 'Card visual lab', 'Any card at every level and version, the foil playground, and the card sandbox')}</div>
+      <div class="sec-h"><span>Learning</span></div><div class="list">${row('adminlearning', 'read', 'Weak points and lessons', 'Sample misses, the Deadlines and Look-alikes lessons, the drill')}${row('adminquiz', 'read', 'Quiz interaction', 'Answer a practice question')}</div>
+      <div class="sec-h"><span>Packs &amp; rewards</span></div><div class="list">${row('adminpacks', 'pack', 'Packs gallery and rewards', 'All seven wrappers, decks and backs, test openings, Hot Docket')}</div>
+      <div class="sec-h"><span>App screens</span></div><div class="list">${row('adminscreens', 'sparkle', 'App screens', 'Startup, welcome, loading, result, finish and tips')}</div>
+      <div class="sec-h"><span>Your save</span></div><div class="list">
+        <button class="row" data-act="sb-enter"><span class="th emo gi">${ICO('sync')}</span><span class="row-main"><b>${Sandbox.on() ? 'Sandbox is on' : 'Start sandbox'}</b><small>Try anything on a copy of your save; Exit puts it back exactly</small></span>${chev}</button>
+        ${row('adminsave', 'warning', 'Change your real save', 'Coins, packs, every card, player level, tips, weak points, card levels')}</div>` };
+    });
   },
   adminsave(){
-    return adminScreen('Saved Account Controls', () => {
+    return adminScreen('Your Real Save', () => {
       const mine = CARDS.filter(c => S.cards[c.id] && S.cards[c.id].owned);
-      return { title:'Saved Account Controls', body:`<p class="acct-err">${ICO('warning')} These controls change this admin account's real save and can sync to the cloud. Use isolated previews everywhere else.</p>
-        <div class="sec-h"><span>Packs &amp; reset</span></div><div class="list">
-          <button class="row" data-act="t-pack"><span class="th emo gi">${ICO('pack')}</span><span class="row-main"><b>Add one test pack</b><small>Changes the signed-in admin save</small></span></button>
+      const quick = (v, icon, b, sm) => `<button class="row" data-act="adm-quick" data-v="${v}"><span class="th emo gi">${ICO(icon)}</span><span class="row-main"><b>${b}</b><small>${sm}</small></span></button>`;
+      return { title:'Your Real Save', body:`<p class="acct-err">${ICO('warning')} ${Sandbox.on() ? 'The sandbox is on, so nothing here is saved until you exit it.' : 'These change your real save and sync to your account. Each one asks first.'}</p>
+        <div class="sec-h"><span>Quick states</span></div><div class="list">
+          ${quick('coins', 'coin', 'Add 500 coins', `You have ${(S.coins || 0).toLocaleString()}`)}${quick('packs', 'pack', 'Add 5 packs', `${S.packs || 0} waiting now`)}
+          ${quick('own', 'cards', 'Own every card', `${mine.length} of ${CARDS.length} owned`)}${quick('level', 'stats', 'Next player level step', `Level ${playerLevel()} now; steps 1, 5, 10, 20`)}
+          ${quick('tips', 'sparkle', 'Show the first-time tips again', 'And the welcome screen')}${quick('weak', 'thermo_snow', 'Clear weak points', 'Missed questions and finished pattern lessons')}
           <button class="row danger" data-act="resetall"><span class="th emo gi">${ICO('warning')}</span><span class="row-main"><b>Reset all progress</b><small>Uses the same confirmation as Settings</small></span></button>
         </div>
         <div class="sec-h"><span>Owned cards</span></div><div class="list">${mine.map(c => { const st=S.cards[c.id]; return `<div class="adm-save-card">${admThumb(c,st.level)}<span><b>${esc(c.name)}</b><small>${st.mastered?'Mastered':`Level ${st.level} · ${st.xp} XP`}</small></span><div><button data-act="t-level" data-id="${c.id}" ${st.mastered?'disabled':''}>Level up</button><button data-act="t-cold" data-id="${c.id}">Cold</button><button data-act="t-reset" data-id="${c.id}">Reset</button></div></div>`; }).join('')}</div>` };
@@ -312,15 +350,28 @@ Object.assign(ADMIN_SCREENS, {
   },
   adminvisuals(){
     return adminScreen('Card Visual Lab', () => {
-      const c = labCard(), series = [...new Set(CARDS.map(x => x.series || 1))].sort((x, y) => x - y), on = LAB.series || c.series || 1;
-      const list = CARDS.filter(x => (x.series || 1) === on);
+      const c = labCard(), groups = SERIES_DEFS.concat(ADDON_PACKS).filter(d => CARDS.some(d.test));
+      const on = groups.find(d => String(d.n) === String(LAB.series)) || groups.find(d => d.test(c)) || groups[0], list = on ? CARDS.filter(on.test) : CARDS;
       return { title:'Card Visual Lab', body:`<p class="st-note">Pick a card, then compare every level and version at once. The glow and foil here are the real ones, so what you see is what players see.</p>
-        <div class="adm-modes">${series.map(n => `<button class="${n === on ? 'on' : ''}" data-act="lab-series" data-v="${n}">Series ${n}</button>`).join('')}</div>
+        <div class="adm-modes">${groups.map(d => `<button class="${d === on ? 'on' : ''}" data-act="lab-series" data-v="${d.n}">${ADDON_PACKS.includes(d) ? esc(d.label) : 'Series ' + d.n}</button>`).join('')}</div>
         <div class="adm-modes lab-cards">${list.map(x => `<button class="${x.id === c.id ? 'on' : ''}" data-act="lab-pick" data-id="${x.id}">${esc(x.name)}</button>`).join('')}</div>
         <div class="lab-previews">${labPreviewHTML(c)}${labGridHTML(c, LAB.live)}</div>
         <div class="lab-acts"><button class="${LAB.live ? 'on' : ''}" data-act="lab-live" aria-pressed="${LAB.live}">${LAB.live ? 'Grid moving: on' : 'Grid moving: off'}</button>
-          <button data-act="push" data-s="admincard" data-id="${c.id}">Questions and states</button></div>
+          <button data-act="push" data-s="admincard" data-id="${c.id}">Card sandbox</button></div>
         ${labPlaygroundHTML()}` };
+    });
+  },
+  adminlearning(){
+    return adminScreen('Weak Points and Lessons', () => {
+      const row = (v, icon, b, sm) => `<button class="row" data-act="adm-learn" data-v="${v}"><span class="th emo gi">${ICO(icon)}</span><span class="row-main"><b>${b}</b><small>${sm}</small></span>${chev}</button>`;
+      return { title:'Weak Points and Lessons', body:`<div class="adm-hero tester"><span>${ICO('read')}</span><div><b>Runs in the sandbox</b><small>Sample missed questions on the Deadlines and Look-alikes cards. Nothing is saved.</small></div></div>
+        <div class="list">
+          ${row('weak', 'thermo_snow', 'Weak points on Home', 'Your weak spots, "You keep missing…" and Learn the method')}
+          ${row('clock', 'streak', 'Deadlines lesson', 'The four-step deadline method')}
+          ${row('difference', 'memory', 'Look-alikes lesson', 'The four-step look-alike method')}
+          ${row('drill', 'cards', 'Look-alike drill', 'A drill on the weakest look-alike cards')}
+        </div>
+        <p class="st-note">A red SANDBOX bar stays at the top. Tap Exit on it when you are done, and your own save is exactly as it was.</p>` };
     });
   },
   adminquiz(p){
@@ -341,10 +392,14 @@ Object.assign(ADMIN_SCREENS, {
       return { title:'Packs & Rewards', body:`<p class="st-note">Static pull fixtures use temporary card states and never spend, award, or save anything.</p>
         <div class="adm-pack"><img src="${nextPackArt()}" alt="Current pack wrapper"><b>Pack presentation</b><small>Wrapper, card back, new card, duplicate, and Memory Trick labels</small></div>
         <div class="adm-pulls">${pulls.map((c,i) => `<div>${i===0?`<img class="adm-back" src="${backSrc()}" alt="Card back">`:admCardPreview(c,Math.min(2,maxL(c)),'normal')}<small>${['Card back / duplicate','New card','Memory Trick'][i]}</small></div>`).join('')}</div>
-        <div class="sec-h"><span>Open a test pack</span></div>
-        <p class="st-note">The real pack opening with sample cards from that series. Nothing is spent, awarded or saved.</p>
-        <div class="adm-packs-open">${SERIES_DEFS.concat(ADDON_PACKS).map(d => `<button data-act="adm-pack-open" data-v="${d.n}"><img src="${packArtOf(d.n)}" alt=""><small>${ADDON_PACKS.includes(d) ? 'Add-on' : 'Series ' + d.n}</small></button>`).join('')}</div>
-        <div class="list" style="margin-top:12px"><button class="row" data-act="adm-pack-add"><span class="th emo gi">${ICO('pack')}</span><span class="row-main"><b>Add 5 real packs</b><small>To your own account, to try Pick Your Pack (${S.packs} waiting now)</small></span></button></div>
+        <div class="sec-h"><span>Pack gallery</span></div>
+        <p class="st-note">Every wrapper with its deck box and card back. Open plays the real pack opening with sample cards; nothing is spent, awarded or saved.</p>
+        <div class="list">${SERIES_DEFS.concat(ADDON_PACKS).map(d => { const add = ADDON_PACKS.includes(d);
+          return `<div class="row adm-pk"><img src="${packArtOf(d.n)}" alt="${esc(d.label)} pack"><span class="row-main"><b>${esc(d.label)}</b><small>${add ? 'Add-on pack' : 'Deck box and card back'}</small></span>
+            ${d.deck ? `<img src="${artSrc(d.deck)}" alt="Deck box">` : ''}<img class="adm-pk-back" src="${add ? 'art/back_tricks.webp' : SERIES_BACKS[d.n] || 'art/cardback.webp'}" alt="Card back">
+            <button class="sk-btn" data-act="adm-pack-open" data-v="${d.n}">Open</button></div>`; }).join('')}</div>
+        ${(() => { const c = CARDS.find(x => x.series === 6); return c ? `<div class="sec-h"><span>Series 6 jigsaw</span></div><p class="st-note">The pieces fill in level by level. Tap one to open it in the card sandbox.</p>
+          <div class="adm-pulls">${Array.from({ length:maxL(c) }, (_, i) => `<button data-act="adm-open" data-id="${c.id}" data-lv="${i + 1}">${admCardPreview(c, i + 1, 'normal')}<small>Level ${i + 1}</small></button>`).join('')}</div>` : ''; })()}
         <div class="sec-h"><span>Reward cards</span></div><div class="list"><button class="row" data-act="push" data-s="rewardpreview"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Landmark cards (Hot Docket)</b><small>Filed, Certified, backs, and one-chance quiz previews</small></span>${chev}</button></div>` };
     });
   },
@@ -369,19 +424,22 @@ document.addEventListener('click', e => {
   switch (t.dataset.act) {
     case 'adm-lv': { const en = topEntry(); en.p = { ...en.p, lv:+t.dataset.lv }; refresh(); currentScreenEl().querySelector('.scr').scrollTop = 0; break; }
     case 'adm-mode': { const en = topEntry(); en.p = { ...en.p, mode:t.dataset.v }; refresh(); break; }
-    case 'adm-evo-peel': { const c = byId(t.dataset.id); showEvolvePeel(c, null, { preview:true, st:admFixture(c, 4, 'normal') }); break; }
     case 'adm-ver': { const en = topEntry(); en.p = { ...en.p, ver:t.dataset.v }; refresh(); break; }
     case 'adm-reroll': refresh(); break;
+    case 'adm-learn': admLearn(t.dataset.v); break;
+    case 'adm-replay': admReplay(t.dataset.id, +t.dataset.lv, t.dataset.ver, t.dataset.mode); break;
     case 'adm-pack-open': {   // sample pulls: a new card, a duplicate, and a Certified one last, like a real pack's order
       const d = packDef(t.dataset.v), addon = ADDON_PACKS.includes(d), pool = shuffle(CARDS.filter(d.test));
       const pulls = pool.slice(0, 3).map((c, i) => ({ c, isNew:i !== 1, ver:i === 2 ? 'certified' : null, newVer:i === 2, coins:i === 1 ? 5 : 0, st:admFixture(c, 1, 'normal', i === 2 ? 'certified' : 'filed') }));
       if (addon) pulls.addon = d.n; else pulls.series = d.n;
       openPack({ pulls, ...(addon ? { addon:d.n } : { series:d.n }), preview:true, chosen:true }); break; }
-    case 'adm-pack-add': if (ADM.is) { S.packs += 5; save(); refresh(); toast('5 packs added', 'pack'); } break;
+    case 'adm-open': push('admincard', { id:t.dataset.id, lv:+t.dataset.lv }); break;
+    case 'adm-quick': admQuick(t.dataset.v); break;
+    case 'sb-enter': if (!Sandbox.on() && Sandbox.enter()) { refresh(); toast('Sandbox on. Change anything; nothing is saved.', 'check'); } break;
     case 'adm-quiz-answer': ADM.quizChoice = +t.dataset.i; refresh(); break;
     case 'adm-quiz-reset': ADM.quizChoice = null; refresh(); break;
     case 'lab-pick': Object.assign(LAB, { id:t.dataset.id, lv:null, ver:null }); refresh(); break;
-    case 'lab-series': Object.assign(LAB, { series:+t.dataset.v, id:(CARDS.find(c => (c.series || 1) === +t.dataset.v) || {}).id, lv:null, ver:null }); refresh(); break;
+    case 'lab-series': { const d = packDef(t.dataset.v); Object.assign(LAB, { series:t.dataset.v, id:d ? (CARDS.find(d.test) || {}).id : null, lv:null, ver:null }); refresh(); break; }
     case 'lab-cell': { LAB.lv = +t.dataset.lv; LAB.ver = t.dataset.ver; labRepaint();
       const big = currentScreenEl() && currentScreenEl().querySelector('.lab-big'); if (big) big.scrollIntoView({ block:'nearest', behavior:'smooth' }); break; }
     case 'lab-live': LAB.live = !LAB.live; refresh(); break;
@@ -438,6 +496,8 @@ const ADMIN_CSS = `
 .adm-answers{display:flex;flex-direction:column;gap:7px}.adm-answers button{min-height:46px;padding:8px 11px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.04);color:var(--paper);text-align:left;font:16px/1.25 var(--ui)}.adm-answers button.ok{background:rgba(95,212,122,.16);border-color:#5fd47a}.adm-answers button.bad{background:rgba(255,107,94,.14);border-color:#ff6b5e}
 .adm-pack{text-align:center;padding:18px;border-radius:17px;background:var(--bg2)}.adm-pack img{display:block;width:min(45%,180px);max-height:230px;object-fit:contain;margin:0 auto 9px}.adm-pack b,.adm-pack small{display:block}.adm-pack b{font:400 22px "Bangers";letter-spacing:.05em}.adm-pack small{font:13px var(--ui);color:var(--sub);margin-top:4px}.adm-pulls{display:grid;grid-template-columns:repeat(3,minmax(0,200px));justify-content:center;gap:8px;margin-top:14px}.adm-pulls>div{min-width:0;text-align:center}.adm-pulls small{display:block;font:11px/1.2 var(--ui);color:var(--sub);margin-top:5px}.adm-back{width:100%;aspect-ratio:1024/1536;object-fit:cover;border-radius:6%/4%}
 .adm-loading{text-align:center;padding:14px 4px}.adm-loading>.ico{width:64px;height:64px}.adm-loading h3{font:400 27px "Bangers";letter-spacing:.05em}.adm-loading p,.adm-loading small{color:var(--sub)}.adm-loading .sp-bar{position:relative;inset:auto;width:100%;margin:14px 0}.adm-result{padding:0}.adm-result .score{font-size:60px}.adm-result .panel{margin-top:14px}
+.adm-pk{display:flex;align-items:center;gap:8px}.adm-pk>img{width:40px;height:60px;object-fit:contain;flex:none}.adm-pk .sk-btn{flex:none;width:auto;min-height:36px;margin:0;padding:0 14px}
+.adm-pulls button{border:0;background:none;padding:0;color:var(--paper)}
 .adm-save-card{display:grid;grid-template-columns:46px 1fr;gap:10px 12px;padding:10px 12px;border-bottom:.5px solid var(--line)}.adm-save-card:last-child{border-bottom:0}.adm-save-card>span{min-width:0}.adm-save-card>span b,.adm-save-card>span small{display:block}.adm-save-card>span b{font:18px "Patrick Hand"}.adm-save-card>span small{font:12px var(--ui);color:var(--sub)}.adm-save-card>div{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.adm-save-card>div button{min-height:36px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.05);color:var(--paper);font:14px var(--ui)}.adm-save-card>div button:disabled{opacity:.4}
 .lab-grid{display:grid;grid-template-columns:auto repeat(var(--cols),minmax(52px,1fr));gap:6px;align-items:center;overflow-x:auto;margin:6px 0 12px;padding:4px 2px}
 .lab-h,.lab-v{font:400 15px "Bangers";letter-spacing:.06em;color:var(--sub);text-align:center}.lab-v{writing-mode:vertical-rl;transform:rotate(180deg);font-size:13px}

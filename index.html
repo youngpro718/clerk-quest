@@ -197,11 +197,11 @@ html.cq-reduce-motion .framebreak-character{transform:translate3d(0,0,0) rotate(
 .vd-clip{width:12%;left:-2.5%;top:20%;transform:rotate(-14deg);filter:drop-shadow(0 .4cqw .5cqw rgba(0,0,0,.4))}
 .vd-tag{width:25%;left:1%;top:40%;transform:rotate(-12deg);filter:drop-shadow(0 .6cqw .8cqw rgba(0,0,0,.45))}
 .card.ver-gold .stampimg.mastered{display:none}   /* the Gold Seal replaces the MASTERED stamp */
-/* gold frames are light: the small labels switch to dark ink with a pale halo so they stay readable */
-.card.ver-gold :is(.t.num,.t.xpstrip,.t.cat,.t.rar,.t.set,.t.lvl),.card.ver-gold :is(.t.num,.t.xpstrip,.t.cat,.t.rar,.t.set,.t.lvl) :not(.gem){
+/* gold frames are light: the small labels switch to dark ink with a pale halo so they stay readable (also an evolved card's level 5 gold frame) */
+.card:is(.ver-gold,.gold-frame) :is(.t.num,.t.xpstrip,.t.cat,.t.rar,.t.set,.t.lvl),.card:is(.ver-gold,.gold-frame) :is(.t.num,.t.xpstrip,.t.cat,.t.rar,.t.set,.t.lvl) :not(.gem){
   color:#2b1b06!important;-webkit-text-stroke:0!important;text-shadow:0 0 .45cqw rgba(255,246,214,.95),0 0 .18cqw rgba(255,246,214,1)!important}
-.card.ver-gold .t.lvl .stars .on{color:#8a5200!important}.card.ver-gold .t.lvl .stars .off{color:rgba(43,27,6,.35)!important}
-.card.ver-gold .t.xpstrip i{background:rgba(43,27,6,.25)!important}
+.card:is(.ver-gold,.gold-frame) .t.lvl .stars .on{color:#8a5200!important}.card:is(.ver-gold,.gold-frame) .t.lvl .stars .off{color:rgba(43,27,6,.35)!important}
+.card:is(.ver-gold,.gold-frame) .t.xpstrip i{background:rgba(43,27,6,.25)!important}
 .vd-goldseal{width:17%;right:2%;top:62%;transform:rotate(8deg);filter:drop-shadow(0 .6cqw .8cqw rgba(0,0,0,.5))}
 .pk-badge.v-gold{background:#f3cf55}
 .pk-badge.v-certified{background:#d9e3ec} .pk-badge.v-exhibit{background:#ffd23f}
@@ -334,7 +334,6 @@ html.cq-reduce-motion .holo{animation:none!important}
 .s3-color{opacity:0}
 .s3-color.stage-2{opacity:1;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M14 25l42-9 8 4-7 9-40 10-8-5zM31 43l43-7 9 5-8 8-42 8-9-5z'/%3E%3C/svg%3E") 0/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M14 25l42-9 8 4-7 9-40 10-8-5zM31 43l43-7 9 5-8 8-42 8-9-5z'/%3E%3C/svg%3E") 0/100% 100% no-repeat}
 .s3-color.stage-3{opacity:1;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M14 25l42-9 8 4-7 9-40 10-8-5zM31 43l43-7 9 5-8 8-42 8-9-5zM8 57l47-8 10 5-7 10-45 7-10-6zM42 67l39-7 12 6-9 9-39 8-10-7z'/%3E%3C/svg%3E") 0/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M14 25l42-9 8 4-7 9-40 10-8-5zM31 43l43-7 9 5-8 8-42 8-9-5zM8 57l47-8 10 5-7 10-45 7-10-6zM42 67l39-7 12 6-9 9-39 8-10-7z'/%3E%3C/svg%3E") 0/100% 100% no-repeat}
-.s3-color.stage-4{opacity:1;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M14 25l42-9 8 4-7 9-40 10-8-5zM31 43l43-7 9 5-8 8-42 8-9-5zM8 57l47-8 10 5-7 10-45 7-10-6zM42 67l39-7 12 6-9 9-39 8-10-7zM3 13l37-8 12 5-8 9-36 8-8-6zM54 26l39-7 7 6-9 9-36 7-8-6zM8 78l45-7 10 7-8 10-44 7-10-8zM59 82l34-6 7 7-8 10-31 4-9-7z'/%3E%3C/svg%3E") 0/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M14 25l42-9 8 4-7 9-40 10-8-5zM31 43l43-7 9 5-8 8-42 8-9-5zM8 57l47-8 10 5-7 10-45 7-10-6zM42 67l39-7 12 6-9 9-39 8-10-7zM3 13l37-8 12 5-8 9-36 8-8-6zM54 26l39-7 7 6-9 9-36 7-8-6zM8 78l45-7 10 7-8 10-44 7-10-8zM59 82l34-6 7 7-8 10-31 4-9-7z'/%3E%3C/svg%3E") 0/100% 100% no-repeat}
 .s3-breakout{top:22.5%}
 .ui-s3-character{width:100%;height:100%}
 .ui-s3-character img{object-fit:contain!important}
@@ -1464,15 +1463,12 @@ html.cq-reduce-motion .mastered-burst.play{animation:none}
 .cq-brand-mark{display:block;width:76px;height:76px;object-fit:contain;flex:none}
 .cq-brand-name{margin:0;font:400 42px/.9 "Luckiest Guy",sans-serif;letter-spacing:-.025em;text-align:left;white-space:nowrap;text-shadow:2px 3px 0 #080706}
 .cq-brand-name span{display:block;color:#d94230;margin-top:5px}
-.cq-brand-start .cq-brand-mark{width:104px;height:104px}
-.cq-brand-start .cq-brand-name{font-size:clamp(28px,8vw,54px)}
+/* startup: just the big deck box and the name, stacked; the card fan belongs to the welcome screen */
+.cq-brand-start{flex-direction:column;gap:18px}
+.cq-brand-start .cq-brand-mark{width:clamp(150px,46vw,210px);height:auto;aspect-ratio:1;filter:drop-shadow(0 14px 18px rgba(0,0,0,.5));animation:sp-pop .6s cubic-bezier(.22,.8,.2,1) both}
+.cq-brand-start .cq-brand-name{font-size:clamp(40px,12vw,58px);text-align:center}
 .cq-brand-small .cq-brand-mark{width:48px;height:48px}
 .cq-brand-small .cq-brand-name{font-size:22px}
-.sp-fan{position:relative;width:100%;height:clamp(225px,32vh,300px);isolation:isolate}
-.sp-card{position:absolute;top:8%;left:var(--left);width:32%;aspect-ratio:2/3;transform:translateX(-50%) rotate(var(--angle));animation:sp-deal .65s cubic-bezier(.22,.8,.2,1) both;animation-delay:var(--delay);z-index:var(--z)}
-/* real cards from the game (pictures made by tools/splash_cards.js, since the splash shows before the game's scripts run) */
-.sp-card img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 10px 14px rgba(0,0,0,.5))}
-.sp-card.mid{top:0;width:37%}   /* the front card is a little bigger */
 .sp-motto{margin:0;color:#f1e5c9;font:400 clamp(20px,5.5vw,28px)/1.15 "Bangers",sans-serif;letter-spacing:.065em}
 .sp-loading{width:min(68%,290px)}
 .sp-bar{height:6px;border-radius:9px;background:#393229;overflow:hidden}
@@ -1480,22 +1476,15 @@ html.cq-reduce-motion .mastered-burst.play{animation:none}
 .sp-cap{margin:12px 0 0;font:16px/1.25 "Patrick Hand",system-ui,sans-serif;color:#c6bba5}
 #splash.out{opacity:0;pointer-events:none}
 .sp-own{margin:14px 0 0;text-align:center;font:11px/1.3 system-ui,-apple-system,sans-serif;color:rgba(246,231,200,.42)}
-@keyframes sp-deal{from{opacity:0;transform:translateX(-50%) translateY(24px) rotate(0deg) scale(.94)}to{opacity:1;transform:translateX(-50%) rotate(var(--angle)) scale(1)}}
-@media(max-height:640px){.sp-frame{gap:16px}.cq-brand-start .cq-brand-name{font-size:clamp(28px,8vw,40px)}.cq-brand-start .cq-brand-mark{width:84px;height:84px}.sp-fan{height:205px;width:min(100%,350px)}.sp-motto{font-size:20px}.sp-cap{font-size:14px}}
-@media(prefers-reduced-motion:reduce){.sp-card{animation:none}#splash,.sp-bar i{transition:none}}
-html.cq-reduce-motion .sp-card{animation:none}
+@keyframes sp-pop{from{opacity:0;transform:translateY(18px) scale(.9)}to{opacity:1;transform:none}}
+@media(max-height:640px){.sp-frame{gap:16px}.cq-brand-start .cq-brand-name{font-size:clamp(34px,10vw,44px)}.cq-brand-start .cq-brand-mark{width:140px}.sp-motto{font-size:20px}.sp-cap{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.cq-brand-start .cq-brand-mark{animation:none}#splash,.sp-bar i{transition:none}}
+html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 </style>
 </head>
 <body>
 <div id="splash" role="status" aria-label="Loading Becoming a Clerk"><div class="sp-frame">
   <div class="cq-brand cq-brand-start"><img class="cq-brand-mark" src="art/brand_deck.webp" alt=""><h1 class="cq-brand-name">BECOMING <span>A CLERK</span></h1></div>
-  <div class="sp-fan" aria-hidden="true">
-    <div class="sp-card" style="--left:18%;--angle:-17deg;--z:1;--delay:.02s"><img src="art/splash_card_s2.webp" alt=""></div>
-    <div class="sp-card" style="--left:34%;--angle:-8deg;--z:2;--delay:.08s"><img src="art/splash_card_s3.webp" alt=""></div>
-    <div class="sp-card" style="--left:82%;--angle:17deg;--z:1;--delay:.14s"><img src="art/splash_card_s5.webp" alt=""></div>
-    <div class="sp-card" style="--left:66%;--angle:8deg;--z:2;--delay:.2s"><img src="art/splash_card_s4.webp" alt=""></div>
-    <div class="sp-card mid" style="--left:50%;--angle:-2deg;--z:3;--delay:.26s"><img src="art/splash_card_s1.webp" alt=""></div>
-  </div>
   <p class="sp-motto">Study for the New York court clerk exam.</p>
   <div class="sp-loading"><div class="sp-bar"><i></i></div><p class="sp-cap">Getting your deck ready…</p></div>
   <p class="sp-own">© 2026 Jack Duchatelier. All rights reserved.</p>
@@ -1518,8 +1507,9 @@ html.cq-reduce-motion .sp-card{animation:none}
 <script src="binder.js?v=dcc2617f"></script>
 <script src="onboarding.js?v=186490cc"></script>
 <script src="account.js?v=833997ea"></script>
-<script src="admin.js?v=ee99a53f"></script>
-<script src="evolve.js?v=15832c8c"></script>
+<script src="admin.js?v=6c047139"></script>
+<script src="sandbox.js?v=8db6606a"></script>
+<script src="evolve.js?v=7019cd0e"></script>
 <script src="stickers.js?v=470cc194"></script>
 <script src="dockets.js?v=581f669f"></script>
 <script src="hearing.js?v=a7e3ecd9"></script>
@@ -2659,6 +2649,7 @@ try { S = normalize(JSON.parse(localStorage.getItem(KEY))); } catch(e){ S = norm
    it saved, and don't send the account the old copy marked as new. */
 let saveFailed = false;
 function save(){
+  if (typeof Sandbox !== 'undefined' && Sandbox.on()) return;   // admin sandbox: nothing is saved, so the cloud never sees it either
   if (window.CQCloud && CQCloud.isReloading && CQCloud.isReloading()) return;   // the account copy just replaced this save; don't write the old one back
   try { localStorage.setItem(KEY, JSON.stringify(S)); saveFailed = false; }
   catch(e){
@@ -2803,19 +2794,21 @@ function starsHTML(lv, newStar, max=5){
   for (let i=1;i<=max;i++) h += `<span class="${i<=lv?'on':'off'} ${i===newStar?'new':''}">${i<=lv?'★':'☆'}</span>`;
   return h;
 }
-/* Series 3 uses one registered, full-color cut-out at every level. Before the final
-   level the base is sepia and fixed brush masks reveal localized pieces of that same
-   image. This keeps every stage aligned and makes reduced motion visually identical. */
-function s3CharacterLayers(c, lv, cls='s3-character'){
-  const src = ART[c.id] && ART[c.id][1];
+/* Series 3 uses one registered, full-color cut-out at every level. Before full color the
+   base is sepia and fixed brush masks reveal localized pieces of that same image. This keeps
+   every stage aligned and makes reduced motion visually identical. Color is fully back at
+   level 3 on every card: five-level cards then evolve at level 4 (the tear) and turn gold at 5. */
+const s3Top = c => Math.min(maxL(c), 3);
+function s3CharacterLayers(c, lv, cls='s3-character', art){
+  const src = art ? art.char : ART[c.id] && ART[c.id][1];
   if (!src) return `<div class="art-ph"><span class="ph-tag">ART COMING SOON</span><div class="ph-emoji">${c.emoji}</div></div>`;
-  if (lv >= maxL(c)) return `<div class="${cls}"><img src="${src}" alt="${esc(c.name)} artwork, full color"></div>`;
+  if (lv >= s3Top(c)) return `<div class="${cls}"><img src="${src}" alt="${esc(c.name)} artwork, full color"></div>`;
   const paint = lv > 1 ? `<img class="s3-color stage-${lv}" src="${src}" alt="" aria-hidden="true">` : '';
   return `<div class="${cls}"><img class="s3-sepia" src="${src}" alt="${esc(c.name)} artwork, sepia">${paint}</div>`;
 }
-function s3ArtHTML(c, lv){
-  const bg = bgFor(c, lv);
-  const character = lv < maxL(c) ? s3CharacterLayers(c, lv) : '';
+function s3ArtHTML(c, lv, art){
+  const bg = art ? art.bg : bgFor(c, lv);
+  const character = lv < s3Top(c) ? s3CharacterLayers(c, lv, undefined, art) : '';
   return `${bg ? `<img class="s3-bg" src="${bg}" alt="">` : '<div class="art-back"></div>'}<div class="s3-bgshade"></div>${character}`;
 }
 /* the courtroom-comic look (look:'cc'): kit layers from back to front are the background, the cast, the frame (a gold one for Gold Seal) and the
@@ -2874,11 +2867,12 @@ function frontCCHTML(c, st, opt = {}){
 function frontS3HTML(c, st, opt={}){
   const lv = st.level, need = NEED[lv-1];
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
-  const breakout = lv >= maxL(c) ? s3CharacterLayers(c, lv, 'framebreak-character s3-breakout') : '';
+  const breakout = lv >= s3Top(c) ? s3CharacterLayers(c, lv, 'framebreak-character s3-breakout', opt.art) : '';
+  const frame = opt.frame || (verOf(st) === 'gold' ? 'art/frame_gold_s3.webp' : 'art/frame_s3.webp');
   return `
-    <div class="art-win s3win" style="${P(0,0,1024,1536)}">${s3ArtHTML(c, lv)}${holoHTML(c)}</div>
-    <img class="frame" src="${verOf(st) === 'gold' ? 'art/frame_gold_s3.webp' : 'art/frame_s3.webp'}" alt="">
-    ${breakout}${breakout ? panelsOverHTML(verOf(st) === 'gold' ? 'art/frame_gold_s3.webp' : 'art/frame_s3.webp', 's3') : ''}
+    <div class="art-win s3win" style="${P(0,0,1024,1536)}">${s3ArtHTML(c, lv, opt.art)}${holoHTML(c)}</div>
+    <img class="frame" src="${frame}" alt="">
+    ${breakout}${breakout ? panelsOverHTML(frame, 's3') : ''}
     <div class="t num s3" style="${P(60,40,215,110)}">${c.num}</div>
     <div class="t xpstrip s3" style="${P(240,32,672,118)}"><span>${st.mastered ? 'XP MAXED' : `XP ${st.xp} / ${need}`}</span><i><b style="width:${pct}%"></b></i></div>
     <div class="t cat s3" style="${P(690,32,880,118)}">${esc(c.category)}</div>
@@ -2942,18 +2936,19 @@ function frontS45HTML(c, st, opt={}){
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
 }
 function frontHTML(c, st, opt={}){
-  if (typeof isEvolvedView === 'function' && isEvolvedView(c, st)) return evolvedFrontHTML(c, st, opt);   // evolve.js
+  if (!opt.art && typeof isEvolvedView === 'function' && isEvolvedView(c, st)) return evolvedFrontHTML(c, st, opt);   // evolve.js; opt.art and opt.frame are its evolved art and frame
   if (c.look === 'cc') return frontCCHTML(c, st, opt);
   if (c.series === 3) return frontS3HTML(c, st, opt);
   if (c.series === 4 || c.series === 5) return frontS45HTML(c, st, opt);
   const lv = st.level, need = NEED[lv-1];
   const pct = st.mastered ? 100 : Math.min(100, st.xp/need*100);
-  const frameBreak = frameBreakCharacter(c, lv);
-  const frameSrc = verOf(st) === 'gold' ? (c.trickType ? 'art/frame_gold_trick.webp' : 'art/frame_gold.webp') : styleFrame(c) || frameFor(c, lv);   // Gold Seal wins over a bought frame
+  const art = opt.art, frameBreak = art ? (lv >= maxL(c) ? `<img class="framebreak-character evo-pop" src="${art.char}" alt="${esc(c.name)} evolved artwork">` : '') : frameBreakCharacter(c, lv);
+  const frameSrc = opt.frame || (verOf(st) === 'gold' ? (c.trickType ? 'art/frame_gold_trick.webp' : 'art/frame_gold.webp') : styleFrame(c) || frameFor(c, lv));   // Gold Seal wins over a bought frame
   const protectedFrame = frameBreak ? `<img class="frame-metadata top" data-frame-mask="top" src="${frameSrc}" alt=""><img class="frame-metadata quote" data-frame-mask="quote" src="${frameSrc}" alt=""><img class="frame-metadata footer" data-frame-mask="footer" src="${frameSrc}" alt="">` : '';
   const frameBreakMnemonic = frameBreak && c.trickType && (!c.mnemonic || c.illustratedMnemonic) ? `<img class="mn-badge framebreak-memory" src="art/icon_memory.webp" alt="Memory Trick">` : '';
   return `
-    <div class="art-win" style="${P(66,383,958,1207)}">${artHTML(c, lv, {omitCharacter:!!frameBreak, omitMnemonicBadge:!!frameBreak})}${holoHTML(c)}</div>
+    <div class="art-win" style="${P(66,383,958,1207)}">${art ? `<img class="art-bgimg" src="${art.bg}" alt=""><div class="art-vig"></div>${frameBreak ? '' : `<img class="art-img cut evo-char" src="${art.char}" alt="${esc(c.name)} evolved artwork">`}`
+      : artHTML(c, lv, {omitCharacter:!!frameBreak, omitMnemonicBadge:!!frameBreak})}${holoHTML(c)}</div>
     <img class="frame" src="${frameSrc}" alt="">
     ${frameBreak}${frameBreak ? panelsOverHTML(frameSrc, 's1') : ''}
     ${frameBreakMnemonic}
@@ -2986,7 +2981,7 @@ function cardEl(c, st, opt={}, extraClass=''){
   const now = Date.now(), cold = isCold(st, now), deadline = coldAfter(st), last = Number.isFinite(+st.last) ? +st.last : 0;
   const charged = !cold && !st.mastered && st.level < maxL(c) && st.xp / NEED[st.level-1] >= .7;   // almost leveled up
   const fx = fxMarkup(verOf(st), st.level, maxL(c));   // glow and foil for this level and version (card-fx.js)
-  return `<div class="card series${c.series || 1} ${c.look ? 'look-' + c.look : ''} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} ${c.illustratedMnemonic ? 'illustrated-mnemonic' : ''} ${typeof isEvolvedView === 'function' && isEvolvedView(c, st) ? 'evolved' : ''} lv${st.level} ver-${verOf(st)} ${fx.cls} ${sleeveOf(c) ? 'sleeved' : ''} ${c.trickType?'special':''} ${cold?'cold':''} ${charged?'charged':''} ${extraClass}" style="${fx.style}${sleeveOf(c) ? `--sl:${sleeveScale(sleeveOf(c))};` : ''}" data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${frontHTML(c, st, opt)}${fx.html}${verDecorHTML(st)}${decoHTML(c)}${frostHTML(c, st, now)}</div>`;
+  return `<div class="card series${c.series || 1} ${c.look ? 'look-' + c.look : ''} ${window.CQ_TITLE_ART?.[c.id]?.asset.startsWith("title_s1_") ? "s1-lettered" : ""} ${c.illustratedMnemonic ? 'illustrated-mnemonic' : ''} ${typeof isEvolvedView === 'function' && isEvolvedView(c, st) ? evoCardClass(c, st) : ''} lv${st.level} ver-${verOf(st)} ${fx.cls} ${sleeveOf(c) ? 'sleeved' : ''} ${c.trickType?'special':''} ${cold?'cold':''} ${charged?'charged':''} ${extraClass}" style="${fx.style}${sleeveOf(c) ? `--sl:${sleeveScale(sleeveOf(c))};` : ''}" data-frost-id="${esc(c.id)}" data-frost-owned="${st.owned?1:0}" data-frost-last="${last}" data-frost-deadline="${Number.isFinite(deadline)?deadline:0}">${frontHTML(c, st, opt)}${fx.html}${verDecorHTML(st)}${decoHTML(c)}${frostHTML(c, st, now)}</div>`;
 }
 
 
@@ -3439,7 +3434,7 @@ function uiCharacterHTML(c, lv, preferLevel1=false, alt=''){
   if (!src) return '';
   if (c.series !== 3) return `<img src="${src}" alt="${esc(alt)}"${alt ? '' : ' aria-hidden="true"'}>`;
   const level = Math.max(1, Math.min(maxL(c), Number(lv) || 1));
-  if (level >= maxL(c)) return `<span class="ui-s3-character"><img src="${src}" alt="${esc(alt)}"${alt ? '' : ' aria-hidden="true"'}></span>`;
+  if (level >= s3Top(c)) return `<span class="ui-s3-character"><img src="${src}" alt="${esc(alt)}"${alt ? '' : ' aria-hidden="true"'}></span>`;
   const paint = level > 1 ? `<img class="s3-color stage-${level}" src="${src}" alt="" aria-hidden="true">` : '';
   return `<span class="ui-s3-character"><img class="s3-sepia" src="${src}" alt="${esc(alt)}"${alt ? '' : ' aria-hidden="true"'}>${paint}</span>`;
 }
@@ -4252,19 +4247,20 @@ function advance(){
 }
 
 /* ---- level up ---- */
-function showLevelUp(id, pl, done){
-  const c = byId(id), st = S.cards[id];
-  if (typeof canEvolve === 'function' && pl.to === 4 && canEvolve(c) && !st.evoSeen) return showEvolvePeel(c, done);   // evolve.js: the tear replaces this level-up
-  const before = {level:pl.from, xp:NEED[pl.from-1], mastered:false};
+/* preview (Admin's card sandbox only): { st, render } plays the same moment for a fixture card; nothing is read from or written to the save */
+function showLevelUp(id, pl, done, preview){
+  const c = byId(id), st = preview ? preview.st : S.cards[id], draw = preview && preview.render || (f => f());
+  if (typeof canEvolve === 'function' && pl.to === 4 && canEvolve(c) && !st.evoSeen) return showEvolvePeel(c, done, preview ? { preview:true, st } : undefined);   // evolve.js: the tear replaces this level-up
+  const before = {level:pl.from, xp:NEED[pl.from-1], mastered:false, vers:st.vers, evoSeen:st.evoSeen, evoArt:st.evoArt};   // same version and art choice as the card, one level down
   const ov = document.createElement('div');
   ov.className = 'lu'; lockScroll();
-  ov.innerHTML = `<div class="rays2"></div><div class="lucard" id="lucard">${cardEl(c, before)}</div>
+  ov.innerHTML = `<div class="rays2"></div><div class="lucard" id="lucard">${draw(() => cardEl(c, before))}</div>
     <h2>${pl.mastered ? 'MASTERED!' : 'LEVEL UP!'}</h2>
     <p>${pl.mastered ? `${esc(c.name)} is fully mastered.` : `${esc(c.name)} is now <b>Level ${pl.to}</b>. New art, harder questions.`}</p>
     <button class="btn-big gold" data-act="lu-close">KEEP GOING →</button>`;
   document.body.appendChild(ov);
   const lc = ov.querySelector('#lucard');
-  const after = () => cardEl(c, st, {newStar: pl.mastered ? 0 : pl.to});
+  const after = () => draw(() => cardEl(c, st, {newStar: pl.mastered ? 0 : pl.to}));
   const timers = [], at = (ms, fn) => timers.push(setTimeout(fn, ms));
   ov._done = () => { timers.forEach(clearTimeout); ov.remove(); unlockScroll(); done && done(); };
   if (prefersReducedMotion()) {   // no shaking or flashing: a plain swap
@@ -5091,7 +5087,6 @@ document.addEventListener('click', e => {
     }
     case 't-cold': { if (!ADM.is) break; closeSheet(true); const st = S.cards[id]; st.last = Date.now() - coldAfter(st) - DAY; save(); refresh(); toast('Card went cold', 'thermo_snow'); break; }
     case 't-reset': { if (!ADM.is) break; closeSheet(true); Object.assign(S.cards[id], {level:1, xp:0, mastered:false}); save(); const en = topEntry(); if (en.p) delete en.p.preview; refresh(); toast('↺ Card reset to Level 1'); break; }
-    case 't-pack': if (ADM.is) { S.packs++; save(); refresh(); toast('Test pack added', 'pack'); } break;
     case 'claim': claimQuest(t.dataset.kind, t.dataset.q); break;
     case 'claim-all': { const list = readyList(); let packs = 0, coins = 0;
       list.forEach(([k, q]) => { if (k === 'daily') { daily().claimed[q.id] = true; onbFlag('claimed'); coins += earnCoins(COINS.dailyQuest, `Daily quest: ${q.label}`); } else { S.milestones = S.milestones || {}; S.milestones[q.id] = true; packs++; } });
