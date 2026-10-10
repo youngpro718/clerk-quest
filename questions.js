@@ -1504,7 +1504,8 @@ window.QBANK = {
    ],
    "a": "Entry of the order with the direction",
    "h": "It is tied to a particular order.",
-   "w": "CPLR 5011: no payment for a period of thirty days following the date of entry of the order containing such direction."
+   "w": "CPLR 5011: no payment for a period of thirty days following the date of entry of the order containing such direction.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -1871,7 +1872,8 @@ window.QBANK = {
    ],
    "a": "IN: summons. NEEDED: subpoena.",
    "h": "Hooks and papers, in order.",
-   "w": "The summons starts the case against a party (CPLR 304(a)); a subpoena requires testimony or records (2301)."
+   "w": "The summons starts the case against a party (CPLR 304(a)); a subpoena requires testimony or records (2301).",
+   "ex": false
   }
  ],
  "whosigns": [
@@ -5170,7 +5172,8 @@ window.QBANK = {
    ],
    "a": "S-U-N: serving, unavailable, no substitute",
    "h": "A sunny way to remember the three boxes.",
-   "w": "Three conditions: in service, not available, no adequate deposition."
+   "w": "Three conditions: in service, not available, no adequate deposition.",
+   "ex": false
   },
   {
    "lv": 3,
@@ -5225,7 +5228,8 @@ window.QBANK = {
    ],
    "a": "Answering affidavits, at least 2 days before",
    "h": "The opponent answers.",
-   "w": "Answering affidavits shall be served at least two days before the hearing."
+   "w": "Answering affidavits shall be served at least two days before the hearing.",
+   "ex": false
   },
   {
    "lv": 1,
@@ -5328,7 +5332,8 @@ window.QBANK = {
    ],
    "a": "September 29",
    "h": "One day back.",
-   "w": "Any reply at least one day before the hearing."
+   "w": "Any reply at least one day before the hearing.",
+   "ex": false
   },
   {
    "lv": 3,

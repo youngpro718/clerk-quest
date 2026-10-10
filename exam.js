@@ -12,6 +12,68 @@ const EXAM_HISTORY_MAX = 20;
 
 /* every multiple-choice question on every card with a bank (style 'study'), plus the exam-style set written the way the
    test writes it (exam-questions.js, style 'exam'); true/false and generated skill games are left out */
+/* Subject line shown above every card question in the exam (card questions are written to sit on their card, so on their own
+   some need the statute and topic, e.g. "Which of these is INCLUDED?" under DRL § 75-a). Exam-style questions already lead
+   with the citation and get none. Looked up at render time, so attempts already in progress get it too. */
+const EXAM_TOPIC = {
+ "gavel": "Court papers, motions and calendars (CPLR 2211, 2106; Uniform Rules §§ 202.8, 202.22)",
+ "summons": "Commencing an action and serving the summons (CPLR 304, 308, 320)",
+ "motion": "Motions (CPLR 2211; Uniform Rules § 202.8)",
+ "affidavit": "Affidavits and affirmations (CPLR 2106)",
+ "adjournment": "Adjournments of motions (Uniform Rules § 202.8(e))",
+ "calendarcall": "Calendars and calendar calls (Uniform Rules § 202.22)",
+ "judgment": "Judgments (CPLR 5011)",
+ "svs": "Summons vs. subpoena (CPLR 304, 2301)",
+ "whosigns": "Family Court Act § 312.1: the summons in a juvenile delinquency proceeding",
+ "clock6090": "Uniform Rules § 205.43(b): hearings on a willful violation of a support order",
+ "ypsi": "CPL § 720.20(1): youthful offender determination",
+ "eightdays": "Family Court Act § 427(a): serving the summons and petition in a support proceeding",
+ "sealed": "CPL § 160.50(1): when a criminal action ends in favor of the accused",
+ "followpetitioner": "Family Court Act § 168.2: filing copies of an order of protection",
+ "amendonce": "CPLR 3025(a): amending a pleading without leave of court",
+ "custodyornot": "DRL § 75-a: what counts as a “child custody proceeding”",
+ "jurywaiver": "CPL § 320.10: waiving a jury trial",
+ "interest": "CPLR 5003: interest on judgments and orders",
+ "quash": "CPLR 2304: motions to quash or modify a subpoena",
+ "newtrial": "CPLR 4402: continuance or new trial during trial",
+ "schoolnotice": "CPL § 380.90(2): notifying a student's school after sentencing",
+ "bail": "CPL § 500.10(9): the definition of “bail”",
+ "acd": "CPL § 170.56: adjournment in contemplation of dismissal (ACD)",
+ "military": "Uniform Rules § 202.22(a)(7): special calendars (military service)",
+ "eightback": "CPLR 2214(b): when motion papers must be served",
+ "reargue": "CPLR 2221(d): motions to reargue",
+ "renew": "CPLR 2221(e): motions to renew",
+ "sj120": "CPLR 3212: summary judgment",
+ "undodefault": "CPLR 5015: relief from a judgment or order",
+ "freeze": "CPLR 5222: restraining notices",
+ "appeal30": "CPLR 5513, 5515: taking an appeal",
+ "qr_cpl_001_criminal_action": "CPL § 1.20: criminal action",
+ "qr_cpl_011_superior_jurisdiction": "CPL § 10.20: superior court jurisdiction",
+ "qr_cpl_013_limitations": "CPL §§ 30.10, 30.30: time limits for prosecution",
+ "qr_cpl_016_facial_sufficiency": "CPL § 100.40: facial sufficiency of accusatory instruments",
+ "qr_cpl_020_arrest_warrant_issue": "CPL § 120.20: issuing a warrant of arrest",
+ "qr_cpl_028_grand_jury_numbers": "CPL § 190.25(1): grand jury quorum and concurrence",
+ "qr_cpl_033_pleas": "CPL § 220.10: pleas to an indictment",
+ "qr_cpl_034_jury_trial_order": "CPL § 260.30: order of a jury trial",
+ "qr_cpl_039_jury_notes": "CPL § 310.30: jury notes and responses",
+ "qr_cpl_041_set_aside_verdict": "CPL § 330.30: motion to set aside a verdict",
+ "qr_cpl_045_sentence_timing": "CPL §§ 380.30, 380.50, 390.20: sentencing",
+ "qr_cpl_063_order_examination": "CPL Article 730: order of examination",
+ "qr_pl_064_offense_grades": "Penal Law § 10.00: offense, violation, misdemeanor, felony",
+ "qr_pl_065_person": "Penal Law § 10.00(7): “person”",
+ "qr_pl_066_classifications": "Penal Law § 55.05: classes of felonies and misdemeanors",
+ "qr_pl_067_designation": "Penal Law § 55.10: offenses defined outside the Penal Law",
+ "qr_pl_068_felony_fines": "Penal Law § 80.00: fines for felonies",
+ "qr_pl_069_nonfelony_fines": "Penal Law § 80.05: fines for misdemeanors and violations",
+ "s5_concept_minor_mischief": "Penal Law § 10.00: grades of offenses",
+ "s5_concept_split_verdict": "Penal Law §§ 10.00, 55.05: grades and classes of offenses",
+ "s5_concept_felony_titan": "Penal Law §§ 10.00, 55.05: felonies and felony classes",
+ "s5_concept_the_aces": "Penal Law § 55.05: felony classes",
+ "s5_concept_triple_take": "Penal Law § 80.00: fines for felonies",
+ "s5_concept_vault_voltage": "Penal Law § 80.00: fines for felonies"
+};
+const examTopic = it => it && it.style !== 'exam' ? (EXAM_TOPIC[it.cardId] || '') : '';
+
 const examQuestions = () => (typeof window !== 'undefined' && Array.isArray(window.CQ_EXAM_QUESTIONS)) ? window.CQ_EXAM_QUESTIONS : [];
 const examOk = q => q && q.type !== 'tf' && q.ex !== false && Array.isArray(q.c) && q.c.length >= 3 && q.c.includes(q.a);
 function examPool(){
@@ -146,7 +208,7 @@ const EXAM_SCREENS = {
       ${typeof weakReportHTML === 'function' ? weakReportHTML(Weak.since(L.startedAt, 'exam'), { sys:true }) : ''}
       ${weak.length ? `<h3>Cards to review</h3><div class="exr-weak">${weak.map(c => `<div class="exr-wrow"><span>${esc(c.name)}</span>${readBtn(c)}</div>`).join('')}</div>` : ''}
       ${missed.length ? `<h3>Review your answers</h3>${missed.map(m => { const L = v => 'ABCDEF'[m.it.c.indexOf(v)] + '. ' + esc(v);
-          return `<details class="exr-q"><summary>${m.i + 1}. ${esc(m.it.q)}</summary>
+          return `<details class="exr-q"><summary>${m.i + 1}. ${examTopic(m.it) ? `<span class="exr-topic">${esc(examTopic(m.it))}</span> ` : ''}${esc(m.it.q)}</summary>
           ${m.it.st ? `<ol class="exr-st">${m.it.st.map(t => `<li>${esc(t)}</li>`).join('')}</ol>` : ''}
           <p><em>Your answer:</em> ${m.ans === undefined ? 'No answer' : L(m.ans)}</p>
           <p class="exr-correct">The correct response is ${L(m.it.a)}</p>
@@ -198,7 +260,7 @@ function examRender(){
         aria-label="Question ${k + 1}${x.answers[k] !== undefined ? ', answered' : ', blank'}${x.flags[k] ? ', flagged' : ''}">${k + 1}</button>`).join('')}</div>
       <p class="ex-key"><span class="done"></span> answered <span class="flag"></span> flagged <span></span> blank</p>
       <button class="ex-primary" data-act="ex-submit-ask">Submit exam</button><button class="ex-secondary" data-act="ex-map">Back to the question</button></section>`;
-  else main = `<section class="ex-q"><p class="ex-num">${i + 1}.</p><p class="ex-text">${esc(it.q)}</p>
+  else main = `<section class="ex-q"><p class="ex-num">${i + 1}.</p>${examTopic(it) ? `<p class="ex-topic">${esc(examTopic(it))}</p>` : ''}<p class="ex-text">${esc(it.q)}</p>
       ${it.st ? `<ol class="ex-st">${it.st.map(t => `<li>${esc(t)}</li>`).join('')}</ol>` : ''}
       <div class="ex-choices" role="radiogroup" aria-label="Answer choices">${it.c.map((c, k) => `<button class="ex-choice ${chosen === c ? 'on' : ''}" role="radio" aria-checked="${chosen === c}" aria-label="${'ABCDEF'[k]}: ${esc(c)}" data-act="ex-choose" data-k="${k}">
         <span class="ex-letter">${'ABCDEF'[k]}.</span><span class="ex-ctext">${esc(c)}</span></button>`).join('')}</div></section>`;
@@ -247,6 +309,8 @@ const EXAM_CSS = `
 .ex-flag.on{background:#fff4d6;border-color:#c99a1a;color:#7a5a00;font-weight:600}
 .ex-body{flex:1;overflow-y:auto;padding:22px 18px 18px;max-width:680px;width:100%;margin:0 auto;box-sizing:border-box}
 .ex-num{margin:0 0 6px;font-size:17px;font-weight:700}
+.ex-topic{margin:0 0 6px;font-size:14px;line-height:1.35;color:#5a5a5a}
+.exr-topic{display:block;font-size:13px;color:#5a5a5a}
 .ex-text{margin:0 0 16px;font-size:19px;line-height:1.45}
 .ex-st{margin:0 0 18px;padding-left:28px;font-size:17px;line-height:1.45}
 .ex-st li{margin:4px 0;padding-left:4px}
