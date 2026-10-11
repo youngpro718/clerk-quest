@@ -720,6 +720,7 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
     linear-gradient(115deg,transparent 40%,rgba(255,255,255,.38) 50%,transparent 60%) calc(100% - var(--gx,50%)) 0/260% 100% no-repeat;
   opacity:var(--go,.7)}   /* the foil shine slides across as the pack turns */
 .pk-pack.torn::after,.pk-pack.ripping::after{display:none}
+.pk-pack.m3d{transform:none}.pk-pack.m3d::after{display:none}   /* the 3D packet (pack3d-model.js) does its own tilt and shine */
 @media (prefers-reduced-motion:reduce){.pk-bg,.pk-pack,.pk-floor{animation:none}}
 /* pick your pack */
 .pkc{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;overflow:hidden;
@@ -1597,6 +1598,8 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="dockets.js?v=581f669f"></script>
 <script src="hearing.js?v=e4da21bf"></script>
 <script src="card-fx.js?v=d57c240d"></script>
+<script src="holo-gl.js?v=de7962f8"></script>
+<script src="char-react.js?v=50a94673"></script>
 <script src="jigsaw.js?v=f2cee497"></script>
 <script src="lookalike-cards.js?v=24237958"></script>
 <script src="familycourt-cards.js?v=aae2496e"></script>
@@ -1608,6 +1611,7 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="exam.js?v=a8debae6"></script>
 <script src="exam-questions.js?v=37d27577"></script>
 <script src="pack3d.js?v=175b3691"></script>
+<script src="pack3d-model.js?v=21237b80"></script>
 <script src="packfield.js?v=b72b00a2"></script>
 <script src="sticker3d.js?v=90437e9d"></script>
 <script src="questions.js?v=8aa56525"></script>
@@ -3249,6 +3253,7 @@ const BreakoutMotion = (() => {
     document.querySelectorAll(TILT_CARDS).forEach(el => {
       if (states.has(el) || el.classList.contains('mystery')) return;
       el.classList.add('tilt3d');
+      if (el.classList.contains('ver-gold') && typeof HoloGL === 'object') HoloGL.attach(el);   // Gold Seal: the flake foil (holo-gl.js)
       if (!el.querySelector(':scope > .tilt-glare')) el.insertAdjacentHTML('beforeend', '<i class="tilt-glare"></i>');
       states.set(el, {el, kind:'card', visible:false, rx:0, ry:0, vrx:0, vry:0, g:0, vg:0}); observer.observe(el);
     });
@@ -4122,6 +4127,12 @@ function showScreen(dir = 'none'){
     }
   } else if (old) old.remove();
   renderTabbar();
+  warmPack();
+}
+/* Load the 3D pack (three.js, loader, model, art) ahead of time, but only while there is a pack to open */
+function warmPack(...arts){
+  if (S.packs <= 0 || !window.PackModel3D || /[?&]pack3d=0\b/.test(location.search)) return;
+  try { (arts.length ? arts : [nextPackArtSrc()]).forEach(a => a && PackModel3D.preload(a)); } catch (_) {}
 }
 function push(s, p = {}){ saveScroll(); nav.stacks[nav.tab].push({s, p}); history.pushState({cq:'push'}, ''); showScreen('push'); }
 function pop(){ const st = nav.stacks[nav.tab]; if (st.length > 1) { st.pop(); showScreen('pop'); return true; } return false; }
@@ -4245,6 +4256,7 @@ function paintStudy(anim){
         ${q.raw ? q.w : `<p>${esc(q.w)}</p>`}
         ${c.source ? `<p class="cite">Source: ${esc(c.source.cite)}</p>` : ''}
       </div>` : ''}`;
+  if (typeof CharReact === 'object') CharReact.mount(back, c.id);   // test: a character that reacts instead of the picture (char-react.js)
   // Answers keep a readable size. One that doesn't fit is clipped with a "more" tag and opens the full-answer sheet.
   const hintBox = back.querySelector('.hint');
   if (hintBox) shrinkToFit(hintBox, 2.8);   // a long hint shrinks to stay inside the sidebar box
@@ -4371,6 +4383,7 @@ function answer(v){
   const barWas = document.querySelector('#back .nxl .bar b'), barFrom = barWas && barWas.style.width;
   paintStudy();
   answerFx(ok, barFrom);
+  if (typeof CharReact === 'object') CharReact.fire(ok ? 'right' : 'wrong');
   // make sure the Next button is on screen (short iPhones)
   const nb = document.querySelector('#below .btn-big'); if (nb) { const r = nb.getBoundingClientRect(); if (r.bottom > innerHeight - 8) nb.scrollIntoView({block:'end', behavior:'smooth'}); }
 }
@@ -4808,6 +4821,7 @@ function choosePack(){
     <button class="sheet-cancel pkc-later" data-act="pkc-close">Not now</button>`;
   document.body.appendChild(ov); lockScroll();
   window.PackField?.preload();   // get the letter floor ready while you choose
+  warmPack(...picks.map(d => packArtOf(d.n)));
 }
 /* Handle a pack before you pick it: it tilts toward your finger and a shine follows (like turning a real pack in the light) */
 document.addEventListener('pointermove', e => {
@@ -4838,6 +4852,7 @@ function openPack(opts = {}){
   const packKey = pulls.addon || pulls.series || opts.addon || opts.series || 0;   // 6 for a series pack, 'tricks' for the add-on pack
   const packImg = opts.img || (packKey ? packArtOf(packKey) : packArtFor(pulls.map(p => p.c)));
   const packSeries = Number(packKey) || 0;
+  try { window.PackModel3D && PackModel3D.preload(packImg); } catch (_) {}   // no-op if already cached; starts loading before the overlay is built
   const packLabel = opts.label || '';
   const label = packLabel ? `<span class="pk-label ${packSeries >= 4 ? `series45 s${packSeries}` : ''}">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(packLabel)}</b></span>` : '';
   lockScroll(); history.pushState({cq:'pack'}, '');
@@ -4875,7 +4890,10 @@ function openPack(opts = {}){
       .catch(() => ov.classList.remove('field-wait'));   // no 3D: bring back the blurred pack art
   }
   // the 3D sticker curl (pack3d.js); until it's ready, or if it can't load, the flat rip below is used
-  if (window.Pack3D) Pack3D.attach(pk, packImg, line, TEAR_Y).then(ctl => { if (!pk._p && !pk._done) pk._3d = ctl; else ctl.destroy(); }).catch(() => {});
+  // (first choice: the whole packet in real 3D, pack3d-model.js; ?pack3d=0 keeps the flat flap for comparison)
+  const adopt3d = ctl => { if (!pk._p && !pk._done && pk.isConnected) pk._3d = ctl; else ctl.destroy(); };
+  const flap3d = () => { if (window.Pack3D) Pack3D.attach(pk, packImg, line, TEAR_Y).then(adopt3d).catch(() => {}); };
+  if (window.PackModel3D && !/[?&]pack3d=0\b/.test(location.search)) PackModel3D.attach(pk, packImg, line, TEAR_Y).then(adopt3d).catch(flap3d); else flap3d();
 }
 function tearPack(btn){   // Open for me (or Enter on the pack): tears the strip off for you
   if (btn._swiped || btn._done) return;
@@ -5255,7 +5273,7 @@ document.addEventListener('click', e => {
     case 'quick': closeSheet(true); quickRound(); break;
     case 'answer': closeSheet(true); answer(t.dataset.v); break;
     case 'ans-sheet': answerSheet(t.dataset.v); break;
-    case 'hint': if (sess && !sess.answered && !sess.hint) { sess.hint = true; S.stats.hints = (S.stats.hints || 0) + 1; if (boosts().freeHints > 0) { boosts().freeHints--; sess.freeHint = true; } save(); paintStudy(); } break;
+    case 'hint': if (sess && !sess.answered && !sess.hint) { sess.hint = true; S.stats.hints = (S.stats.hints || 0) + 1; if (boosts().freeHints > 0) { boosts().freeHints--; sess.freeHint = true; } save(); paintStudy(); if (typeof CharReact === 'object') CharReact.fire('hint'); } break;
     case 'next': next(); break;
     case 'lu-close': { const ov = t.closest('.lu'); ov && ov._done(); break; }
     case 'session-close': goBack(); if (typeof guestWall === 'function') guestWall(); break;   // a guest sees the sign-up screen after their results
