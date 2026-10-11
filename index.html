@@ -1203,6 +1203,7 @@ summary{cursor:pointer;font-family:"Bangers";letter-spacing:.08em;font-size:18px
 @keyframes luSlam{0%{transform:scale(3.2);opacity:0}22%{transform:scale(.92);opacity:1}32%{transform:scale(1.04)}75%{transform:scale(1);opacity:1}100%{transform:scale(1.05) translateY(-8px);opacity:0}}
 
 @keyframes titlepop{from{transform:scale(0) rotate(-10deg);opacity:0}to{opacity:1}}
+.gold-burst{position:fixed;inset:0;width:100%;height:100%;z-index:300;pointer-events:none}
 .confetti{position:absolute;top:-20px;width:10px;height:14px;z-index:55;pointer-events:none;border:1px solid rgba(0,0,0,.4);animation:fall linear forwards}
 @keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--rot))}}
 
@@ -1594,7 +1595,7 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="evolve.js?v=7019cd0e"></script>
 <script src="stickers.js?v=470cc194"></script>
 <script src="dockets.js?v=581f669f"></script>
-<script src="hearing.js?v=a7e3ecd9"></script>
+<script src="hearing.js?v=e4da21bf"></script>
 <script src="card-fx.js?v=d57c240d"></script>
 <script src="jigsaw.js?v=f2cee497"></script>
 <script src="lookalike-cards.js?v=24237958"></script>
@@ -4455,6 +4456,7 @@ function showLevelUp(id, pl, done, preview){
     lc.classList.remove('charge'); ov.classList.remove('charging');
     lc.innerHTML = after();
     lc.classList.add('punch', 'shine'); ov.classList.add('burst'); confetti(ov);
+    if (pl.mastered) goldBurst(lc);
   });
   at(2250, () => ov.classList.add('slam'));
   at(2700, () => ov.classList.add('done'));
@@ -4471,6 +4473,47 @@ function luSparks(host, target){
     d.style.animationDelay = (Math.random() * 1.0).toFixed(2) + 's';
     host.appendChild(d); setTimeout(() => d.remove(), 1500);
   }
+}
+/* the big gold moment (Mastered, Gold Seal): gold flakes and sparkles blast out of the card and fall,
+   while soft light rays turn behind it. One canvas over the page, removed when done; skipped with Reduce Motion. */
+function goldBurst(origin){
+  if (!origin || prefersReducedMotion() || document.hidden) return;
+  const cv = document.createElement('canvas'); cv.className = 'gold-burst'; cv.setAttribute('aria-hidden', 'true');
+  const W = innerWidth, H = innerHeight, dpr = Math.min(2, devicePixelRatio || 1);
+  cv.width = W * dpr; cv.height = H * dpr; document.body.appendChild(cv);
+  const g = cv.getContext('2d'); g.scale(dpr, dpr);
+  const r = origin.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, R = Math.hypot(W, H);
+  const cols = ['#fff3c4', '#ffe38a', '#f5c542', '#e3b23c', '#c9962a'];
+  const ps = Array.from({length:120}, () => {
+    const a = Math.random() * Math.PI * 2, v = 3 + Math.random() * 9;
+    return {x:cx + Math.cos(a) * r.width * .28, y:cy + Math.sin(a) * r.height * .28, vx:Math.cos(a) * v, vy:Math.sin(a) * v - 4,
+      s:3 + Math.random() * 6, rot:Math.random() * 6, vr:(Math.random() - .5) * .5, c:pick(cols), star:Math.random() < .3, life:.7 + Math.random() * .3};
+  });
+  const t0 = performance.now(), DUR = 2000; let last = t0;
+  const frame = now => {
+    const t = (now - t0) / DUR, k = Math.min(3, (now - last) / 16.667); last = now;
+    if (t >= 1 || !cv.isConnected) return cv.remove();
+    g.clearRect(0, 0, W, H);
+    const ray = Math.sin(Math.min(1, t * 1.6) * Math.PI) * .5;   // rays swell in, then fade
+    if (ray > .01) {
+      g.save(); g.translate(cx, cy); g.rotate(t * .9); g.globalCompositeOperation = 'lighter';
+      const grd = g.createRadialGradient(0, 0, 0, 0, 0, R * .55);
+      grd.addColorStop(0, `rgba(255,214,110,${ray})`); grd.addColorStop(1, 'rgba(255,214,110,0)'); g.fillStyle = grd;
+      for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; g.beginPath(); g.moveTo(0, 0); g.arc(0, 0, R, a, a + .17); g.closePath(); g.fill(); }
+      g.restore(); g.clearRect(r.left, r.top, r.width, r.height);   // never over the card itself
+    }
+    ps.forEach(p => {
+      p.vy += .3 * k; p.vx *= Math.pow(.985, k); p.vy *= Math.pow(.985, k); p.x += p.vx * k; p.y += p.vy * k; p.rot += p.vr * k;
+      const a = Math.max(0, 1 - t / p.life); if (!a) return;
+      g.save(); g.translate(p.x, p.y); g.rotate(p.rot); g.globalAlpha = a; g.fillStyle = p.c;
+      if (p.star) { const s = p.s * (.8 + .4 * Math.sin(now / 60 + p.rot)); g.beginPath();   // four-point twinkle
+        for (let i = 0; i < 8; i++) { const rr = i % 2 ? s * .28 : s; g.lineTo(Math.cos(i * Math.PI / 4) * rr, Math.sin(i * Math.PI / 4) * rr); } g.fill(); }
+      else { const f = Math.abs(Math.cos(p.rot * 2)) + .15; g.fillRect(-p.s / 2, -p.s * f / 2, p.s, p.s * f); }   // a flake turning over
+      g.restore();
+    });
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
 }
 function confetti(host){
   if (prefersReducedMotion()) return;

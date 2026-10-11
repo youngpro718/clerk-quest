@@ -68,7 +68,7 @@ function hearingVerdict(passed, missed){
         <p class="hr-miss"><b>The answer was:</b> ${esc(missed.a)}</p>${missed.w ? `<p>${esc(missed.w)}</p>` : ''}
         <p>Study the card and come back tomorrow. You need all ${hearing.qs.length} right.</p>
         <button class="btn-big gold" data-act="hearing-close">BACK TO THE CARD</button></div>`;
-  if (passed) { softFlash(); nativeFeedback('levelup'); confetti(ov); }
+  if (passed) { softFlash(); nativeFeedback('levelup'); confetti(ov); goldBurst(ov.querySelector('.hr-card')); }
 }
 function closeHearing(){
   document.querySelector('.hearing')?.remove(); hearing = null; unlockScroll();
