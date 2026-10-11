@@ -47,8 +47,12 @@ function payStreak(){
 }
 
 /* The wallet chip sits top-left on every main tab. */
+let coinsShown = null;   // the wallet ticks up by what was earned since it was last on screen (not under a study round)
 function coinChip(){
-  return `<button class="coin-chip" data-act="coins" aria-label="${S.coins || 0} coins"><span class="ci">${COIN}</span>${(S.coins || 0).toLocaleString()}</button>`;
+  const now = S.coins || 0, visible = typeof app === 'undefined' || app.hidden;
+  const from = visible && coinsShown != null && now > coinsShown ? coinsShown : null;
+  if (visible) coinsShown = now;
+  return `<button class="coin-chip" ${from != null ? `data-from="${from}"` : ''} data-act="coins" aria-label="${S.coins || 0} coins"><span class="ci">${COIN}</span>${(S.coins || 0).toLocaleString()}</button>`;
 }
 function coinSheet(){
   const log = S.coinLog || [];

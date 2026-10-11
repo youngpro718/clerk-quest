@@ -868,7 +868,11 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .ans.right{filter:drop-shadow(0 0 1.4cqw rgba(63,143,74,.9))}
 .ans.right .A{color:#1f6b2b;font-weight:bold}
 .ans.wrong{opacity:.6}
-.ans.wrong .A{text-decoration:line-through;text-decoration-color:var(--bad);text-decoration-thickness:.5cqw}
+.ans.wrong::after{content:"";position:absolute;left:19%;right:4%;top:50%;height:.7cqw;margin-top:-.35cqw;border-radius:.4cqw;background:var(--bad);transform-origin:left center;pointer-events:none}
+.ans.wrong.fx::after{animation:strike .28s .18s cubic-bezier(.3,.7,.3,1) both}   /* the red line draws across the wrong pick, once */
+@keyframes strike{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){.ans.wrong.fx::after{animation:none}}
+html.cq-reduce-motion .ans.wrong.fx::after{animation:none}
 .ans[disabled]{cursor:default}
 .ans.cut .A,.ans.cut .A.wrap{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;padding-right:9cqw}
 .qtext.cut{cursor:pointer}
@@ -1574,7 +1578,7 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js?v=280b2aa4"></script>
 <script src="study.js?v=c0c0a01c"></script>
-<script src="economy.js?v=8b2bf044"></script>
+<script src="economy.js?v=7f47f916"></script>
 <script src="store.js?v=8f330790"></script>
 <script src="study/quick-reference/quick-reference.js?v=0128f417"></script>
 <script src="study/quick-reference/series-lessons.js?v=55eee161"></script>
@@ -1582,7 +1586,7 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="card-typography.js?v=53a87104"></script>
 <script src="card-title-art.js?v=e1304f60"></script>
 <script src="card-caption-art.js?v=54f165ad"></script>
-<script src="binder.js?v=dcc2617f"></script>
+<script src="binder.js?v=93d4f0ed"></script>
 <script src="onboarding.js?v=186490cc"></script>
 <script src="account.js?v=833997ea"></script>
 <script src="admin.js?v=6c047139"></script>
@@ -1599,7 +1603,7 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="weak-ui.js?v=b8614c5a"></script>
 <script src="pattern-lessons.js?v=bd455b9f"></script>
 <script src="pattern-lessons-ui.js?v=3ace01b8"></script>
-<script src="today.js?v=81cb4d7c"></script>
+<script src="today.js?v=3195590f"></script>
 <script src="exam.js?v=a8debae6"></script>
 <script src="exam-questions.js?v=37d27577"></script>
 <script src="pack3d.js?v=175b3691"></script>
@@ -1630,6 +1634,34 @@ function syncMotionPreference(event){
 }
 syncMotionPreference();
 window.addEventListener('cq-native-motion', syncMotionPreference);
+/* a number ticks up to its value: the first number in el's text counts up from `from`, then the element pops.
+   Reduce motion just shows the final number. */
+function countUp(el, from = 0, delay = 0, pop = true){
+  if (!el || prefersReducedMotion() || document.hidden) return;   // a hidden page just shows the final number
+  const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let t;
+  while ((t = w.nextNode()) && !/\d/.test(t.data));
+  const m = t && t.data.match(/^([^]*?)(\d[\d,]*)([^]*)$/); if (!m) return;
+  const to = +m[2].replace(/,/g, ''); if (!(to > from)) return;
+  const fmt = n => m[1] + (m[2].includes(',') ? n.toLocaleString() : n) + m[3];
+  const dur = Math.min(900, 300 + (to - from) * 8), start = performance.now() + delay;
+  t.data = fmt(from);
+  const tick = now => {
+    if (!t.isConnected) return;
+    const k = Math.min(1, Math.max(0, (now - start) / dur));
+    t.data = fmt(Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))));
+    if (k < 1) requestAnimationFrame(tick);
+    else if (pop && el.animate) el.animate([{transform:'scale(1)'}, {transform:'scale(1.15)'}, {transform:'scale(1)'}], {duration:280, easing:'cubic-bezier(.2,1.6,.4,1)'});
+  };
+  requestAnimationFrame(tick);
+}
+/* end-of-round screens: the score, the XP chip and the coin chip tick up one after another */
+function resultsFx(root){
+  if (!prefersReducedMotion() && Element.prototype.animate)   // every chip pops in, one after another
+    root.querySelectorAll('.results .rchips .chip').forEach((el, i) => el.animate([{opacity:0, transform:'scale(.6)'}, {opacity:1, transform:'scale(1.08)', offset:.7}, {opacity:1, transform:'none'}],
+      {duration:380, delay:120 + i * 110, easing:'ease-out', fill:'backwards'}));
+  [root.querySelector('.results .score'), root.querySelector('.results .rchips .chip'), root.querySelector('.results .rchips .chip.coin')]
+    .filter(Boolean).forEach((el, i) => countUp(el, 0, 150 + i * 220));
+}
 function softFlash(){
   if (prefersReducedMotion()) return;
   const f = document.getElementById('flash'); if (!f) return;
@@ -4068,6 +4100,7 @@ function showScreen(dir = 'none'){
   const old = currentScreenEl();
   const el = buildScreen(topEntry());
   box.appendChild(el); el.classList.add('current');
+  const cc = el.querySelector('.coin-chip[data-from]'); if (cc) countUp(cc, +cc.dataset.from, 250);   // coins earned since the wallet was last on screen
   const scr = el.querySelector('.scr'); scr.scrollTop = topEntry().scroll || 0; el.classList.toggle('scrolled', scr.scrollTop > 28);
   const nbBack = el.querySelector('.nb-back'), nbTitle = el.querySelector('.nb-title');
   if (nbBack && nbBack.getBoundingClientRect().right > nbTitle.getBoundingClientRect().left) el.querySelector('.navbar').classList.add('tight');
@@ -4075,7 +4108,10 @@ function showScreen(dir = 'none'){
   const reduce = prefersReducedMotion();
   if (old && dir !== 'none' && !reduce && el.animate) {
     const ease = 'cubic-bezier(.2,.8,.2,1)', dur = 260;
-    if (dir === 'push') {
+    if (dir === 'tab') {   // switching tabs: the new tab fades up over the old one
+      el.animate([{opacity:0, transform:'translateY(10px)'}, {opacity:1, transform:'none'}], {duration:200, easing:ease});
+      setTimeout(() => old.remove(), 200);
+    } else if (dir === 'push') {
       el.animate([{transform:'translateX(100%)'}, {transform:'none'}], {duration:dur, easing:ease});
       old.animate([{transform:'none', filter:'brightness(1)'}, {transform:'translateX(-28%)', filter:'brightness(.7)'}], {duration:dur, easing:ease}).finished.then(() => old.remove(), () => old.remove());
     } else {
@@ -4095,7 +4131,9 @@ function switchTab(id){
     else { const s = currentScreenEl() && currentScreenEl().querySelector('.scr'); s && s.scrollTo({top:0, behavior:'smooth'}); }
     return;
   }
-  saveScroll(); nav.tab = id; showScreen('none');
+  saveScroll(); nav.tab = id; showScreen('tab');
+  const ico = !prefersReducedMotion() && document.querySelector('#tabbar button.on svg');   // the chosen tab's icon gives a little hop
+  ico && ico.animate && ico.animate([{transform:'none'}, {transform:'translateY(-4px) scale(1.12)'}, {transform:'none'}], {duration:300, easing:'cubic-bezier(.2,1.4,.4,1)'});
 }
 function refresh(){ saveScroll(); showScreen('none'); checkSeriesGoals(); }   // re-render the current screen in place (keeps scroll)
 
@@ -4198,7 +4236,7 @@ function paintStudy(anim){
     <div class="t nxr" style="${PB(606,1446,950,1670)}">${lock}</div>
     ${ans ? `${series === 7 ? s7StampHTML(ans.ok ? 'sustained' : 'overruled', ans.ok ? 'Sustained' : 'Overruled', `big ${q.type === 'table' ? 'top' : ''}`) : `<img class="stampimg big ${q.type === 'table' ? 'top' : ''}" src="art/stamp_${ans.ok?'sustained':'overruled'}.webp" alt="${ans.ok?'Sustained':'Overruled'}">`}
       <div class="explain" style="${PB(58,1218,966,1688)}">
-        <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +${ans.gain} XP${ans.coins ? ` · +${ans.coins} ${COIN}` : ''}` : 'Overruled. Not quite.'}</h3>
+        <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +<span class="n">${ans.gain}</span> XP${ans.coins ? ` · +<span class="n">${ans.coins}</span> ${COIN}` : ''}` : 'Overruled. Not quite.'}</h3>
         ${ans.ok ? '' : '<p>Keep going—this rule will be easier to spot next time.</p>'}
         ${ans.reopened ? `<p class="reopen"><img src="art/stamp_reopened.webp" alt="Case reopened"><span>Includes a +${COLD_BONUS} XP cold-case bonus.</span></p>` : ''}
         <div class="ex-acts">${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}${cardVideoButtonHTML(c)}${saveQButtonHTML()}</div>
@@ -4329,9 +4367,32 @@ function answer(v){
   }
   save();
   sess.answered = { choice:v, ok, gain, coins, reopened: !!sess.justReopened }; sess.justReopened = false;
+  const barWas = document.querySelector('#back .nxl .bar b'), barFrom = barWas && barWas.style.width;
   paintStudy();
+  answerFx(ok, barFrom);
   // make sure the Next button is on screen (short iPhones)
   const nb = document.querySelector('#below .btn-big'); if (nb) { const r = nb.getBoundingClientRect(); if (r.bottom > innerHeight - 8) nb.scrollIntoView({block:'end', behavior:'smooth'}); }
+}
+/* one-shot motion right after an answer: the right pick pops and glows; a wrong pick shakes, gets struck through, then the right one pops */
+function answerFx(ok, barFrom){
+  if (prefersReducedMotion() || !Element.prototype.animate) return;
+  if (ok) {   // the XP numbers tick up and the card's XP bar grows from where it was
+    document.querySelectorAll('#back .explain h3 .n').forEach((n, i) => countUp(n, 0, 200 + i * 150, false));
+    countUp(document.getElementById('sxp'), sess.xp - sess.answered.gain, 200);
+    const bar = document.querySelector('#back .nxl .bar b');
+    if (bar && barFrom && barFrom !== bar.style.width) bar.animate([{width:barFrom}, {width:bar.style.width}], {duration:800, delay:150, easing:'cubic-bezier(.2,.9,.3,1)', fill:'backwards'});
+  }
+  const right = document.querySelector('#back .ans.right, #below .tans .right'), wrong = document.querySelector('#back .ans.wrong, #below .tans .wrong');
+  const pop = (el, delay) => el && el.animate([{transform:'scale(1)'}, {transform:'scale(1.07)', offset:.4}, {transform:'scale(.98)', offset:.75}, {transform:'scale(1)'}],
+    {duration:420, delay, easing:'cubic-bezier(.2,.8,.2,1)'});
+  if (ok) pop(right, 0);
+  else {
+    if (wrong) { wrong.classList.add('fx'); wrong.animate([{transform:'none'}, {transform:'translateX(-2.4cqw) rotate(-1.5deg)'}, {transform:'translateX(2.4cqw) rotate(1.5deg)'},
+      {transform:'translateX(-1.6cqw)'}, {transform:'translateX(1cqw)'}, {transform:'none'}], {duration:420, easing:'ease-out'}); }
+    pop(right, 380);
+  }
+  const dot = document.querySelector('#dots i.cur');
+  dot && dot.animate([{transform:'scale(1)'}, {transform:'scale(1.8)'}, {transform:'scale(1)'}], {duration:360, easing:'cubic-bezier(.2,1.4,.4,1)'});
 }
 function next(){
   if (!sess || !canStudyCard(sess.id)) { const id = sess && sess.id; closeSessionLayer(); missingSheet(id); return; }
@@ -4888,6 +4949,7 @@ function renderResults(){
       </div>
     </div>`;
   app.scrollTo({top:0});
+  resultsFx(app);
 }
 
 /* ================= LAYERS: sheets, alerts, study round ================= */

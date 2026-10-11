@@ -99,8 +99,8 @@ function heroCard(){
 }
 
 /* the big hero card, dressed for one plan item (or for "done for today" when it is null) */
-function todayHero(it, i, done, total){
-  const dots = total ? `<span class="td-prog">TODAY · ${done} OF ${total}<i>${Array.from({ length:total }, (_, k) => `<em class="${k < done ? 'on' : ''}"></em>`).join('')}</i></span>` : '';
+function todayHero(it, i, done, total, was = done){
+  const dots = total ? `<span class="td-prog">TODAY · ${done} OF ${total}<i>${Array.from({ length:total }, (_, k) => `<em class="${k < done ? 'on' : ''} ${k >= was && k < done ? 'just' : ''}"></em>`).join('')}</i></span>` : '';
   const ruleStep = it && it.kind === 'gs' && (it.id === 'read' || it.id === 'mark') && typeof ruleCard === 'function';   // these steps open a rule card: show it
   const card = it && (it.kind === 'review' || it.kind === 'next') ? byId(it.id) : (ruleStep && ruleCard()) || heroCard();
   let label, title, what, cta, cls = '', art = card ? homeCharacter(card) : '', name = card ? card.name : '';
@@ -138,21 +138,28 @@ function todayHero(it, i, done, total){
 }
 
 /* the rest of the plan: small art tiles under the hero, ticked when done */
-function todayTile(it, i){
+function todayTile(it, i, just){
   const r = todayRow(it), d = itemDone(it), c = (it.kind === 'review' || it.kind === 'next') && byId(it.id);
   const art = c ? thumb(c)
     : it.kind === 'docket' ? `<span class="th td-art"><img src="${artSrc('docket_folder')}" alt=""></span>`
     : it.kind === 'pack' ? `<span class="th td-art"><img src="${nextPackArt()}" alt=""></span>`
     : `<span class="th emo gi">${ICO(it.kind === 'quest' ? 'trophy' : 'check')}</span>`;
-  return `<button class="td-tile ${d ? 'done' : ''}" data-act="today-go" data-i="${i}" ${d ? 'disabled' : ''}>${art}
-    <span class="td-main"><b>${esc(r.t)}</b><small>${esc(r.sub)}</small></span><span class="td-tick">${d ? ICO('check') : ''}</span></button>`;
+  return `<button class="td-tile ${d ? 'done' : ''} ${just ? 'just' : ''}" data-act="today-go" data-i="${i}" ${d ? 'disabled' : ''}>${art}
+    <span class="td-main"><b><span>${esc(r.t)}</span></b><small>${esc(r.sub)}</small></span><span class="td-tick">${d ? ICO('check') : ''}</span></button>`;
 }
 
+/* items finished since Today was last on screen tick themselves off once. Only counted while Today is
+   actually visible (not under a study round), and a fresh plan (new day, sync) is learned without animating. */
+const tdSeen = { items:null, done:new Set(), count:0 };
 function todayHTML(){
   if (typeof payOnboarding === 'function') payOnboarding();
   const items = todayPlan().items, done = items.filter(itemDone).length, first = items.findIndex(it => !itemDone(it));
-  const rest = items.map((it, i) => i === first ? '' : todayTile(it, i)).join('');
-  return `<section class="today" aria-label="Today's plan">${todayHero(first >= 0 ? items[first] : null, first, done, items.length)}
+  const visible = typeof app === 'undefined' || app.hidden, fresh = tdSeen.items !== items;
+  const just = it => visible && !fresh && itemDone(it) && !tdSeen.done.has(it);
+  const was = visible && !fresh ? Math.min(tdSeen.count, done) : done;
+  const rest = items.map((it, i) => i === first ? '' : todayTile(it, i, just(it))).join('');
+  if (visible) { tdSeen.items = items; tdSeen.done = new Set(items.filter(itemDone)); tdSeen.count = done; }
+  return `<section class="today" aria-label="Today's plan">${todayHero(first >= 0 ? items[first] : null, first, done, items.length, was)}
     ${rest ? `<div class="td-list">${rest}</div>` : ''}</section>`;
 }
 
@@ -226,7 +233,7 @@ function reviewResults(){
         <button class="btn-big alt" data-act="session-close">Done</button>
       </div>
     </div>`;
-  app.scrollTo({ top:0 });
+  app.scrollTo({ top:0 }); resultsFx(app);
   refresh();
 }
 document.addEventListener('click', e => {
@@ -250,7 +257,20 @@ const TODAY_CSS = `
 .td-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
 .td-tile{display:flex;align-items:center;gap:12px;width:100%;min-height:64px;padding:9px 12px;border-radius:16px;border:.5px solid var(--line);background:var(--bg2);color:var(--paper);text-align:left}
 .td-tile.done{opacity:.6}
-.td-tile.done b{text-decoration:line-through}
+.td-tile.done b span{background:linear-gradient(currentColor,currentColor) no-repeat 0 55%/100% 1.5px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+/* just finished: the tile dims, the line sweeps through the title, the tick fills and the check pops in */
+.td-tile.just{animation:tdDim .5s .55s ease both}
+.td-tile.just b span{animation:tdStrike .4s .35s cubic-bezier(.3,.7,.3,1) both}
+.td-tile.just .td-tick{animation:tdTick .45s .1s cubic-bezier(.2,1.5,.4,1) both}
+.td-tile.just .td-tick>*{animation:tdCheck .35s .25s cubic-bezier(.2,1.6,.4,1) both}
+.td-prog em.just{animation:tdDot .5s .2s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes tdDim{from{opacity:1}to{opacity:.6}}
+@keyframes tdStrike{from{background-size:0 1.5px}to{background-size:100% 1.5px}}
+@keyframes tdTick{0%{background:transparent;border-color:var(--line);transform:scale(1)}50%{transform:scale(1.25)}100%{background:#5fd47a;border-color:#5fd47a;transform:scale(1)}}
+@keyframes tdCheck{from{transform:scale(0) rotate(-30deg)}to{transform:none}}
+@keyframes tdDot{0%{background:rgba(241,229,201,.22);transform:scale(1)}50%{transform:scale(1.8)}100%{background:#5fd47a;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.td-tile.just,.td-tile.just b span,.td-tile.just .td-tick,.td-tile.just .td-tick>*,.td-prog em.just{animation:none}}
+html.cq-reduce-motion .td-tile.just,html.cq-reduce-motion .td-tile.just b span,html.cq-reduce-motion .td-tile.just .td-tick,html.cq-reduce-motion .td-tile.just .td-tick>*,html.cq-reduce-motion .td-prog em.just{animation:none}
 .td-art{background:rgba(0,0,0,.25)}
 .td-art img{object-fit:contain}
 .td-main{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}

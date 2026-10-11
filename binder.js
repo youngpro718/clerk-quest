@@ -181,7 +181,7 @@ function lessonResults(){
         <button class="btn-big alt" data-act="session-close">Done</button>
       </div>
     </div>`;
-  app.scrollTo({top:0});
+  app.scrollTo({top:0}); resultsFx(app);
   if (b) refresh();
 }
 
