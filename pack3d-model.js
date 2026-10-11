@@ -57,16 +57,93 @@
   function imgOnce(src){
     return cache.img[src] || (cache.img[src] = new Promise((ok, no) => { const i = new Image(); i.crossOrigin = 'anonymous'; i.onload = () => ok(i); i.onerror = () => no(new Error('pack art')); i.src = src; }).catch(e => { delete cache.img[src]; throw e; }));
   }
+  // the pack after it was torn open: art/pack_opened_<key>.webp (pack.png -> pack_opened_s1, pack_s3.png -> pack_opened_s3, pack_tricks.png -> pack_opened_tricks); same extension as the pack art
+  function openedFor(src){
+    const m = /^(.*?\/)?pack(?:_(s[2-9]|tricks))?(\.(?:png|webp|jpe?g)(?:\?.*)?)$/.exec(String(src));
+    return m ? (m[1] || '') + 'pack_opened_' + (m[2] || 's1') + m[3] : null;
+  }
+  const openedImg = packImg => { const u = openedFor(packImg); return u ? imgOnce(u).catch(() => null) : Promise.resolve(null); };
   function preload(packImg){
     const url = glbFor(packImg); if (!url) return Promise.resolve(false);
+    openedImg(packImg);
     return Promise.all([gltfOnce(url), imgOnce(packImg)]).then(() => true, () => false);
+  }
+
+  // The torn-open pack as a gently puffed textured sheet. o: { w, h } plane size and { cx, cy } its centre (packet units), z (front),
+  // bulge (puff), split (also build a back wall: the front copy has the silver mouth cut out so things can rise out of it).
+  function mouthCut(img, keepMouth){   // a copy of the art with the open mouth (the silver inside, found column by column from the top edge down to the gold torn rim) made transparent
+    const w = img.naturalWidth, h = img.naturalHeight, c = document.createElement('canvas'); c.width = w; c.height = h;
+    const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+    let id; try { id = g.getImageData(0, 0, w, h); } catch (e) { return null; }
+    const mouth = new Uint8Array(w * h), d = id.data, Y = Math.round(h * 0.28), ys = new Array(w).fill(-1), ye = new Array(w).fill(-1);
+    const sat = i => { const r = d[i], gg = d[i + 1], b = d[i + 2], mx = Math.max(r, gg, b); return mx ? (mx - Math.min(r, gg, b)) / mx : 0; };
+    const gold = (x, y) => d[(y * w + x) * 4 + 3] > 127 && sat((y * w + x) * 4) > 0.3;
+    for (let x = 0; x < w; x++) {
+      let y0 = 0; while (y0 < Y && d[(y0 * w + x) * 4 + 3] <= 127) y0++;
+      if (y0 >= Y) continue;
+      let n = 0; for (let k = 0; k < 6; k++) if (gold(x, Math.min(Y, y0 + k))) n++;
+      if (n > 2) continue;
+      let y = y0; while (y < Y) { let q = 0; for (let k = 0; k < 5; k++) if (y + k < h && gold(x, y + k)) q++; if (q >= 4) break; y++; }
+      ys[x] = y0; ye[x] = y;
+    }
+    // columns that failed (thin gold lines) take their neighbours' median
+    const med = (arr, x, r) => { const v = []; for (let k = -r; k <= r; k++) if (arr[x + k] >= 0) v.push(arr[x + k]); v.sort((a, b) => a - b); return v.length ? v[v.length >> 1] : -1; };
+    const ye2 = ye.slice(), ys2 = ys.slice();
+    for (let x = 0; x < w; x++) { if (ye[x] < 0 && x > 0.14 * w && x < 0.93 * w) { ye2[x] = med(ye, x, 6); ys2[x] = med(ys, x, 6); } else if (ye[x] >= 0) { ye2[x] = med(ye, x, 3); } }
+    for (let x = 0; x < w; x++) { if (ye2[x] < 0) continue; const e = Math.max(ys2[x], ye2[x] - 2); for (let y = Math.max(0, ys2[x] - 1); y < e; y++) mouth[y * w + x] = 1; }
+    for (let i = 0; i < w * h; i++) if (keepMouth ? !mouth[i] : mouth[i]) d[i * 4 + 3] = 0;
+    g.putImageData(id, 0, 0);
+    return c;
+  }
+  // Registration of each opened-pack PNG onto its closed-pack PNG (both 1024x1536). The torn-open art was drawn separately, so its artwork is
+  // shifted/squashed against the closed art: s1 measured by patch matching (title, badge, Gavel, copier, banner, laurels, side borders; residual <= 4px):
+  //   closedX = (openedX - 3.9) / 0.9948 ; closedY = (openedY - 163.1) / 0.9066 down to the banner (opened y 1238 = closed 1190), then the bottom crimp
+  //   is stretched so the opened bottom edge (1509) lands on the closed bottom edge (1504). Knots are [openedY, closedY]; ox/sx map x: closedX = sx*openedX + ox.
+  // On top of that, ox/dy/ys (3px right, 15px down, y squashed 2% about y=760, x squashed 1.4% about x=512) remove the small residual between the flat PNG and how the puffed 3D body renders it,
+  // measured on screen in pack3d/test.html (patch-matching the body alone against the opened sheet alone: residual within ~2 screen px).
+  // Other packs default to fitting the opaque bounding boxes onto each other (see defaultReg).
+  const OPENED_REG = { s1: { sx:1 / 0.9948, ox:-3.9 / 0.9948 + 3, dy:15, ys:0.98, xs:0.986, y:[[0, -179.9], [1237.7, 1190], [1509, 1504], [1536, 1531]] } };
+  function defaultReg(closedBox, openBox){   // boxes are normalised 0..1; returns a reg in 1024x1536 pixel terms
+    const sx = (closedBox.x1 - closedBox.x0) / (openBox.x1 - openBox.x0), sy = (closedBox.y1 - closedBox.y0) / (openBox.y1 - openBox.y0);
+    return { sx, ox:(closedBox.x0 - openBox.x0 * sx) * 1024, y:[[0, (closedBox.y0 - openBox.y0 * sy) * 1536], [1536, (closedBox.y0 + (1 - openBox.y0) * sy) * 1536]] };
+  }
+  function regFor(packImg, img, openImg){
+    const m = /pack_opened_(s[2-9]|tricks)/.exec(openedFor(packImg) || '') , key = m ? m[1] : 's1';
+    return OPENED_REG[key] || defaultReg(artBox(img), artBox(openImg));
+  }
+  function makeOpened(img, o){
+    const tex = src => { const t = new THREE.Texture(src); t.encoding = THREE.sRGBEncoding; t.anisotropy = 4; t.needsUpdate = true; return t; };
+    const group = new THREE.Group(), mats = [], geos = [];
+    // o.w/o.h/cx/cy = the CLOSED art's frame; o.reg registers the opened art onto it (see OPENED_REG), so the artwork lands on the 3D body's artwork
+    const reg = o.reg || { sx:1, ox:0, y:[[0, 0], [1, 1]] }, fw = img.naturalWidth || 1, fh = img.naturalHeight || 1;
+    const regY = py => { const k = reg.y; let i = 1; while (i < k.length - 1 && py > k[i][0]) i++; const a = k[i - 1], b = k[i]; return a[1] + (py - a[0]) * (b[1] - a[1]) / (b[0] - a[0]); };
+    const mk = (src, z) => {
+      const geo = new THREE.PlaneGeometry(1, 1, 24, 48), p = geo.attributes.position, uv = geo.attributes.uv, bu = o.bulge || 0.04;
+      for (let i = 0; i < p.count; i++) {
+        const iu = uv.getX(i), iv = 1 - uv.getY(i), px = 512 + (reg.sx * iu * fw + reg.ox - 512) * (reg.xs || 1), py = 760 + (regY(iv * fh) - 760) * (reg.ys || 1) + (reg.dy || 0);   // image pixel -> closed-art pixel
+        p.setX(i, (px / fw - 0.5) * o.w); p.setY(i, (0.5 - py / fh) * o.h);
+        const u = clamp01((px / fw - 0.065) / 0.87), v = clamp01((py / fh - 0.03) / 0.95);
+        p.setZ(i, bu * Math.pow(Math.sin(Math.PI * u), 0.8) * (0.35 + 0.65 * Math.sin(Math.PI * v)) * (1 - 0.35 * (1 - v)));   // fatter low down, where the cards sit
+      }
+      geo.computeVertexNormals();
+      const t = tex(src), m = new THREE.MeshStandardMaterial({ map:t, metalness:0.25, roughness:0.42, envMapIntensity:0.9, emissiveMap:t, emissive:new THREE.Color(0.55, 0.55, 0.55), emissiveIntensity:0.5, transparent:true, opacity:1, alphaTest:0.05 });
+      const mesh = new THREE.Mesh(geo, m); mesh.position.set(o.cx, o.cy, z); mesh.frustumCulled = false;
+      mats.push(m); geos.push(geo); group.add(mesh); return mesh;
+    };
+    let front = null, back = null;
+    const cut = o.split ? mouthCut(img) : null, wall = o.split ? mouthCut(img, true) : null;
+    if (cut && wall) { back = mk(wall, o.z - (o.backGap || 0.07)); front = mk(cut, o.z); back.renderOrder = 1; front.renderOrder = 3; }
+    else front = mk(img, o.z);
+    return { group, front, back, mats,
+      setOpacity(op){ mats.forEach(m => { m.opacity = op; m.transparent = op < 1; }); group.visible = op > 0.01; },
+      dispose(){ geos.forEach(g => g.dispose()); mats.forEach(m => { m.map && m.map.dispose(); m.dispose(); }); } };
   }
 
   async function attach(btn, packImg, line, tearY){
     const url = glbFor(packImg);
     if (!url) throw new Error('no 3D model for ' + packImg);
     const W = btn.clientWidth, H = btn.clientHeight; if (!W || !H) throw new Error('pack not laid out');
-    const [gltf0, img] = await Promise.all([gltfOnce(url), imgOnce(packImg)]);
+    const [gltf0, img, openImg] = await Promise.all([gltfOnce(url), imgOnce(packImg), openedImg(packImg)]);
     const gltf = { scene: gltf0.scene.clone(true) };
     if (!btn.isConnected) throw new Error('pack closed');
     const box = artBox(img);
@@ -162,6 +239,14 @@
     camera.position.set(0, 0, dist); camera.lookAt(0, 0, 0);
     floatG.position.set((PXl + cx - CW / 2) / pxPerUnit, -(PYt + cy - CH / 2) / pxPerUnit, 0);
 
+    // the torn-open pack (when there is art for it): a puffed sheet over the same outline, faded in as the tear finishes
+    let opened = null;
+    if (openImg) {
+      const bb = new THREE.Box3().setFromObject(bodyObj);   // bodyObj is already centred; its front face sets the sheet's depth
+      opened = makeOpened(openImg, { w:W / pxPerUnit, h:H / pxPerUnit, cx:(W / 2 - cx) / pxPerUnit, cy:-(H / 2 - cy) / pxPerUnit, z:bb.max.z + 0.004, bulge:0.045, split:false, reg:regFor(packImg, img, openImg) });
+      opened.setOpacity(0); packG.add(opened.group);
+    }
+
     // foil flecks along the tear
     const FN = 60;
     const fPos = new Float32Array(FN * 3), fCol = new Float32Array(FN * 3), fVel = new Float32Array(FN * 3), fLife = new Float32Array(FN);
@@ -208,7 +293,8 @@
     const st = { phase:'idle', t:0, target:0, fold:0, rx:0, ry:0, done:null, flyT:-1, shown:false, dropT:-1,
       yaw:0, yawV:0, yawTgt:0, spin:null, pendP:-1, pendD:1, waitFin:null };
     let live = true, raf = 0, prev = performance.now(), reduce = reducedMotion();
-    const TEAR_T = .55, FLY_START = .4, FLY_T = .7, DROP_DELAY = .62, DROP_T = 1.1, TILT_IN = .22, TILT_OUT = .3, TILT = 0.7;   // after the tear the top leans toward you so the silver inside shows, then the packet drops
+    const TEAR_T = .55, FLY_START = .4, FLY_T = .7, DROP_DELAY0 = .62, DROP_DELAY_OPEN = .9, OPEN_FADE = .08, DROP_T = 1.1, TILT_IN = .22, TILT_OUT = .3, TILT = 0.7;   // after the tear the top leans toward you so the silver inside shows, then the packet drops
+    const dropDelay = () => opened && !reduce ? DROP_DELAY_OPEN : DROP_DELAY0;
     const schedule = () => { if (live && !raf && !document.hidden) raf = requestAnimationFrame(frame); };
     const motionChanged = () => { reduce = reducedMotion(); };
     const visibilityChanged = () => { prev = performance.now(); schedule(); };
@@ -302,10 +388,15 @@
       } else if (st.phase === 'drop') {
         st.t += dt;
         if (st.flyT >= 0 && !reduce) { st.flyT += dt; if (st.flyT <= FLY_T + .05) flyStrip(st.flyT); else stripObj.visible = false; }
-        const f = clamp01((st.t - (reduce ? 0 : DROP_DELAY)) / (reduce ? .4 : DROP_T));
-        packG.rotation.x = reduce ? 0 : TILT * ease(clamp01(st.t / TILT_IN)) * (1 - ease(clamp01((st.t - (DROP_DELAY - .05)) / TILT_OUT)));
+        const dd = dropDelay(), f = clamp01((st.t - (reduce ? 0 : dd)) / (reduce ? .4 : DROP_T));
+        packG.rotation.x = reduce ? 0 : TILT * ease(clamp01(st.t / TILT_IN)) * (1 - ease(clamp01((st.t - (dd - .05)) / TILT_OUT)));
         packG.position.y = -(f * f) * 2.6 * (reduce ? .3 : 1); packG.rotation.z = reduce ? 0 : 0.07 * f;
-        setFade(bodyObj, 1 - clamp01((f - 0.45) / 0.55));
+        const fo = 1 - clamp01((f - 0.45) / 0.55);
+        if (opened) {   // the flat body cross-fades into the torn-open sheet, holds so you can see inside, then drops away with it
+          const cf = reduce ? 1 : clamp01(st.t / OPEN_FADE);
+          if (cf >= 1) bodyObj.visible = false;
+          opened.setOpacity(Math.min(cf, fo));
+        } else setFade(bodyObj, fo);
         if (f >= 1) { st.phase = 'gone'; setTimeout(destroy, 0); }
       }
       stepFlecks(dt);
@@ -339,6 +430,7 @@
       btn.removeEventListener('pointerdown', spinDown); btn.removeEventListener('pointermove', spinMove);
       btn.removeEventListener('pointerup', spinUp); btn.removeEventListener('pointercancel', spinUp);
       gltf.scene.traverse(o => { if (o.isMesh) o.geometry.dispose(); });
+      if (opened) opened.dispose();
       own.forEach(m => { ['map', 'normalMap', 'metalnessMap', 'roughnessMap', 'emissiveMap', 'aoMap'].forEach(k => m[k] && m[k].dispose()); m.dispose(); });
       fGeo.dispose(); flecks.material.dispose(); dotTex.dispose(); disposables.forEach(d => d.dispose());
       renderer.dispose(); try { renderer.forceContextLoss(); } catch (_) {}
@@ -374,5 +466,5 @@
     };
   }
 
-  window.PackModel3D = { attach, preload, glbFor };
+  window.PackModel3D = { attach, preload, glbFor, openedFor, makeOpened, regFor, OPENED_REG };
 })();

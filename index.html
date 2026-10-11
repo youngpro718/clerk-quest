@@ -1599,7 +1599,8 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="hearing.js?v=e4da21bf"></script>
 <script src="card-fx.js?v=d57c240d"></script>
 <script src="holo-gl.js?v=de7962f8"></script>
-<script src="char-react.js?v=50a94673"></script>
+<script src="face-map.js?v=d1261e54"></script>
+<script src="char-react.js?v=2d9387fd"></script>
 <script src="jigsaw.js?v=f2cee497"></script>
 <script src="lookalike-cards.js?v=24237958"></script>
 <script src="familycourt-cards.js?v=aae2496e"></script>
@@ -1611,7 +1612,7 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="exam.js?v=a8debae6"></script>
 <script src="exam-questions.js?v=37d27577"></script>
 <script src="pack3d.js?v=175b3691"></script>
-<script src="pack3d-model.js?v=21237b80"></script>
+<script src="pack3d-model.js?v=2b0e7d71"></script>
 <script src="packfield.js?v=b72b00a2"></script>
 <script src="sticker3d.js?v=90437e9d"></script>
 <script src="questions.js?v=8aa56525"></script>
@@ -2908,7 +2909,9 @@ function artHTML(c, lv, opt={}){
     ? (cut ? (bgFor(c, lv) ? `<img class="art-bgimg" src="${bgFor(c, lv)}" alt=""><div class="art-vig"></div>` : `<div class="art-back series${c.series || 1}"></div>`) : '') + (opt.omitCharacter && cut ? '' : `<img class="art-img ${cut?'cut':''}"${fit ? ` style="${fit}"` : ''} src="${ART[c.id][base]}" alt="${c.illustratedMnemonic ? '' : `${esc(c.name)} artwork, level ${base}`}">`)
     : `<div class="art-ph"><span class="ph-tag">ART COMING SOON</span><div class="ph-emoji">${c.emoji}</div></div>`;
   if (c.illustratedMnemonic) h += `<span class="sr-only">Mnemonic: ${esc(c.mnemonic.sentence)}. ${c.mnemonic.letters.map((letter, i) => `${letter}: ${c.mnemonic.means[i]}`).join('. ')}.</span>`;
-  for (let l = Math.max(base+1, 2); l <= lv; l++) (c.stickers[l]||[]).forEach(s => h += stickerHTML(s));
+  // cards that evolve at level 4 get new art there instead of the old level-4/5 stickers (so no emoji on the card before, during or after the tear)
+  const stkTop = typeof canEvolve === 'function' && canEvolve(c) ? Math.min(lv, 3) : lv;
+  for (let l = Math.max(base+1, 2); l <= stkTop; l++) (c.stickers[l]||[]).forEach(s => h += stickerHTML(s));
   return h;
 }
 function starsHTML(lv, newStar, max=5){
