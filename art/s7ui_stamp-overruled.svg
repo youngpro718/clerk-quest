@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 128" role="img" aria-labelledby="title">
+  <title id="title">Overruled confirmation plate</title>
+  <g fill="none" stroke="#d95847" stroke-linejoin="round">
+    <rect x="8" y="12" width="304" height="104" rx="12" stroke-width="7"/>
+    <rect x="18" y="22" width="284" height="84" rx="8" stroke-width="3" stroke-dasharray="8 5"/>
+    <path d="M88 39h180v50H88z" stroke-width="3" opacity=".75"/>
+    <path d="m34 49 28 30M62 49 34 79" stroke-width="8" stroke-linecap="round"/>
+  </g>
+</svg>

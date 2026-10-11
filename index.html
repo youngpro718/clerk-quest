@@ -490,6 +490,64 @@ html.cq-reduce-motion .holo{animation:none!important}
 .card.look-cc .t.cc.set small{font-size:calc(2cqw*var(--fit,1));opacity:.8}
 .card.look-cc .t.cc.lvl{flex-direction:column;font-size:calc(2.8cqw*var(--fit,1))}
 .card.look-cc .stampimg.mastered{z-index:8}
+/* Series 7 · Family Court: a retro computer. The casing and keyboard are the frame; each card's screen art glows on the dark CRT glass
+   above it, and every label is live green terminal text (layout: assets/series7/card-kit/docs/pc-layout-geometry.json). */
+.card.look-pc .pc-screen{position:absolute;z-index:3;object-fit:contain;pointer-events:none}
+/* the owner's motherboard background sits on the CRT glass, inside the green rim; "screen" keeps the glass's own glow showing through */
+.card.look-pc .pc-glass{position:absolute;z-index:2;overflow:hidden;border-radius:4.5%/5.5%;mix-blend-mode:screen;pointer-events:none}
+.card.look-pc .pc-glass img{position:absolute;width:112%;height:auto;left:-6%;top:-62%;opacity:.9}
+/* movement, on the big card and live cards only (grids stay still): the object floats and glows over the circuits, and both follow a tilt */
+.card.look-pc:is(.tilt3d,.fx-live) .pc-screen{animation:pcfloat 6.5s ease-in-out infinite;animation-delay:var(--pcd,0s)}
+.card.look-pc:is(.tilt3d,.fx-live) .pc-glass img{animation:pcdrift 24s ease-in-out infinite alternate}
+.card.look-pc.tilt3d .pc-screen{translate:calc(var(--mx,0)*2.4%) calc(var(--my,0)*1.8%)}
+.card.look-pc.tilt3d .pc-glass{translate:calc(var(--mx,0)*-.8%) calc(var(--my,0)*-.6%)}
+@keyframes pcfloat{0%,100%{transform:translateY(0) rotate(0deg);filter:drop-shadow(0 0 .6cqw rgba(110,255,120,.25))}
+  30%{transform:translateY(-1.6%) rotate(-1.2deg);filter:drop-shadow(0 0 1.6cqw rgba(110,255,120,.55))}
+  65%{transform:translateY(.9%) rotate(.9deg);filter:drop-shadow(0 0 1cqw rgba(110,255,120,.35))}}
+@keyframes pcdrift{from{transform:translate(0,0)}to{transform:translate(-3%,2.5%)}}
+/* Series 7 shine: no whole-card foil; at the top level a green phosphor band rolls up and down inside the screen only,
+   and the card glows green around its edge */
+.card.look-pc .holo-wrap{display:none}
+.card.look-pc .pc-sheen{position:absolute;z-index:4;overflow:hidden;border-radius:4.5%/5.5%;pointer-events:none;mix-blend-mode:screen;
+  background:linear-gradient(180deg,transparent 0,rgba(95,224,74,0) 34%,rgba(120,255,110,.38) 46%,rgba(210,255,200,.55) 50%,rgba(120,255,110,.38) 54%,rgba(95,224,74,0) 66%,transparent 100%);
+  background-size:100% 260%;background-repeat:no-repeat;background-position:50% calc(30% + var(--my,0) * 40%)}
+.card.look-pc:is(.tilt3d,.fx-live) .pc-sheen{animation:pcsheen 4.6s ease-in-out infinite alternate}
+@keyframes pcsheen{from{background-position:50% 0%}to{background-position:50% 100%}}
+.card.look-pc:has(> .pc-sheen){--st-glow:0 0 3.6cqw rgba(95,224,74,.75),0 0 1.2cqw rgba(160,255,140,.6)}
+html.cq-reduce-motion .card.look-pc .pc-sheen{animation:none!important}
+@media (prefers-reduced-motion:reduce){.card.look-pc .pc-sheen{animation:none!important}}
+html.cq-reduce-motion .card.look-pc .pc-screen,html.cq-reduce-motion .card.look-pc .pc-glass img{animation:none!important;translate:none!important}
+@media (prefers-reduced-motion:reduce){.card.look-pc .pc-screen,.card.look-pc .pc-glass img{animation:none!important}}
+.card.look-pc .t.pc{z-index:5;display:flex;align-items:center;justify-content:center;text-align:center;color:#b9ff9c;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-weight:700;line-height:1.12;text-shadow:0 0 .5cqw #468d38;overflow:hidden}
+.card.look-pc .t.pc.num,.card.look-pc .t.pc.cat{font-size:3.4cqw;letter-spacing:.04em;white-space:nowrap}
+.card.look-pc .t.pc.xpstrip{flex-direction:column;gap:.4cqw;font-size:2.2cqw;white-space:nowrap}
+.card.look-pc .t.pc.xpstrip i{display:block;width:84%;height:.8cqw;border:1px solid #6bd155;background:none;border-radius:0}
+.card.look-pc .t.pc.xpstrip i b{display:block;height:100%;background:#8bee68}
+.card.look-pc .t.pc.title{font-size:4.8cqw;letter-spacing:.02em;white-space:nowrap}
+.card.look-pc .t.pc.title.long{font-size:4.2cqw}
+.card.look-pc .t.pc.quote{font-size:4.2cqw;font-weight:600;line-height:1.2;padding:0 2.4cqw;text-decoration:none}
+.card.look-pc .t.pc.rar,.card.look-pc .t.pc.set,.card.look-pc .t.pc.lvl{flex-direction:column;gap:.5cqw;font-size:2.8cqw}
+.card.look-pc .t.pc.rar{flex-direction:row;gap:.8cqw}
+.card.look-pc .t.pc.set small{font-family:inherit;font-size:2.2cqw;opacity:.85}
+.card.look-pc .t.pc.set hr{display:none}
+.card.look-pc .t.pc .stars{display:flex;gap:.5cqw;justify-content:center}
+.card.look-pc .s7star{width:4.2cqw;height:4.2cqw}
+.card.look-pc .s7star.new{animation:slamimg .5s cubic-bezier(.2,1.6,.4,1) both}
+.card.look-pc .s7badge{width:5cqw;height:5cqw;flex:none}
+.card.look-pc .t.pc.rar{gap:.6cqw;font-size:2.3cqw;white-space:nowrap}
+.card.look-pc .t.pc.rar span{white-space:normal;line-height:1;text-align:left}
+.card.look-pc .t.pc.rar span.long{font-size:1.95cqw;letter-spacing:0}
+/* the generic Gold Seal rule turns labels dark ink for light frames; the CRT plates stay dark, so the text turns gold instead */
+.card.look-pc:is(.ver-gold,.gold-frame) :is(.t.num,.t.xpstrip,.t.cat,.t.rar,.t.set,.t.lvl),.card.look-pc:is(.ver-gold,.gold-frame) :is(.t.num,.t.xpstrip,.t.cat,.t.rar,.t.set,.t.lvl) :not(.gem){color:#ffe27a!important;text-shadow:0 0 .5cqw rgba(140,100,20,.8)!important}
+/* Series 7 stamps: the kit's wordless plate, lettered live */
+.stampimg.s7stamp{aspect-ratio:320/128;height:auto;display:flex;align-items:center;justify-content:center}
+.stampimg.s7stamp img{position:absolute;inset:0;width:100%;height:100%}
+.stampimg.s7stamp b{position:relative;padding-left:16%;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:800;font-size:5.4cqw;letter-spacing:.06em}
+.s7stamp-sustained b{color:#53ff7b;text-shadow:0 0 .8cqw rgba(83,255,123,.6)}
+.s7stamp-overruled b{color:#ff6a55;text-shadow:0 0 .8cqw rgba(217,88,71,.6)}
+.s7stamp-mastered b{color:#ffd76a;text-shadow:0 0 .8cqw rgba(255,215,106,.6)}
+.card.look-pc .stampimg.mastered{z-index:8}
 .card .cc-cast.cc-break{object-position:center;z-index:7;scale:1.04;transform-origin:50% 92%;filter:drop-shadow(0 0 .8cqw rgba(255,226,150,.6)) drop-shadow(0 1.3cqw 1cqw rgba(0,0,0,.45))}   /* same box as levels 1 and 2 (no drop): stage lighting and a small lift instead */
 .card .cc-spot{position:absolute;left:2.3%;top:20.8%;width:95.4%;height:54%;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 58%,rgba(255,226,150,.34),rgba(255,200,90,.12) 46%,transparent 74%);mix-blend-mode:screen}
 .card .cc-cast.cc-popin{animation:ccpop .9s cubic-bezier(.2,1.3,.4,1) both}
@@ -909,6 +967,7 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 #back.question_s4{--qpanel:url(art/question_s4_question.svg);--tpanel:url(art/question_s4_table.svg);--epanel:url(art/question_s4_explanation.svg);--apanel:url(art/question_s4_answer.svg);--hpanel:url(art/question_s4_hint.svg);--ppanel:url(art/question_s4_points.svg);--xpanel:url(art/question_s4_progress.svg);--qaccent:#171719;--qlabel:#cf3b2a;--qpaper:#fbf6e8}
 #back.question_s5{--qpanel:url(art/question_s5_question.svg);--tpanel:url(art/question_s5_table.svg);--epanel:url(art/question_s5_explanation.svg);--apanel:url(art/question_s5_answer.svg);--hpanel:url(art/question_s5_hint.svg);--ppanel:url(art/question_s5_points.svg);--xpanel:url(art/question_s5_progress.svg);--qaccent:#243b5c;--qlabel:#b93835;--qpaper:#fff5d9}
 #back.question_s6{--qpanel:url(art/question_s6_question.svg);--tpanel:url(art/question_s6_table.svg);--epanel:url(art/question_s6_explanation.svg);--apanel:url(art/question_s6_answer.svg);--hpanel:url(art/question_s6_hint.svg);--ppanel:url(art/question_s6_points.svg);--xpanel:url(art/question_s6_progress.svg);--qaccent:#0f3851;--qlabel:#b63b32;--qpaper:#fff0cc}
+#back.question_s7{--qpanel:url(art/question_s7_question.svg);--tpanel:url(art/question_s7_table.svg);--epanel:url(art/question_s7_explanation.svg);--apanel:url(art/question_s7_answer.svg);--hpanel:url(art/question_s7_hint.svg);--ppanel:url(art/question_s7_points.svg);--xpanel:url(art/question_s7_progress.svg);--qaccent:#0b2a1a;--qlabel:#5fe04a;--qpaper:#03150f}
 #back[class*="question_s"] .qtext{background:var(--qpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:2.6cqw 3cqw;line-height:1.06}   /* padding lines the text up with the panel art's inner frame */
 #back[class*="question_s"] .rec{background:var(--tpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:3cqw 3cqw 2cqw}
 #back[class*="question_s"] .ans{background-color:transparent;background-image:var(--apanel);background-position:center;background-size:100% 100%;background-repeat:no-repeat;border:0;border-radius:0;box-shadow:0 .65cqw 0 rgba(0,0,0,.28)}
@@ -932,6 +991,25 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 #back.question_s2 .title{transform:rotate(-.5deg);box-shadow:.6cqw .7cqw 0 #17121e}
 #back.question_s4 .title{border-style:dashed;transform:rotate(.35deg)}
 #back.question_s5 .title{box-shadow:.7cqw .7cqw 0 #151a25}
+/* Series 7's computer face: dark CRT panels, so the live text is phosphor green; the shell already draws the title plate */
+#back.question_s7 :is(.qtext,.ans .A,.hint,.explain,.rec,.title,.nxl,.nxr,.brar,.bcat,.icon,.counter){color:#b9ff9c;text-shadow:0 0 .5cqw rgba(70,141,56,.8)}
+#back.question_s7 .title{background:none;border:0}
+#back.question_s7 :is(.bnum,.lvtag,.nxtab){color:#062010;text-shadow:none}
+#back.question_s7 .ans .L{background:#5fe04a;border-right-color:#0b2a1a;color:#062010}
+/* the kit's answer states and action buttons */
+#back.question_s7 .ans{background-image:url(art/s7ui_question_s7_answer_default.svg);box-shadow:none}
+#back.question_s7 .ans:not(:disabled):active{background-image:url(art/s7ui_question_s7_answer_pressed.svg)}
+#back.question_s7 .ans:disabled{background-image:url(art/s7ui_question_s7_answer_disabled.svg)}
+#back.question_s7 .ans.right{background-image:url(art/s7ui_question_s7_answer_correct.svg);filter:drop-shadow(0 0 1.4cqw rgba(83,255,123,.7))}
+#back.question_s7 .ans.wrong{background-image:url(art/s7ui_question_s7_answer_wrong.svg);opacity:1}
+#back.question_s7 .ex-acts button{background:url(art/s7ui_question_s7_button_secondary.svg) center/100% 100% no-repeat;border:0;border-radius:0;color:#b9ff9c;padding:1.6cqw 3.4cqw}
+#back.question_s7 .ex-acts .rlink:not(.savq){background-image:url(art/s7ui_question_s7_button_primary.svg);color:#e8ffd9}
+#back.question_s7 .s7ico{filter:none}
+#back.question_s7 .hint .bulb .s7ico{width:12cqw;height:12cqw}
+#back.question_s7 .pts .v .s7ico{width:1.25em;height:1.25em}
+#back.question_s7 .nxr b .s7ico{width:1.5em;height:1.5em}
+#back.question_s7 .title :is(.t1,.t2){color:#b9ff9c}
+#back.question_s7 .title .t2{color:#e8ffd9}
 /* The proven Series 3 compact sizing is used by every question face for small phones. */
 #back[class*="question_s"] .nxr{font-size:3.1cqw;gap:.6cqw;line-height:1.12}
 #back[class*="question_s"] .nxr b{font-size:3cqw;margin-bottom:.3cqw;gap:.7cqw}
@@ -1497,7 +1575,7 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="cloud-sync.js?v=280b2aa4"></script>
 <script src="study.js?v=c0c0a01c"></script>
 <script src="economy.js?v=8b2bf044"></script>
-<script src="store.js?v=22affdd3"></script>
+<script src="store.js?v=8f330790"></script>
 <script src="study/quick-reference/quick-reference.js?v=0128f417"></script>
 <script src="study/quick-reference/series-lessons.js?v=55eee161"></script>
 <script src="curriculum-pilot.js?v=9e0d75af"></script>
@@ -1513,15 +1591,16 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="stickers.js?v=470cc194"></script>
 <script src="dockets.js?v=581f669f"></script>
 <script src="hearing.js?v=a7e3ecd9"></script>
-<script src="card-fx.js?v=9632c1a0"></script>
+<script src="card-fx.js?v=d57c240d"></script>
 <script src="jigsaw.js?v=f2cee497"></script>
 <script src="lookalike-cards.js?v=24237958"></script>
+<script src="familycourt-cards.js?v=aae2496e"></script>
 <script src="weakness.js?v=f19e3e69"></script>
 <script src="weak-ui.js?v=b8614c5a"></script>
 <script src="pattern-lessons.js?v=bd455b9f"></script>
 <script src="pattern-lessons-ui.js?v=3ace01b8"></script>
 <script src="today.js?v=81cb4d7c"></script>
-<script src="exam.js?v=4f7f08c3"></script>
+<script src="exam.js?v=a8debae6"></script>
 <script src="exam-questions.js?v=37d27577"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="packfield.js?v=b72b00a2"></script>
@@ -2322,6 +2401,11 @@ CARDS.push(...SERIES45_SOURCE_CARDS.filter(c => c && (Number(c.series) === 4 || 
 /* the look-alikes pilot set (lookalike-cards.js): finished cards only, unless the page is opened with ?ccdrafts=1 */
 const LOOKALIKE_DATA = window.CQ_LOOKALIKES || { cards:[] };
 CARDS.push(...LOOKALIKE_DATA.cards.filter(c => c && (LOOKALIKE_DATA.includeDrafts || !c.draft)).map(lookalikeCard));
+/* Series 7 · Family Court (familycourt-cards.js): finished cards only, unless the page is opened with ?ccdrafts=1. While none is
+   finished, Series 7 has no pack, deck, card back or collection tab. */
+const FAMILY_COURT_DATA = window.CQ_FAMILY_COURT || { cards:[] };
+CARDS.push(...FAMILY_COURT_DATA.cards.filter(c => c && (FAMILY_COURT_DATA.includeDrafts || !c.draft)).map(familyCourtCard));
+if (typeof SERIES_DEFS !== "undefined" && !CARDS.some(c => c.series === 7)) SERIES_DEFS.splice(SERIES_DEFS.findIndex(d => d.n === 7) >>> 0, 1);
 
 const SERIES3_IDS = new Set(['eightback','reargue','renew','sj120','undodefault','freeze','appeal30']);
 const SERIES3_BACKGROUNDS = {
@@ -2667,8 +2751,9 @@ function save(){
 const ART = {};
 function probeArt(){
   CARDS.forEach(c => { if (c.look === 'cc') c.asset = artSrc(c.ccArt.cast); });   // the look-alike set's cast doubles as its card art (thumbnails, Today hero)
+  CARDS.forEach(c => { if (c.look === 'pc') c.asset = artSrc(c.art + '_1'); });   // Series 7: the level 1 screen art is the card art
   // The published build lists its art files up front, so nothing has to be guessed.
-  if (window.ART_MANIFEST) { CARDS.forEach(c => { ART[c.id] = window.ART_MANIFEST[c.art] || (c.look === 'cc' ? { 1:c.asset } : {}); }); return Promise.resolve(); }
+  if (window.ART_MANIFEST) { CARDS.forEach(c => { ART[c.id] = window.ART_MANIFEST[c.art] || (c.look === 'cc' || c.look === 'pc' ? { 1:c.asset } : {}); }); return Promise.resolve(); }
   const jobs = [];
   CARDS.forEach(c => {
     ART[c.id] = {};
@@ -2823,6 +2908,33 @@ const ccNumHTML = num => /^★/.test(num)
   : esc(num);
 const ccBadgeHTML = st => { const v = verOf(st), l = VERSIONS[v].label;
   return `<span class="gem cc-gem v-${v}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${CC_STAR_PATH}"/></svg></span><span class="cc-ver" style="font-size:${l.length > 6 ? '2.5cqw' : '3cqw'}">${l}</span>`; };
+/* Series 7's own symbols from the owner's kit (art/s7ui_*.svg): version badges, level stars, icons, stamps and buttons. They carry no words,
+   so stamps keep live lettering on top. */
+const S7_UI = name => `art/s7ui_${name}.svg`;
+const S7_BADGE = { filed:'badge-filed', certified:'badge-certified', exhibit:'badge-exhibit', gold:'badge-gold-seal' };
+const S7_ICON = { lock:'lock', mastered:'mastery', hint:'hint', star:'point-star' };
+const qIco = (series, name) => series === 7 && S7_ICON[name] ? `<img class="ico s7ico" src="${S7_UI(S7_ICON[name])}" alt="">` : ICO(name);
+const s7StampHTML = (kind, label, cls) => `<div class="stampimg ${cls} s7stamp s7stamp-${kind}" role="img" aria-label="${label}"><img src="${S7_UI('stamp-' + kind)}" alt=""><b>${label.toUpperCase()}</b></div>`;
+const s7StarsHTML = (lv, newStar, max) => Array.from({ length:max }, (_, i) => `<img class="s7star ${i + 1 === newStar ? 'new' : ''}" src="${S7_UI(i < lv ? 'level-star-on' : 'level-star-off')}" alt="">`).join('');
+/* Series 7 · Family Court: the computer front. Screen art changes at level 3 (level 2 keeps the level 1 art), and so does the caption. */
+function frontPCHTML(c, st, opt = {}){
+  const lv = st.level, need = NEED[lv - 1], pct = st.mastered ? 100 : Math.min(100, st.xp / need * 100), top = lv >= 3 ? 3 : 1;
+  const caption = (c.captions || {})[top] || c.quote || '', frame = 'art/frame_s7.webp';
+  return `
+    <img class="frame pc-frame" src="${frame}" alt="Series 7 card frame">
+    <div class="pc-glass" style="${P(128, 357, 896, 951)}"><img src="${artSrcJpg('bg_s7')}" alt=""></div>
+    ${lv >= maxL(c) ? `<i class="pc-sheen" aria-hidden="true" style="${P(128, 357, 896, 951)}"></i>` : ''}
+    <img class="pc-screen" src="${artSrc(c.art + '_' + top)}" alt="${esc(c.name)} artwork, level ${lv}" style="${P(145, 365, 877, 935)};--pcd:${-(parseInt(String(c.num).slice(-2), 10) || 0) * .9}s">
+    <div class="t num pc" style="${P(105, 84, 245, 130)}">${esc(c.num)}</div>
+    <div class="t cat pc" style="${P(305, 84, 715, 130)}">${esc(c.category)}</div>
+    <div class="t xpstrip pc" style="${P(786, 83, 914, 133)}"><span>${st.mastered ? 'XP MAX' : `XP ${st.xp}/${need}`}</span><i><b style="width:${pct}%"></b></i></div>
+    <div class="t title pc${c.name.length > 26 ? ' long' : ''}" style="${P(96, 185, 928, 255)}">${esc(c.name.toUpperCase())}</div>
+    <div class="t quote pc" style="${P(88, 1045, 936, 1167)}">${esc(caption)}</div>
+    <div class="t rar pc" style="${P(76, 1310, 260, 1384)}"><img class="s7badge" src="${S7_UI(S7_BADGE[verOf(st)])}" alt=""><span${verLabel(st).length > 7 ? ' class="long"' : ''}>${verLabel(st)}</span></div>
+    <div class="t set pc" style="${P(312, 1310, 715, 1384)}"><small>CARD SET</small><hr><span>${esc(c.set)}</span></div>
+    <div class="t lvl pc" style="${P(778, 1310, 953, 1384)}"><span class="stars" aria-label="${lv} of ${maxL(c)} stars">${s7StarsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
+    ${st.mastered ? s7StampHTML('mastered', 'Mastered', 'mastered') : ''}`;
+}
 const CC_TITLE_BOX = [126, 112, 898, 304];   // the banner is yellow from about y 103 to 309 at the middle and 115 to 302 near its ends
 function ccLockupHTML(c){
   const t = S6_QUESTION_TITLE_ART[c.id]; if (!t) return '';
@@ -2938,6 +3050,7 @@ function frontS45HTML(c, st, opt={}){
 function frontHTML(c, st, opt={}){
   if (!opt.art && typeof isEvolvedView === 'function' && isEvolvedView(c, st)) return evolvedFrontHTML(c, st, opt);   // evolve.js; opt.art and opt.frame are its evolved art and frame
   if (c.look === 'cc') return frontCCHTML(c, st, opt);
+  if (c.look === 'pc') return frontPCHTML(c, st, opt);
   if (c.series === 3) return frontS3HTML(c, st, opt);
   if (c.series === 4 || c.series === 5) return frontS45HTML(c, st, opt);
   const lv = st.level, need = NEED[lv-1];
@@ -3489,12 +3602,13 @@ const SERIES = [
   {g:'s4', label:'Series 4', icon:'cards'},
   {g:'s5', label:'Series 5', icon:'cards'},
   {g:'s6', label:'Series 6', icon:'cards'},
+  {g:'s7', label:'Series 7', icon:'cards'},
   {g:'tricks', label:'All Memory Tricks', icon:'memory'},
 ];
 function groupTest(g){
   if (g.startsWith('set:')) { const n = g.slice(4); return c => c.set === n; }
   return ({all:() => true, s1:c => !c.series && !c.trickType, s2:c => c.series === 2, s3:c => c.series === 3,
-    s4:c => c.series === 4, s5:c => c.series === 5, s6:c => c.series === 6, tricks:c => !!c.trickType})[g] || (() => true);
+    s4:c => c.series === 4, s5:c => c.series === 5, s6:c => c.series === 6, s7:c => c.series === 7, tricks:c => !!c.trickType})[g] || (() => true);
 }
 function groupLabel(g){
   if (g.startsWith('set:')) return titleCase(g.slice(4));
@@ -3514,13 +3628,15 @@ const reverseSeries = c => Number(c?.series) || 1;
 const SERIES_BACKS = {
   1:'art/back_s1_template_v1.webp', 2:'art/back_s2_template_v1.webp',
   3:'art/back_s3_archive_v1.webp', 4:'art/back_s4_template_v1.webp', 5:'art/back_s5_template_v1.webp',
-  6:'art/back_s6.webp'   // Series 6's emblem is its everyday back, not a reward
+  6:'art/back_s6.webp',   // Series 6's emblem is its everyday back, not a reward
+  7:'art/back_s7_template_v1.webp'
 };
 const SERIES_BACK_LABELS = {
   1:{src:'art/back_label_s1_v1.svg', label:'Series 1 Court Terms card back'},
   2:{src:'art/back_label_s2_v1.svg', label:'Series 2 Memory Tricks card back'},
   4:{src:'art/back_label_s4_v1.svg', label:'Series 4 Criminal Procedure card back'},
-  5:{src:'art/back_label_s5_v1.svg', label:'Series 5 Penal Law card back'}
+  5:{src:'art/back_label_s5_v1.svg', label:'Series 5 Penal Law card back'},
+  7:{src:'art/back_label_s7_v1.svg', label:'Series 7 Family Court card back'}
 };
 const certifiedBack = n => n <= 5 && SERIES_DEFS.some(d => d.n === n) && seriesGoals(n).certified ? `art/back_s${n}_certified.webp` : '';   // earned, never bought
 const isTrickPackCard = c => !!c && ADDON_PACKS.some(a => a.test(c));   // the loose Memory Tricks (no series) have their own back
@@ -4055,8 +4171,8 @@ function paintStudy(anim){
       <div class="mascot" style="${PB(640,572,958,1218)}">${mascotHTML || `<span class="me">${c.emoji}</span><span class="bub">?</span>`}</div>`;
   }
   const lock = lv < maxL(c)
-    ? `<b>${ICO('lock')} LEVEL ${lv+1} UNLOCKS:</b><span>• Harder questions</span><span>• +${REWARD[lv]} XP per answer</span><span>• New card art</span>`
-    : `<b>${ICO('mastered')} MASTERY:</b><span>• Gold MASTERED stamp</span><span>• Bragging rights</span><span>• Final lore line</span>`;
+    ? `<b>${qIco(series, 'lock')} LEVEL ${lv+1} UNLOCKS:</b><span>• Harder questions</span><span>• +${REWARD[lv]} XP per answer</span><span>• New card art</span>`
+    : `<b>${qIco(series, 'mastered')} MASTERY:</b><span>• Gold MASTERED stamp</span><span>• Bragging rights</span><span>• Final lore line</span>`;
   const back = document.getElementById('back');
   back.className = `card question_s${series}` + (anim ? ' fade-swap' : '');
   back.innerHTML = `
@@ -4071,8 +4187,8 @@ function paintStudy(anim){
     <div class="t counter" style="${PB(610,316,912,372)}${sessLen() > 9 ? ';font-size:3.3cqw;letter-spacing:.02em' : ''}">QUESTION ${sess.i+1} OF ${sessLen()}</div>
     ${mid}
     <button class="t hint ${sess.hint?'used':''}" style="${PB(68,1230,642,1408)}" data-act="hint" ${sess.hint||ans?'disabled':''}>
-      <span class="bulb">${ICO('hint')}</span><span><b>${sess.hint ? 'HINT:' : 'SIDEBAR?'}</b>${esc(sess.hint ? q.h : boosts().freeHints ? `Tap for a free hint (${boosts().freeHints} left).` : 'Tap for a hint. Half XP and coins if right.')}</span></button>
-    <div class="t pts" style="${PB(664,1240,956,1408)}"><span>POINT VALUE</span><span class="v ${hintCosts()?'half':''}">${ICO('star')} +${reward}${hintCosts()?` <s>+${REWARD[lv-1] * (doubleXPOn() ? 2 : 1)}</s>`:''}</span></div>
+      <span class="bulb">${qIco(series, 'hint')}</span><span><b>${sess.hint ? 'HINT:' : 'SIDEBAR?'}</b>${esc(sess.hint ? q.h : boosts().freeHints ? `Tap for a free hint (${boosts().freeHints} left).` : 'Tap for a hint. Half XP and coins if right.')}</span></button>
+    <div class="t pts" style="${PB(664,1240,956,1408)}"><span>POINT VALUE</span><span class="v ${hintCosts()?'half':''}">${qIco(series, 'star')} +${reward}${hintCosts()?` <s>+${REWARD[lv-1] * (doubleXPOn() ? 2 : 1)}</s>`:''}</span></div>
     <div class="progress-surface" aria-hidden="true" style="${PB(86,1446,950,1670)}"></div>
     <div class="t nxtab" style="${PB(70,1436,358,1508)}">NEXT LEVEL</div>
     <div class="t nxl" style="${PB(86,1520,596,1670)}">
@@ -4080,7 +4196,7 @@ function paintStudy(anim){
       <div class="bar"><b style="width:${pct}%"></b></div>
       <span>${disp.mastered ? 'XP maxed' : `${disp.xp} / ${need} XP`}</span></div>
     <div class="t nxr" style="${PB(606,1446,950,1670)}">${lock}</div>
-    ${ans ? `<img class="stampimg big ${q.type === 'table' ? 'top' : ''}" src="art/stamp_${ans.ok?'sustained':'overruled'}.webp" alt="${ans.ok?'Sustained':'Overruled'}">
+    ${ans ? `${series === 7 ? s7StampHTML(ans.ok ? 'sustained' : 'overruled', ans.ok ? 'Sustained' : 'Overruled', `big ${q.type === 'table' ? 'top' : ''}`) : `<img class="stampimg big ${q.type === 'table' ? 'top' : ''}" src="art/stamp_${ans.ok?'sustained':'overruled'}.webp" alt="${ans.ok?'Sustained':'Overruled'}">`}
       <div class="explain" style="${PB(58,1218,966,1688)}">
         <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +${ans.gain} XP${ans.coins ? ` · +${ans.coins} ${COIN}` : ''}` : 'Overruled. Not quite.'}</h3>
         ${ans.ok ? '' : '<p>Keep going—this rule will be easier to spot next time.</p>'}
@@ -4561,11 +4677,11 @@ function packBadge(p){
 }
 /* Pick your pack: two packs from different series float side by side; tap the one you want. The mix changes every time.
    Series with cards still to find come first. The very first pack skips this (onboarding opens Series 1). */
-const PACK_TINT = { 1:'#e3b23c', 2:'#a77bff', 3:'#3fb5a8', 4:'#e0443a', 5:'#ffcc33', 6:'#3d6bff', tricks:'#a77bff' };   // each series' glow colour
+const PACK_TINT = { 1:'#e3b23c', 2:'#a77bff', 3:'#3fb5a8', 4:'#e0443a', 5:'#ffcc33', 6:'#3d6bff', 7:'#5fe04a', tricks:'#a77bff' };   // each series' glow colour
 /* the word that rises out of the letter floor when a pack opens, in a colour taken from that pack's art that stands out
    against the floor (which is tinted with PACK_TINT): red on gold, yellow on purple, cream on teal, white on red, red on yellow, red on blue */
 const PACK_WORD = { 1:{ word:'GAVEL', color:'#e8473a' }, 2:{ word:'MEMORY', color:'#f5c518' }, 3:{ word:'DOCKET', color:'#f0d9a0' },
-  4:{ word:'DOODLE', color:'#f4f1ea' }, 5:{ word:'HERO', color:'#ff5544' }, 6:{ word:'ALIKE', color:'#e8473a' }, tricks:{ word:'TRICK', color:'#f5c518' } };
+  4:{ word:'DOODLE', color:'#f4f1ea' }, 5:{ word:'HERO', color:'#ff5544' }, 6:{ word:'ALIKE', color:'#e8473a' }, 7:{ word:'FAMILY', color:'#f1e5c9' }, tricks:{ word:'TRICK', color:'#f5c518' } };
 /* the other words hidden in the letter floor, word-search style; a pack gets the three whose colours sit furthest from its own word's */
 const FIELD_WORDS = [{ word:'CLERK', color:'#3d6bff' }, { word:'COURT', color:'#1fbf8f' }, { word:'JURY', color:'#ff8a1a' }, { word:'OATH', color:'#e85aa8' }, { word:'SEAL', color:'#ffd23a' }];
 function packFieldWords(n){
@@ -5140,7 +5256,7 @@ window.addEventListener('cq-cloud', e => {
 // Decode the card frames and backs up front: Safari won't decode hidden images, which caused a gray flash mid-flip.
 ['art/back_s1_template_v1.webp','art/back_s2_template_v1.webp','art/back_s3_archive_v1.webp','art/back_s4_template_v1.webp','art/back_s5_template_v1.webp','art/back_label_s1_v1.svg','art/back_label_s2_v1.svg','art/back_label_s4_v1.svg','art/back_label_s5_v1.svg','art/frame_base.webp','art/frame_mid.webp','art/frame_premium.webp','art/frame_trick.webp','art/frame_s4_v2.webp','art/frame_s5_v3.webp','art/caption_s5_short.webp','art/caption_s5_medium.webp','art/caption_s5_long.webp','art/frost_stencil_v1.webp','art/cardback.webp','art/back_tricks.webp','art/answer_button.webp']
   .forEach(src => { const i = new Image(); i.src = src; if (i.decode) i.decode().catch(() => {}); });
-for (let series = 1; series <= 6; series++) {
+for (let series = 1; series <= 7; series++) {
   ['template','question','answer','hint','points','progress','table','explanation'].forEach(part => {
     const i = new Image(); i.src = `art/question_s${series}_${part}.svg`; if (i.decode) i.decode().catch(() => {});
   });

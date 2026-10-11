@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Level earned</title>
+  <defs>
+    <linearGradient id="bezel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4e8c9"/><stop offset="1" stop-color="#d5c49d"/></linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4f7ef"/><stop offset=".5" stop-color="#aeb8b8"/><stop offset="1" stop-color="#667474"/></linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.25" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    
+  </defs>
+  <g fill="none" stroke="#17211b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="32.00,13.00 36.82,24.37 49.12,25.44 39.80,33.53 42.58,45.56 32.00,39.20 21.42,45.56 24.20,33.53 14.88,25.44 27.18,24.37" fill="url(#bezel)"/><path d="m23 32 6 6 13-14" stroke="#31e981" filter="url(#glow)" stroke-width="4.5"/></g>
+</svg>

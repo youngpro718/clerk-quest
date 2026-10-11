@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="868" height="832" viewBox="0 0 868 832" preserveAspectRatio="none">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#0a2e21"/><stop offset=".25" stop-color="#03140e"/><stop offset="1" stop-color="#071f17"/></linearGradient><pattern id="grid" width="36" height="32" patternUnits="userSpaceOnUse"><path d="M36 0H0V32" fill="none" stroke="#7dff93" stroke-opacity=".04"/></pattern></defs>
+  <path d="M24 6h820l18 18v784l-18 18H24L6 808V24z" fill="#171d19" stroke="#d8c59a" stroke-width="10"/>
+  <path d="M34 21h800l13 13v764l-13 13H34l-13-13V34z" fill="url(#g)" stroke="#35f467" stroke-width="5"/>
+  <path d="M40 28h788v776H40z" fill="url(#grid)"/>
+  <path d="M52 184h764M52 286h764M52 388h764M52 490h764M52 592h764M52 694h764" stroke="#8effa1" stroke-opacity=".17" stroke-width="2"/>
+  <path d="M142 184v510M474 184v510" stroke="#8effa1" stroke-opacity=".2" stroke-width="3"/>
+  <g fill="#d8c59a" stroke="#3c392f" stroke-width="2"><path d="M8 44L44 8h42L50 44z"/><path d="M860 44L824 8h-42l36 36z"/><path d="M8 788l36 36h42l-36-36z"/><path d="M860 788l-36 36h-42l36-36z"/></g>
+  <path d="M55 55h758v85H55z" fill="#071b13" stroke="#9cffaa" stroke-opacity=".35" stroke-width="3"/>
+</svg>

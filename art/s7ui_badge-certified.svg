@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Certified version badge</title>
+  <defs>
+    <radialGradient id="silver"><stop stop-color="#fbfff8"/><stop offset=".42" stop-color="#b9c2c1"/><stop offset=".76" stop-color="#7a8685"/><stop offset="1" stop-color="#3d4745"/></radialGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e5eef0"/><stop offset=".5" stop-color="#7793a3"/><stop offset="1" stop-color="#344e5b"/></linearGradient>
+    <linearGradient id="copper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd180"/><stop offset=".45" stop-color="#b86e35"/><stop offset="1" stop-color="#5e321f"/></linearGradient>
+    <radialGradient id="gold"><stop stop-color="#fff7ad"/><stop offset=".48" stop-color="#d9aa2f"/><stop offset="1" stop-color="#795016"/></radialGradient>
+    <filter id="led" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <path d="M64 8 106 25l14 39-14 39-42 17-42-17L8 64l14-39z" fill="url(#steel)" stroke="#17211b" stroke-width="5"/><circle cx="64" cy="64" r="38" fill="#b7c8ce" stroke="#314b57" stroke-width="4"/>
+  <g fill="none" stroke="#16211b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 63h14M94 63h14M64 18v12M64 98v12M29 32l9 9M90 88l9 9"/></g>
+  <path d="m42 64 15 15 31-35" fill="none" stroke="#b9ffd5" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><path d="m42 61 15 15 31-35" fill="none" stroke="#2f5e48" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="101" cy="27" r="7" fill="#071d14" stroke="#17211b" stroke-width="3"/><circle cx="101" cy="27" r="3.5" fill="#31e981" filter="url(#led)"/>
+</svg>

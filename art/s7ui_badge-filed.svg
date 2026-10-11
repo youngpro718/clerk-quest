@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Filed version badge</title>
+  <defs>
+    <radialGradient id="silver"><stop stop-color="#fbfff8"/><stop offset=".42" stop-color="#b9c2c1"/><stop offset=".76" stop-color="#7a8685"/><stop offset="1" stop-color="#3d4745"/></radialGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e5eef0"/><stop offset=".5" stop-color="#7793a3"/><stop offset="1" stop-color="#344e5b"/></linearGradient>
+    <linearGradient id="copper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd180"/><stop offset=".45" stop-color="#b86e35"/><stop offset="1" stop-color="#5e321f"/></linearGradient>
+    <radialGradient id="gold"><stop stop-color="#fff7ad"/><stop offset=".48" stop-color="#d9aa2f"/><stop offset="1" stop-color="#795016"/></radialGradient>
+    <filter id="led" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <circle cx="64" cy="64" r="52" fill="url(#silver)" stroke="#17211b" stroke-width="5"/><circle cx="64" cy="64" r="43" fill="none" stroke="#e9f0e8" stroke-width="2" opacity=".7"/>
+  <g fill="none" stroke="#16211b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M25 50h10M93 78h11M31 92h12"/></g>
+  <polygon points="64.00,39.00 71.05,56.29 89.68,57.66 75.41,69.71 79.87,87.84 64.00,78.00 48.13,87.84 52.59,69.71 38.32,57.66 56.95,56.29" fill="#a9b3b2" stroke="#394342" stroke-width="5" stroke-linejoin="round"/><path d="M44 58 64 44 84 58" fill="none" stroke="#f4f7ef" stroke-width="3" opacity=".8"/>
+  <circle cx="101" cy="27" r="7" fill="#071d14" stroke="#17211b" stroke-width="3"/><circle cx="101" cy="27" r="3.5" fill="#31e981" filter="url(#led)"/>
+</svg>

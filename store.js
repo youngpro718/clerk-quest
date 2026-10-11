@@ -122,6 +122,7 @@ const SERIES_DEFS = [
   { n:4, label:'Series 4 · Doodle Files', test:c => c.series === 4, pack:'pack_s4', deck:'deck_s4' },
   { n:5, label:'Series 5 · Vintage Heroes', test:c => c.series === 5, pack:'pack_s5', deck:'deck_s5' },
   { n:6, label:'Series 6 · Look-alike Rules', test:c => c.series === 6, pack:'pack_s6', deck:'deck_s6' },
+  { n:7, label:'Series 7 · Family Court', test:c => c.series === 7, pack:'pack_s7', deck:'deck_s7' },   // index.html drops it while every Series 7 card is a draft
 ];
 const seriesDef = n => SERIES_DEFS.find(d => d.n === +n);
 const seriesPackArt = n => artSrc(seriesDef(n).pack);

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="838" height="202" viewBox="0 0 838 202" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#092d20"/><stop offset=".48" stop-color="#03150f"/><stop offset="1" stop-color="#071f17"/></linearGradient>
+    <pattern id="grid" width="32" height="24" patternUnits="userSpaceOnUse"><path d="M32 0H0V24" fill="none" stroke="#71ff89" stroke-opacity=".055"/></pattern>
+    <filter id="glow" x="-20%" y="-30%" width="140%" height="160%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <path d="M22 5H816l17 17v158l-17 17H22L5 180V22z" fill="#171d19" stroke="#d9c79d" stroke-width="8"/>
+  <path d="M28 15H810l13 13v146l-13 13H28l-13-13V28z" fill="url(#glass)" stroke="#35f467" stroke-width="4" filter="url(#glow)"/>
+  <path d="M35 25H803l10 10v132l-10 10H35l-10-10V35z" fill="url(#grid)" stroke="#8bff9d" stroke-opacity=".42" stroke-width="2"/>
+  <path d="M42 33h754" stroke="#d7ffe0" stroke-opacity=".12" stroke-width="7"/>
+  <g fill="#d9c79d" stroke="#3c392f" stroke-width="2"><path d="M7 24L24 7h35L43 24z"/><path d="M831 24L814 7h-35l16 17z"/><path d="M7 178l17 17h35l-16-17z"/><path d="M831 178l-17 17h-35l16-17z"/></g>
+</svg>
