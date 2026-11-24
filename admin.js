@@ -74,7 +74,31 @@ function admThumb(c, level){
 const fmtDate = t => t ? new Date(t).toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' }) : '—';
 const lastText = t => t ? 'last played ' + agoText(t) : "hasn't played yet";
 
+/* Question reports: every player's S.reports (study.js), read from the saves the admin RPC already returns.
+   Grouped by question, most reported first, then newest. */
+function playerReports(){
+  const out = [];
+  (ADM.players || []).forEach(p => { const r = (p.save_data || {}).reports; if (Array.isArray(r)) r.forEach(x => x && x.q && out.push({ ...x, email:p.email || '' })); });
+  return out;
+}
 const ADMIN_SCREENS = {
+  adminreports(){
+    if (!ADM.is) return adminDenied();
+    if (!ADM.players && !ADM.err) loadPlayers();
+    const groups = {};
+    playerReports().forEach(r => { const k = r.cardId + '\u0000' + r.q; (groups[k] = groups[k] || []).push(r); });
+    const list = Object.values(groups).map(g => g.sort((a, b) => (b.at || 0) - (a.at || 0)))
+      .sort((a, b) => (b.length - a.length) || ((b[0].at || 0) - (a[0].at || 0)));
+    const body = list.map(g => { const r = g[0], c = byId(r.cardId);
+      return `<div class="adm-rep"><p><b>${esc(c ? c.name : r.cardId)}</b> · ${g.length} report${g.length === 1 ? '' : 's'}</p>
+        <p class="as-q">${esc(r.q)}</p><p><small>Marked answer: ${esc(r.a || '')}</small></p>
+        <ul>${g.map(x => `<li><b>${esc(x.reason || '')}</b>${x.note ? ` · ${esc(x.note)}` : ''}<br><small>${esc(x.email)} · ${fmtDate(x.at)}${x.choice ? ` · chose “${esc(x.choice)}”` : ''}</small></li>`).join('')}</ul>
+        ${c ? `<button class="rlink" data-act="push" data-s="admincard" data-id="${esc(c.id)}">Open the card</button>` : ''}</div>`; }).join('');
+    return { title:'Question reports', right:`<button class="nb-btn txt" data-act="adm-reload">Refresh</button>`, body:`
+      <p class="st-note">Problems players flagged with "Report a problem" after answering. They arrive with each signed-in player's saved progress. Guests' reports stay on their device.</p>
+      ${ADM.err ? `<p class="acct-err">${ICO('warning')} ${esc(ADM.err)}</p>` : ''}
+      ${ADM.players ? (body || '<p class="empty">No reports yet.</p>') : '<p class="empty">Loading…</p>'}` };
+  },
   admin(){
     if (!ADM.is) return adminDenied();
     if (!ADM.players && !ADM.err) loadPlayers();
@@ -101,6 +125,7 @@ const ADMIN_SCREENS = {
       <div class="list">
         <button class="row" data-act="push" data-s="admincards"><span class="th emo gi">${ICO('cards')}</span><span class="row-main"><b>Cards and questions</b><small>All ${CARDS.length} cards, every level</small></span>${chev}</button>
         <button class="row" data-act="push" data-s="adminlessons"><span class="th emo gi">${ICO('read')}</span><span class="row-main"><b>Lessons</b><small>${LESSONS.length} built-in lessons</small></span>${chev}</button>
+        <button class="row" data-act="push" data-s="adminreports"><span class="th emo gi">${ICO('warning')}</span><span class="row-main"><b>Question reports</b><small>${ADM.players ? `${playerReports().length} from players` : 'Problems players flagged'}</small></span>${chev}</button>
       </div>
       <div class="sec-h"><span>Quality assurance</span></div>
       <div class="list">
@@ -397,7 +422,7 @@ Object.assign(ADMIN_SCREENS, {
         <div class="list">${SERIES_DEFS.concat(ADDON_PACKS).map(d => { const add = ADDON_PACKS.includes(d);
           return `<div class="row adm-pk"><img src="${packArtOf(d.n)}" alt="${esc(d.label)} pack"><span class="row-main"><b>${esc(d.label)}</b><small>${add ? 'Add-on pack' : 'Deck box and card back'}</small></span>
             ${d.deck ? `<img src="${artSrc(d.deck)}" alt="Deck box">` : ''}<img class="adm-pk-back" src="${add ? 'art/back_tricks.webp' : SERIES_BACKS[d.n] || 'art/cardback.webp'}" alt="Card back">
-            <button class="sk-btn" data-act="adm-pack-open" data-v="${d.n}">Open</button></div>`; }).join('')}</div>
+            <button class="sk-btn" data-act="adm-pack-open" data-v="${d.n}">Open</button>${d.deck ? `<button class="sk-btn" data-act="adm-deck-open" data-v="${d.n}">Deck</button>` : ''}</div>`; }).join('')}</div>
         ${(() => { const c = CARDS.find(x => x.series === 6); return c ? `<div class="sec-h"><span>Series 6 jigsaw</span></div><p class="st-note">The pieces fill in level by level. Tap one to open it in the card sandbox.</p>
           <div class="adm-pulls">${Array.from({ length:maxL(c) }, (_, i) => `<button data-act="adm-open" data-id="${c.id}" data-lv="${i + 1}">${admCardPreview(c, i + 1, 'normal')}<small>Level ${i + 1}</small></button>`).join('')}</div>` : ''; })()}
         <div class="sec-h"><span>Reward cards</span></div><div class="list"><button class="row" data-act="push" data-s="rewardpreview"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Landmark cards (Hot Docket)</b><small>Filed, Certified, backs, and one-chance quiz previews</small></span>${chev}</button></div>` };
@@ -433,6 +458,9 @@ document.addEventListener('click', e => {
       const pulls = pool.slice(0, 3).map((c, i) => ({ c, isNew:i !== 1, ver:i === 2 ? 'certified' : null, newVer:i === 2, coins:i === 1 ? 5 : 0, st:admFixture(c, 1, 'normal', i === 2 ? 'certified' : 'filed') }));
       if (addon) pulls.addon = d.n; else pulls.series = d.n;
       openPack({ pulls, ...(addon ? { addon:d.n } : { series:d.n }), preview:true, chosen:true }); break; }
+    case 'adm-deck-open': {   // the deck-box moment with sample cards; nothing is spent, awarded or saved
+      const d = packDef(t.dataset.v), cs = shuffle(CARDS.filter(d.test)).slice(0, 9);
+      deckBoxMoment(d.n, cs, { html:c => `<span class="mini">${cardEl(c, admFixture(c, 1, 'normal', 'filed'))}</span>` }); break; }
     case 'adm-open': push('admincard', { id:t.dataset.id, lv:+t.dataset.lv }); break;
     case 'adm-quick': admQuick(t.dataset.v); break;
     case 'sb-enter': if (!Sandbox.on() && Sandbox.enter()) { refresh(); toast('Sandbox on. Change anything; nothing is saved.', 'check'); } break;
@@ -491,6 +519,7 @@ const ADMIN_CSS = `
 .adm-rows{display:flex;flex-direction:column;gap:3px;margin:0 0 8px} .adm-rows div{display:grid;grid-template-columns:18px 1fr 1fr;gap:6px;font:13px var(--ui)}
 .adm-rows code{padding:3px 6px;border-radius:6px;background:rgba(255,255,255,.06);font:13px "Courier Prime",monospace;color:var(--paper)}
 .adm-email{margin:0 0 4px;font:400 22px "Bangers";letter-spacing:.03em;word-break:break-all}
+.adm-rep{margin:0 0 12px;padding:12px;border-radius:14px;background:var(--bg2);font:15px/1.4 var(--ui)}.adm-rep p{margin:0 0 6px}.adm-rep ul{margin:6px 0;padding-left:18px}.adm-rep li{margin:0 0 6px}
 .adm-hero{display:flex;align-items:center;gap:13px;margin:4px 0 18px;padding:15px;border-radius:17px;background:linear-gradient(135deg,rgba(227,178,60,.18),rgba(143,179,209,.1));border:.5px solid var(--line)}.adm-hero>span,.adm-hero>img{width:46px;height:46px;display:grid;place-items:center}.adm-hero b{display:block;font:400 24px "Bangers";letter-spacing:.05em}.adm-hero small{display:block;color:var(--sub);font:13px/1.35 var(--ui);margin-top:3px}.adm-hero.tester{background:linear-gradient(135deg,rgba(143,179,209,.18),rgba(123,75,181,.12))}
 .adm-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,220px));justify-content:center;gap:12px}@media (max-width:520px){.adm-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}.adm-gallery button{border:0;background:none;color:var(--paper);padding:0}.adm-gallery small{display:block;margin-top:5px;font:13px var(--ui);color:var(--sub)}
 .adm-answers{display:flex;flex-direction:column;gap:7px}.adm-answers button{min-height:46px;padding:8px 11px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.04);color:var(--paper);text-align:left;font:16px/1.25 var(--ui)}.adm-answers button.ok{background:rgba(95,212,122,.16);border-color:#5fd47a}.adm-answers button.bad{background:rgba(255,107,94,.14);border-color:#ff6b5e}

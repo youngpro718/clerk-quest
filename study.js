@@ -746,6 +746,44 @@ document.addEventListener('click', e => {
   }
   b.classList.add('done'); b.disabled = true; b.textContent = 'Saved to notebook';
 });
+/* ---------- report a problem with a question ----------
+   Kept in the save (S.reports), so a signed-in player's reports reach the admin page with the cloud save (admin.js,
+   "Question reports"); no extra table. A guest's reports stay on the device until they sign in. */
+const REPORT_REASONS = ['The marked answer is wrong', 'The question is unclear', 'The law has changed', 'A typo or wording problem', 'Something else'];
+const REPORTS_MAX = 50, REPORT_NOTE_MAX = 500;
+const reports = () => (S.reports = Array.isArray(S.reports) ? S.reports : []);
+const isReportedQ = (cardId, q) => reports().some(r => r.cardId === cardId && r.q === q);
+let reportDraft = null;
+function reportQButtonHTML(){
+  const done = isReportedQ(sess.id, sess.q.q);
+  return `<button class="rlink repq ${done ? 'done' : ''}" data-act="report-q" ${done ? 'disabled' : ''}>${done ? 'Problem reported' : 'Report a problem'}</button>`;
+}
+function reportSheet(draft){
+  reportDraft = draft;
+  openSheet(`<h3>Report a problem</h3><p class="as-q">${esc(draft.q)}</p>
+    <fieldset class="rep-reasons"><legend>What is wrong?</legend>${REPORT_REASONS.map((r, i) =>
+      `<label><input type="radio" name="rep-reason" value="${i}" ${i === 0 ? 'checked' : ''}> ${esc(r)}</label>`).join('')}</fieldset>
+    <label class="rep-note">Anything to add? (optional)<textarea id="rep-note" rows="3" maxlength="${REPORT_NOTE_MAX}" placeholder="For example, the section number or what the rule actually says"></textarea></label>
+    <button class="btn-big gold" data-act="report-send">Send report</button>
+    <button class="sheet-cancel" data-act="sheet-close">Cancel</button>`);
+}
+function sendReport(){
+  const d = reportDraft; if (!d) return;
+  const pick = document.querySelector('input[name="rep-reason"]:checked'), note = (document.getElementById('rep-note')?.value || '').trim().slice(0, REPORT_NOTE_MAX);
+  if (!isReportedQ(d.cardId, d.q)) {
+    reports().unshift({ id:Date.now().toString(36), cardId:d.cardId, q:d.q, a:d.a, choice:d.choice || '', reason:REPORT_REASONS[+(pick && pick.value) || 0], note, at:Date.now() });
+    S.reports.length = Math.min(S.reports.length, REPORTS_MAX);
+    save();
+  }
+  reportDraft = null; closeSheet();
+  document.querySelectorAll('[data-act="report-q"]').forEach(b => { b.classList.add('done'); b.disabled = true; b.textContent = 'Problem reported'; });
+  toast('Thanks. Your report was saved for review', 'check');
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-act="report-send"]')) { sendReport(); return; }
+  const b = e.target.closest('[data-act="report-q"]'); if (!b || b.disabled || !sess || !sess.answered) return;
+  reportSheet({ cardId:sess.id, q:sess.q.q, a:sess.q.a, choice:sess.answered.choice });
+});
 function savedSheet(id){
   const x = nb().saved.find(s => s.id === id); if (!x) return;
   const c = byId(x.cardId);
@@ -869,11 +907,12 @@ const STUDY_SCREENS = {
     if (!c) return { title:'Rule unavailable', body:'<p class="empty">This rule could not be found.</p>' };
     const mine = owned(c);
     return {
-      title:c.name, cta:mine,
+      title:c.name, cta:mine || canStudyCard(c.id),
       body:`<p class="rule-sub">${esc(titleCase(c.set))}</p>${caseFileHTML(c)}
         ${mine ? `<button class="row openrow" data-act="push" data-s="card" data-id="${c.id}">${thumb(c)}<span class="row-main"><b>Open card</b><small>${statusLine(c)}</small></span>${chev}</button>`
+          : canStudyCard(c.id) ? `<p class="foot">Not in your collection yet. You can still quiz on it; collect it to show its art.</p>`
           : `<p class="foot">This card isn't in your collection yet. Find it in a pack to quiz on it.</p>`}`,
-      after: mine ? `<div class="cta-bar"><div><button class="btn-big" data-act="study" data-id="${c.id}">${PLAY_ICON} QUIZ THIS CARD</button></div></div>` : ''
+      after: canStudyCard(c.id) ? `<div class="cta-bar"><div><button class="btn-big" data-act="study" data-id="${c.id}">${PLAY_ICON} QUIZ THIS CARD</button></div></div>` : ''
     };
   },
 };
@@ -895,6 +934,10 @@ const STUDY_CSS = `
 .studyhelp .sh-rule em{display:block;font-style:normal;font-weight:700;color:var(--sub)}
 .studyhelp .sk-btn{margin-bottom:8px}
 .studyhelp .sh-src{color:var(--sub);font-size:13px}
+.rep-reasons{display:flex;flex-direction:column;gap:6px;margin:8px 0;padding:0;border:0;font:15px/1.35 var(--ui)}
+.rep-reasons legend{margin-bottom:4px;font-weight:700}.rep-reasons label{display:flex;gap:8px;align-items:center;min-height:36px}
+.rep-note{display:flex;flex-direction:column;gap:6px;margin:6px 0 12px;font:15px/1.35 var(--ui)}
+.rep-note textarea{width:100%;box-sizing:border-box;padding:8px;border-radius:10px;font:15px/1.4 var(--ui)}
 .video-lesson .video-kicker{margin:2px 0 3px;text-align:center;color:var(--mustard);font:700 12px var(--ui);letter-spacing:.1em;text-transform:uppercase}
 .video-lesson h3{margin-bottom:12px}
 .video-lesson video{display:block;width:min(100%,360px);max-height:52dvh;margin:0 auto;border:2px solid var(--ink);border-radius:14px;background:#211f1b;box-shadow:0 5px 0 rgba(0,0,0,.28)}

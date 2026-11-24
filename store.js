@@ -123,6 +123,7 @@ const SERIES_DEFS = [
   { n:5, label:'Series 5 · Vintage Heroes', test:c => c.series === 5, pack:'pack_s5', deck:'deck_s5' },
   { n:6, label:'Series 6 · Look-alike Rules', test:c => c.series === 6, pack:'pack_s6', deck:'deck_s6' },
   { n:7, label:'Series 7 · Family Court', test:c => c.series === 7, pack:'pack_s7', deck:'deck_s7' },   // index.html drops it while every Series 7 card is a draft
+  { n:8, label:'Series 8 · Criminal Procedure', test:c => c.series === 8, pack:'pack_blank', deck:'deck_box' },   // plain pack and deck until the newspaper kit has its own; index.html drops it while every Series 8 card is a draft
 ];
 const seriesDef = n => SERIES_DEFS.find(d => d.n === +n);
 const seriesPackArt = n => artSrc(seriesDef(n).pack);
@@ -243,14 +244,58 @@ function buyCopy(){
   save(); closeSheet(true); refresh();
   toast(copies() >= COPIES_TO_CERTIFY ? `${copies()} Copies: open a card to certify it` : `+1 Copy · ${copies()} of ${COPIES_TO_CERTIFY}`, 'check');
 }
+/* The deck-box moment: the Complete Deck box turns (swipe sideways or the round button) and opens, and the new cards fan up out of it.
+   deckBoxMoment(n, cards, { html, done }) -> true if it plays (done runs after "Nice"); false if this series has no box art (the caller keeps the old sheet). */
+function deckBoxMoment(n, cards, opts = {}){
+  const d = SERIES_DEFS.find(x => x.n === +n); if (!d || !d.deck || document.querySelector('.dk')) return false;
+  const srcs = [artSrc(d.deck), artSrc(`deck_back_s${d.n}`), artSrc(`deck_open_s${d.n}`)], finish = () => { opts.done && opts.done(); };
+  Promise.all(srcs.map(src => new Promise((ok, no) => { const im = new Image(); im.onload = ok; im.onerror = no; im.src = src; }))).then(() => {
+    const shown = cards.slice(0, 7), html = opts.html || (c => miniCard(c));
+    lockScroll();
+    const ov = document.createElement('div'); ov.className = `pk dk pk-s${d.n}`; ov.style.setProperty('--tint', (typeof PACK_TINT !== 'undefined' && PACK_TINT[d.n]) || '#e3b23c');
+    ov.innerHTML = `<div class="pk-bg" style="background-image:url('${srcs[0]}')"></div><div class="pk-pattern"></div><div class="pk-glow"></div><div class="pk-rays"></div><div class="pk-vig"></div>
+      <div class="pk-stage"><div class="pk-floor"></div>
+        <div class="dk-cards">${shown.map((c, i) => `<div class="dk-card" style="--i:${i};--t:${i - (shown.length - 1) / 2}">${html(c)}</div>`).join('')}</div>
+        <button class="dk-box has-back" data-act="dk-open" aria-label="Open the box"><img class="dk-bk" src="${srcs[1]}" alt=""><img class="dk-fr" src="${srcs[0]}" alt=""><img class="dk-op" src="${srcs[2]}" alt=""></button>
+        <button class="pk-turn" data-act="dk-turn" aria-label="Turn the box over" type="button">&#8635;</button>
+      </div>
+      <p class="pk-hint">Your ${esc(d.label)} Complete Deck! Swipe to turn it over.</p>
+      <button class="btn-big gold dk-open" data-act="dk-open">OPEN THE BOX</button>
+      <button class="btn-big gold dk-done" data-act="dk-done">NICE</button>`;
+    document.body.appendChild(ov);
+    const box = ov.querySelector('.dk-box'); box._hasBack = true; ov._done = finish; ov._count = cards.length;
+  }).catch(finish);
+  return true;
+}
+function deckBoxOpen(ov){
+  const box = ov.querySelector('.dk-box'); if (!box || box._opened || box._swiped) return; box._opened = true;
+  const go = () => {
+    ov.classList.add('open'); ov.querySelector('.pk-hint').textContent = `${ov._count} new card${ov._count > 1 ? 's' : ''} for your collection!`;
+    try { nativeFeedback('claim'); } catch (_) {}
+    setTimeout(() => ov.classList.add('shown'), prefersReducedMotion() ? 300 : 1300);
+  };
+  if (box._back || box._flipping) packFlip(box, false, go); else go();
+}
+function deckBoxClose(ov){ const f = ov._done; ov.remove(); unlockScroll(); f && f(); }
+document.addEventListener('pointerdown', e => {
+  const box = e.target.closest('.dk-box'); if (!box || box._opened) return;
+  box._fdrag = { x:e.clientX, y:e.clientY, id:e.pointerId }; try { box.setPointerCapture(e.pointerId); } catch (_) {}
+});
+document.addEventListener('pointermove', e => {
+  const box = document.querySelector('.dk-box'), f = box && box._fdrag; if (!f || e.pointerId !== f.id) return;
+  const fx = e.clientX - f.x, fy = e.clientY - f.y;
+  if (Math.abs(fx) > 28 && Math.abs(fx) > Math.abs(fy)) { box._fdrag = null; box._swiped = true; setTimeout(() => { box._swiped = false; }, 400); packFlip(box, !box._back); }
+});
+['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, () => { const box = document.querySelector('.dk-box'); if (box) box._fdrag = null; }));
 function buyDeck(n){
   const d = storeSeries().find(x => x.n === +n); if (!d || !d.missing.length) return;
   if (!spendCoins(d.deckPrice, `${d.label} Complete Deck`)) return;
   d.missing.forEach(c => { S.cards[c.id].owned = true; });
   save(); closeSheet(true); refresh();
-  openSheet(`<div class="reward"><h3>${esc(d.label)} Complete Deck added!</h3><p>${d.missing.length} new card${d.missing.length > 1 ? 's' : ''} in your collection.</p></div>
+  const sheet = () => openSheet(`<div class="reward"><h3>${esc(d.label)} Complete Deck added!</h3><p>${d.missing.length} new card${d.missing.length > 1 ? 's' : ''} in your collection.</p></div>
     <div class="st-new">${d.missing.map(c => miniCard(c)).join('')}</div>
     <button class="btn-big gold" data-act="sheet-close">NICE</button>`);
+  if (!deckBoxMoment(d.n, d.missing, { done:sheet })) sheet();   // the box turns and opens first; a series without box art goes straight to the sheet
 }
 function buyPack(n){
   const d = packDef(n); if (!d) return;
@@ -269,6 +314,9 @@ document.addEventListener('click', e => {
     case 'st-deck': deckSheet(set); break;
     case 'st-pack': packSheet(set); break;
     case 'st-buy-deck': buyDeck(set); break;
+    case 'dk-open': { const ov = t.closest('.dk'); if (ov) deckBoxOpen(ov); break; }
+    case 'dk-turn': { const b = t.closest('.dk').querySelector('.dk-box'); if (b && !b._opened) packFlip(b, !b._back); break; }
+    case 'dk-done': deckBoxClose(t.closest('.dk')); break;
     case 'st-buy-pack': buyPack(set); break;
     case 'st-copy': copySheet(); break;
     case 'st-buy-copy': buyCopy(); break;
@@ -354,6 +402,24 @@ const STORE_CSS = `
 .cd-card .cd-back{position:absolute;inset:0;transform:rotateY(180deg);border-radius:6%/4%;overflow:hidden}
 .cd-card .cd-back img{width:100%;height:100%;object-fit:cover}
 .cd-card.flipped .card{transform:rotateY(-180deg)} .cd-card.flipped .cd-back{transform:rotateY(0)}
+.dk-box:focus,.dk-box:focus-visible{outline:none}
+.dk-box{position:absolute;left:calc(50% - var(--dkw) / 2);bottom:46px;width:var(--dkw);aspect-ratio:1024/1536;border:0;background:none;padding:0;z-index:3;touch-action:none;animation:pkfloat 3.2s ease-in-out infinite;
+  transform:perspective(1100px) rotateY(var(--fl,0deg))}
+.dk-box img{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 14px 18px rgba(0,0,0,.6));pointer-events:none;-webkit-user-drag:none}
+.dk-box .dk-bk{display:none;transform:scaleX(-1)} .dk-box.has-back .dk-bk{display:block;opacity:0} .dk-box.back .dk-bk{opacity:1} .dk-box.back>:not(.dk-bk){opacity:0 !important}
+.dk-box .dk-op{opacity:0} .dk.open .dk-op{opacity:1} .dk.open .dk-fr{opacity:0}
+.dk.open .dk-box{animation:dkpop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes dkpop{0%{scale:1}35%{scale:1.1}100%{scale:1}}
+.dk .pk-stage{--dkw:min(58vw,250px,30vh)}
+.dk .pk-floor{top:auto;bottom:38px;width:calc(var(--dkw) * .95);height:calc(var(--dkw) * .14);translate:-50% 0}
+.dk .pk-turn{display:flex;top:auto;bottom:2px} .dk.open .pk-turn{display:none}
+.dk-cards{position:absolute;left:calc(50% - var(--dkw) / 2);bottom:46px;width:var(--dkw);aspect-ratio:1024/1536;z-index:2;pointer-events:none}
+.dk-card{position:absolute;left:50%;top:14%;width:46%;opacity:0;transform:translate(-50%,40%) scale(.9);pointer-events:none;transition:transform .7s cubic-bezier(.2,1.3,.4,1) calc(var(--i) * .09s + .25s),opacity .3s calc(var(--i) * .09s + .25s)}
+.dk-card .mini{width:100%;pointer-events:none} .dk-card .mini-cap{display:none}
+.dk.open .dk-card{opacity:1;transform:translate(calc(-50% + var(--t) * var(--dkw) * .14),calc(var(--dkw) * -.6 + var(--t) * var(--t) * var(--dkw) * .012)) rotate(calc(var(--t) * 7deg))}
+.dk .pk-hint{min-height:26px}
+.dk-open{max-width:340px;z-index:3} .dk-done{max-width:340px;z-index:3;display:none} .dk.open .dk-open{display:none} .dk.open.shown .dk-done{display:block;animation:fadein .3s both}
+@media (prefers-reduced-motion:reduce){.dk-box{animation:none!important}.dk-box>*{transition:opacity .2s}.dk-card,.dk.open .dk-card{transition:opacity .4s calc(var(--i) * .06s)}.dk.open .dk-card{transform:translate(calc(-50% + var(--t) * var(--dkw) * .14),calc(var(--dkw) * -.6)) rotate(calc(var(--t) * 7deg))}}
 .st-new{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 14px}
 .st-new .mini{width:auto;min-width:0}
 .pk-label{position:absolute;left:18%;top:28%;width:66%;height:34%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4%;z-index:1;color:var(--ink);container-type:inline-size;pointer-events:none}

@@ -6,7 +6,7 @@ const weakHook = c => (c && (c.hook || (c.intro && c.intro.idea))) || '';
 
 function weakRow(id){
   const c = byId(id); if (!c) return '';
-  const canDrill = owned(c) && canStudyCard(id), hook = weakHook(c);
+  const canDrill = canStudyCard(id), hook = weakHook(c);
   return `<div class="wk-row"><span class="wk-main"><b>${esc(c.name)}</b>${Recall.pips(id)}${hook ? `<small>${esc(hook)}</small>` : ''}</span>
     <span class="wk-btns">${weakCanRead(c) ? `<button class="wk-btn" data-act="weak-read" data-id="${id}">Read</button>` : ''}
     ${canDrill ? `<button class="wk-btn go" data-act="weak-drill" data-id="${id}">Drill</button>` : ''}</span></div>`;
@@ -34,7 +34,7 @@ document.addEventListener('click', e => {
 
 /* hook first (one-card lesson), then the drill: a normal round with the person's missed questions first */
 function weakDrill(ids){
-  const cards = ids.map(byId).filter(c => c && owned(c) && canStudyCard(c.id)); if (!cards.length) return;
+  const cards = ids.map(byId).filter(c => c && canStudyCard(c.id)); if (!cards.length) return;
   const c = cards[0], hook = weakHook(c), lore = c.hook && Array.isArray(c.lore) ? c.lore : [];   // lore is a mnemonic on trick cards only; on other cards it is flavor text
   openSheet(`<div class="sh-head">${thumb(c)}<span><b>${esc(c.name)}</b><small>Your trick for this${cards.length > 1 ? ' · +' + (cards.length - 1) + ' more cards' : ''}</small></span></div>
     <div class="intro">${hook ? `<div class="intro-sec"><em>Remember</em><p>${esc(hook)}</p></div>` : ''}
@@ -60,7 +60,7 @@ function weakReportHTML(entries, opts){
   const cards = r.cardIds.slice(0, 3).map(byId).filter(Boolean);
   const head = r.key ? `${r.count} of your ${r.total} misses were ${esc(Weak.PATTERN_PHRASE[r.key])} questions` : `You missed ${r.total} questions`;
   const rows = cards.map(c => { const h = weakHook(c); return `<div class="wk-rrow"><b>${esc(c.name)}</b>${h ? `<small>${esc(h)}</small>` : ''}</div>`; }).join('');
-  const ids = cards.filter(c => owned(c) && canStudyCard(c.id)).map(c => c.id);
+  const ids = cards.filter(c => canStudyCard(c.id)).map(c => c.id);
   return `<div class="wk-report ${opts && opts.sys ? 'sys' : ''}"><h3>${head}</h3>${rows}
     ${r.key && typeof plBtn === 'function' ? plBtn(r.key) : ''}
     ${ids.length ? `<button class="btn-big gold" data-act="weak-drill-these" data-ids="${ids.join(',')}">${PLAY_ICON} DRILL THESE</button>` : ''}</div>`;

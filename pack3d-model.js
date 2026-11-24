@@ -4,6 +4,9 @@
    PackModel3D.attach(btn, packImg, line, tearY) has the same controller as Pack3D: { peel(p, dir), finish(dir, done), destroy() }.
    It rejects when it can't run (unknown pack art, no WebGL, files missing); openPack then falls back to pack3d.js. */
 (function(){
+  // The strip curl, strip fling, foil flecks, body shake, opened-art swap and lean are kept but switched off: opening is just a small lift, then the whole
+  // pack drops and fades. Set TEAR_FX to true (or add ?packtear=1 to the page address) to bring the full tear back.
+  const TEAR_FX = false || /[?&]packtear=1\b/.test(location.search);
   const THREE_URLS = ['three.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'];
   const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
   const reducedMotion = () => window.__CLERK_QUEST_REDUCE_MOTION__ === true || motionQuery.matches;
@@ -19,9 +22,10 @@
     const three = window.THREE ? Promise.resolve() : THREE_URLS.reduce((p, u) => p.catch(() => loadScript(u).then(() => { if (!window.THREE) throw 0; })), Promise.reject());
     return three.then(() => THREE.GLTFLoader ? 0 : loadScript('pack3d/GLTFLoader.js')).then(() => { if (!THREE.GLTFLoader) throw new Error('no GLTFLoader'); });
   }
+  const GLB_V = '20261012b';   // bump when the pack3d/*.glb files are rebuilt, so phones and browsers fetch the new ones
   function glbFor(src){
     const m = /(?:^|\/)pack(?:_(s[2-9]|tricks))?\.(?:png|webp|jpe?g)(?:$|\?)/.exec(String(src));
-    return m ? 'pack3d/pack_' + (m[1] || 's1') + '.glb' : null;
+    return m ? 'pack3d/pack_' + (m[1] || 's1') + '.glb?v=' + GLB_V : null;
   }
   // where the packet sits inside the pack art: the alpha bounding box (+4px), the same crop foil_pack.py made
   function artBox(img){
@@ -65,7 +69,7 @@
   const openedImg = packImg => { const u = openedFor(packImg); return u ? imgOnce(u).catch(() => null) : Promise.resolve(null); };
   function preload(packImg){
     const url = glbFor(packImg); if (!url) return Promise.resolve(false);
-    openedImg(packImg);
+    if (TEAR_FX) openedImg(packImg);
     return Promise.all([gltfOnce(url), imgOnce(packImg)]).then(() => true, () => false);
   }
 
@@ -143,7 +147,7 @@
     const url = glbFor(packImg);
     if (!url) throw new Error('no 3D model for ' + packImg);
     const W = btn.clientWidth, H = btn.clientHeight; if (!W || !H) throw new Error('pack not laid out');
-    const [gltf0, img, openImg] = await Promise.all([gltfOnce(url), imgOnce(packImg), openedImg(packImg)]);
+    const [gltf0, img, openImg] = await Promise.all([gltfOnce(url), imgOnce(packImg), TEAR_FX ? openedImg(packImg) : null]);
     const gltf = { scene: gltf0.scene.clone(true) };
     if (!btn.isConnected) throw new Error('pack closed');
     const box = artBox(img);
@@ -259,6 +263,7 @@
     flecks.frustumCulled = false; floatG.add(flecks);
     let fNext = 0, anyFleck = false;
     const spawnFleck = (x, y) => {
+      if (!TEAR_FX) return;
       x -= ctr.x; y -= ctr.y;
       const i = fNext++ % FN; anyFleck = true;
       fPos.set([x, y, 0.02 + Math.random() * 0.05], i * 3);
@@ -291,9 +296,9 @@
 
     // state
     const st = { phase:'idle', t:0, target:0, fold:0, rx:0, ry:0, done:null, flyT:-1, shown:false, dropT:-1,
-      yaw:0, yawV:0, yawTgt:0, spin:null, pendP:-1, pendD:1, waitFin:null };
+      yaw:0, yawV:0, yawTgt:0, spin:null, pendP:-1, pendD:1, waitFin:null, press:0, pressTgt:0, b0:0 };
     let live = true, raf = 0, prev = performance.now(), reduce = reducedMotion();
-    const TEAR_T = .55, FLY_START = .4, FLY_T = .7, DROP_DELAY0 = .62, DROP_DELAY_OPEN = .9, OPEN_FADE = .08, DROP_T = 1.1, TILT_IN = .22, TILT_OUT = .3, TILT = 0.7;   // after the tear the top leans toward you so the silver inside shows, then the packet drops
+    const SHAKE_T = .9, TEAR_T = .55, FLY_START = .4, FLY_T = .7, DROP_DELAY0 = .62, DROP_DELAY_OPEN = .9, OPEN_FADE = .08, DROP_T = 1.1, TILT_IN = .22, TILT_OUT = .3, TILT = 0.7;   // after the tear the top leans toward you so the silver inside shows, then the packet drops
     const dropDelay = () => opened && !reduce ? DROP_DELAY_OPEN : DROP_DELAY0;
     const schedule = () => { if (live && !raf && !document.hidden) raf = requestAnimationFrame(frame); };
     const motionChanged = () => { reduce = reducedMotion(); };
@@ -350,6 +355,29 @@
       stripG.rotation.set(-0.8 * f, dir * 0.5 * f, -dir * 1.4 * f);
       setFade(stripObj, 1 - clamp01((f - 0.35) / 0.65));
     }
+    // Simple burst helpers. b 0..1 is how far the build-up has come (shake, inner glow, outer aura).
+    const BODY_MATS = []; bodyObj.traverse(o => { if (o.isMesh) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => { if (m.emissive) BODY_MATS.push([m, m.emissive.clone(), m.emissiveIntensity]); }); });
+    const ovEl = btn.closest('.pk'), WARM = new THREE.Color(.9, .55, .18);
+    function setBuild(b){
+      if (Math.abs(b - (setBuild.last || 0)) < .002 && b < .002) return; setBuild.last = b;
+      btn.style.setProperty('--bst', b.toFixed(3));
+      if (ovEl) ovEl.style.setProperty('--bst', b.toFixed(3));
+    }
+    function shakePack(b, t, scaleB){
+      const a = b * b, freq = 38 + 70 * b;   // faster and harder as it builds
+      packG.position.set(Math.sin(t * freq) * .018 * a, Math.sin(t * freq * 1.3 + 1) * .012 * a, 0);
+      packG.rotation.set(0, 0, Math.sin(t * freq * .8 + 2) * .05 * a);
+      packG.scale.setScalar(1 + .07 * scaleB * scaleB);
+    }
+    function burstNow(){
+      if (st.phase !== 'open') return;
+      st.phase = 'gone';
+      setBuild(0); packG.position.set(0, 0, 0); packG.rotation.set(0, 0, 0); packG.scale.setScalar(1);
+      const cb = st.done; st.done = null;
+      cv.style.visibility = 'hidden';   // the pack is gone in the flash
+      if (cb) cb(!reduce);
+      setTimeout(destroy, 0);
+    }
     function update(dt, time){
       // tilt: mirror the button's own spring (packTilt sets --rx / --ry); with reduced motion those stay at 0
       const trx = reduce ? 0 : -cssNum('--rx') * Math.PI / 180 * 1.15, try_ = reduce ? 0 : cssNum('--ry') * Math.PI / 180 * 1.15;
@@ -366,7 +394,21 @@
         if (st.pendP >= 0 && (st.phase === 'idle' || st.phase === 'peel')) { const pp = st.pendP; st.pendP = -1; peelNow(pp, st.pendD); }
         if (st.waitFin) { const w = st.waitFin; st.waitFin = null; finishNow(w.d, w.done); }
       }
-      if (st.phase === 'idle' || st.phase === 'peel') {
+      if (!TEAR_FX && (st.phase === 'idle' || st.phase === 'peel')) {   // the swipe builds the opening: a growing tremble and warm glow while the finger moves
+        st.press += (st.pressTgt - st.press) * k;
+        const b = reduce ? 0 : st.press * .5; shakePack(b, time, b); setBuild(b);
+      } else if (!TEAR_FX && st.phase === 'open') {
+        // Simple burst: the pack shakes (quick, building), glows from inside, then bursts in light and is gone
+        st.t += dt;
+        if (reduce) {   // no shake or rays: a quick soft fade into the reveal
+          const f = clamp01(st.t / .3); setFade(bodyObj, 1 - f); setFade(stripObj, 1 - f);
+          if (f >= 1) burstNow();
+        } else {
+          const b = Math.max(st.b0, ease(clamp01(st.t / SHAKE_T)));
+          shakePack(b, st.t, b); setBuild(b);
+          if (st.t >= SHAKE_T) burstNow();
+        }
+      } else if (st.phase === 'idle' || st.phase === 'peel') {
         // follow the finger: ease the fold toward the target
         st.fold += (st.target - st.fold) * (1 - Math.pow(.0005, dt));
         U.uFold.value = st.fold > 0.003 ? -0.02 + st.fold : -9;
@@ -412,11 +454,11 @@
       raf = 0; if (!live) return;
       if (!cv.isConnected) { destroy(); return; }
       const dt = Math.min((now - prev) / 1000, .05); prev = now;
-      update(window.__freeze3d ? 0 : dt, now / 1000);
+      const fx = window.__packFx; update(window.__freeze3d || (fx && fx.freeze) ? 0 : dt * ((fx && fx.slow) || 1), now / 1000);
       if (!live) return;
       renderer.render(scene, camera);
       if (!st.shown) {   // first picture is ready: swap the flat pack for the 3D one
-        st.shown = true; cv.style.visibility = 'visible'; btn.classList.add('m3d');
+        st.shown = true; cv.style.visibility = 'visible'; btn.classList.add('m3d'); if (!TEAR_FX) btn.classList.add('simple');
         btn.querySelector('.pk-slash')?.style.setProperty('--cut-y', cutPct.toFixed(2) + '%');
         btn.querySelectorAll('.pk-body, .pk-rest, .pk-flap').forEach(el => { el.style.visibility = 'hidden'; });
       }
@@ -434,14 +476,16 @@
       own.forEach(m => { ['map', 'normalMap', 'metalnessMap', 'roughnessMap', 'emissiveMap', 'aoMap'].forEach(k => m[k] && m[k].dispose()); m.dispose(); });
       fGeo.dispose(); flecks.material.dispose(); dotTex.dispose(); disposables.forEach(d => d.dispose());
       renderer.dispose(); try { renderer.forceContextLoss(); } catch (_) {}
-      cv.remove(); btn.classList.remove('m3d');
+      cv.remove(); btn.classList.remove('m3d', 'simple');
     }
     function peelNow(p, d){
-      if (st.phase === 'tear' || st.phase === 'drop') return;
+      if (st.phase === 'tear' || st.phase === 'drop' || st.phase === 'open') return;
+      if (!TEAR_FX) { st.pressTgt = Math.max(st.pressTgt, clamp01(p)); schedule(); return; }
       if (st.phase === 'idle') { st.phase = 'peel'; setDir(d); }
       st.target = Math.max(st.target, clamp01(p) * 0.75 * uMax); schedule();
     }
     function finishNow(d, done){
+      if (!TEAR_FX) { st.phase = 'open'; st.t = 0; st.done = done; st.b0 = st.press * .5; st.pressTgt = 0; schedule(); return; }
       if (st.phase === 'idle') setDir(d);
       st.phase = 'tear'; st.t = 0; st.done = done; st.fold0 = Math.max(0, st.fold);
       st.tearDur = TEAR_T * (1 - clamp01(st.fold0 / foldEnd()) * .5) + .15;
@@ -452,7 +496,7 @@
     return {
       // p: 0..1 of the way across; dir: 1 = torn from the left, -1 = from the right
       peel(p, d){
-        if (!live || st.phase === 'tear' || st.phase === 'drop') return;
+        if (!live || st.phase === 'tear' || st.phase === 'drop' || st.phase === 'open') return;
         if (!isFront()) { st.pendP = Math.max(st.pendP, p); st.pendD = d; requestFront(); return; }   // tearing needs the front: turn it round first
         peelNow(p, d);
       },
@@ -463,8 +507,11 @@
         finishNow(d, done);
       },
       destroy,
+      burst: !TEAR_FX,   // opening ends in a burst of light (index.html packTorn builds the flash and fans the cards)
+      flip(){ if (!live || st.phase !== 'idle' && st.phase !== 'peel') return; st.yawTgt = Math.round(st.yaw / Math.PI) * Math.PI + Math.PI; schedule(); },
+      _dbg: { setT(t){ st.t = t; schedule(); }, state: () => ({ phase:st.phase, t:st.t, yaw:st.yaw }) },
     };
   }
 
-  window.PackModel3D = { attach, preload, glbFor, openedFor, makeOpened, regFor, OPENED_REG };
+  window.PackModel3D = { TEAR_FX, attach, preload, glbFor, openedFor, makeOpened, regFor, OPENED_REG };
 })();
