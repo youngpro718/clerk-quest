@@ -124,6 +124,7 @@ const SERIES_DEFS = [
   { n:6, label:'Series 6 · Look-alike Rules', test:c => c.series === 6, pack:'pack_s6', deck:'deck_s6' },
   { n:7, label:'Series 7 · Family Court', test:c => c.series === 7, pack:'pack_s7', deck:'deck_s7' },   // index.html drops it while every Series 7 card is a draft
   { n:8, label:'Series 8 · Criminal Procedure', test:c => c.series === 8, pack:'pack_blank', deck:'deck_box' },   // plain pack and deck until the newspaper kit has its own; index.html drops it while every Series 8 card is a draft
+  { n:9, label:'Series 9 · Other Laws', test:c => c.series === 9, pack:'pack_blank', deck:'deck_box' },   // plain pack and deck for now; index.html drops it while every Series 9 card is a draft
 ];
 const seriesDef = n => SERIES_DEFS.find(d => d.n === +n);
 const seriesPackArt = n => artSrc(seriesDef(n).pack);

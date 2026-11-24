@@ -22,6 +22,7 @@ function welcomeVisualHTML(){
 function welcomeHTML(){
   return `<div class="wl">${brandHTML('small')}${welcomeVisualHTML()}<h2>${esc(WELCOME.h)}</h2><p>${esc(WELCOME.p)}</p>
     <button class="btn-big gold" data-act="wl-pack">${ICO('pack')} OPEN MY FIRST PACK</button>
+    ${!wlPreview && typeof ptOpen === 'function' ? `<button class="wl-signin wl-plain" data-act="pt-open">Just want a practice test? Skip the cards.</button>` : ''}
     ${!wlPreview && typeof cloudUser === 'function' && !cloudUser() ? `<button class="wl-signin" data-act="wl-signin">I already have an account · Sign in</button>` : ''}</div>`;
 }
 function showWelcome(){

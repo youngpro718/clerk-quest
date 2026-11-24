@@ -13,14 +13,25 @@ const EXAM_HISTORY_MAX = 20;
    questions come from each law, so the share is a guess: the number of articles, parts or section groups the JG-20 subject
    list (May 4, 2026) names for that law. Laws with no cards drop out and their share goes to the rest. Change here. */
 const EXAM_WEIGHTS = { CPL:39, CPLR:22, FCA:11, PL:3, UR:3, MHL:3, DRL:1, RPAPL:1, VTL:1, OTHER:1 };
+/* the same count for the Associate and Principal lists (September 16, 2026); Principal adds 3 Social Services Law sections */
+const EXAM_WEIGHTS_BY_TRACK = { cc:EXAM_WEIGHTS,
+  acc:{ CPL:45, CPLR:25, FCA:14, PL:6, DRL:4, UR:3, MHL:3, SSL:2, CORR:2, EXEC:2, RPAPL:1, VTL:1, OTHER:1 },
+  pcc:{ CPL:45, CPLR:25, FCA:14, PL:6, DRL:4, SSL:5, UR:3, MHL:3, CORR:2, EXEC:2, RPAPL:1, VTL:1, OTHER:1 } };
+const examTrackNow = () => typeof examTrack === 'function' ? examTrack() : 'cc';
+const examWeights = () => EXAM_WEIGHTS_BY_TRACK[examTrackNow()] || EXAM_WEIGHTS;
 const EXAM_SET_LAW = { CPLR:'CPLR', CPL:'CPL', DRL:'DRL', 'COURT TERMS':'CPLR', 'COURT PROCEDURES':'CPLR', 'CRIMINAL PROCEDURE':'CPL', 'PENAL LAW':'PL', 'FAMILY COURT':'FCA',
   'FAMILY COURT ACT':'FCA', 'UNIFORM RULES':'UR', 'DOMESTIC RELATIONS LAW':'DRL' };
 /* the law a card belongs to: the first law named in its source citation, else its set */
 function examLaw(c){
-  const cite = String((c && c.source && c.source.cite) || (c && c.cite) || ''), m = cite.match(/^\s*(CPLR|CPL|PL|FCA|DRL|RPAPL|VTL|MHL|Uniform Rules?|UR)\b/i);
+  const cite = String((c && c.source && c.source.cite) || (c && c.cite) || ''), m = cite.match(/^\s*(CPLR|CPL|PL|FCA|DRL|RPAPL|VTL|MHL|SSL|Uniform Rules?|UR)\b/i);
   if (m) { const k = m[1].toUpperCase(); return k.startsWith('UNIFORM') ? 'UR' : k; }
   return EXAM_SET_LAW[c && c.set] || 'OTHER';
 }
+/* Longest-answer giveaway: in about 6 of 10 bank questions the right answer is the longest choice, so "pick the longest" beats
+   chance. Until the wrong choices are rewritten, an exam takes at most this share of such questions (chance with 4 choices is
+   25%); a subject goes over it only when it has no other question left, so the even rotation across subjects comes first. */
+const EXAM_LONGEST_MAX = 0.3;
+const examLongest = q => Array.isArray(q.c) && q.c.length >= 4 && String(q.a).length >= Math.max(...q.c.map(x => String(x).length));
 
 /* every multiple-choice question on every card with a bank (style 'study'), plus the exam-style set written the way the
    test writes it (exam-questions.js, style 'exam'); true/false and generated skill games are left out */
@@ -122,14 +133,15 @@ function examText(it){
 
 const examQuestions = () => (typeof window !== 'undefined' && Array.isArray(window.CQ_EXAM_QUESTIONS)) ? window.CQ_EXAM_QUESTIONS : [];
 const examOk = q => q && q.type !== 'tf' && q.ex !== false && Array.isArray(q.c) && q.c.length >= 3 && q.c.includes(q.a);
+/* only questions on the chosen exam's subject list (exam-scope.js); every question when that file isn't loaded */
 function examPool(){
-  const out = [], cardOf = {};
+  const out = [], cardOf = {}, t = examTrackNow(), onTrack = (q, c) => typeof questionOnTrack !== 'function' || questionOnTrack(q, c, t);
   CARDS.forEach(c => {
     cardOf[c.id] = c;
     if (c.gen || !Array.isArray(c.bank)) return;
-    c.bank.forEach(q => { if (examOk(q)) out.push({ cardId:c.id, set:c.set || 'OTHER', law:examLaw(c), q, style:'study' }); });
+    c.bank.forEach(q => { if (examOk(q) && onTrack(q, c)) out.push({ cardId:c.id, set:c.set || 'OTHER', law:examLaw(c), q, style:'study' }); });
   });
-  examQuestions().forEach(q => { const c = cardOf[q.card]; if (c && examOk(q)) out.push({ cardId:c.id, set:c.set || 'OTHER', law:examLaw(c), q, style:'exam' }); });
+  examQuestions().forEach(q => { const c = cardOf[q.card]; if (c && examOk(q) && onTrack(q, c)) out.push({ cardId:c.id, set:c.set || 'OTHER', law:examLaw(c), q, style:'exam' }); });
   return out;
 }
 
@@ -137,17 +149,22 @@ function examPool(){
    shuffled order), at most `cap` per card, no repeats; choices shuffled and frozen */
 function pickExam(n, rand = Math.random){
   const shuf = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-  const cap = Math.max(2, Math.ceil(n / 30)), used = {}, bySet = {}, picked = [];
+  const cap = Math.max(2, Math.ceil(n / 30)), used = {}, bySet = {}, picked = [], longMax = Math.floor(n * EXAM_LONGEST_MAX);
+  let longN = 0;
   shuf(examPool()).forEach(p => (bySet[p.law] = bySet[p.law] || []).push(p));   // grouped by law
   for (const s in bySet) bySet[s] = [...bySet[s].filter(p => p.style === 'exam'), ...bySet[s].filter(p => p.style !== 'exam')];   // exam-style first
-  const sets = shuf([].concat(...Object.keys(bySet).map(l => Array(Math.max(1, EXAM_WEIGHTS[l] || 1)).fill(l))));
+  const W = examWeights(), sets = shuf([].concat(...Object.keys(bySet).map(l => Array(Math.max(1, W[l] || 1)).fill(l))));
   for (let progress = true; picked.length < n && progress; ) {
     progress = false;
     for (const s of sets) {
       if (picked.length >= n) break;
-      const list = bySet[s], k = list.findIndex(p => (used[p.cardId] || 0) < cap);
+      const list = bySet[s], free = p => (used[p.cardId] || 0) < cap;
+      // once the longest-answer share is used up, take this law's next question whose answer is not the longest, if any
+      let k = longN >= longMax ? list.findIndex(p => free(p) && !examLongest(p.q)) : -1;
+      if (k < 0) k = list.findIndex(free);
       if (k < 0) continue;
       const p = list.splice(k, 1)[0];
+      if (examLongest(p.q)) longN++;
       used[p.cardId] = (used[p.cardId] || 0) + 1; picked.push(p); progress = true;
     }
   }
@@ -155,15 +172,17 @@ function pickExam(n, rand = Math.random){
     c:shuf(p.q.c), a:p.q.a, w:p.q.w || '' }));
 }
 
-function startExam(n, now = Date.now(), rand = Math.random){
-  const items = pickExam(n, rand);
-  S.exam = { id:'x' + now.toString(36), n:items.length, startedAt:now, deadline:now + items.length * EXAM_MIN_PER_Q * 60000,
+/* opts.untimed: no clock (the plain test page offers it); the deadline is then far away and never shown */
+function startExam(n, now = Date.now(), rand = Math.random, opts = {}){
+  const items = pickExam(n, rand), untimed = !!opts.untimed;
+  S.exam = { id:'x' + now.toString(36), track:examTrackNow(), n:items.length, startedAt:now,
+    deadline:untimed ? now + 365 * 864e5 : now + items.length * EXAM_MIN_PER_Q * 60000, ...(untimed ? { untimed:true } : {}),
     items, answers:{}, flags:{}, at:0 };
   save();
   return S.exam;
 }
 
-const examExpired = (now = Date.now()) => !!(S.exam && now >= S.exam.deadline);
+const examExpired = (now = Date.now()) => !!(S.exam && !S.exam.untimed && now >= S.exam.deadline);
 
 function scoreExam(x){
   const bySet = {}; let right = 0;
@@ -184,7 +203,7 @@ function submitExam(now = Date.now()){
     if (!ok) Weak.logMiss(it.cardId, it.q, x.answers[i], 'exam', false, now);
   });
   const sc = scoreExam(x);
-  const rec = { at:now, n:x.n, right:sc.right, total:sc.total, ms:Math.min(now, x.deadline) - x.startedAt, bySet:sc.bySet };
+  const rec = { at:now, track:x.track || 'cc', n:x.n, right:sc.right, total:sc.total, ms:Math.min(now, x.deadline) - x.startedAt, bySet:sc.bySet, ...(x.untimed ? { untimed:true } : {}) };
   S.examHistory = [rec, ...(Array.isArray(S.examHistory) ? S.examHistory : [])].slice(0, EXAM_HISTORY_MAX);
   S.examLast = { ...x, result:rec };
   delete S.exam;
@@ -219,12 +238,16 @@ const EXAM_SCREENS = {
       note = `<div class="exs-alert">Time ran out on your last exam, so it was submitted. <button class="exs-link" data-act="push" data-s="examresult">See the results</button></div>`;
     }
     const pool = examPool().length, hist = (Array.isArray(S.examHistory) ? S.examHistory : []).slice(0, 3);
+    const trackName = typeof examTrackInfo === 'function' ? examTrackInfo().short : 'Court Clerk';
+    const trackOf = h => typeof EXAM_TRACKS === 'object' && EXAM_TRACKS[h.track || 'cc'] ? ' · ' + EXAM_TRACKS[h.track || 'cc'].short : '';
     const choose = S.exam
-      ? `<div class="exs-resume"><b>Exam in progress</b><span>${Object.keys(S.exam.answers).length} of ${S.exam.n} answered · ${exClock(S.exam.deadline - Date.now())} left</span>
+      ? `<div class="exs-resume"><b>Exam in progress</b><span>${Object.keys(S.exam.answers).length} of ${S.exam.n} answered · ${S.exam.untimed ? 'untimed' : exClock(S.exam.deadline - Date.now()) + ' left'}</span>
           <button class="exs-go" data-act="ex-resume">Resume exam</button></div>`
       : `<div class="exs-sizes">${EXAM_SIZES.map(n => `<button class="exs-size" data-act="ex-start" data-n="${n}"><b>${Math.min(n, pool)} questions</b><small>${exLimit(Math.min(n, pool))}</small></button>`).join('')}</div>`;
     return { title:'Practice Exam', body:`<div class="exs">${note}
-      <p class="exs-lead">A timed test across every subject, written like the Court Clerk exam: multiple choice, four choices, A to D. Questions vary in difficulty; some are easier and some harder than the real test.</p>
+      <p class="exs-lead">A timed test across every subject on the ${esc(trackName)} list, written like the real exam: multiple choice, four choices, A to D. Questions vary in difficulty; some are easier and some harder than the real test.</p>
+      ${S.exam ? '' : typeof examTrackPickerHTML === 'function' ? `<h3>Your exam</h3>${examTrackPickerHTML()}` : ''}
+      ${!S.exam && examTrackNow() !== 'cc' ? `<p class="exs-label">The app doesn't have questions yet for every law on the ${esc(trackName)} list, so this practice exam covers ${pool} questions from the parts it has. More are coming.</p>` : ''}
       ${choose}
       <h3>How it works</h3>
       <ul class="exs-rules">
@@ -233,8 +256,9 @@ const EXAM_SCREENS = {
         <li>Unanswered questions count as wrong.</li>
         <li>Your answers update your recall, so what you miss comes back in Today's review. No XP or coins.</li>
       </ul>
+      <button class="exs-link" data-act="pt-open">Prefer a plain test page with no cards or games? Open it here.</button>
       <p class="exs-label">Practice set. Questions come from the study cards and are not yet reviewed by court clerks. Your score is practice, not a prediction.</p>
-      ${hist.length ? `<h3>Recent scores</h3><div class="exs-hist">${hist.map(h => `<div><b>${exPct(h.right, h.total)}%</b><span>${h.right} of ${h.total} · ${new Date(h.at).toLocaleDateString()}</span></div>`).join('')}</div>` : ''}
+      ${hist.length ? `<h3>Recent scores</h3><div class="exs-hist">${hist.map(h => `<div><b>${exPct(h.right, h.total)}%</b><span>${h.right} of ${h.total}${esc(trackOf(h))} · ${new Date(h.at).toLocaleDateString()}</span></div>`).join('')}</div>` : ''}
     </div>` };
   },
   examresult(p){
@@ -283,11 +307,13 @@ function examClose(){
 function examTick(){
   const x = S.exam; if (!x) { examClose(); return; }
   const left = x.deadline - Date.now(), t = document.getElementById('ex-timer');
+  if (x.untimed) return;
   if (t) { t.textContent = exClock(left); t.classList.toggle('low', left < 5 * 60000); }
   if (left <= 0) examFinish(true);
 }
 function examFinish(auto){
   submitExam(); examClose(); exConfirm = exMap = false;
+  if (typeof ptActive === 'function' && ptActive()) { ptShowResult(auto); return; }   // the plain test page shows its own results
   push('examresult', { auto:auto ? 1 : 0 });
 }
 function examRender(){
@@ -295,7 +321,7 @@ function examRender(){
   const i = Math.min(Math.max(0, x.at), x.n - 1), it = x.items[i], chosen = x.answers[i];
   const answered = Object.keys(x.answers).length, flagged = Object.values(x.flags).filter(Boolean).length, left = x.deadline - Date.now();
   const head = `<div class="ex-top" role="banner"><div class="ex-title"><b>PRACTICE EXAM</b><span>Question ${i + 1} of ${x.n}</span></div>
-    <div class="ex-tools"><span id="ex-timer" class="ex-timer ${left < 5 * 60000 ? 'low' : ''}" role="timer" aria-label="Time left">${exClock(left)}</span>
+    <div class="ex-tools">${x.untimed ? '' : `<span id="ex-timer" class="ex-timer ${left < 5 * 60000 ? 'low' : ''}" role="timer" aria-label="Time left">${exClock(left)}</span>`}
       <button class="ex-flag ${x.flags[i] ? 'on' : ''}" data-act="ex-flag" aria-pressed="${!!x.flags[i]}">${x.flags[i] ? 'Flagged' : 'Flag'}</button>
       <button class="ex-exit" data-act="ex-exit">Exit</button></div></div>`;
   let main;
@@ -333,7 +359,7 @@ document.addEventListener('click', e => {
     case 'ex-submit-ask': exConfirm = true; exMap = false; break;
     case 'ex-keep': exConfirm = false; break;
     case 'ex-submit': examFinish(false); return;
-    case 'ex-exit': save(); examClose(); refresh(); return;
+    case 'ex-exit': save(); examClose(); if (typeof ptActive === 'function' && ptActive()) ptRender(); else refresh(); return;
   }
   save(); examRender();
   if (a !== 'ex-choose' && a !== 'ex-flag') document.querySelector('#exam-root .ex-body')?.scrollTo(0, 0);
