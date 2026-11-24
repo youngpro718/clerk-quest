@@ -11,9 +11,11 @@ const REVIEW_MAX = 6;   // a mixed review round: one question per card
 const dayKeyOf = ts => { const d = new Date(+ts); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
 const onToday = ts => !!ts && dayKeyOf(ts) === todayKey();
 
-/* what to come back to: due, then shaky, then cold cards that have no recall record yet. Owned cards with questions. */
+/* what to come back to: due, then shaky, then cold cards that have no recall record yet. Studyable cards with questions
+   (owned ones, or every card once study is open: canStudyCard decides). */
+const studyable = c => !!c && (typeof canStudyCard === 'function' ? canStudyCard(c.id) : owned(c));
 function reviewPile(now = Date.now()){
-  const rec = id => (S.recall || {})[id], mine = Recall.examCards().filter(owned);
+  const rec = id => (S.recall || {})[id], mine = Recall.examCards().filter(studyable);
   const due = mine.filter(c => { const r = rec(c.id); return r && r.box > 0 && r.due <= now; })
     .sort((a, b) => rec(a.id).due - rec(b.id).due);
   const shaky = mine.filter(c => { const r = rec(c.id); return r && !due.includes(c) && (r.right || 0) + (r.wrong || 0) > 0 && Recall.strength(c.id, now) < .4; })
@@ -23,10 +25,10 @@ function reviewPile(now = Date.now()){
   return [...due, ...shaky, ...cold].map(c => c.id);
 }
 
-/* the next owned card never studied, in built-in lesson order, then card order */
+/* the next studyable card never studied, in built-in lesson order, then card order */
 function nextCard(){
   const order = [...LESSONS.flatMap(L => L.cards || []), ...CARDS.map(c => c.id)];
-  return order.find(id => { const c = byId(id); return c && owned(c) && c.bank && c.bank.length && !S.cards[id].last; }) || null;
+  return order.find(id => { const c = byId(id); return c && studyable(c) && c.bank && c.bank.length && !(S.cards[id] || {}).last; }) || null;
 }
 
 /* pages finished on a docket, over all its levels (old saves kept pages on the record itself) */
@@ -34,6 +36,16 @@ function docketProgress(id){
   const r = dockets().find(x => x.id === id); if (!r) return 0;
   const parts = r.lv ? Object.values(r.lv) : [r];
   return parts.reduce((n, x) => n + doneCount({ done:(x && x.done) || {} }), 0);
+}
+
+/* the weekly practice exam: offered once a week after a few cards are studied, so misses feed tomorrow's review */
+const EXAM_EVERY_DAYS = 7, EXAM_AFTER_CARDS = 5, EXAM_TODAY_N = 25;
+function examDue(now = Date.now()){
+  if (typeof startExam !== 'function' || S.exam) return false;
+  const studied = Object.values(S.cards || {}).filter(x => x && x.last).length;
+  if (studied < EXAM_AFTER_CARDS) return false;
+  const last = Array.isArray(S.examHistory) && S.examHistory[0];
+  return !last || now - last.at >= EXAM_EVERY_DAYS * 864e5;
 }
 
 function buildTodayItems(now = Date.now()){
@@ -45,6 +57,7 @@ function buildTodayItems(now = Date.now()){
   const next = nextCard();
   if (next) items.push({ kind:'next', id:next });
   else if (S.packs > 0) items.push({ kind:'pack', base:S.packsOpened || 0 });
+  if (examDue(now)) items.push({ kind:'exam', base:(S.examHistory || []).length });
   const d = liveDocket();
   if (d) items.push({ kind:'docket', id:d.id, base:docketProgress(d.id) });
   if (!gs) {
@@ -69,6 +82,7 @@ function itemDone(it){
     case 'pack': return (S.packsOpened || 0) > (it.base || 0);
     case 'docket': return docketProgress(it.id) > (it.base || 0);
     case 'quest': { const q = DAILY_QUESTS.find(x => x.id === it.id); return !q || questState(q, 'daily').done; }
+    case 'exam': return (S.examHistory || []).length > (it.base || 0) || (Array.isArray(S.examHistory) && S.examHistory[0] && onToday(S.examHistory[0].at));
   }
   return true;
 }
@@ -83,6 +97,7 @@ function todayRow(it){
     case 'next': { const k = CARD_VIDEOS[it.id], v = k && LESSON_VIDEOS[k];
       return v ? { t:'Watch, then practice: ' + c.name, sub:'Video ' + v.len + ' · then 5 questions' } : { t:'Next: ' + c.name, sub:'New card · 5 questions' }; }
     case 'pack': return { t:'Open a pack for new cards', sub:'New cards to study' };
+    case 'exam': return { t:'Weekly practice exam', sub:EXAM_TODAY_N + ' questions · about ' + Math.round(EXAM_TODAY_N * 1.2) + ' min · misses come back in review' };
     case 'docket': { const d = HOT_DOCKETS.find(x => x.id === it.id), n = d ? daysLeft(d) : 0;
       return { t:'Hot Docket: ' + (d ? d.title : ''), sub:n + ' day' + (n === 1 ? '' : 's') + ' left · finish one page' }; }
     case 'quest': { const q = DAILY_QUESTS.find(x => x.id === it.id), x = q ? questState(q, 'daily') : { val:0, need:0 };
@@ -98,9 +113,9 @@ function heroCard(){
   return cold[0] || (g && g.c) || CARDS.find(owned) || null;
 }
 
-/* the big hero card, dressed for one plan item (or for "done for today" when it is null) */
-function todayHero(it, i, done, total, was = done){
-  const dots = total ? `<span class="td-prog">TODAY · ${done} OF ${total}<i>${Array.from({ length:total }, (_, k) => `<em class="${k < done ? 'on' : ''} ${k >= was && k < done ? 'just' : ''}"></em>`).join('')}</i></span>` : '';
+/* the words (and art) of the hero card for one plan item, or for "done for today" when it is null.
+   Shared by the hero card below and the desk-style Today (home-desk.js). */
+function todayHeroText(it, done, total){
   const ruleStep = it && it.kind === 'gs' && (it.id === 'read' || it.id === 'mark') && typeof ruleCard === 'function';   // these steps open a rule card: show it
   const card = it && (it.kind === 'review' || it.kind === 'next') ? byId(it.id) : (ruleStep && ruleCard()) || heroCard();
   let label, title, what, cta, cls = '', art = card ? homeCharacter(card) : '', name = card ? card.name : '';
@@ -123,12 +138,21 @@ function todayHero(it, i, done, total, was = done){
     art = `<img src="${artSrc('docket_folder')}" alt="">`; name = '';
   } else if (it.kind === 'gs') {
     label = 'GETTING STARTED'; title = r.t; what = '+' + ONB.stepCoins + ' coins for this step.'; cta = 'START';
+  } else if (it.kind === 'exam') {
+    label = 'WEEKLY CHECK-UP'; title = 'Practice exam'; what = EXAM_TODAY_N + ' questions from every subject, timed like the real test. What you miss comes back in your review.'; cta = 'START THE EXAM';
   } else if (it.kind === 'pack') {
     label = 'NEW CARDS'; title = 'Open a pack'; what = 'New cards to study are waiting.'; cta = 'OPEN A PACK';
     art = `<img src="${nextPackArt()}" alt="">`; name = '';
   } else {
     label = 'DAILY QUEST'; title = r.t; what = r.sub.replace(/^Daily quest · /, '') + ' so far today.'; cta = 'KEEP GOING';
   }
+  return { label, title, what, cta, cls, art, name };
+}
+
+/* the big hero card, dressed for one plan item (or for "done for today" when it is null) */
+function todayHero(it, i, done, total, was = done){
+  const dots = total ? `<span class="td-prog">TODAY · ${done} OF ${total}<i>${Array.from({ length:total }, (_, k) => `<em class="${k < done ? 'on' : ''} ${k >= was && k < done ? 'just' : ''}"></em>`).join('')}</i></span>` : '';
+  const { label, title, what, cta, cls, art, name } = todayHeroText(it, done, total);
   const act = it ? `data-act="today-go" data-i="${i}"` : 'data-act="today-more"';
   return `<button class="hero td-hero ${cls}" ${act}>
     <span class="hero-info">${dots}<small>${label}</small><b>${esc(title)}</b>
@@ -143,8 +167,8 @@ function todayTile(it, i, just){
   const art = c ? thumb(c)
     : it.kind === 'docket' ? `<span class="th td-art"><img src="${artSrc('docket_folder')}" alt=""></span>`
     : it.kind === 'pack' ? `<span class="th td-art"><img src="${nextPackArt()}" alt=""></span>`
-    : `<span class="th emo gi">${ICO(it.kind === 'quest' ? 'trophy' : 'check')}</span>`;
-  return `<button class="td-tile ${d ? 'done' : ''} ${just ? 'just' : ''}" data-act="today-go" data-i="${i}" ${d ? 'disabled' : ''}>${art}
+    : `<span class="th emo gi">${ICO(it.kind === 'quest' ? 'trophy' : it.kind === 'exam' ? 'page' : 'check')}</span>`;
+  return `<button class="${['td-tile', d && 'done', just && 'just'].filter(Boolean).join(' ')}" data-act="today-go" data-i="${i}" ${d ? 'disabled' : ''}>${art}
     <span class="td-main"><b><span>${esc(r.t)}</span></b><small>${esc(r.sub)}</small></span><span class="td-tick">${d ? ICO('check') : ''}</span></button>`;
 }
 
@@ -197,6 +221,7 @@ function todayGo(it){
     case 'next': { const k = CARD_VIDEOS[it.id]; if (k && LESSON_VIDEOS[k]) openLessonVideo(k, 'intro', it.id); else studyCard(it.id); return; }
     case 'pack': if (S.packs) openPack(); else push('packs'); return;
     case 'docket': push('docket', { id:it.id }); return;
+    case 'exam': examOpen(); return;   // the start page: the player picks 25, 50 or 90
     case 'quest': { const card = todayPlan().items.find(x => (x.kind === 'review' || x.kind === 'next') && !itemDone(x));
       if (card) todayGo(card); else switchTab('study'); return; }
   }

@@ -25,8 +25,9 @@ const HOLO_SAFE = {
   series5:[[55, 69, 956, 158], [130, 193, 900, 433], [125, 1070, 900, 1313], [72, 1320, 952, 1460]],
   cc:[[30, 28, 995, 108], [116, 102, 908, 314], [53, 1155, 977, 1357], [31, 1380, 995, 1491]],
   pc:[[95, 74, 925, 143], [86, 175, 938, 265], [78, 1035, 946, 1177], [66, 1300, 963, 1394]],
+  news:[[54, 54, 970, 438], [54, 1118, 970, 1494]],   // Series 8 newspaper: masthead to dateline, and the columns to the footer
 };
-const HOLO_SELECTORS = { series1:'.card.series1', series2:'.card.series2', series3:'.card.series3', series4:'.card.series4', series5:'.card.series5', cc:'.card.look-cc', pc:'.card.look-pc' };
+const HOLO_SELECTORS = { series1:'.card.series1', series2:'.card.series2', series3:'.card.series3', series4:'.card.series4', series5:'.card.series5', cc:'.card.look-cc', pc:'.card.look-pc', news:'.card.look-news' };
 
 const fxClamp = (n, a, b) => Math.min(b, Math.max(a, n));
 const fxNum = (v, d, a, b) => (v !== '' && v != null && Number.isFinite(+v)) ? fxClamp(+v, a, b) : d;

@@ -548,6 +548,31 @@ html.cq-reduce-motion .card.look-pc .pc-screen,html.cq-reduce-motion .card.look-
 .s7stamp-overruled b{color:#ff6a55;text-shadow:0 0 .8cqw rgba(217,88,71,.6)}
 .s7stamp-mastered b{color:#ffd76a;text-shadow:0 0 .8cqw rgba(255,215,106,.6)}
 .card.look-pc .stampimg.mastered{z-index:8}
+/* Series 8 · Criminal Procedure: the newspaper front (kit: assets/series8/newspaper-cards-v1, regions in docs/geometry.json). Paper edge,
+   then the comic strip in the window, then the blank front on top; every word is live text. */
+.card.look-news{background:#f2ead7}
+.card.look-news .news-paper,.card.look-news .news-frame{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.card.look-news .news-paper{z-index:0;object-fit:cover}
+.card.look-news .news-strip{position:absolute;z-index:1;object-fit:cover;pointer-events:none}
+.card.look-news .news-frame{z-index:2}
+.card.look-news .t.news{z-index:3;display:flex;align-items:center;color:#33312d;font-family:'Courier Prime',monospace;font-weight:700;line-height:1.1;white-space:nowrap}
+.card.look-news .t.news.num{justify-content:center;font-size:3cqw}
+.card.look-news .t.news.cat{justify-content:center;font-size:3cqw;color:#9d392d;letter-spacing:.06em}
+.card.look-news .t.news.xp{justify-content:center;font-size:2.7cqw}
+.card.look-news .t.news.head{font-family:Georgia,'Times New Roman',serif;font-size:7.4cqw;letter-spacing:-.01em;padding-left:.6cqw}
+.card.look-news .t.news.head.long{font-size:5.8cqw}
+.card.look-news .t.news.by,.card.look-news .t.news.date{font-size:2.1cqw;font-weight:400;padding:0 .8cqw}
+.card.look-news .t.news.date{justify-content:flex-end}
+.card.look-news .t.news.deck{display:block}   /* a block, so the drop cap (::first-letter) works */
+.card.look-news .t.news.deck,.card.look-news .t.news.pic{align-items:flex-start;white-space:normal;font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:3.6cqw;line-height:1.25;padding:1cqw 1.2cqw}
+.card.look-news .t.news.deck::first-letter{float:left;font-size:9cqw;line-height:.8;color:#9d392d;margin:.4cqw .8cqw 0 0;font-weight:700}
+.card.look-news .t.news.pic{flex-direction:column}
+.card.look-news .t.news.pic small{font-family:'Courier Prime',monospace;font-weight:700;font-size:2.2cqw;color:#9d392d;letter-spacing:.1em;margin-bottom:.8cqw}
+.card.look-news .t.news.rar,.card.look-news .t.news.set,.card.look-news .t.news.lvl{font-size:2.5cqw;padding:0 .8cqw}
+.card.look-news .t.news.rar{color:#9d392d}
+.card.look-news .t.news.set{justify-content:center}
+.card.look-news .t.news.lvl{justify-content:flex-end}
+.card.look-news .stampimg.mastered{z-index:8}
 .card .cc-cast.cc-break{object-position:center;z-index:7;scale:1.04;transform-origin:50% 92%;filter:drop-shadow(0 0 .8cqw rgba(255,226,150,.6)) drop-shadow(0 1.3cqw 1cqw rgba(0,0,0,.45))}   /* same box as levels 1 and 2 (no drop): stage lighting and a small lift instead */
 .card .cc-spot{position:absolute;left:2.3%;top:20.8%;width:95.4%;height:54%;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 58%,rgba(255,226,150,.34),rgba(255,200,90,.12) 46%,transparent 74%);mix-blend-mode:screen}
 .card .cc-cast.cc-popin{animation:ccpop .9s cubic-bezier(.2,1.3,.4,1) both}
@@ -618,7 +643,7 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
 .pk-stage{position:relative;width:min(94vw,600px);height:min(64vh,580px);display:flex;align-items:center;justify-content:center;--pkw:min(76vw,330px,37vh)}
 /* the pack in your hand: it floats, turns in 3D (--rx/--ry, set by packTilt), and casts a soft shadow on the floor */
 .pk-pack{position:absolute;width:var(--pkw);aspect-ratio:640/975;border:0;background:none;padding:0;z-index:3;animation:pkfloat 3.2s ease-in-out infinite;
-  transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+  transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(calc(var(--ry,0deg) + var(--fl,0deg)))}
 @keyframes pkfloat{50%{translate:0 -7px}}
 .pk-floor{position:absolute;left:50%;top:calc(50% + var(--pkw) * 975 / 640 / 2 + 6px);width:calc(var(--pkw) * .82);height:calc(var(--pkw) * .13);translate:-50% -50%;border-radius:50%;pointer-events:none;
   background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent);animation:pkfloorbob 3.2s ease-in-out infinite;transition:opacity .4s}
@@ -654,6 +679,25 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
    its cut edge as it goes, with a little lift, like pulling the cards up out of the pack. No fade, so no ghost. */
 .pk-pack.torn .pk-body,.pk-pack.torn .pk-label{transition:transform 1.1s .18s cubic-bezier(.55,0,.3,1);transform:translateY(210%) rotate(4deg)}
 .pk.emerge .pk-card{transition:none !important;opacity:1 !important}
+/* Simple burst (3D pack): the glow builds around the pack (--bst 0..1), then a white-gold flash with rays; the cards start at the burst and fan to their places */
+.pk-3d-model{filter:drop-shadow(0 0 calc(var(--bst,0) * 22px) rgba(255,205,100,calc(var(--bst,0) * 1.2))) brightness(calc(1 + var(--bst,0) * .35))}
+.pk-aura,.pk-bflash{position:absolute;left:50%;top:50%;translate:-50% -50%;pointer-events:none}
+.pk-aura{width:calc(var(--pkw) * 1.9);height:calc(var(--pkw) * 2.6);border-radius:50%;z-index:2;opacity:calc(var(--bst,0) * 1.1);scale:calc(.75 + var(--bst,0) * .5);
+  background:radial-gradient(closest-side,rgba(255,236,170,.95),rgba(255,190,80,.55) 45%,transparent 100%)}
+.pk-bflash{width:0;height:0;z-index:8}
+.pk-bflash i{position:absolute;left:0;top:0;translate:-50% -50%;border-radius:50%;opacity:0}
+.bf-core{width:150vmax;height:150vmax;background:radial-gradient(closest-side,#fff 0,#fff 14%,rgba(255,240,180,.9) 30%,rgba(255,200,90,.45) 50%,transparent 75%)}
+.bf-rays{width:150vmax;height:150vmax;-webkit-mask:radial-gradient(closest-side,#000 12%,transparent 100%);mask:radial-gradient(closest-side,#000 12%,transparent 100%);
+  background:repeating-conic-gradient(rgba(255,244,200,.95) 0 5deg,transparent 5deg 15deg)}
+.pk.bursting .bf-core{animation:bfcore 1.1s ease-out both}
+.pk.bursting .bf-rays{animation:bfrays 1.4s ease-out both}
+@keyframes bfcore{0%{opacity:1;scale:.2}25%{opacity:1;scale:.45}100%{opacity:0;scale:.9}}
+@keyframes bfrays{0%{opacity:0;scale:.1;rotate:0deg}12%{opacity:1}100%{opacity:0;scale:.8;rotate:40deg}}
+.pk.burst .pk-aura{opacity:0}
+.pk.burst .pk-card{transition:none !important;animation:bfcard .85s cubic-bezier(.2,1.2,.4,1) both;animation-delay:calc(.08s + var(--i) * .07s)}
+.pk.burst.emerge .pk-cards{animation:none}
+@keyframes bfcard{0%{opacity:0;scale:.12;rotate:calc((1 - var(--i)) * 70deg)}25%{opacity:1}100%{opacity:1;scale:1;rotate:0deg}}
+.pk.burst.calm .pk-card{animation:fadein .35s both}
 .pk.emerge .pk-cards{animation:pkemerge 1.25s both}
 @keyframes pkemerge{0%{transform:translateY(2%);animation-timing-function:cubic-bezier(.3,0,.4,1)}55%{transform:translateY(-5%);animation-timing-function:cubic-bezier(.4,0,.3,1)}100%{transform:none}}
 .pk-cards{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:clamp(8px,2.4vw,18px);z-index:2;pointer-events:none}
@@ -720,8 +764,19 @@ html.cq-reduce-motion .framebreak-character.series45{transform:translate3d(0,0,0
     linear-gradient(115deg,transparent 40%,rgba(255,255,255,.38) 50%,transparent 60%) calc(100% - var(--gx,50%)) 0/260% 100% no-repeat;
   opacity:var(--go,.7)}   /* the foil shine slides across as the pack turns */
 .pk-pack.torn::after,.pk-pack.ripping::after{display:none}
+.pk-pack.m3d.simple .pk-slash,.pk-pack.m3d.simple .pk-flap{display:none}   /* simple 3D opening: no torn-line glow or flat flap */
 .pk-pack.m3d{transform:none}.pk-pack.m3d::after{display:none}   /* the 3D packet (pack3d-model.js) does its own tilt and shine */
 @media (prefers-reduced-motion:reduce){.pk-bg,.pk-pack,.pk-floor{animation:none}}
+/* turn the pack over: the whole pack spins (--fl, set by packFlip) and the printed back art shows on the far side (pre-mirrored so it reads right once turned) */
+.pk-pack .pk-bk{display:none;transform:scaleX(-1)}
+.pk-pack.has-back .pk-bk{display:block;opacity:0}
+.pk-pack.back.has-back .pk-bk{opacity:1}
+.pk-pack.back>:not(.pk-bk){opacity:0 !important}
+.pk-turn{position:absolute;left:50%;top:calc(50% + var(--pkw) * 975 / 640 / 2 + 8px);translate:-50% 0;width:34px;height:34px;border-radius:50%;z-index:4;padding:0;display:none;align-items:center;justify-content:center;
+  background:rgba(20,16,10,.55);border:1.5px solid rgba(255,255,255,.55);color:#fff;font-size:18px;line-height:1;cursor:pointer;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.pk-pack.has-back~.pk-turn{display:flex}
+.pk-pack.ripping~.pk-turn,.pk-pack.torn~.pk-turn,.pk.out .pk-turn{display:none}
+@media (prefers-reduced-motion:reduce){.pk-pack.has-back>*{transition:opacity .2s}}
 /* pick your pack */
 .pkc{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;overflow:hidden;
   background:radial-gradient(circle at 50% 45%,#3b2a12,#0d0b08 75%);animation:fadein .2s both}
@@ -973,6 +1028,7 @@ html.cq-reduce-motion .ans.wrong.fx::after{animation:none}
 #back.question_s5{--qpanel:url(art/question_s5_question.svg);--tpanel:url(art/question_s5_table.svg);--epanel:url(art/question_s5_explanation.svg);--apanel:url(art/question_s5_answer.svg);--hpanel:url(art/question_s5_hint.svg);--ppanel:url(art/question_s5_points.svg);--xpanel:url(art/question_s5_progress.svg);--qaccent:#243b5c;--qlabel:#b93835;--qpaper:#fff5d9}
 #back.question_s6{--qpanel:url(art/question_s6_question.svg);--tpanel:url(art/question_s6_table.svg);--epanel:url(art/question_s6_explanation.svg);--apanel:url(art/question_s6_answer.svg);--hpanel:url(art/question_s6_hint.svg);--ppanel:url(art/question_s6_points.svg);--xpanel:url(art/question_s6_progress.svg);--qaccent:#0f3851;--qlabel:#b63b32;--qpaper:#fff0cc}
 #back.question_s7{--qpanel:url(art/question_s7_question.svg);--tpanel:url(art/question_s7_table.svg);--epanel:url(art/question_s7_explanation.svg);--apanel:url(art/question_s7_answer.svg);--hpanel:url(art/question_s7_hint.svg);--ppanel:url(art/question_s7_points.svg);--xpanel:url(art/question_s7_progress.svg);--qaccent:#0b2a1a;--qlabel:#5fe04a;--qpaper:#03150f}
+#back.question_s8{--qpanel:url(art/question_s8_question.svg);--tpanel:url(art/question_s8_table.svg);--epanel:url(art/question_s8_explanation.svg);--apanel:url(art/question_s8_answer.svg);--hpanel:url(art/question_s8_hint.svg);--ppanel:url(art/question_s8_points.svg);--xpanel:url(art/question_s8_progress.svg);--qaccent:#33312d;--qlabel:#9d392d;--qpaper:#f7f0df}   /* Series 8 newspaper (tools/s8_art.py) */
 #back[class*="question_s"] .qtext{background:var(--qpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:2.6cqw 3cqw;line-height:1.06}   /* padding lines the text up with the panel art's inner frame */
 #back[class*="question_s"] .rec{background:var(--tpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:3cqw 3cqw 2cqw}
 #back[class*="question_s"] .ans{background-color:transparent;background-image:var(--apanel);background-position:center;background-size:100% 100%;background-repeat:no-repeat;border:0;border-radius:0;box-shadow:0 .65cqw 0 rgba(0,0,0,.28)}
@@ -1579,40 +1635,42 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script src="cloud-sync.js?v=280b2aa4"></script>
-<script src="study.js?v=c0c0a01c"></script>
+<script src="study.js?v=e1e0944a"></script>
 <script src="economy.js?v=7f47f916"></script>
-<script src="store.js?v=8f330790"></script>
+<script src="store.js?v=52a760f9"></script>
 <script src="study/quick-reference/quick-reference.js?v=0128f417"></script>
 <script src="study/quick-reference/series-lessons.js?v=55eee161"></script>
 <script src="curriculum-pilot.js?v=9e0d75af"></script>
 <script src="card-typography.js?v=53a87104"></script>
 <script src="card-title-art.js?v=e1304f60"></script>
 <script src="card-caption-art.js?v=54f165ad"></script>
-<script src="binder.js?v=93d4f0ed"></script>
+<script src="binder.js?v=0fb39163"></script>
 <script src="onboarding.js?v=186490cc"></script>
-<script src="account.js?v=833997ea"></script>
-<script src="admin.js?v=6c047139"></script>
+<script src="account.js?v=f5ef9821"></script>
+<script src="admin.js?v=0348f8de"></script>
 <script src="sandbox.js?v=8db6606a"></script>
 <script src="evolve.js?v=7019cd0e"></script>
 <script src="stickers.js?v=470cc194"></script>
 <script src="dockets.js?v=581f669f"></script>
 <script src="hearing.js?v=e4da21bf"></script>
-<script src="card-fx.js?v=d57c240d"></script>
+<script src="card-fx.js?v=050b362a"></script>
 <script src="holo-gl.js?v=de7962f8"></script>
 <script src="face-map.js?v=d1261e54"></script>
 <script src="char-react.js?v=2d9387fd"></script>
+<script src="home-desk.js?v=27815efb"></script>
 <script src="jigsaw.js?v=f2cee497"></script>
-<script src="lookalike-cards.js?v=24237958"></script>
-<script src="familycourt-cards.js?v=aae2496e"></script>
+<script src="lookalike-cards.js?v=86fdcc7e"></script>
+<script src="familycourt-cards.js?v=99470b26"></script>
+<script src="criminalprocedure-cards.js?v=a9e27540"></script>
 <script src="weakness.js?v=f19e3e69"></script>
-<script src="weak-ui.js?v=b8614c5a"></script>
+<script src="weak-ui.js?v=27817c76"></script>
 <script src="pattern-lessons.js?v=bd455b9f"></script>
 <script src="pattern-lessons-ui.js?v=3ace01b8"></script>
-<script src="today.js?v=3195590f"></script>
-<script src="exam.js?v=a8debae6"></script>
+<script src="today.js?v=7b46d941"></script>
+<script src="exam.js?v=22fd9823"></script>
 <script src="exam-questions.js?v=37d27577"></script>
 <script src="pack3d.js?v=175b3691"></script>
-<script src="pack3d-model.js?v=2b0e7d71"></script>
+<script src="pack3d-model.js?v=1860b3a0"></script>
 <script src="packfield.js?v=b72b00a2"></script>
 <script src="sticker3d.js?v=90437e9d"></script>
 <script src="questions.js?v=8aa56525"></script>
@@ -2148,11 +2206,11 @@ CARDS.push(
     lore:['Kids don\'t go to court alone.','Guardian first. Then parent. Then others.','Married? A spouse living with them can step in.'],
     stickers:{},
     bank:[
-      {lv:1,q:'Under CPLR § 1201, if no guardian ad litem is appointed, who appears for an infant FIRST?',c:['The guardian of the infant\'s property','Any adult relative','The court clerk','The infant alone'],a:'The guardian of the infant\'s property',h:'G comes first.',w:'"…an infant shall appear by the guardian of his property…"'},
-      {lv:2,q:'Under CPLR § 1201, a MARRIED infant may appear by:',c:['An adult spouse residing with the infant','Any spouse, wherever they live','Only a parent','The court clerk'],a:'An adult spouse residing with the infant',h:'Adult, and living with them.',w:'"…or, if the infant is married, by an adult spouse residing with the infant."'},
-      {lv:2,q:'Under CPLR § 1201, what overrides the whole G-P-O list?',c:['The court appointing a guardian ad litem','The infant\'s written consent','A notarized letter from a relative','The clerk\'s approval'],a:'The court appointing a guardian ad litem',h:'"Unless the court appoints…"',w:'The rule begins: "Unless the court appoints a guardian ad litem…"'},
+      {lv:1,q:'Under CPLR § 1201, if no guardian ad litem is appointed, who appears for an infant FIRST?',c:['The guardian of the infant\'s property','Any adult relative','A parent with legal custody of the infant','The infant alone'],a:'The guardian of the infant\'s property',h:'G comes first.',w:'"…an infant shall appear by the guardian of his property…"'},
+      {lv:2,q:'Under CPLR § 1201, a MARRIED infant may appear by:',c:['An adult spouse residing with the infant','Any spouse, wherever they live','Only a parent','A parent having legal custody, never the spouse'],a:'An adult spouse residing with the infant',h:'Adult, and living with them.',w:'"…or, if the infant is married, by an adult spouse residing with the infant."'},
+      {lv:2,q:'Under CPLR § 1201, what overrides the whole G-P-O list?',c:['The court appointing a guardian ad litem','The infant\'s written consent','A notarized letter from a relative','A parent\'s written choice of who will appear'],a:'The court appointing a guardian ad litem',h:'"Unless the court appoints…"',w:'The rule begins: "Unless the court appoints a guardian ad litem…"'},
       {lv:3,q:'Exam format. Under CPLR § 1201, an infant may be represented by: (1) the guardian of his property (2) a parent that has legal custody (3) an adult spouse who resides with the infant',c:['1, 2, and 3','1 only, but not 2 or 3','2 only, but not 1 or 3','1 and 3, but not 2'],a:'1, 2, and 3',h:'All three appear in the rule.',w:'Correct answer: 1, 2, and 3. Each appears in CPLR § 1201 (the spouse when the infant is married).'},
-      {lv:3,q:'An infant has no guardian of the property. The mother has legal custody. No guardian ad litem is appointed. Who appears for the infant under CPLR § 1201?',c:['The mother, as the parent having legal custody','Any adult relative','The court clerk','No one; the case must wait'],a:'The mother, as the parent having legal custody',h:'G is missing, so go to P.',w:'"…if there is no such guardian, by a parent having legal custody…"'},
+      {lv:3,q:'An infant has no guardian of the property. The mother has legal custody. No guardian ad litem is appointed. Who appears for the infant under CPLR § 1201?',c:['The mother, as the parent having legal custody','Any adult relative','A guardian ad litem, who must always be appointed first','No one; the case must wait'],a:'The mother, as the parent having legal custody',h:'G is missing, so go to P.',w:'"…if there is no such guardian, by a parent having legal custody…"'},
     ],
   },
   {
@@ -2306,15 +2364,15 @@ CARDS.push(
     panel:{ kind:'trigger', steps:['STUDENT UNDER 19','SENTENCED FOR A CRIME','COURT NOTIFIES THE SCHOOL'], caption:'Elementary or secondary school' },
     lore:['The court tells the school. Not the parents.','Under 19 means 18 and younger.','College isn\'t covered. K–12 is.'],
     bank:[
-      {lv:1,q:'Under CPL § 380.90(2), who must notify the school?',c:['The court that sentenced the person','The probation department','The district attorney','The student\'s parents'],a:'The court that sentenced the person',h:'The sentencing court.',w:'"…the court that has sentenced such person shall provide notification…"'},
+      {lv:1,q:'Under CPL § 380.90(2), who must notify the school?',c:['The court that sentenced the person','The probation department that wrote the report','The district attorney','The student\'s parents'],a:'The court that sentenced the person',h:'The sentencing court.',w:'"…the court that has sentenced such person shall provide notification…"'},
       {lv:1,q:'CPL § 380.90(2) notice is required for students up to and including what age?',c:['18','16','17','19'],a:'18',h:'"Under the age of nineteen."',w:'"Under the age of nineteen" means up to and including 18. (Official sample Q9.)'},
-      {lv:1,q:'Under CPL § 380.90(2), which schools are covered?',c:['Public or private elementary or secondary schools','Only public high schools','Colleges and universities','Only private schools'],a:'Public or private elementary or secondary schools',h:'K–12, public or private.',w:'The rule covers a student "in a public or private elementary or secondary school."'},
-      {lv:2,q:'Under CPL § 380.90(2), who RECEIVES the notice?',c:['The designated educational official of the school','Every teacher','The school board president','The student\'s classmates'],a:'The designated educational official of the school',h:'One designated person.',w:'Notice goes "to the designated educational official of the school."'},
-      {lv:2,q:'What does the notice under CPL § 380.90(2) cover?',c:['The conviction and sentence','Only the arrest','Only the charges','Only the bail amount'],a:'The conviction and sentence',h:'What happened at the end.',w:'The court notifies the school "of the conviction and sentence."'},
-      {lv:2,q:'WHAT TRIGGERS IT? The CPL § 380.90(2) notice is triggered when the student is:',c:['Sentenced for a crime','Arrested','Arraigned','Indicted'],a:'Sentenced for a crime',h:'IF sentenced…',w:'The duty arises when the student "is sentenced for a crime."'},
-      {lv:3,q:'A 19-year-old high school student is sentenced for a crime. Is notice required under CPL § 380.90(2)?',c:['No. The rule covers persons under 19','Yes, all high school students','Yes, if the school asks','Only if the crime was at school'],a:'No. The rule covers persons under 19',h:'Under 19.',w:'CPL § 380.90(2) applies to persons "under the age of nineteen."'},
-      {lv:3,q:'A 17-year-old enrolled in a private high school is sentenced for a crime. What must happen?',c:['The sentencing court notifies the school\'s designated educational official','Nothing, private schools are excluded','The DA notifies the principal','The student must tell the school'],a:'The sentencing court notifies the school\'s designated educational official',h:'Public or private.',w:'Private secondary schools are covered, and the sentencing court sends the notice.'},
-      {lv:3,q:'A 17-year-old COLLEGE student is sentenced for a crime. Does CPL § 380.90(2) require school notice?',c:['No. It covers elementary or secondary schools','Yes, any school','Yes, if under 19','Only public colleges'],a:'No. It covers elementary or secondary schools',h:'What kind of school?',w:'The rule is limited to "elementary or secondary" schools.'},
+      {lv:1,q:'Under CPL § 380.90(2), which schools are covered?',c:['Public or private elementary or secondary schools','Only public high schools','Colleges and universities','Only public elementary and secondary schools'],a:'Public or private elementary or secondary schools',h:'K–12, public or private.',w:'The rule covers a student "in a public or private elementary or secondary school."'},
+      {lv:2,q:'Under CPL § 380.90(2), who RECEIVES the notice?',c:['The designated educational official of the school','Every teacher','The president of the school district\'s board','The student\'s classmates'],a:'The designated educational official of the school',h:'One designated person.',w:'Notice goes "to the designated educational official of the school."'},
+      {lv:2,q:'What does the notice under CPL § 380.90(2) cover?',c:['The conviction and sentence','Only the arrest','Only the charges','Only the charges and arrest date'],a:'The conviction and sentence',h:'What happened at the end.',w:'The court notifies the school "of the conviction and sentence."'},
+      {lv:2,q:'WHAT TRIGGERS IT? The CPL § 380.90(2) notice is triggered when the student is:',c:['Sentenced for a crime','Arrested','Arraigned on an indictment','Charged with a crime by complaint'],a:'Sentenced for a crime',h:'IF sentenced…',w:'The duty arises when the student "is sentenced for a crime."'},
+      {lv:3,q:'A 19-year-old high school student is sentenced for a crime. Is notice required under CPL § 380.90(2)?',c:['No. The rule covers persons under 19','Yes, all high school students','Yes. The rule covers all students under 21','Only if the crime was at school'],a:'No. The rule covers persons under 19',h:'Under 19.',w:'CPL § 380.90(2) applies to persons "under the age of nineteen."'},
+      {lv:3,q:'A 17-year-old enrolled in a private high school is sentenced for a crime. What must happen?',c:['The sentencing court notifies the school\'s designated educational official','Nothing, because private high schools are not covered by the rule','The district attorney notifies the school\'s principal within ten days','The student must tell the school'],a:'The sentencing court notifies the school\'s designated educational official',h:'Public or private.',w:'Private secondary schools are covered, and the sentencing court sends the notice.'},
+      {lv:3,q:'A 17-year-old COLLEGE student is sentenced for a crime. Does CPL § 380.90(2) require school notice?',c:['No. It covers elementary or secondary schools','Yes, any school','Yes, if under 19','Yes. It covers any school if the student is under 19'],a:'No. It covers elementary or secondary schools',h:'What kind of school?',w:'The rule is limited to "elementary or secondary" schools.'},
     ],
   }),
   Object.assign({}, S2, {
@@ -2334,15 +2392,15 @@ CARDS.push(
     panel:{ kind:'diff', heads:['✔ BAIL','✘ NOT LISTED'], yes:['CASH BAIL','BAIL BOND','CREDIT CARD PAYMENT'], no:['REAL PROPERTY','"EQUITY"'], caption:'CPL § 500.10(9)' },
     lore:['Cash. Bond. Card.','The exam loves adding things that aren\'t on the list.','Three forms. That\'s it.'],
     bank:[
-      {lv:1,q:'Under CPL § 500.10(9), "bail" means:',c:['Cash bail, a bail bond, or money paid with a credit card','Only cash','Cash or real property','Any property worth the bail amount'],a:'Cash bail, a bail bond, or money paid with a credit card',h:'Cash, bond, or card.',w:'CPL § 500.10(9): "\'Bail\' means cash bail, a bail bond or money paid with a credit card."'},
+      {lv:1,q:'Under CPL § 500.10(9), "bail" means:',c:['Cash bail, a bail bond, or money paid with a credit card','Only cash','Cash bail, a bail bond, or a deed to real property','Any property worth the bail amount'],a:'Cash bail, a bail bond, or money paid with a credit card',h:'Cash, bond, or card.',w:'CPL § 500.10(9): "\'Bail\' means cash bail, a bail bond or money paid with a credit card."'},
       {lv:1,type:'tf',q:'TRUE or FALSE: Money paid with a credit card is part of the definition of bail in CPL § 500.10(9).',c:['True','False'],a:'True',h:'Cash, bond, or…',w:'True. Credit card payment is expressly included.'},
-      {lv:1,q:'Exam format. Under CPL § 500.10(9), "bail" means: (1) cash bail or a bail bond (2) real property (3) equity in full force and effect',c:['1 only, but not 2 or 3','1 and 2, but not 3','1 and 3, but not 2','1, 2, and 3'],a:'1 only, but not 2 or 3',h:'Only one item matches the definition.',w:'Correct answer: 1 only. The definition lists cash bail, a bail bond, or money paid with a credit card. (Official sample Q7.)'},
+      {lv:1,q:'Exam format. Under CPL § 500.10(9), "bail" means: (1) cash bail or a bail bond (2) real property (3) equity in full force and effect',c:['1 only, but not 2 or 3','1 and 2, but not 3','1 and 3, but not 2','2 only, but not 1 or 3'],a:'1 only, but not 2 or 3',h:'Only one item matches the definition.',w:'Correct answer: 1 only. The definition lists cash bail, a bail bond, or money paid with a credit card. (Official sample Q7.)'},
       {lv:2,type:'tf',q:'CASH BAIL. Is it in the CPL § 500.10(9) definition?',c:LISTED,a:'Listed as bail',h:'Cash, bond, or card.',w:'Cash bail is listed.'},
       {lv:2,type:'tf',q:'REAL PROPERTY. Is it in the CPL § 500.10(9) definition?',c:LISTED,a:'Not listed',h:'Cash, bond, or card.',w:'Real property is not one of the three items in the definition.'},
       {lv:2,type:'tf',q:'A BAIL BOND. Is it in the CPL § 500.10(9) definition?',c:LISTED,a:'Listed as bail',h:'Cash, bond, or card.',w:'A bail bond is listed.'},
-      {lv:3,q:'How many forms of bail does CPL § 500.10(9) list?',c:['Three','Two','Four','Five'],a:'Three',h:'Cash, bond, card.',w:'Three: cash bail, a bail bond, and money paid with a credit card.'},
+      {lv:3,q:'How many forms of bail does CPL § 500.10(9) list?',c:['Three','Two','Four','Seven'],a:'Three',h:'Cash, bond, card.',w:'Three: cash bail, a bail bond, and money paid with a credit card.'},
       {lv:3,q:'Which is NOT listed in CPL § 500.10(9)?',c:['Real property','Cash bail','A bail bond','Money paid with a credit card'],a:'Real property',h:'Find the extra.',w:'Real property is not in the definition. The three listed forms are cash bail, a bail bond, and credit card payment.'},
-      {lv:3,q:'A defendant\'s family asks to pay the bail amount by credit card. Under CPL § 500.10(9), is that within the definition of bail?',c:['Yes. Money paid with a credit card is bail','No. Only cash counts','No. Only a bail bond counts','Only with the prosecutor\'s consent'],a:'Yes. Money paid with a credit card is bail',h:'Cash, bond, or card.',w:'The definition expressly includes "money paid with a credit card."'},
+      {lv:3,q:'A defendant\'s family asks to pay the bail amount by credit card. Under CPL § 500.10(9), is that within the definition of bail?',c:['Yes. Money paid with a credit card is bail','No. Only cash counts','No. Only a bail bond counts','No. Only cash bail or a bail bond counts as bail'],a:'Yes. Money paid with a credit card is bail',h:'Cash, bond, or card.',w:'The definition expressly includes "money paid with a credit card."'},
     ],
   }),
   Object.assign({}, S2, {
@@ -2444,6 +2502,10 @@ CARDS.push(...LOOKALIKE_DATA.cards.filter(c => c && (LOOKALIKE_DATA.includeDraft
 const FAMILY_COURT_DATA = window.CQ_FAMILY_COURT || { cards:[] };
 CARDS.push(...FAMILY_COURT_DATA.cards.filter(c => c && (FAMILY_COURT_DATA.includeDrafts || !c.draft)).map(familyCourtCard));
 if (typeof SERIES_DEFS !== "undefined" && !CARDS.some(c => c.series === 7)) SERIES_DEFS.splice(SERIES_DEFS.findIndex(d => d.n === 7) >>> 0, 1);
+/* Series 8 · Criminal Procedure (criminalprocedure-cards.js), the newspaper set: same rule as Series 7. */
+const CRIMINAL_PROCEDURE_DATA = window.CQ_CRIMINAL_PROCEDURE || { cards:[] };
+CARDS.push(...CRIMINAL_PROCEDURE_DATA.cards.filter(c => c && (CRIMINAL_PROCEDURE_DATA.includeDrafts || !c.draft)).map(criminalProcedureCard));
+if (typeof SERIES_DEFS !== "undefined" && !CARDS.some(c => c.series === 8)) { const i = SERIES_DEFS.findIndex(d => d.n === 8); if (i >= 0) SERIES_DEFS.splice(i, 1); }
 
 const SERIES3_IDS = new Set(['eightback','reargue','renew','sj120','undodefault','freeze','appeal30']);
 const SERIES3_BACKGROUNDS = {
@@ -2790,8 +2852,9 @@ const ART = {};
 function probeArt(){
   CARDS.forEach(c => { if (c.look === 'cc') c.asset = artSrc(c.ccArt.cast); });   // the look-alike set's cast doubles as its card art (thumbnails, Today hero)
   CARDS.forEach(c => { if (c.look === 'pc') c.asset = artSrc(c.art + '_1'); });   // Series 7: the level 1 screen art is the card art
+  CARDS.forEach(c => { if (c.look === 'news') c.asset = artSrcJpg(c.art + '_1'); });   // Series 8: the comic strip is the card art
   // The published build lists its art files up front, so nothing has to be guessed.
-  if (window.ART_MANIFEST) { CARDS.forEach(c => { ART[c.id] = window.ART_MANIFEST[c.art] || (c.look === 'cc' || c.look === 'pc' ? { 1:c.asset } : {}); }); return Promise.resolve(); }
+  if (window.ART_MANIFEST) { CARDS.forEach(c => { ART[c.id] = window.ART_MANIFEST[c.art] || (c.look === 'cc' || c.look === 'pc' || c.look === 'news' ? { 1:c.asset } : {}); }); return Promise.resolve(); }
   const jobs = [];
   CARDS.forEach(c => {
     ART[c.id] = {};
@@ -2975,6 +3038,27 @@ function frontPCHTML(c, st, opt = {}){
     <div class="t lvl pc" style="${P(778, 1310, 953, 1384)}"><span class="stars" aria-label="${lv} of ${maxL(c)} stars">${s7StarsHTML(lv, opt.newStar, maxL(c))}</span><span>LEVEL ${lv}</span></div>
     ${st.mastered ? s7StampHTML('mastered', 'Mastered', 'mastered') : ''}`;
 }
+/* Series 8 · Criminal Procedure: the newspaper front (the masthead is printed in the frame). One comic strip at every level; the left column carries the card's rule caption,
+   the right column the kit's line about the picture. Boxes are the kit's regions (assets/series8/newspaper-cards-v1/docs/geometry.json). */
+function frontNewsHTML(c, st, opt = {}){
+  const lv = st.level, need = NEED[lv - 1];
+  return `
+    <img class="news-paper" src="${artSrcJpg('bg_s8_paper')}" alt="">
+    <img class="news-strip" src="${artSrcJpg(c.art + '_1')}" alt="${esc(c.name)} comic strip" style="${P(72, 474, 952, 1060)}">
+    <img class="frame news-frame" src="${artSvg('frame_s8')}" alt="Series 8 card frame">
+    <div class="t news num" style="${P(54, 164, 202, 208)}">${esc(c.num)}</div>
+    <div class="t news cat" style="${P(218, 164, 746, 208)}">${esc(c.category)}</div>
+    <div class="t news xp" style="${P(762, 164, 970, 208)}">${st.mastered ? 'XP MAX' : `XP ${st.xp} / ${need}`}</div>
+    <div class="t news head${c.name.length > 22 ? ' long' : ''}" style="${P(54, 226, 970, 338)}">${esc(c.name.toUpperCase())}</div>
+    <div class="t news by" style="${P(54, 386, 614, 438)}">From the courthouse desk</div>
+    <div class="t news date" style="${P(630, 386, 970, 438)}">Morning edition · Series 8</div>
+    <div class="t news deck" style="${P(54, 1118, 484, 1362)}">${esc(c.quote || '')}</div>
+    <div class="t news pic" style="${P(528, 1118, 970, 1362)}"><small>PICTURED</small><span>${esc(c.caption || '')}</span></div>
+    <div class="t news rar" style="${P(54, 1452, 282, 1494)}">${verLabel(st)}</div>
+    <div class="t news set" style="${P(306, 1452, 720, 1494)}">THE NEWSPAPER SET</div>
+    <div class="t news lvl" style="${P(744, 1452, 970, 1494)}">LEVEL ${lv} · ${'★'.repeat(lv)}${'☆'.repeat(Math.max(0, maxL(c) - lv))}</div>
+    ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
+}
 const CC_TITLE_BOX = [126, 112, 898, 304];   // the banner is yellow from about y 103 to 309 at the middle and 115 to 302 near its ends
 function ccLockupHTML(c){
   const t = S6_QUESTION_TITLE_ART[c.id]; if (!t) return '';
@@ -3091,6 +3175,7 @@ function frontHTML(c, st, opt={}){
   if (!opt.art && typeof isEvolvedView === 'function' && isEvolvedView(c, st)) return evolvedFrontHTML(c, st, opt);   // evolve.js; opt.art and opt.frame are its evolved art and frame
   if (c.look === 'cc') return frontCCHTML(c, st, opt);
   if (c.look === 'pc') return frontPCHTML(c, st, opt);
+  if (c.look === 'news') return frontNewsHTML(c, st, opt);
   if (c.series === 3) return frontS3HTML(c, st, opt);
   if (c.series === 4 || c.series === 5) return frontS45HTML(c, st, opt);
   const lv = st.level, need = NEED[lv-1];
@@ -3221,6 +3306,7 @@ const BreakoutMotion = (() => {
   const states = new Map();
   const finePointer = !!(window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches);
   let inputX = 0, inputY = 0, raf = 0, lastTime = 0, nativeActive = null;
+  let extraWatchers = 0; const inputListeners = new Set();   // home-desk.js asks for tilt while the desk is on screen
   let orientationAuthorized = false, orientationListening = false, orientationOrigin = null;
 
   const observer = new IntersectionObserver(entries => {
@@ -3234,7 +3320,7 @@ const BreakoutMotion = (() => {
 
   function reduced(){ return prefersReducedMotion(); }
   function eligible(){
-    return !reduced() && document.visibilityState === 'visible' && [...states.values()].some(s => s.visible && s.el.isConnected);
+    return !reduced() && document.visibilityState === 'visible' && (extraWatchers > 0 || [...states.values()].some(s => s.visible && s.el.isConnected));
   }
   function syncNative(force=false){
     const active = eligible();
@@ -3267,7 +3353,7 @@ const BreakoutMotion = (() => {
   function setInput(x, y){
     x = clamp(Number(x) || 0); y = clamp(Number(y) || 0);
     if (Math.abs(x-inputX) < .008 && Math.abs(y-inputY) < .008) return;
-    inputX = x; inputY = y; wake();
+    inputX = x; inputY = y; inputListeners.forEach(f => f(x, y)); wake();
   }
 
   function wake(){
@@ -3311,7 +3397,7 @@ const BreakoutMotion = (() => {
 
   function reset(clearTransform=true){
     if (raf) cancelAnimationFrame(raf); raf = 0;
-    inputX = inputY = 0;
+    inputX = inputY = 0; inputListeners.forEach(f => f(0, 0));
     states.forEach(s => {
       s.el.classList.remove('cq-motion-active');
       if (s.kind === 'card') {
@@ -3383,7 +3469,10 @@ const BreakoutMotion = (() => {
   });
   new MutationObserver(scan).observe(document.documentElement,{subtree:true,childList:true});
   scan();
-  return {setInput, reset};
+  return {setInput, reset, enableOrientation,
+    onInput(fn){ inputListeners.add(fn); return () => inputListeners.delete(fn); },   // fn(x, y) in -1..1
+    watch(on){ extraWatchers = Math.max(0, extraWatchers + (on ? 1 : -1)); syncNative(); if (on) wake(); },
+    get x(){ return inputX; }, get y(){ return inputY; }};
 })();
 function lockedCardHTML(c){
   return `<div class="card mystery"><img class="bg" src="art/mysteryback.webp" alt="" style="object-fit:cover;border-radius:6%/4%">
@@ -3565,7 +3654,10 @@ const isStandalone = () => !!(navigator.standalone || (window.matchMedia && matc
 /* ---------- small building blocks ---------- */
 const PLAY_ICON = '&#9654;&#xFE0E;';
 const owned = c => !!(c && S.cards && S.cards[c.id] && S.cards[c.id].owned);
-const canStudyCard = id => owned(byId(id));
+/* Study is open: every card can be read and quizzed from day one, owned or not. Packs, levels, versions and foil stay the
+   collection's rewards; they no longer decide what a player may study. Set false to go back to quizzing owned cards only. */
+const STUDY_OPEN = true;
+const canStudyCard = id => { const c = byId(id); return !!(c && (STUDY_OPEN || owned(c))); };
 const playerLevel = () => 1 + Math.floor(S.stats.xp / 250);
 function ring(pct, label, size = 64, color = 'var(--mustard)'){
   const r = 26, C = 2 * Math.PI * r, p = Math.max(0, Math.min(1, pct));
@@ -3656,6 +3748,9 @@ function groupLabel(g){
   return (SERIES.find(x => x.g === g) || {}).label || 'Cards';
 }
 /* Hand-drawn UI icons (art/icon_*.webp). The build rewrites these paths to .webp. */
+/* Tester feedback: a link to a short form (or a mailto: address). Empty = the Profile row is hidden. */
+const FEEDBACK_URL = '';
+const feedbackRow = () => FEEDBACK_URL ? `<a class="row" style="text-decoration:none;color:inherit" href="${esc(FEEDBACK_URL)}" target="_blank" rel="noopener"><span class="th emo gi">${ICO('help')}</span><span class="row-main"><b>Tell us what's confusing</b><small>Two minutes · helps make the app better</small></span>${chev}</a>` : '';
 const ICO = (name, cls = '') => `<img class="ico ${cls}" src="art/icon_${name}.webp" alt="">`;
 const artSrc = name => `art/${name}.webp`;
 const artSrcJpg = name => `art/${name}.webp`;   // opaque backgrounds (the look-alike set); the build rewrites these to .webp like artSrc
@@ -3670,7 +3765,8 @@ const SERIES_BACKS = {
   1:'art/back_s1_template_v1.webp', 2:'art/back_s2_template_v1.webp',
   3:'art/back_s3_archive_v1.webp', 4:'art/back_s4_template_v1.webp', 5:'art/back_s5_template_v1.webp',
   6:'art/back_s6.webp',   // Series 6's emblem is its everyday back, not a reward
-  7:'art/back_s7_template_v1.webp'
+  7:'art/back_s7_template_v1.webp',
+  8:'art/back_s8.webp'   // Series 8's newspaper back (tools/s8_art.py)
 };
 const SERIES_BACK_LABELS = {
   1:{src:'art/back_label_s1_v1.svg', label:'Series 1 Court Terms card back'},
@@ -3982,6 +4078,7 @@ const SCREENS = {
         <div><b>${CARDS.filter(owned).length}</b><small>Cards</small></div><div><b>${mastered || '—'}</b><small>Mastered</small></div></div>
       ${readinessPanel()}
       <div class="list">
+        ${feedbackRow()}
         ${profileAdminRow()}
         ${profileOnbRow()}
         <button class="row" data-act="push" data-s="stats"><span class="th emo gi">${ICO('stats')}</span><span class="row-main"><b>Statistics</b></span>${chev}</button>
@@ -4025,10 +4122,10 @@ const SCREENS = {
       ${item(ICO('thermo_snow') + ' Cold cases', 'Cards you haven\'t studied in a while go cold (2 days at Level 1, up to 21 days when mastered). One correct answer reopens the case for a +' + COLD_BONUS + ' XP bonus.', 'cold')}
       ${item(ICO('mastered') + ' Levels and Mastered', 'Right answers fill a card\'s XP bar. It levels up, and at the top it is Mastered. That is a game milestone for the card, not a promise about the exam. Cards you leave alone go cold, so come back to them.', 'mastered')}
       ${item(ICO('memory') + ' Memory Tricks', 'Special cards that teach a rule the easy way: Chain (order), Who (roles), Clock (deadlines), Difference (look-alikes), and Trigger (what happens next).', 'tricks')}
-      ${item(ICO('series2') + ' Series', 'There are five series, each with its own art style and pack. A series pack holds cards from that series, and sometimes a trick card. Once you make a binder, packs can hold a bonus sticker too. Collect every card in a series to stamp it COMPLETE.', 'series')}
+      ${item(ICO('series2') + ' Series', 'Each series has its own art style and pack. A series pack holds cards from that series, and sometimes a trick card. Once you make a binder, packs can hold a bonus sticker too. Collect every card in a series to stamp it COMPLETE.', 'series')}
       ${item(ICO('subject') + ' Official sources', 'Rule cards are built only from the rule text quoted in the NYS Unified Court System Court Clerk sample questions and cite their source. Other questions are sample content. Fact-check before relying on them.', 'sources')}
       </div>
-      <p class="own-note">© 2026 Jack Duchatelier. All rights reserved.</p>` };
+      <p class="own-note">© 2026 Jack Duchatelier. All rights reserved.<br>Becoming a Clerk is an independent study app, not affiliated with or endorsed by the New York State Unified Court System.</p>` };
   },
 
   settings(){
@@ -4056,7 +4153,7 @@ const SCREENS = {
       <div class="sec-h"><span>Data</span></div><div class="list">
         <button class="row danger" data-act="resetall"><span class="th emo gi">${ICO('warning')}</span><span class="row-main"><b>Reset all progress</b></span></button>
       </div>
-      <p class="own-note">© 2026 Jack Duchatelier. All rights reserved.<br>Becoming a Clerk, its characters, artwork, and original writing may not be copied or reused without permission. Quoted law text belongs to the State of New York.</p>` };
+      <p class="own-note">© 2026 Jack Duchatelier. All rights reserved.<br>Becoming a Clerk, its characters, artwork, and original writing may not be copied or reused without permission. Quoted law text belongs to the State of New York.<br>Becoming a Clerk is an independent study app, not affiliated with or endorsed by the New York State Unified Court System.</p>` };
   },
 };
 function playerTitle(){
@@ -4131,10 +4228,11 @@ function showScreen(dir = 'none'){
   } else if (old) old.remove();
   renderTabbar();
   warmPack();
+  if (typeof HomeDesk === "object") HomeDesk.sync();   // the 3D desk behind Today (home-desk.js, ?desk=1)
 }
 /* Load the 3D pack (three.js, loader, model, art) ahead of time, but only while there is a pack to open */
 function warmPack(...arts){
-  if (S.packs <= 0 || !window.PackModel3D || /[?&]pack3d=0\b/.test(location.search)) return;
+  if (S.packs <= 0 || !window.PackModel3D || !use3dPack()) return;
   try { (arts.length ? arts : [nextPackArtSrc()]).forEach(a => a && PackModel3D.preload(a)); } catch (_) {}
 }
 function push(s, p = {}){ saveScroll(); nav.stacks[nav.tab].push({s, p}); history.pushState({cq:'push'}, ''); showScreen('push'); }
@@ -4160,7 +4258,7 @@ function startSession(id, lesson, opts){
     lesson = { ...lesson, queue }; id = queue[0];
   }
   const c = byId(id);
-  if (!owned(c)) { missingSheet(id); return false; }
+  if (!canStudyCard(id)) { missingSheet(id); return false; }
   if (typeof guestWallDue === 'function' && guestWallDue()) { guestWall(); return; }   // a guest signs up before a second round
   openSessionLayer();
   sess = { id, i:0, results:[], xp:0, used:new Set(), startLevel:S.cards[id].level, startXP:S.cards[id].xp, wasCold:isCold(S.cards[id]), reopened:false, lesson:lesson || null };
@@ -4254,7 +4352,7 @@ function paintStudy(anim){
         <h3 class="${ans.ok?'ok':'no'}">${ans.ok ? `Sustained! +<span class="n">${ans.gain}</span> XP${ans.coins ? ` · +<span class="n">${ans.coins}</span> ${COIN}` : ''}` : 'Overruled. Not quite.'}</h3>
         ${ans.ok ? '' : '<p>Keep going—this rule will be easier to spot next time.</p>'}
         ${ans.reopened ? `<p class="reopen"><img src="art/stamp_reopened.webp" alt="Case reopened"><span>Includes a +${COLD_BONUS} XP cold-case bonus.</span></p>` : ''}
-        <div class="ex-acts">${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}${cardVideoButtonHTML(c)}${saveQButtonHTML()}</div>
+        <div class="ex-acts">${c.source && !ans.ok ? `<button class="rlink" data-act="read-rule" data-id="${c.id}">Review the rule</button>` : ''}${cardVideoButtonHTML(c)}${saveQButtonHTML()}${reportQButtonHTML()}</div>
         ${ans.ok ? '' : `<p><b>Correct answer:</b> ${esc(q.a)}</p>`}
         ${q.raw ? q.w : `<p>${esc(q.w)}</p>`}
         ${c.source ? `<p class="cite">Source: ${esc(c.source.cite)}</p>` : ''}
@@ -4353,6 +4451,12 @@ const Recall = (() => {
   const pips = id => { const n = Math.round(strength(id) * 5); return `<span class="rc-pips" aria-label="Recall ${n} of 5">${[1,2,3,4,5].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span>`; };
   return { record, strength, readiness, strong, examCards, dueText, pips };
 })();
+/* Say a short result out loud for screen readers (VoiceOver/TalkBack); nothing shows on screen */
+function announce(text){
+  let el = document.getElementById('cq-live');
+  if (!el) { el = document.createElement('div'); el.id = 'cq-live'; el.className = 'sr-only'; el.setAttribute('aria-live', 'polite'); document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(() => { el.textContent = text; }, 60);   // cleared first so the same words are read again
+}
 function answer(v){
   if (!sess || sess.answered) return;
   if (!canStudyCard(sess.id)) { const id = sess.id; closeSessionLayer(); missingSheet(id); return; }
@@ -4386,6 +4490,7 @@ function answer(v){
   const barWas = document.querySelector('#back .nxl .bar b'), barFrom = barWas && barWas.style.width;
   paintStudy();
   answerFx(ok, barFrom);
+  announce(ok ? `Correct.${gain ? ` Plus ${gain} XP.` : ''}` : `Not quite. The answer is: ${sess.q.a}`);   // for screen readers
   if (typeof CharReact === 'object') CharReact.fire(ok ? 'right' : 'wrong');
   // make sure the Next button is on screen (short iPhones)
   const nb = document.querySelector('#below .btn-big'); if (nb) { const r = nb.getBoundingClientRect(); if (r.bottom > innerHeight - 8) nb.scrollIntoView({block:'end', behavior:'smooth'}); }
@@ -4715,16 +4820,17 @@ function finishRip(btn){   // past 70%: finish the tear, then open
   const step = now => { const k = Math.max(0, Math.min(1, (now - t0) / (170 + (1 - start) * 260))); setRip(btn, start + (1 - start) * k); k < 1 ? requestAnimationFrame(step) : packTorn(btn); };
   requestAnimationFrame(step);
 }
-function sparkBurst(ov){
+function sparkBurst(ov, n = 14){
   if (prefersReducedMotion()) return;
-  for (let i = 0; i < 14; i++) {   // a light burst, kept small
-    const a = Math.PI * 2 * i / 14 + Math.random() * .4, r = 110 + Math.random() * 140, s = document.createElement('i');
+  for (let i = 0; i < n; i++) {   // a light burst, kept small
+    const a = Math.PI * 2 * i / n + Math.random() * .4, r = 110 + Math.random() * (n > 14 ? 200 : 140), s = document.createElement('i');
     s.className = 'pk-spark'; s.style.setProperty('--dx', (Math.cos(a) * r).toFixed(0) + 'px'); s.style.setProperty('--dy', (Math.sin(a) * r).toFixed(0) + 'px');
     s.style.animationDelay = (Math.random() * .08).toFixed(2) + 's'; ov.appendChild(s); setTimeout(() => s.remove(), 1100);
   }
 }
 function packTorn(btn){
   const ov = btn.closest('.pk');
+  if (btn._3d && btn._3d.burst) return packBurst(btn, ov);
   btn.querySelector('.pk-rest').style.visibility = 'hidden';
   if (btn._3d) btn.querySelector('.pk-flap').style.visibility = 'hidden';   // the 3D flap flings itself away
   else btn.querySelector('.pk-flap').style.transform = '';   // the .torn rule flings it away
@@ -4732,6 +4838,18 @@ function packTorn(btn){
   nativeFeedback('packtear'); softFlash(); sparkBurst(ov); ov._field?.tear();
   ov.classList.add('out', 'stack', 'emerge'); nextPackCard(ov);
   setTimeout(() => ov.classList.remove('emerge'), 1300);
+}
+/* Simple burst: the 3D pack has shaken and glowed; now it is gone in a flash of light and the three cards fan out from that point */
+function packBurst(btn, ov){
+  const calm = prefersReducedMotion();
+  btn.classList.add('torn'); btn.style.visibility = 'hidden';
+  ov.classList.add('burst', 'out', 'stack'); ov.classList.toggle('calm', calm);
+  if (!calm) {
+    ov.classList.add('bursting'); ov.querySelector('.bf-rays')?.addEventListener('animationend', () => ov.classList.remove('bursting'), { once:true });
+    nativeFeedback('packtear'); softFlash(); sparkBurst(ov, 30); ov._field?.tear();
+  } else ov._field?.tear();
+  nextPackCard(ov);
+  ov.querySelector('.pk-card:last-child')?.addEventListener('animationend', () => ov.classList.remove('burst'), { once:true });
 }
 /* One-at-a-time reveal: the top card flips on a tap, then a swipe (or another tap) sends it away */
 function nextPackCard(ov){
@@ -4754,23 +4872,37 @@ function packSummary(ov){   // every card back in a fan, face up, with its NEW /
 document.addEventListener('pointerdown', e => {
   const btn = e.target.closest('.pk-pack'); if (!btn || btn._done) return;
   const r = btn.getBoundingClientRect();
-  if ((e.clientY - r.top) / r.height > TEAR_Y / 100 + .14) return;   // the cut starts only near the top of the pack, around the glowing line
+  if ((e.clientY - r.top) / r.height > TEAR_Y / 100 + .14) {   // below the tear zone: a sideways swipe turns the pack over
+    if (btn._hasBack && !btn._3d?.burst) { btn._fdrag = { x:e.clientX, y:e.clientY, id:e.pointerId }; try { btn.setPointerCapture(e.pointerId); } catch (_) {} }
+    return;
+  }
   btn._drag = { x:e.clientX, y:e.clientY, w:r.width, id:e.pointerId, base:btn._p || 0, moved:false };
   btn._swiped = false;
   try { btn.setPointerCapture(e.pointerId); } catch (_) {}
 });
 document.addEventListener('pointermove', e => {
-  const btn = document.querySelector('.pk-pack'), d = btn && btn._drag; if (!d || e.pointerId !== d.id) return;
+  const btn = document.querySelector('.pk-pack'); if (!btn) return;
+  const f = btn._fdrag;
+  if (f && e.pointerId === f.id) {
+    const fx = e.clientX - f.x, fy = e.clientY - f.y;
+    if (Math.abs(fx) > 28 && Math.abs(fx) > Math.abs(fy)) { btn._fdrag = null; btn._swiped = true; setTimeout(() => { btn._swiped = false; }, 400); packFlip(btn, !btn._back); }
+    return;
+  }
+  const d = btn._drag; if (!d || e.pointerId !== d.id) return;
   const dx = e.clientX - d.x, dy = e.clientY - d.y;
   if (!d.moved) {
     if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return;
+    if (btn._back || btn._flipping) {   // a tear swipe on the back: turn to the front first, then the strip comes off
+      btn._drag = null; btn._swiped = true; btn._dir = Math.sign(dx);
+      packFlip(btn, false, () => { btn._swiped = false; finishRip(btn); }); return;
+    }
     d.moved = btn._swiped = true; if (!btn._dir) btn._dir = Math.sign(dx); btn.classList.add('ripping');
   }
   btn._p = Math.max(btn._p || 0, Math.min(1, d.base + dx * btn._dir / (d.w * .8)));
   setRip(btn, btn._p);
   if (btn._p >= .7) finishRip(btn);
 });
-['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, () => { const btn = document.querySelector('.pk-pack'); if (btn) btn._drag = null; }));
+['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, () => { const btn = document.querySelector('.pk-pack'); if (btn) { btn._drag = null; btn._fdrag = null; } }));
 /* swipe a flipped top card off the stack; it follows your finger and flies off past ~70px */
 document.addEventListener('pointerdown', e => {
   const card = e.target.closest('.pk.stack .pk-card.top.flipped'); if (!card) return;
@@ -4839,6 +4971,7 @@ function pickPack(btn){
   const k = btn.dataset.set;
   setTimeout(() => { ov.remove(); openPack(ADDON_PACKS.some(a => a.n === k) ? { addon:k, chosen:true } : { series:+k, chosen:true }); }, 520);
 }
+function use3dPack(){ return /[?&]pack3d=1\b/.test(location.search); }   // the owner prefers the flat pack (sticker-peel rip, turn over to the printed back), 2026-10-12; the Blender 3D packet only with ?pack3d=1
 function openPack(opts = {}){
   if (!opts.pulls && S.packs <= 0) return;
   if (!opts.pulls && !opts.chosen && S.packsOpened > 0) return choosePack();
@@ -4855,7 +4988,7 @@ function openPack(opts = {}){
   const packKey = pulls.addon || pulls.series || opts.addon || opts.series || 0;   // 6 for a series pack, 'tricks' for the add-on pack
   const packImg = opts.img || (packKey ? packArtOf(packKey) : packArtFor(pulls.map(p => p.c)));
   const packSeries = Number(packKey) || 0;
-  try { window.PackModel3D && PackModel3D.preload(packImg); } catch (_) {}   // no-op if already cached; starts loading before the overlay is built
+  try { window.PackModel3D && use3dPack() && PackModel3D.preload(packImg); } catch (_) {}   // no-op if already cached; starts loading before the overlay is built
   const packLabel = opts.label || '';
   const label = packLabel ? `<span class="pk-label ${packSeries >= 4 ? `series45 s${packSeries}` : ''}">${opts.emblem ? `<img src="${opts.emblem}" alt="">` : ''}<b>${esc(packLabel)}</b></span>` : '';
   lockScroll(); history.pushState({cq:'pack'}, '');
@@ -4864,12 +4997,14 @@ function openPack(opts = {}){
   const line = tearLine();
   ov.innerHTML = `<div class="pk-bg" style="background-image:url('${packImg}')"></div><div class="pk-pattern"></div><div class="pk-glow"></div><div class="pk-rays"></div><div class="pk-vig"></div>
     <div class="pk-stage"><div class="pk-floor"></div>
+      <div class="pk-aura"></div><div class="pk-bflash"><i class="bf-rays"></i><i class="bf-core"></i></div>
       <button class="pk-pack" data-act="pk-tear" aria-label="Open the pack" style="--pack-mask:url('${packImg}')">
         <img class="pk-body" src="${packImg}" alt="" style="clip-path:polygon(${line.map(ptc).join(',')},100% 100%,0% 100%)">
         <img class="pk-top pk-rest" src="${packImg}" alt="" style="clip-path:${flapClip(line, 0, 100)}">
         <img class="pk-top pk-flap" src="${packImg}" alt="" style="clip-path:${flapClip(line, 0, 0)}">
         <span class="pk-slash" style="--cut-y:${TEAR_Y}%"><i class="pk-glint"></i></span>${label}
       </button>
+      <button class="pk-turn" data-act="pk-turn" aria-label="Turn the pack over" type="button">&#8635;</button>
       <div class="pk-cards">${pulls.map((p,i) => `<button class="pk-card${p.ver === 'exhibit' ? ' tease rare' : p.ver === 'certified' ? ' tease' : ''}" data-act="pk-flip" style="--i:${i}" aria-label="Reveal card ${i+1}">
         <div class="pk-inner"><div class="pk-face pk-back">${cardReverseHTML(p.c)}</div>
         <div class="pk-face pk-front">${cardEl(p.c, p.st)}</div></div>
@@ -4884,7 +5019,7 @@ function openPack(opts = {}){
   document.body.appendChild(ov);
   const pk = ov.querySelector('.pk-pack'); pk._line = line; ov._sticker = bonus;
   if (opts.chosen) { pk.classList.add('landing'); setTimeout(() => pk.classList.remove('landing'), 600); }
-  packTilt(pk); packCutEdges(pk, packImg);
+  packTilt(pk); packCutEdges(pk, packImg); packBackArt(pk, packImg);
   // the room: a floor of raised letters (packfield.js); until it's ready, or if it can't load, the blurred pack art stays
   if (window.PackField) {
     ov.classList.add('field-wait');
@@ -4893,13 +5028,14 @@ function openPack(opts = {}){
       .catch(() => ov.classList.remove('field-wait'));   // no 3D: bring back the blurred pack art
   }
   // the 3D sticker curl (pack3d.js); until it's ready, or if it can't load, the flat rip below is used
-  // (first choice: the whole packet in real 3D, pack3d-model.js; ?pack3d=0 keeps the flat flap for comparison)
+  // (the owner preferred the flat sticker-peel rip, 2026-10-11; the whole 3D packet, pack3d-model.js, only with ?pack3d=1)
   const adopt3d = ctl => { if (!pk._p && !pk._done && pk.isConnected) pk._3d = ctl; else ctl.destroy(); };
   const flap3d = () => { if (window.Pack3D) Pack3D.attach(pk, packImg, line, TEAR_Y).then(adopt3d).catch(() => {}); };
-  if (window.PackModel3D && !/[?&]pack3d=0\b/.test(location.search)) PackModel3D.attach(pk, packImg, line, TEAR_Y).then(adopt3d).catch(flap3d); else flap3d();
+  if (window.PackModel3D && use3dPack()) PackModel3D.attach(pk, packImg, line, TEAR_Y).then(adopt3d).catch(flap3d); else flap3d();
 }
 function tearPack(btn){   // Open for me (or Enter on the pack): tears the strip off for you
   if (btn._swiped || btn._done) return;
+  if (btn._back || btn._flipping) return packFlip(btn, false, () => finishRip(btn));   // the tear only happens on the front: turn it over first
   finishRip(btn);   // the whole strip comes off in one smooth pull
 }
 /* The pack in your hand (after the holo cards at poke-holo.simey.me): it sways slowly on its own; touch it and it
@@ -4934,6 +5070,38 @@ function packCutEdges(btn, src){
     if (l >= 0 && r > l) { btn.style.setProperty('--cut-l', (l / w * 100 + 1).toFixed(1) + '%'); btn.style.setProperty('--cut-r', ((r + 1) / w * 100 - 1).toFixed(1) + '%'); }
   } catch (_) {} };
   img.src = src;
+}
+/* The printed back of the pack (art/pack_back_<key>.webp: pack.png -> s1, pack_sN -> sN, pack_tricks -> tricks). Only a pack with back art can be turned over. */
+function packBackArt(btn, src){
+  const m = /^(.*\/)?pack(?:_(s\d+|tricks))?(\.\w+)(\?.*)?$/.exec(src || ''); if (!m) return;
+  const back = (m[1] || '') + 'pack_back_' + (m[2] || 's1') + m[3];
+  const img = new Image();
+  img.onload = () => {
+    if (!btn.isConnected || btn._done) return;
+    const el = document.createElement('img'); el.className = 'pk-bk'; el.alt = ''; el.src = back;
+    btn.insertBefore(el, btn.firstChild); btn.classList.add('has-back'); btn._hasBack = true;
+  };
+  img.src = back;
+}
+function packFlip(btn, toBack, done){   // spring the pack round to its back (true) or front (false); done runs when it has settled
+  if (!btn._hasBack && toBack) return done && done();
+  if (btn._done) return;
+  if (btn._flipTo === toBack && !btn._flipping) return done && done();
+  btn._flipTo = toBack; btn._flipDone = done || null; btn._back = toBack;
+  const side = a => btn.classList.toggle('back', Math.cos(a * Math.PI / 180) < 0);
+  const finish = () => { btn._flipping = false; btn.style.setProperty('--fl', (toBack ? 180 : 0) + 'deg'); side(toBack ? 180 : 0); const f = btn._flipDone; btn._flipDone = null; f && f(); };
+  if (prefersReducedMotion()) { btn._fl = toBack ? 180 : 0; return finish(); }   // quick cross-fade (the children fade their opacity)
+  if (btn._flipping) return;   // already springing: it retargets to the new end
+  btn._flipping = true; btn._fl = btn._fl || 0; let v = 0, last = performance.now();
+  const step = now => {
+    const dt = Math.min(.033, (now - last) / 1000); last = now;
+    const tgt = btn._flipTo ? 180 : 0;
+    v += ((tgt - btn._fl) * 150 - v * 11) * dt; btn._fl += v * dt;   // underdamped: a small overshoot, then it settles
+    btn.style.setProperty('--fl', btn._fl.toFixed(2) + 'deg'); side(btn._fl);
+    if (Math.abs(tgt - btn._fl) < .3 && Math.abs(v) < 3) { btn._fl = tgt; return finish(); }
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
 }
 function packPointer(e){
   const b = document.querySelector('.pk-pack'); if (!b) return;
@@ -4980,6 +5148,16 @@ function flipPackCard(card){
 }
 
 /* ---- results ---- */
+/* Results keep the score and "drill these" in front: XP plus at most ONE reward chip, the most important one.
+   Coins, quests and streaks still count; they show in the wallet, on Today and on the Quests sheet. */
+function resultsHeadlineChip(st, leveled){
+  if (leveled) return `<span class="chip">${ICO('star')} LEVEL ${sess.startLevel} → ${st.level}</span>`;
+  if (sess.packGiven) return `<span class="chip">${ICO('pack')} +1 DAILY PACK</span>`;
+  if (sess.reopened) return `<span class="chip" style="background:#bfe0ff">${ICO('streak')} CASE REOPENED</span>`;
+  if (sess.streakCoins) return `<span class="chip" style="background:#ffd9a8">${ICO('streak')} ${S.streak.days}-DAY STREAK</span>`;
+  if (sess.coins) return `<span class="chip coin">+${sess.coins} ${COIN}</span>`;
+  return '';
+}
 function renderResults(){
   const c = byId(sess.id), st = S.cards[sess.id];
   const correct = sess.results.filter(Boolean).length;
@@ -4994,7 +5172,7 @@ function renderResults(){
       <div class="score">${correct} / ${SESSION_LEN}</div>
       <div class="sub">correct answers</div>
       ${Weak.backOnTrack(sess) ? `<div class="sub">Back on track ✓</div>` : ''}
-      <div class="rchips"><span class="chip">+${sess.xp} XP</span>${sess.coins ? `<span class="chip coin">+${sess.coins} ${COIN}</span>` : ''}${sess.streakCoins ? `<span class="chip" style="background:#ffd9a8">${ICO('streak')} ${S.streak.days}-DAY STREAK</span>` : ''}${claimableCount() ? `<span class="chip" style="background:#bfe8c4">${ICO('trophy')} QUEST REWARD READY</span>` : ''}${sess.reopened ? `<span class="chip" style="background:#bfe0ff">${ICO('streak')} CASE REOPENED</span>` : ''}${leveled ? `<span class="chip">${ICO('star')} LEVEL ${sess.startLevel} → ${st.level}</span>` : ''}${sess.packGiven ? `<span class="chip">${ICO('pack')} +1 DAILY PACK</span>` : ''}</div>
+      <div class="rchips"><span class="chip">+${sess.xp} XP</span>${resultsHeadlineChip(st, leveled)}</div>
       ${weakReportHTML(Weak.since(sess.startedAt))}
       <div class="rcard">${cardEl(c, st)}</div>
       <div class="panel">
@@ -5008,7 +5186,7 @@ function renderResults(){
         <button class="btn-big" data-act="study" data-id="${c.id}">&#9654;&#xFE0E; ONE MORE ROUND</button>
         ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} ${sess.packGiven ? 'OPEN YOUR DAILY PACK' : 'OPEN A PACK'}</button>` : ''}
         ${c.source && correct < SESSION_LEN ? `<button class="btn-big alt" data-act="read-rule" data-id="${c.id}">REVIEW THE RULE</button>` : ''}
-        ${typeof guestWallDue === 'function' && guestWallDue() ? `<button class="btn-big alt" data-act="cloud-signin" data-tab="create">SAVE MY PROGRESS</button>` : ''}
+        ${typeof guestWithRounds === 'function' && guestWithRounds() ? `<button class="btn-big alt" data-act="cloud-signin" data-tab="create">SAVE MY PROGRESS</button>` : ''}
         <button class="btn-big alt" data-act="session-close">Done</button>
       </div>
     </div>`;
@@ -5092,20 +5270,20 @@ function sortSheet(){
    (it stays readable from the card's menu). Cards get an intro as each one's example is written and checked. */
 function studyCard(id){
   const c = byId(id);
-  if (!owned(c)) { missingSheet(id); return false; }
+  if (!canStudyCard(id)) { missingSheet(id); return false; }
   if (c.intro && !(S.skipIntro && S.skipIntro[id])) introSheet(c); else startSession(id);
 }
 function introSheet(c, readOnly){
   if (!c || !c.intro) return;
   const mine = owned(c);
-  readOnly = readOnly || !mine;
+  readOnly = readOnly || !canStudyCard(c.id);
   openSheet(`<div class="sh-head">${mine ? thumb(c) : `<span class="sh-mcard">${lockedCardHTML(c)}</span>`}<span><b>${esc(c.name)}</b><small>Read first · about 30 seconds</small></span></div>
     <div class="intro">
       <div class="intro-sec"><em>The idea</em><p>${esc(c.intro.idea)}</p></div>
       <div class="intro-sec ex"><em>Example</em><p>${esc(c.intro.example)}</p></div>
       <p class="intro-src">Source: ${esc(c.intro.source)}</p>
       ${cardVideo(c) ? `<p class="intro-video-tip">Still fuzzy on this rule?</p>${cardVideoButtonHTML(c, 'intro')}` : ''}</div>
-    ${readOnly ? `${mine ? `<button class="btn-big gold" data-act="intro-go" data-id="${c.id}">${PLAY_ICON} TRY 5 QUESTIONS</button>` : ''}<button class="sheet-cancel" data-act="sheet-close">Close</button>`
+    ${readOnly ? `${canStudyCard(c.id) ? `<button class="btn-big gold" data-act="intro-go" data-id="${c.id}">${PLAY_ICON} TRY 5 QUESTIONS</button>` : ''}<button class="sheet-cancel" data-act="sheet-close">Close</button>`
       : `<button class="btn-big gold" data-act="intro-go" data-id="${c.id}">${PLAY_ICON} TRY 5 QUESTIONS</button>
          <button class="sheet-cancel" data-act="intro-skip" data-id="${c.id}">Go straight to questions<small>Skips this intro next time</small></button>`}`);
 }
@@ -5130,8 +5308,9 @@ function readFreeHTML(c){
 function missingSheet(id){
   const c = byId(id);
   openSheet(`<div class="sh-missing"><div class="sh-mcard">${lockedCardHTML(c)}</div>
-      <h3>${c ? 'Not found yet' : 'Card unavailable'}</h3><p>${c ? `This ${c.trickType ? 'Memory Trick' : 'card'} is waiting in a pack. ${S.packs ? `You have ${S.packs} pack${S.packs > 1 ? 's' : ''} to open.` : 'Study a card you own to earn a pack.'} You can read it now. Collect it to quiz on it and level it up.` : 'This card could not be found.'}</p>${readFreeHTML(c)}</div>
-    ${S.packs ? `<button class="btn-big gold" data-act="pack-open">${ICO('pack')} OPEN A PACK</button>` : `<button class="btn-big" data-act="tab" data-tab="study">${PLAY_ICON} STUDY YOUR OWNED CARDS</button>`}
+      <h3>${c ? 'Not found yet' : 'Card unavailable'}</h3><p>${c ? `This ${c.trickType ? 'Memory Trick' : 'card'} is waiting in a pack. ${S.packs ? `You have ${S.packs} pack${S.packs > 1 ? 's' : ''} to open.` : 'Study a card you own to earn a pack.'} ${STUDY_OPEN ? 'You can read it and quiz on it now. Collect it to show its art and level it up.' : 'You can read it now. Collect it to quiz on it and level it up.'}` : 'This card could not be found.'}</p>${readFreeHTML(c)}</div>
+    ${c && STUDY_OPEN ? `<button class="btn-big gold" data-act="study" data-id="${c.id}">${PLAY_ICON} STUDY IT NOW</button>` : ''}
+    ${S.packs ? `<button class="btn-big${c && STUDY_OPEN ? '' : ' gold'}" data-act="pack-open">${ICO('pack')} OPEN A PACK</button>` : c && STUDY_OPEN ? '' : `<button class="btn-big" data-act="tab" data-tab="study">${PLAY_ICON} STUDY YOUR OWNED CARDS</button>`}
     <button class="sheet-cancel" data-act="sheet-close">Not now</button>`);
 }
 function a2hsSheet(){
@@ -5295,6 +5474,7 @@ document.addEventListener('click', e => {
       refresh(); break;
     }
     case 'pack-open': closeSheet(true); openPack(); break;
+    case 'pk-turn': { const pkb = t.closest('.pk')?.querySelector('.pk-pack'); if (pkb && !pkb._done) { if (pkb._3d && pkb._3d.flip) pkb._3d.flip(); else packFlip(pkb, !pkb._back); } break; }
     case 'pk-tear': if (!e.detail) tearPack(t); break;   // only the keyboard opens it with a press; a finger has to swipe the top (or use Open for me)
     case 'pk-auto': { const ov = t.closest('.pk'), pkb = ov && ov.querySelector('.pk-pack'); if (pkb) { pkb._swiped = false; tearPack(pkb); } t.hidden = true; break; }
     case 'pk-flip': flipPackCard(t); break;

@@ -51,9 +51,10 @@ const ownedCovers = () => (S.binderCovers = Array.isArray(S.binderCovers) ? S.bi
 const lessonRec = id => ((S.lessons = S.lessons || {})[id] = S.lessons[id] || { best:0, passes:0, passedAt:0 });
 const binderCards = b => b.slots.filter(Boolean).map(byId).filter(Boolean);
 const lessonCards = b => b && b.builtin ? binderCards(b) : binderCards(b).filter(owned);
-const lessonQuizCards = b => binderCards(b).filter(owned);
+const studyOpen = () => typeof STUDY_OPEN !== 'undefined' && STUDY_OPEN;   // index.html: every built-in lesson can be quizzed
+const lessonQuizCards = b => binderCards(b).filter(c => owned(c) || (studyOpen() && b.builtin));
 const lessonMissing = b => b.builtin ? binderCards(b).filter(c => !owned(c)) : [];
-const lessonReady = b => lessonQuizCards(b).length >= minCardsFor(b) && !lessonMissing(b).length;
+const lessonReady = b => lessonQuizCards(b).length >= minCardsFor(b) && (studyOpen() || !lessonMissing(b).length);
 const lessonDeckPrice = b => lessonMissing(b).reduce((n, c) => n + cardPrice(c), 0);
 const coverOf = b => COVERS.find(c => c.id === b.cover) || COVERS[0];
 function newBinder(name){

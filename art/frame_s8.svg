@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536" role="img" aria-labelledby="t d">
+<title id="t">Series 8 blank newspaper article card front</title><desc id="d">Warm ivory newspaper page with blank live-text lanes, a transparent three-panel strip aperture, article columns, and footer metadata.</desc>
+<defs><pattern id="grain" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M2 7h8m7 13h9M5 26h4" stroke="#2e2d29" stroke-width="1" opacity=".08"/></pattern><clipPath id="page"><path d="M34 22h956v1492H34z"/></clipPath></defs>
+<path d="M34 22h956v1492H34z M72 474h880v586H72z" fill="#f2ead7" fill-rule="evenodd"/>
+<path d="M34 22h956v1492H34z M72 474h880v586H72z" fill="url(#grain)" fill-rule="evenodd"/>
+<g clip-path="url(#page)" fill="none" stroke="#33312d"><path d="M54 54h916M54 140h916" stroke-width="3"/><path d="M54 152h916" stroke-width="1"/><path d="M54 352h916" stroke-width="7"/><path d="M54 367h916" stroke-width="1"/><path d="M54 1090h916M54 1390h916" stroke-width="3"/><path d="M506 1118v244" stroke-width="1"/><path d="M54 1440h916" stroke-width="1"/></g>
+<path d="M72 474h880v586H72z" fill="none" stroke="#33312d" stroke-width="8"/><path d="M82 484h860v566H82z" fill="none" stroke="#33312d" stroke-width="1"/>
+<g fill="none" stroke="#33312d"><rect data-region="number" x="54" y="164" width="148" height="44"/><rect data-region="category" x="218" y="164" width="528" height="44"/><rect data-region="xp" x="762" y="164" width="208" height="44"/><rect data-region="headline" x="54" y="226" width="916" height="112"/><rect data-region="byline" x="54" y="386" width="560" height="52"/><rect data-region="date" x="630" y="386" width="340" height="52"/><rect data-region="article-left" x="54" y="1118" width="430" height="244"/><rect data-region="article-right" x="528" y="1118" width="442" height="244"/><rect data-region="rarity" x="54" y="1452" width="228" height="42"/><rect data-region="set" x="306" y="1452" width="414" height="42"/><rect data-region="level" x="744" y="1452" width="226" height="42"/></g>
+<path d="M54 216h916" stroke="#9d392d" stroke-width="7"/><path d="M54 1098h916" stroke="#9d392d" stroke-width="5"/>
+<!-- Static branding is intentionally separate from every variable live region. -->
+<text x="512" y="122" text-anchor="middle" fill="#2e2d29" font-family="Georgia,serif" font-size="58" font-weight="700" letter-spacing="4">BECOMING A CLERK</text>
+</svg>

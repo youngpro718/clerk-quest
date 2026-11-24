@@ -56,8 +56,13 @@ function hideLogin(){ const el = document.getElementById('login-root'); if (!el)
 /* Signing in on purpose (Settings, Home, or the welcome): the same screen, with a way to close it */
 function openSignIn(tab){ Object.assign(acct, { tab:tab || 'signin', err:'', info:'' }); showLogin(false); }
 document.addEventListener('click', e => { if (e.target.closest('[data-act="acct-close"]')) { document.getElementById('login-root')?.remove(); refresh(); } });
-/* The guest wall: once a guest has finished a study round, they sign up (or sign in) to keep playing. */
-const guestWallDue = () => !cloudUser() && !!(S.stats && S.stats.sessions >= 1);
+/* The guest wall: once a guest has finished a study round, they sign up (or sign in) to keep playing.
+   Switched off for testing (GUEST_WALL = false): guests keep playing and their progress saves on this device.
+   They can still sign up any time from Home, Settings or the SAVE MY PROGRESS button after a round.
+   Set GUEST_WALL = true to bring the wall back. */
+const GUEST_WALL = false;
+const guestWithRounds = () => !cloudUser() && !!(S.stats && S.stats.sessions >= 1);   // a guest who has played: offer sign-up
+const guestWallDue = () => GUEST_WALL && guestWithRounds();
 function guestWall(){ if (guestWallDue() && !document.getElementById('login-root')) { acct.tab = 'create'; showLogin(true); } }
 /* Called once at startup, after the cloud has loaded: guests play until their first round is done */
 function requireLogin(){ if (cloudUser()) maybeWelcome(); else if (guestWallDue()) guestWall(); else maybeWelcome(); }

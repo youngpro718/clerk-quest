@@ -9,6 +9,18 @@
 const EXAM_MIN_PER_Q = 2;            // minutes per question until the real exam's time limit is known
 const EXAM_SIZES = [25, 50, 90];
 const EXAM_HISTORY_MAX = 20;
+/* How a practice exam spreads its questions across the laws. The court system publishes the subject list but not how many
+   questions come from each law, so the share is a guess: the number of articles, parts or section groups the JG-20 subject
+   list (May 4, 2026) names for that law. Laws with no cards drop out and their share goes to the rest. Change here. */
+const EXAM_WEIGHTS = { CPL:39, CPLR:22, FCA:11, PL:3, UR:3, MHL:3, DRL:1, RPAPL:1, VTL:1, OTHER:1 };
+const EXAM_SET_LAW = { CPLR:'CPLR', CPL:'CPL', DRL:'DRL', 'COURT TERMS':'CPLR', 'COURT PROCEDURES':'CPLR', 'CRIMINAL PROCEDURE':'CPL', 'PENAL LAW':'PL', 'FAMILY COURT':'FCA',
+  'FAMILY COURT ACT':'FCA', 'UNIFORM RULES':'UR', 'DOMESTIC RELATIONS LAW':'DRL' };
+/* the law a card belongs to: the first law named in its source citation, else its set */
+function examLaw(c){
+  const cite = String((c && c.source && c.source.cite) || (c && c.cite) || ''), m = cite.match(/^\s*(CPLR|CPL|PL|FCA|DRL|RPAPL|VTL|MHL|Uniform Rules?|UR)\b/i);
+  if (m) { const k = m[1].toUpperCase(); return k.startsWith('UNIFORM') ? 'UR' : k; }
+  return EXAM_SET_LAW[c && c.set] || 'OTHER';
+}
 
 /* every multiple-choice question on every card with a bank (style 'study'), plus the exam-style set written the way the
    test writes it (exam-questions.js, style 'exam'); true/false and generated skill games are left out */
@@ -115,19 +127,20 @@ function examPool(){
   CARDS.forEach(c => {
     cardOf[c.id] = c;
     if (c.gen || !Array.isArray(c.bank)) return;
-    c.bank.forEach(q => { if (examOk(q)) out.push({ cardId:c.id, set:c.set || 'OTHER', q, style:'study' }); });
+    c.bank.forEach(q => { if (examOk(q)) out.push({ cardId:c.id, set:c.set || 'OTHER', law:examLaw(c), q, style:'study' }); });
   });
-  examQuestions().forEach(q => { const c = cardOf[q.card]; if (c && examOk(q)) out.push({ cardId:c.id, set:c.set || 'OTHER', q, style:'exam' }); });
+  examQuestions().forEach(q => { const c = cardOf[q.card]; if (c && examOk(q)) out.push({ cardId:c.id, set:c.set || 'OTHER', law:examLaw(c), q, style:'exam' }); });
   return out;
 }
 
-/* n questions, rotating evenly through the subjects, at most `cap` per card, no repeats; choices shuffled and frozen */
+/* n questions spread across the laws by EXAM_WEIGHTS (each law appears in the rotation as many times as its weight, in a
+   shuffled order), at most `cap` per card, no repeats; choices shuffled and frozen */
 function pickExam(n, rand = Math.random){
   const shuf = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const cap = Math.max(2, Math.ceil(n / 30)), used = {}, bySet = {}, picked = [];
-  shuf(examPool()).forEach(p => (bySet[p.set] = bySet[p.set] || []).push(p));
+  shuf(examPool()).forEach(p => (bySet[p.law] = bySet[p.law] || []).push(p));   // grouped by law
   for (const s in bySet) bySet[s] = [...bySet[s].filter(p => p.style === 'exam'), ...bySet[s].filter(p => p.style !== 'exam')];   // exam-style first
-  const sets = shuf(Object.keys(bySet));
+  const sets = shuf([].concat(...Object.keys(bySet).map(l => Array(Math.max(1, EXAM_WEIGHTS[l] || 1)).fill(l))));
   for (let progress = true; picked.length < n && progress; ) {
     progress = false;
     for (const s of sets) {
