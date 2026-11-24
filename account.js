@@ -65,7 +65,8 @@ const guestWithRounds = () => !cloudUser() && !!(S.stats && S.stats.sessions >= 
 const guestWallDue = () => GUEST_WALL && guestWithRounds();
 function guestWall(){ if (guestWallDue() && !document.getElementById('login-root')) { acct.tab = 'create'; showLogin(true); } }
 /* Called once at startup, after the cloud has loaded: guests play until their first round is done */
-function requireLogin(){ if (cloudUser()) maybeWelcome(); else if (guestWallDue()) guestWall(); else maybeWelcome(); }
+function requireLogin(){ if (typeof ptWanted === 'function' && ptWanted()) { ptOpen(); return; }   // the plain practice test: no welcome, no wall
+  if (cloudUser()) maybeWelcome(); else if (guestWallDue()) guestWall(); else maybeWelcome(); }
 
 const ACCOUNT_SCREENS = {
   account(p){

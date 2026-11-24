@@ -28,7 +28,9 @@ function reviewPile(now = Date.now()){
 /* the next studyable card never studied, in built-in lesson order, then card order */
 function nextCard(){
   const order = [...LESSONS.flatMap(L => L.cards || []), ...CARDS.map(c => c.id)];
-  return order.find(id => { const c = byId(id); return c && studyable(c) && c.bank && c.bank.length && !(S.cards[id] || {}).last; }) || null;
+  const fresh = id => { const c = byId(id); return c && studyable(c) && c.bank && c.bank.length && !(S.cards[id] || {}).last; };
+  const onTrack = id => typeof cardOnTrack !== 'function' || cardOnTrack(byId(id));   // the chosen exam's cards first (exam-scope.js)
+  return order.find(id => fresh(id) && onTrack(id)) || order.find(fresh) || null;
 }
 
 /* pages finished on a docket, over all its levels (old saves kept pages on the record itself) */

@@ -573,6 +573,64 @@ html.cq-reduce-motion .card.look-pc .pc-screen,html.cq-reduce-motion .card.look-
 .card.look-news .t.news.set{justify-content:center}
 .card.look-news .t.news.lvl{justify-content:flex-end}
 .card.look-news .stampimg.mastered{z-index:8}
+/* Series 9 · Other Laws: the tagged front. Each law prints its memory code on an object from its own world (license plate, door notice,
+   hospital wristband, the clerk's RECEIVED stamp); the picture above acts the rule out. The tag is live text, so a code can be fixed after
+   legal review without new art. Level 1 shows the tag as a pencil draft, level 2 as the real thing, level 3 adds the gold finish. */
+.card.look-tag{background:#f6eedc;--s9navy:#1b264a;--s9yel:#f4be2c;--s9red:#c4302b;--s9cream:#f6eedc}
+.card.look-tag .s9-border{position:absolute;inset:1.4%;border:1.4cqw solid var(--s9navy);border-radius:4.5cqw;pointer-events:none;z-index:4}
+.card.look-tag .s9-head{position:absolute;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:2cqw;background:var(--s9navy);border-radius:2.3cqw;padding:0 3cqw;color:var(--s9cream);font-family:"DIN Condensed","Arial Narrow","Avenir Next Condensed",Impact,sans-serif;font-weight:700;line-height:1;white-space:nowrap}
+.card.look-tag .s9-head b{color:var(--s9yel);font-size:5.2cqw}
+.card.look-tag .s9-head span{font-size:5.6cqw;overflow:hidden;text-overflow:ellipsis}
+.card.look-tag .s9-head span.long{font-size:4.4cqw}
+.card.look-tag .s9-art{position:absolute;z-index:1;border:.8cqw solid var(--s9navy);border-radius:3cqw;overflow:hidden;background:#fff}
+.card.look-tag .s9-art img{width:100%;height:100%;object-fit:cover;display:block}
+.card.look-tag .s9-rule{position:absolute;z-index:3;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--s9navy);font-family:Rockwell,"Roboto Slab",Georgia,serif;font-size:3.9cqw;line-height:1.15}
+.card.look-tag .s9-foot{position:absolute;z-index:3;display:flex;align-items:center;justify-content:space-between;color:var(--s9navy);font-family:"DIN Condensed","Arial Narrow",Impact,sans-serif;font-weight:700;font-size:3.3cqw;letter-spacing:.04em;white-space:nowrap}
+.card.look-tag .s9-foot .lv{color:var(--s9red)}
+.card.look-tag .s9-tagbox{position:absolute;z-index:2;display:flex;align-items:center;justify-content:center}
+.s9tag{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1;white-space:nowrap;box-sizing:border-box}
+.s9tag .s9-code{white-space:nowrap}
+.s9tag small{font-weight:700;letter-spacing:.06em}
+/* license plate */
+.s9tag.s9-plate{width:86%;height:94%;background:#fbfbf7;border:1cqw solid var(--s9navy);border-radius:4cqw;overflow:hidden;box-shadow:0 1.2cqw 2.4cqw rgba(0,0,0,.28);font-family:"DIN Condensed","Arial Narrow",Impact,sans-serif;font-weight:700}
+.s9tag.s9-plate .s9-top{position:absolute;top:0;left:0;right:0;height:21%;background:var(--s9navy);color:var(--s9yel);font-size:5.4cqw;display:flex;align-items:center;justify-content:center}
+.s9tag.s9-plate .s9-bot{position:absolute;bottom:0;left:0;right:0;height:14%;background:var(--s9yel);color:var(--s9navy);font-size:3.4cqw;display:flex;align-items:center;justify-content:center}
+.s9tag.s9-plate .s9-code{font-size:19cqw;color:var(--s9navy);margin-top:3cqw;text-shadow:.5cqw .5cqw 0 #9a9aa8}
+.s9tag.s9-plate .s9-code.long{font-size:14cqw}
+.s9tag.s9-plate i{position:absolute;top:27%;width:2.8cqw;height:2.8cqw;border-radius:50%;background:#c4c4c4;border:.4cqw solid var(--s9navy)}
+.s9tag.s9-plate i:first-of-type{left:5%}.s9tag.s9-plate i:last-of-type{right:5%}
+/* door notice */
+.s9tag.s9-notice{width:76%;height:90%;background:#fce278;border:.5cqw solid var(--s9navy);rotate:-3deg;box-shadow:0 1.2cqw 2.2cqw rgba(0,0,0,.25);font-family:Rockwell,"Roboto Slab",Georgia,serif}
+.s9tag.s9-notice .s9-top{position:absolute;top:0;left:0;right:0;height:22%;background:var(--s9red);color:var(--s9cream);font-size:6.4cqw;display:flex;align-items:center;justify-content:center;letter-spacing:.08em}
+.s9tag.s9-notice .s9-code{font-size:15cqw;color:var(--s9navy);margin-top:6cqw}
+.s9tag.s9-notice .s9-code.long{font-size:11cqw}
+.s9tag.s9-notice small{position:absolute;bottom:5%;font-family:'Courier Prime',monospace;font-size:2.8cqw;color:var(--s9navy)}
+.s9tag.s9-notice::before,.s9tag.s9-notice::after{content:"";position:absolute;top:-2.2cqw;width:10cqw;height:4cqw;background:rgba(255,255,255,.65);rotate:-8deg}
+.s9tag.s9-notice::before{left:-2cqw}.s9tag.s9-notice::after{right:-2cqw;rotate:8deg}
+/* hospital wristband */
+.s9tag.s9-band{width:94%;height:62%;background:#ebf2fa;border:.8cqw solid var(--s9navy);border-radius:9cqw;box-shadow:0 1cqw 2cqw rgba(0,0,0,.22);font-family:"DIN Condensed","Arial Narrow",Impact,sans-serif;font-weight:700}
+.s9tag.s9-band .s9-bandplate{position:absolute;left:21%;right:21%;top:-14%;bottom:-14%;background:#fff;border:.8cqw solid var(--s9navy);border-radius:2.4cqw;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.s9tag.s9-band small{color:var(--s9red);font-size:3.2cqw;margin-bottom:1cqw}
+.s9tag.s9-band .s9-code{font-size:14cqw;color:var(--s9navy)}
+.s9tag.s9-band .s9-code.long{font-size:10.5cqw}
+.s9tag.s9-band i{position:absolute;top:calc(50% - 1cqw);width:2cqw;height:2cqw;border-radius:50%;background:var(--s9navy)}
+.s9tag.s9-band i:nth-of-type(1){left:6%}.s9tag.s9-band i:nth-of-type(2){left:11%}.s9tag.s9-band i:nth-of-type(3){right:11%}.s9tag.s9-band i:nth-of-type(4){right:6%}
+/* clerk's RECEIVED stamp */
+.s9tag.s9-stamp{width:72%;height:84%;border:1.4cqw solid rgba(196,48,43,.92);border-radius:3cqw;outline:.5cqw solid rgba(196,48,43,.92);outline-offset:-3cqw;rotate:-4deg;color:rgba(196,48,43,.92);font-family:Rockwell,"Roboto Slab",Georgia,serif}
+.s9tag.s9-stamp .s9-top{font-size:4.8cqw;letter-spacing:.06em;margin-bottom:.4cqw}
+.s9tag.s9-stamp .s9-code{font-size:11.5cqw}
+.s9tag.s9-stamp .s9-code.long{font-size:8.5cqw}
+.s9tag.s9-stamp small{font-family:'Courier Prime',monospace;font-size:2.3cqw;margin-top:.6cqw}
+/* level 1: the tag is still a pencil draft */
+.card.look-tag.lv1 .s9tag{background:transparent!important;box-shadow:none!important;border-style:dashed!important;border-color:#8a8578!important;outline-color:#8a8578!important;color:#5f5a50!important}
+.card.look-tag.lv1 .s9tag *{background:transparent!important;border-color:#8a8578!important;color:#5f5a50!important;text-shadow:none!important}
+.card.look-tag.lv1 .s9tag .s9-code{font-family:"Patrick Hand UI","Patrick Hand",cursive;font-weight:400}
+.card.look-tag.lv1 .s9tag::before,.card.look-tag.lv1 .s9tag::after{display:none}
+/* level 3: the gold finish */
+.card.look-tag.lv3 .s9tag{filter:drop-shadow(0 0 1.4cqw rgba(244,190,44,.75))}
+.card.look-tag.lv3 .s9tag.s9-plate .s9-top,.card.look-tag.lv3 .s9tag.s9-notice .s9-top{background:linear-gradient(100deg,var(--s9navy) 30%,#3b4c86 50%,var(--s9navy) 70%)}
+.card.look-tag.lv3 .s9tag.s9-notice .s9-top{background:linear-gradient(100deg,var(--s9red) 30%,#e8665f 50%,var(--s9red) 70%)}
+.card.look-tag .stampimg.mastered{z-index:8}
 .card .cc-cast.cc-break{object-position:center;z-index:7;scale:1.04;transform-origin:50% 92%;filter:drop-shadow(0 0 .8cqw rgba(255,226,150,.6)) drop-shadow(0 1.3cqw 1cqw rgba(0,0,0,.45))}   /* same box as levels 1 and 2 (no drop): stage lighting and a small lift instead */
 .card .cc-spot{position:absolute;left:2.3%;top:20.8%;width:95.4%;height:54%;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 58%,rgba(255,226,150,.34),rgba(255,200,90,.12) 46%,transparent 74%);mix-blend-mode:screen}
 .card .cc-cast.cc-popin{animation:ccpop .9s cubic-bezier(.2,1.3,.4,1) both}
@@ -1029,6 +1087,7 @@ html.cq-reduce-motion .ans.wrong.fx::after{animation:none}
 #back.question_s6{--qpanel:url(art/question_s6_question.svg);--tpanel:url(art/question_s6_table.svg);--epanel:url(art/question_s6_explanation.svg);--apanel:url(art/question_s6_answer.svg);--hpanel:url(art/question_s6_hint.svg);--ppanel:url(art/question_s6_points.svg);--xpanel:url(art/question_s6_progress.svg);--qaccent:#0f3851;--qlabel:#b63b32;--qpaper:#fff0cc}
 #back.question_s7{--qpanel:url(art/question_s7_question.svg);--tpanel:url(art/question_s7_table.svg);--epanel:url(art/question_s7_explanation.svg);--apanel:url(art/question_s7_answer.svg);--hpanel:url(art/question_s7_hint.svg);--ppanel:url(art/question_s7_points.svg);--xpanel:url(art/question_s7_progress.svg);--qaccent:#0b2a1a;--qlabel:#5fe04a;--qpaper:#03150f}
 #back.question_s8{--qpanel:url(art/question_s8_question.svg);--tpanel:url(art/question_s8_table.svg);--epanel:url(art/question_s8_explanation.svg);--apanel:url(art/question_s8_answer.svg);--hpanel:url(art/question_s8_hint.svg);--ppanel:url(art/question_s8_points.svg);--xpanel:url(art/question_s8_progress.svg);--qaccent:#33312d;--qlabel:#9d392d;--qpaper:#f7f0df}   /* Series 8 newspaper (tools/s8_art.py) */
+#back.question_s9{--qpanel:url(art/question_s9_question.svg);--tpanel:url(art/question_s9_table.svg);--epanel:url(art/question_s9_explanation.svg);--apanel:url(art/question_s9_answer.svg);--hpanel:url(art/question_s9_hint.svg);--ppanel:url(art/question_s9_points.svg);--xpanel:url(art/question_s9_progress.svg);--qaccent:#1b264a;--qlabel:#c4302b;--qpaper:#fbf6ea}   /* Series 9 Other Laws: the Series 8 panels recoloured navy, red and cream */
 #back[class*="question_s"] .qtext{background:var(--qpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:2.6cqw 3cqw;line-height:1.06}   /* padding lines the text up with the panel art's inner frame */
 #back[class*="question_s"] .rec{background:var(--tpanel) center/100% 100% no-repeat;border:0;border-radius:0;padding:3cqw 3cqw 2cqw}
 #back[class*="question_s"] .ans{background-color:transparent;background-image:var(--apanel);background-position:center;background-size:100% 100%;background-repeat:no-repeat;border:0;border-radius:0;box-shadow:0 .65cqw 0 rgba(0,0,0,.28)}
@@ -1637,7 +1696,7 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="cloud-sync.js?v=280b2aa4"></script>
 <script src="study.js?v=e1e0944a"></script>
 <script src="economy.js?v=7f47f916"></script>
-<script src="store.js?v=52a760f9"></script>
+<script src="store.js?v=31d69fc8"></script>
 <script src="study/quick-reference/quick-reference.js?v=0128f417"></script>
 <script src="study/quick-reference/series-lessons.js?v=55eee161"></script>
 <script src="curriculum-pilot.js?v=9e0d75af"></script>
@@ -1645,8 +1704,8 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="card-title-art.js?v=e1304f60"></script>
 <script src="card-caption-art.js?v=54f165ad"></script>
 <script src="binder.js?v=0fb39163"></script>
-<script src="onboarding.js?v=186490cc"></script>
-<script src="account.js?v=f5ef9821"></script>
+<script src="onboarding.js?v=22da6d19"></script>
+<script src="account.js?v=8815fcd1"></script>
 <script src="admin.js?v=0348f8de"></script>
 <script src="sandbox.js?v=8db6606a"></script>
 <script src="evolve.js?v=7019cd0e"></script>
@@ -1662,13 +1721,16 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="lookalike-cards.js?v=86fdcc7e"></script>
 <script src="familycourt-cards.js?v=99470b26"></script>
 <script src="criminalprocedure-cards.js?v=a9e27540"></script>
+<script src="otherlaws-cards.js?v=c5e9cf43"></script>
 <script src="weakness.js?v=f19e3e69"></script>
 <script src="weak-ui.js?v=27817c76"></script>
 <script src="pattern-lessons.js?v=bd455b9f"></script>
 <script src="pattern-lessons-ui.js?v=3ace01b8"></script>
-<script src="today.js?v=7b46d941"></script>
-<script src="exam.js?v=22fd9823"></script>
+<script src="exam-scope.js?v=10c630a4"></script>
+<script src="today.js?v=65992cff"></script>
+<script src="exam.js?v=58922473"></script>
 <script src="exam-questions.js?v=37d27577"></script>
+<script src="plain-test.js?v=467c1051"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="pack3d-model.js?v=1860b3a0"></script>
 <script src="packfield.js?v=b72b00a2"></script>
@@ -2506,6 +2568,19 @@ if (typeof SERIES_DEFS !== "undefined" && !CARDS.some(c => c.series === 7)) SERI
 const CRIMINAL_PROCEDURE_DATA = window.CQ_CRIMINAL_PROCEDURE || { cards:[] };
 CARDS.push(...CRIMINAL_PROCEDURE_DATA.cards.filter(c => c && (CRIMINAL_PROCEDURE_DATA.includeDrafts || !c.draft)).map(criminalProcedureCard));
 if (typeof SERIES_DEFS !== "undefined" && !CARDS.some(c => c.series === 8)) { const i = SERIES_DEFS.findIndex(d => d.n === 8); if (i >= 0) SERIES_DEFS.splice(i, 1); }
+/* Series 9 · Other Laws (otherlaws-cards.js), the tagged set: same rule as Series 7 and 8 (drafts only with ?ccdrafts=1). S9_TAGS gives each card
+   its tag (plate = traffic, notice = landlord and tenant, band = mental hygiene, stamp = court papers and rules) and the memory code printed on it. */
+const S9_TAGS = {
+  rpapl_who_signs:['notice', 'A-J-C'], rpapl_ten_to_seventeen:['notice', '10 TO 17'], rpapl_answer_adjourn:['notice', 'ORAL 14'],
+  rpapl_warrant:['notice', '14 SUNUP'], rpapl_rent_demand:['notice', 'PAY 14'],
+  vtl_aggravated_unlicensed:['plate', '3-2-1'], vtl_point_oh_eight:['plate', '.08 .18'], vtl_sanctions:['plate', 'DWAI≠DWI'],
+  mhl_article9:['band', '2 DOC 10'], mhl_article10:['band', '72 HRS'], mhl_article81:['band', '28 · 7'],
+  cplr_article78:['stamp', 'C-M-P'], cplr_poor_person:['stamp', 'FEE $0'], ur200_papers:['stamp', '2 CLERK'], ur200_terms_oaths:['stamp', '4 WK × 13'],
+};
+const OTHER_LAWS_DATA = window.CQ_OTHER_LAWS || { cards:[] };
+CARDS.push(...OTHER_LAWS_DATA.cards.filter(c => c && (OTHER_LAWS_DATA.includeDrafts || !c.draft)).map(otherLawsCard)
+  .map(c => Object.assign(c, { look:'tag', tag:(S9_TAGS[c.id] || ['stamp', c.num])[0], tagCode:(S9_TAGS[c.id] || ['stamp', c.num])[1] })));
+if (typeof SERIES_DEFS !== "undefined" && !CARDS.some(c => c.series === 9)) { const i = SERIES_DEFS.findIndex(d => d.n === 9); if (i >= 0) SERIES_DEFS.splice(i, 1); }
 
 const SERIES3_IDS = new Set(['eightback','reargue','renew','sj120','undodefault','freeze','appeal30']);
 const SERIES3_BACKGROUNDS = {
@@ -2853,8 +2928,9 @@ function probeArt(){
   CARDS.forEach(c => { if (c.look === 'cc') c.asset = artSrc(c.ccArt.cast); });   // the look-alike set's cast doubles as its card art (thumbnails, Today hero)
   CARDS.forEach(c => { if (c.look === 'pc') c.asset = artSrc(c.art + '_1'); });   // Series 7: the level 1 screen art is the card art
   CARDS.forEach(c => { if (c.look === 'news') c.asset = artSrcJpg(c.art + '_1'); });   // Series 8: the comic strip is the card art
+  CARDS.forEach(c => { if (c.look === 'tag') c.asset = artSrcJpg(c.art + '_1'); });   // Series 9: the picture above the tag is the card art
   // The published build lists its art files up front, so nothing has to be guessed.
-  if (window.ART_MANIFEST) { CARDS.forEach(c => { ART[c.id] = window.ART_MANIFEST[c.art] || (c.look === 'cc' || c.look === 'pc' || c.look === 'news' ? { 1:c.asset } : {}); }); return Promise.resolve(); }
+  if (window.ART_MANIFEST) { CARDS.forEach(c => { ART[c.id] = window.ART_MANIFEST[c.art] || (c.look === 'cc' || c.look === 'pc' || c.look === 'news' || c.look === 'tag' ? { 1:c.asset } : {}); }); return Promise.resolve(); }
   const jobs = [];
   CARDS.forEach(c => {
     ART[c.id] = {};
@@ -3059,6 +3135,26 @@ function frontNewsHTML(c, st, opt = {}){
     <div class="t news lvl" style="${P(744, 1452, 970, 1494)}">LEVEL ${lv} · ${'★'.repeat(lv)}${'☆'.repeat(Math.max(0, maxL(c) - lv))}</div>
     ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
 }
+/* Series 9 · Other Laws: the tagged front (see the .look-tag styles). One picture at every level; the tag beneath it carries the memory code. */
+const S9_TAG_WORDS = { plate:['BECOMING A CLERK', 'OTHER LAWS · ON THE ROAD'], notice:['NOTICE', 'BECOMING A CLERK · AT THE DOOR'],
+  band:['', 'BECOMING A CLERK · ADMITTED'], stamp:['RECEIVED', "BECOMING A CLERK · CLERK'S OFFICE"] };
+function s9TagHTML(kind, code){
+  const [top, sub] = S9_TAG_WORDS[kind] || S9_TAG_WORDS.stamp, k = `s9-code${String(code).length > 7 ? ' long' : ''}`;
+  if (kind === 'plate') return `<div class="s9tag s9-plate"><div class="s9-top">${top}</div><i></i><i></i><span class="${k}">${esc(code)}</span><div class="s9-bot">${sub}</div></div>`;
+  if (kind === 'band') return `<div class="s9tag s9-band"><i></i><i></i><i></i><i></i><div class="s9-bandplate"><small>${sub}</small><span class="${k}">${esc(code)}</span></div></div>`;
+  return `<div class="s9tag s9-${kind === 'notice' ? 'notice' : 'stamp'}"><div class="s9-top">${top}</div><span class="${k}">${esc(code)}</span><small>${sub}</small></div>`;
+}
+function frontTagHTML(c, st, opt = {}){
+  const lv = st.level, need = NEED[lv - 1];
+  return `
+    <i class="s9-border" aria-hidden="true"></i>
+    <div class="s9-head" style="${P(40, 40, 984, 150)}"><b>${esc(c.num)}</b><span${c.name.length > 24 ? ' class="long"' : ''}>${esc(c.name.toUpperCase())}</span></div>
+    <div class="s9-art" style="${P(132, 172, 892, 932)}"><img src="${artSrcJpg(c.art + '_1')}" alt="${esc(c.name)} artwork"></div>
+    <div class="s9-tagbox" role="img" aria-label="Memory code ${esc(c.tagCode)}" style="${P(60, 950, 964, 1330)}">${s9TagHTML(c.tag, c.tagCode)}</div>
+    <div class="s9-rule" style="${P(70, 1338, 954, 1420)}">${esc(c.quote || '')}</div>
+    <div class="s9-foot" style="${P(80, 1428, 944, 1486)}"><span>${verLabel(st)}</span><span>${st.mastered ? 'XP MAX' : `XP ${st.xp} / ${need}`}</span><span class="lv">LEVEL ${lv} · ${'★'.repeat(lv)}${'☆'.repeat(Math.max(0, maxL(c) - lv))}</span></div>
+    ${st.mastered ? `<img class="stampimg mastered" src="art/stamp_mastered.webp" alt="Mastered">` : ''}`;
+}
 const CC_TITLE_BOX = [126, 112, 898, 304];   // the banner is yellow from about y 103 to 309 at the middle and 115 to 302 near its ends
 function ccLockupHTML(c){
   const t = S6_QUESTION_TITLE_ART[c.id]; if (!t) return '';
@@ -3176,6 +3272,7 @@ function frontHTML(c, st, opt={}){
   if (c.look === 'cc') return frontCCHTML(c, st, opt);
   if (c.look === 'pc') return frontPCHTML(c, st, opt);
   if (c.look === 'news') return frontNewsHTML(c, st, opt);
+  if (c.look === 'tag') return frontTagHTML(c, st, opt);
   if (c.series === 3) return frontS3HTML(c, st, opt);
   if (c.series === 4 || c.series === 5) return frontS45HTML(c, st, opt);
   const lv = st.level, need = NEED[lv-1];
@@ -3766,7 +3863,8 @@ const SERIES_BACKS = {
   3:'art/back_s3_archive_v1.webp', 4:'art/back_s4_template_v1.webp', 5:'art/back_s5_template_v1.webp',
   6:'art/back_s6.webp',   // Series 6's emblem is its everyday back, not a reward
   7:'art/back_s7_template_v1.webp',
-  8:'art/back_s8.webp'   // Series 8's newspaper back (tools/s8_art.py)
+  8:'art/back_s8.webp',   // Series 8's newspaper back (tools/s8_art.py)
+  9:'art/back_s9.webp'   // Series 9's tagged back: the four tags around the courthouse
 };
 const SERIES_BACK_LABELS = {
   1:{src:'art/back_label_s1_v1.svg', label:'Series 1 Court Terms card back'},
@@ -3915,7 +4013,7 @@ const SCREENS = {
       const cold = mine.filter(c => isCold(S.cards[c.id]));
       const almost = mine.filter(c => { const st = S.cards[c.id]; return !st.mastered && Math.ceil((NEED[st.level-1] - st.xp) / REWARD[st.level-1]) <= 2; });
       const upNext = mine.filter(c => !S.cards[c.id].mastered && !isCold(S.cards[c.id])).sort((a, b) => cardProgress(b) - cardProgress(a)).slice(0, 5);
-      body += `${typeof examRowHTML === 'function' ? examRowHTML() : ''}<button class="quick" data-act="quick">${PLAY_ICON} Quick Round<small>A random card from your collection</small></button>
+      body += `${typeof examTrackInfo === 'function' ? `<div class="xt-row"><span>Studying for <b>${esc(examTrackInfo().short)}</b></span><button data-act="push" data-s="examtrack">Change</button></div>` : ''}${typeof examRowHTML === 'function' ? examRowHTML() : ''}<button class="quick" data-act="quick">${PLAY_ICON} Quick Round<small>A random card from your collection</small></button>
         ${typeof docketPracticeHTML === 'function' ? docketPracticeHTML() : ''}
         ${cold.length ? `<div class="sec-h"><span>${ICO('thermo_snow')} Cold Cases</span></div><div class="list">${cold.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('')}</div>` : ''}
         ${almost.length ? `<div class="sec-h"><span>${ICO('almost')} Almost Leveled Up</span></div><div class="carousel">${almost.map(c => miniCard(c)).join('')}</div>` : ''}
@@ -4138,6 +4236,7 @@ const SCREENS = {
              <button class="row" data-act="cloud-signout"><span class="th emo gi">${ICO('signout')}</span><span class="row-main"><b>Sign out</b></span></button>`
           : `<button class="row" data-act="cloud-signin"><span class="th emo gi">${ICO('cloud')}</span><span class="row-main"><b>Create an account or sign in</b><small>Right now your progress is only on this device</small></span>${chev}</button>`}
       </div>
+      ${typeof examTrackRowHTML === 'function' ? `<div class="sec-h"><span>Studying for</span></div><div class="list">${examTrackRowHTML()}</div>` : ''}
       <div class="sec-h"><span>Appearance &amp; accessibility</span></div>
       <div class="list">
         <button class="row" data-act="push" data-s="store"><span class="th emo gi">${ICO('sparkle')}</span><span class="row-main"><b>Card appearance</b><small>Frames, backs, and covers</small></span>${chev}</button>
@@ -4180,7 +4279,7 @@ function renderTabbar(){
 const nav = { tab:'home', stacks:{} };
 TABS.forEach(([id]) => nav.stacks[id] = [{s:id, p:{}}]);
 const topEntry = () => { const st = nav.stacks[nav.tab]; return st[st.length - 1]; };
-Object.assign(SCREENS, STUDY_SCREENS, STORE_SCREENS, BINDER_SCREENS, ACCOUNT_SCREENS, ADMIN_SCREENS, STICKER_SCREENS, DOCKET_SCREENS, typeof EXAM_SCREENS === 'object' ? EXAM_SCREENS : {});
+Object.assign(SCREENS, STUDY_SCREENS, STORE_SCREENS, BINDER_SCREENS, ACCOUNT_SCREENS, ADMIN_SCREENS, STICKER_SCREENS, DOCKET_SCREENS, typeof EXAM_SCREENS === 'object' ? EXAM_SCREENS : {}, typeof EXAM_TRACK_SCREENS === 'object' ? EXAM_TRACK_SCREENS : {});
 function currentScreenEl(){ return document.querySelector('#screens .screen.current'); }
 function saveScroll(){ const el = currentScreenEl(); if (el && el._entry) el._entry.scroll = el.querySelector('.scr').scrollTop; }
 function buildScreen(entry, depth = nav.stacks[nav.tab].length - 1){
@@ -4409,7 +4508,7 @@ function paintStudy(anim){
 }
 function readinessPanel(){
   const pct = Math.round(Recall.readiness() * 100), list = Recall.examCards();
-  return `<div class="rd-panel"><div class="rd-top"><b>Exam readiness</b><span>${pct}%</span></div>
+  return `<div class="rd-panel"><div class="rd-top"><b>Exam readiness${typeof examTrackInfo === 'function' ? ' · ' + esc(examTrackInfo().short) : ''}</b><span>${pct}%</span></div>
     <div class="rd-bar"><i style="width:${pct}%"></i></div>
     <small>${Recall.strong()} of ${list.length} rule cards strong in memory. Only right answers without hints raise it, and it fades if you stop reviewing. XP and boosts don't count.</small></div>`;
 }
@@ -4436,7 +4535,7 @@ const Recall = (() => {
     const over = Math.max(0, now - r.due) / (GAP[r.box] * DAYMS);
     return r.box / 5 * Math.pow(.5, over);
   }
-  const examCards = () => CARDS.filter(c => c.bank && c.bank.length);
+  const examCards = () => CARDS.filter(c => c.bank && c.bank.length && (typeof cardOnTrack !== 'function' || cardOnTrack(c)));   // only the chosen exam's cards (exam-scope.js)
   function readiness(){
     const list = examCards(); if (!list.length) return 0;
     return list.reduce((n, c) => n + strength(c.id), 0) / list.length;
@@ -5322,6 +5421,7 @@ function a2hsSheet(){
 }
 function quickRound(){
   let mine = CARDS.filter(owned);
+  if (typeof cardOnTrack === 'function' && mine.some(c => cardOnTrack(c))) mine = mine.filter(c => cardOnTrack(c));   // the chosen exam's cards first
   if (!S.quickRounds) mine = mine.filter(c => c.gen !== 'compare').length ? mine.filter(c => c.gen !== 'compare') : mine;   // a first Quick Round skips copy-check cards
   const cold = mine.filter(c => isCold(S.cards[c.id]));
   const open = mine.filter(c => !S.cards[c.id].mastered);
