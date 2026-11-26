@@ -30,7 +30,9 @@ function nextCard(){
   const order = [...LESSONS.flatMap(L => L.cards || []), ...CARDS.map(c => c.id)];
   const fresh = id => { const c = byId(id); return c && studyable(c) && c.bank && c.bank.length && !(S.cards[id] || {}).last; };
   const onTrack = id => typeof cardOnTrack !== 'function' || cardOnTrack(byId(id));   // the chosen exam's cards first (exam-scope.js)
-  return order.find(id => fresh(id) && onTrack(id)) || order.find(fresh) || null;
+  const ranked = list => typeof pathCardRank === 'function' ? list.map((id, k) => ({ id, k, r:pathCardRank(byId(id)) })).sort((a, b) => a.r - b.r || a.k - b.k).map(x => x.id) : list;   // the placement map first (study-path.js)
+  const pick = test => ranked(order.filter(test))[0];
+  return pick(id => fresh(id) && onTrack(id)) || pick(fresh) || null;
 }
 
 /* pages finished on a docket, over all its levels (old saves kept pages on the record itself) */

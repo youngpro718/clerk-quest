@@ -190,6 +190,7 @@ const EXAM_TRACK_SCREENS = {
       <p class="xt-lead">Pick the exam you're studying for. The Practice Exam, Today's review, Quick Round and your readiness score use only the law on that exam's official subject list.</p>
       ${examTrackPickerHTML()}
       <p class="xt-note">${n} of ${on.length} study cards have questions on the ${examTrackInfo().short} list. Associate and Principal cover more law than the app has cards for yet; more are on the way.</p>
+      ${typeof pathRowHTML === 'function' ? pathRowHTML() : ''}
     </div>` };
   },
 };

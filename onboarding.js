@@ -34,7 +34,7 @@ function showWelcome(){
 let wlPreview = false;   // the admin view replays the welcome without touching the save
 function previewWelcome(){ wlPreview = true; showWelcome(); }
 function endWelcome(){ document.getElementById('shell')?.removeAttribute('aria-hidden'); if (wlPreview) { wlPreview = false; document.getElementById('wl-root')?.remove(); return; } onbFlag('welcomed'); const el = document.getElementById('wl-root'); if (el) el.remove(); refresh(); }
-function maybeWelcome(){ if (!onb().welcomed) showWelcome(); }
+function maybeWelcome(){ if (onb().welcomed) return; if (typeof pathFrontDoor === 'function') pathFrontDoor(); else showWelcome(); }   // the Study Path (study-path.js) is the front door; this welcome is "Explore on my own"
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if (!t) return;
   switch (t.dataset.act) {
