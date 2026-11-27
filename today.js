@@ -7,6 +7,7 @@
    push, switchTab, spotlight, payOnboarding, nearestGoal). */
 
 const TODAY_MAX = 4;
+const TODAY_PLAN_MAX = 7, TODAY_EXTRA_MAX = 2;   // Study Path days: the plan's own items, then optional extras that never block "done for today"
 const REVIEW_MAX = 6;   // a mixed review round: one question per card
 const dayKeyOf = ts => { const d = new Date(+ts); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
 const onToday = ts => !!ts && dayKeyOf(ts) === todayKey();
@@ -25,8 +26,11 @@ function reviewPile(now = Date.now()){
   return [...due, ...shaky, ...cold].map(c => c.id);
 }
 
-/* the next studyable card never studied, in built-in lesson order, then card order */
+/* the next studyable card never studied: the Study Path's current unit when there is a plan (study-plan.js),
+   else built-in lesson order, then card order */
 function nextCard(){
+  const planned = typeof planNextCards === 'function' ? planNextCards(1)[0] : null;
+  if (planned) return planned;
   const order = [...LESSONS.flatMap(L => L.cards || []), ...CARDS.map(c => c.id)];
   const fresh = id => { const c = byId(id); return c && studyable(c) && c.bank && c.bank.length && !(S.cards[id] || {}).last; };
   const onTrack = id => typeof cardOnTrack !== 'function' || cardOnTrack(byId(id));   // the chosen exam's cards first (exam-scope.js)
@@ -55,15 +59,31 @@ function examDue(now = Date.now()){
 function buildTodayItems(now = Date.now()){
   const items = [], o = onb();
   const gs = !o.finished && !o.hidden && STEPS.find(s => !s.test());
+  const planned = typeof planActive === 'function' && planActive();
+  if (planned) {
+    // Study Path players: the plan leads (mock, repair, checkpoint, the day's new cards), then review, then a
+    // "skip ahead" test-out (study-plan.js). That is the day's finish line. Getting Started, a Hot Docket and a daily
+    // quest come after it as extras (opt): shown, never counted, so they can't hold back "done for today".
+    const { lead, later } = planTodayItems(now);
+    items.push(...lead);
+    const pile = reviewPile(now);
+    if (pile.length) items.push({ kind:'review', id:pile[0], ids:pile.slice(0, REVIEW_MAX) });
+    if (!lead.some(it => it.kind === 'next')) { const next = nextCard(); if (next) items.push({ kind:'next', id:next }); }
+    items.push(...later);
+    const extra = [];
+    if (gs) extra.push({ kind:'gs', id:gs.id, opt:true });
+    const d = liveDocket();
+    if (d) extra.push({ kind:'docket', id:d.id, base:docketProgress(d.id), opt:true });
+    if (!gs) { const q = DAILY_QUESTS.find(q => q.id !== 'round' && !questState(q, 'daily').done); if (q) extra.push({ kind:'quest', id:q.id, opt:true }); }
+    return [...items.slice(0, TODAY_PLAN_MAX), ...extra.slice(0, TODAY_EXTRA_MAX)];
+  }
   if (gs) items.push({ kind:'gs', id:gs.id });
-  const plan = typeof planTodayItem === 'function' ? planTodayItem(now) : null;   // Study Path: a checkpoint, repair or mock exam (study-plan.js)
-  if (plan) items.push(plan);
   const pile = reviewPile(now);
   if (pile.length) items.push({ kind:'review', id:pile[0], ids:pile.slice(0, REVIEW_MAX) });
   const next = nextCard();
   if (next) items.push({ kind:'next', id:next });
   else if (S.packs > 0) items.push({ kind:'pack', base:S.packsOpened || 0 });
-  if (examDue(now) && !(typeof planActive === 'function' && planActive())) items.push({ kind:'exam', base:(S.examHistory || []).length });
+  if (examDue(now)) items.push({ kind:'exam', base:(S.examHistory || []).length });
   const d = liveDocket();
   if (d) items.push({ kind:'docket', id:d.id, base:docketProgress(d.id) });
   if (!gs) {
@@ -74,8 +94,36 @@ function buildTodayItems(now = Date.now()){
 }
 
 function todayPlan(){
+  if (typeof planFoldExam === 'function' && !todayMerging) planFoldExam();   // a mock or practice exam just finished: re-rank the plan, and Today picks up the change
   if (!S.today || S.today.date !== todayKey() || !Array.isArray(S.today.items)) S.today = { date:todayKey(), items:buildTodayItems() };
   return S.today;
+}
+
+/* the day's finish line: only the items that count (extras don't), how many are done, and the first one left */
+function todayCount(items = todayPlan().items){
+  const core = items.filter(it => !it.opt), done = core.filter(itemDone).length;
+  return { total:core.length, done, first:items.findIndex(it => !it.opt && !itemDone(it)) };
+}
+
+/* the plan changed mid-day (a checkpoint result, a mock exam): keep every row Today already showed, so nothing
+   done disappears and the count never goes backwards; add what's new (a repair, the next unit's checkpoint), and
+   new cards only up to the day's budget. A checkpoint or repair still owed stays; other rows that no longer apply drop out. */
+const todayKeyOf = it => [it.kind, it.sub || '', it.unit || '', it.kind === 'review' ? '' : it.id || '', it.skip ? 's' : ''].join('|');
+let todayMerging = false;
+function todayMerge(now = Date.now()){
+  if (todayMerging) return;
+  if (!S.today || S.today.date !== todayKey() || !Array.isArray(S.today.items)) { delete S.today; return; }
+  todayMerging = true;
+  try {
+    const old = S.today.items, fresh = buildTodayItems(now), freshKeys = new Set(fresh.map(todayKeyOf));
+    const keep = old.filter(it => itemDone(it) || freshKeys.has(todayKeyOf(it)) || (it.kind === 'plan' && typeof planItemLive === 'function' && planItemLive(it, now))), have = new Set(keep.map(todayKeyOf));
+    let budget = (typeof planNewPerDay === 'function' ? planNewPerDay() : 1) - keep.filter(it => it.kind === 'next').length;
+    let tests = keep.filter(it => it.sub === 'checkpoint').length;   // at most two checkpoints a day, so passing one doesn't open a chain of them
+    const add = fresh.filter(it => !have.has(todayKeyOf(it)) && (it.kind !== 'next' || budget-- > 0) && (it.sub !== 'checkpoint' || tests++ < 2));
+    const items = [...keep, ...add];
+    // the plan's rows first, extras last, in the order they were first shown
+    S.today.items = [...items.filter(it => !it.opt), ...items.filter(it => it.opt)];
+  } finally { todayMerging = false; }
 }
 
 const multiReview = it => it.kind === 'review' && Array.isArray(it.ids) && it.ids.length > 1;
@@ -102,7 +150,8 @@ function todayRow(it){
     case 'review': return multiReview(it) ? { t:'Review: ' + it.ids.length + ' cards', sub:'Due or shaky · about ' + Math.max(1, Math.round(it.ids.length / 2)) + ' min' }
       : { t:'Review: ' + c.name, sub:'5 questions · about 2 min' };
     case 'next': { const k = CARD_VIDEOS[it.id], v = k && LESSON_VIDEOS[k];
-      return v ? { t:'Watch, then practice: ' + c.name, sub:'Video ' + v.len + ' · then 5 questions' } : { t:'Next: ' + c.name, sub:'New card · 5 questions' }; }
+      const unit = it.unit && typeof planUnitName === 'function' ? planUnitName(it.unit) + ' · ' : '';   // a Study Path card says which unit it's in
+      return v ? { t:'Watch, then practice: ' + c.name, sub:unit + 'Video ' + v.len + ' · then 5 questions' } : { t:'Next: ' + c.name, sub:unit + 'New card · 5 questions' }; }
     case 'pack': return { t:'Open a pack for new cards', sub:'New cards to study' };
     case 'plan': return planItemRow(it);
     case 'exam': return { t:'Weekly practice exam', sub:EXAM_TODAY_N + ' questions · about ' + Math.round(EXAM_TODAY_N * 1.2) + ' min · misses come back in review' };
@@ -121,11 +170,20 @@ function heroCard(){
   return cold[0] || (g && g.c) || CARDS.find(owned) || null;
 }
 
+/* a plan item's art comes from its own unit (a missed card for a repair), so the picture matches the lesson.
+   A mock exam covers everything: no card. */
+function planHeroCard(it){
+  if (it.sub === 'mock') return null;
+  const ids = it.ids && it.ids.length ? it.ids : (typeof pathUnits === 'function' ? (pathUnits().find(u => u.id === it.unit) || { cards:[] }).cards : []);
+  const list = ids.map(byId).filter(Boolean);
+  return list.find(owned) || list[0] || null;
+}
+
 /* the words (and art) of the hero card for one plan item, or for "done for today" when it is null.
    Shared by the hero card below and the desk-style Today (home-desk.js). */
 function todayHeroText(it, done, total){
   const ruleStep = it && it.kind === 'gs' && (it.id === 'read' || it.id === 'mark') && typeof ruleCard === 'function';   // these steps open a rule card: show it
-  const card = it && (it.kind === 'review' || it.kind === 'next') ? byId(it.id) : (ruleStep && ruleCard()) || heroCard();
+  const card = it && (it.kind === 'review' || it.kind === 'next') ? byId(it.id) : it && it.kind === 'plan' ? planHeroCard(it) : (ruleStep && ruleCard()) || heroCard();
   let label, title, what, cta, cls = '', art = card ? homeCharacter(card) : '', name = card ? card.name : '';
   const r = it && todayRow(it);
   if (!it) {
@@ -140,7 +198,8 @@ function todayHeroText(it, done, total){
     label = 'READY FOR A REFRESHER'; title = heroTopicTitle(card); what = heroTopic(card); cta = 'STUDY 5 QUESTIONS'; cls = 'cold';
   } else if (it.kind === 'next') {
     const k = CARD_VIDEOS[it.id], v = k && LESSON_VIDEOS[k];
-    label = 'YOUR NEXT STUDY'; title = heroTopicTitle(card); what = heroTopic(card); cta = v ? 'WATCH, THEN 5 QUESTIONS' : 'STUDY 5 QUESTIONS';
+    label = it.unit ? 'STUDY PATH · NEXT CARD' : 'YOUR NEXT STUDY';   // the banner above already names the unit
+    title = heroTopicTitle(card); what = heroTopic(card); cta = v ? 'WATCH, THEN 5 QUESTIONS' : 'STUDY 5 QUESTIONS';
   } else if (it.kind === 'docket') {
     label = 'HOT DOCKET'; title = r.t.replace(/^Hot Docket: /, ''); what = r.sub; cta = 'OPEN THE DOCKET'; cls = 'docket';
     art = `<img src="${artSrc('docket_folder')}" alt="">`; name = '';
@@ -187,14 +246,16 @@ function todayTile(it, i, just){
 const tdSeen = { items:null, done:new Set(), count:0 };
 function todayHTML(){
   if (typeof payOnboarding === 'function') payOnboarding();
-  const items = todayPlan().items, done = items.filter(itemDone).length, first = items.findIndex(it => !itemDone(it));
+  const items = todayPlan().items, { done, total, first } = todayCount(items);
   const visible = typeof app === 'undefined' || app.hidden, fresh = tdSeen.items !== items;
   const just = it => visible && !fresh && itemDone(it) && !tdSeen.done.has(it);
   const was = visible && !fresh ? Math.min(tdSeen.count, done) : done;
-  const rest = items.map((it, i) => i === first ? '' : todayTile(it, i, just(it))).join('');
+  const tiles = opt => items.map((it, i) => i === first || !it.opt !== !opt ? '' : todayTile(it, i, just(it))).join('');
+  const rest = tiles(false), extras = tiles(true);
   if (visible) { tdSeen.items = items; tdSeen.done = new Set(items.filter(itemDone)); tdSeen.count = done; }
-  return `<section class="today" aria-label="Today's plan">${todayHero(first >= 0 ? items[first] : null, first, done, items.length, was)}
-    ${rest ? `<div class="td-list">${rest}</div>` : ''}</section>`;
+  return `<section class="today" aria-label="Today's plan">${todayHero(first >= 0 ? items[first] : null, first, done, total, was)}
+    ${rest ? `<div class="td-list">${rest}</div>` : ''}
+    ${extras ? `<div class="td-extra-h">Extras · optional</div><div class="td-list td-extra">${extras}</div>` : ''}</section>`;
 }
 
 /* daily quests live on Today now (no Quests tab): one row that opens the Quests screen */
@@ -291,6 +352,8 @@ const TODAY_CSS = `
 .hero.td-hero.done .hero-cta{background:#2f8a4a}
 .hero.td-hero .hero-card>img{height:150px}
 .td-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.td-extra-h{margin:16px 2px 0;font:400 16px "Bangers";letter-spacing:.06em;color:var(--sub)}
+.td-extra .td-tile:not(.done){opacity:.85}
 .td-tile{display:flex;align-items:center;gap:12px;width:100%;min-height:64px;padding:9px 12px;border-radius:16px;border:.5px solid var(--line);background:var(--bg2);color:var(--paper);text-align:left}
 .td-tile.done{opacity:.6}
 .td-tile.done b span{background:linear-gradient(currentColor,currentColor) no-repeat 0 55%/100% 1.5px;-webkit-box-decoration-break:clone;box-decoration-break:clone}

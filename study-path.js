@@ -156,10 +156,12 @@ let pathRankCache = {};
 function pathPacing(now = Date.now()){
   const p = S.path || {}, units = pathUnits();
   const toLearn = units.filter(u => (p.map || {})[u.id] !== 'strong').reduce((n, u) => n + u.cards.filter(id => !((S.cards || {})[id] || {}).last).length, 0);
-  const days = pathDaysLeft(now) ?? PATH_DEFAULT_DAYS;
+  // no exam date: the 8-week plan counts down from the day the map was drawn, so falling behind shows up as a higher need
+  const dated = pathDaysLeft(now), start = p.doneAt || now;
+  const days = dated ?? Math.max(0, Math.ceil((start + PATH_DEFAULT_DAYS * 864e5 - now) / 864e5));
   const need = days ? Math.ceil(toLearn / Math.max(1, days - 7)) : toLearn;    // the last week is for review and a mock exam
   const fits = PATH_NEW_PER_DAY[p.minutes] || 2;
-  return { toLearn, days, need, fits, ok:need <= fits };
+  return { toLearn, days, need, fits, ok:need <= fits, dated:dated != null };
 }
 
 /* ---------- screens ---------- */
@@ -174,12 +176,16 @@ const PATH_BG = [
   ['court', 'I work in a court now', 'Start with harder questions'],
   ['retake', "I've taken this exam before", 'Start with harder questions'],
 ];
-const PATH_STEPS = 4;
+/* Associate and Principal are promotion exams: everyone taking them already works as a clerk, so the background question
+   is skipped for them and the check starts with harder questions (bg 'promo'). */
+const PATH_PROMO = ['acc', 'pcc'];
+const pathPromo = (p = S.path || {}) => PATH_PROMO.includes(p.exam);
+const pathSteps = (p = S.path || {}) => pathPromo(p) ? 3 : 4;
 let pathDateOpen = false;
 
 function pathFrame(inner, cls = ''){ return `<div class="spth ${cls}">${inner}</div>`; }
 const pathOpt = (act, val, on, b, small, attr = 'v') => `<button class="sp-opt ${on ? 'on' : ''}" role="radio" aria-checked="${!!on}" data-act="${act}" data-${attr}="${esc(String(val))}"><b>${esc(b)}</b>${small ? `<small>${esc(small)}</small>` : ''}</button>`;
-const pathStepLbl = k => `<span class="sp-lbl">INTAKE · ${k} OF ${PATH_STEPS}</span>`;
+const pathStepLbl = k => `<span class="sp-lbl">INTAKE · ${k} OF ${pathSteps()}</span>`;
 const pathNav = (canNext, nextLabel = 'NEXT') => `<div class="sp-nav"><button class="btn-big gold" data-act="sp-next" ${canNext ? '' : 'disabled'}>${nextLabel}</button>
   <button class="sp-back" data-act="sp-back">Back</button></div>`;
 
@@ -187,7 +193,7 @@ function pathIntroHTML(){
   const signIn = typeof cloudUser === 'function' && !cloudUser() ? `<button class="wl-signin" data-act="wl-signin">I already have an account · Sign in</button>` : '';
   return `<div class="wl">${typeof brandHTML === 'function' ? brandHTML('small') : ''}${typeof welcomeVisualHTML === 'function' ? welcomeVisualHTML() : ''}
     <h2>Let's get you ready for your exam.</h2>
-    <p>Four quick questions, a short placement check, and you'll know exactly where to start.</p>
+    <p>A few quick questions, a short placement check, and you'll know exactly where to start.</p>
     <button class="btn-big gold" data-act="sp-begin">BUILD MY STUDY PLAN</button>
     ${typeof ptOpen === 'function' ? `<button class="wl-signin wl-plain" data-act="pt-open">Just want a practice test? Skip the cards.</button>` : ''}
     <button class="wl-signin" data-act="sp-explore">Explore on my own</button>
@@ -195,7 +201,7 @@ function pathIntroHTML(){
 }
 
 function pathIntakeHTML(){
-  const p = pathState(), k = p.step;
+  const p = pathState(), k = Math.min(p.step, pathSteps(p));   // an old save may sit on a step this exam no longer asks
   if (k === 1) return pathFrame(`${pathStepLbl(1)}<h2>Which exam are you studying for?</h2>
     <div class="sp-opts" role="radiogroup">${PATH_EXAMS.map(([v, b, s]) => pathOpt('sp-exam', v, p.exam === v, b, s)).join('')}</div>${pathNav(!!p.exam)}`);
   if (k === 2) {
@@ -209,7 +215,7 @@ function pathIntakeHTML(){
   if (k === 3) return pathFrame(`${pathStepLbl(3)}<h2>How long can you study a day?</h2>
     <div class="sp-opts sp-inline" role="radiogroup">${PATH_MINUTES.map(m => pathOpt('sp-min', m, p.minutes === m, m + ' min', m === 10 ? 'A coffee break' : m === 20 ? 'Recommended' : 'Serious push')).join('')}</div>
     ${pathNav(!!p.minutes)}`);
-  if (k === 4) return pathFrame(`${pathStepLbl(4)}<h2>What's your background?</h2>
+  if (k === 4 && !pathPromo(p)) return pathFrame(`${pathStepLbl(4)}<h2>What's your background?</h2>
     <div class="sp-opts" role="radiogroup">${PATH_BG.map(([v, b, s]) => pathOpt('sp-bg', v, p.bg === v, b, s)).join('')}</div>${pathNav(!!p.bg)}`);
   return pathIntroHTML();
 }
@@ -238,7 +244,8 @@ function pathQuestionHTML(){
 function pathResultHTML(){
   const p = S.path, units = pathUnits(), pace = pathPacing(), track = (EXAM_TRACKS[examTrack()] || {}).short || 'Court Clerk';
   const order = units.slice().sort((a, b) => pathCardRank(byId(a.cards[0])) - pathCardRank(byId(b.cards[0])));
-  const first = order.find(u => p.map[u.id] !== 'strong') || order[0];
+  const cur = typeof planCurrent === 'function' ? planCurrent() : null;   // the same "start here" as Home and the Study Path
+  const first = (cur && order.find(u => u.id === cur.id)) || order.find(u => p.map[u.id] !== 'strong') || order[0];
   const counts = { strong:0, shaky:0, new:0 }; units.forEach(u => counts[p.map[u.id] || 'new']++);
   const days = pathDaysLeft(), when = days == null ? 'No exam date yet, so this plans for 8 weeks.' : days === 0 ? 'Your exam is today.' : `Your exam is in ${days} day${days === 1 ? '' : 's'}.`;
   const paceLine = !pace.toLearn ? 'Every unit came back Strong. Your plan is review and practice exams.'
@@ -298,8 +305,14 @@ function pathAnswer(v){
   save(); showPath();
 }
 
-/* retake from the "Your exam" screen: keep the intake, redo the check */
-function pathRetake(){ const p = pathState(); p.step = 1; p.stage = 'intake'; delete p.place; save(); showPath(); }
+/* retake from the "Your exam" or Study Path screen: keep the intake and go straight to the check (Back still edits the
+   answers). A player who never did the intake ("Explore on my own") starts at its first question. */
+function pathRetake(){
+  const p = pathState(); delete p.place;
+  if (p.exam && p.minutes && (p.bg || pathPromo(p))) { p.stage = 'placement'; p.step = pathSteps(p); }
+  else { p.stage = 'intake'; p.step = 1; }
+  save(); showPath();
+}
 
 document.addEventListener('click', e => {
   const t = e.target.closest && e.target.closest('[data-act^="sp-"]'); if (!t) return;
@@ -307,13 +320,16 @@ document.addEventListener('click', e => {
   switch (a) {
     case 'sp-begin': p.step = 1; break;
     case 'sp-explore': document.getElementById('wl-root')?.remove(); if (typeof showWelcome === 'function') showWelcome(); return;
-    case 'sp-exam': p.exam = t.dataset.v; if (typeof setExamTrack === 'function') setExamTrack(p.exam === 'unsure' ? 'cc' : p.exam); p.track = examTrack(); break;
+    case 'sp-exam':
+      p.exam = t.dataset.v; if (typeof setExamTrack === 'function') setExamTrack(p.exam === 'unsure' ? 'cc' : p.exam); p.track = examTrack();
+      if (pathPromo(p)) p.bg = 'promo'; else if (p.bg === 'promo') delete p.bg;   // promotion exams: no "are you new?" question
+      break;
     case 'sp-when': p.when = t.dataset.v; pathDateOpen = p.when === 'date'; if (p.when === 'none') p.date = ''; break;
     case 'sp-min': p.minutes = +t.dataset.v; break;
     case 'sp-bg': p.bg = t.dataset.v; break;
-    case 'sp-next': if (p.step >= PATH_STEPS) { p.stage = 'placement'; delete p.place; } else p.step++; break;
+    case 'sp-next': if (p.step >= pathSteps(p)) { p.stage = 'placement'; delete p.place; } else p.step++; break;
     case 'sp-back':
-      if (p.stage === 'placement') { p.stage = 'intake'; p.step = PATH_STEPS; }
+      if (p.stage === 'placement') { p.stage = 'intake'; p.step = pathSteps(p); }
       else p.step = Math.max(0, p.step - 1);
       break;
     case 'sp-place-go': pathStartPlacement(); return;

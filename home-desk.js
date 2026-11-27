@@ -128,7 +128,7 @@ const HomeDesk = (() => {
   /* ---------- the day's live data ---------- */
   const cardArt = c => { try { return !!(c && typeof uiCharacterSrc === 'function' && uiCharacterSrc(c)); } catch (_) { return false; } };
   function deskData(){
-    const items = todayPlan().items, total = items.length, done = items.filter(itemDone).length, first = items.findIndex(it => !itemDone(it));
+    const items = todayPlan().items, { total, done, first } = todayCount(items);   // extras never count toward the finish line
     const it = first >= 0 ? items[first] : null, hero = todayHeroText(it, done, total);
     const packs = Math.max(0, S.packs | 0);
     let next = null;

@@ -14,6 +14,8 @@ const MOCK_N = 50;              // mock exam length until the real exam's length
 const PLAN_DAY = 864e5;
 
 const planActive = () => typeof pathDone === 'function' && pathDone();
+/* the plan changed mid-day (a checkpoint, a mock exam): Today keeps what it showed and adds what's new (today.js) */
+const planTodayChanged = now => { if (typeof todayMerge === 'function') todayMerge(now); else if (S.today) delete S.today; };
 function planUnitRec(id){
   const p = S.path, all = p.units = p.units && typeof p.units === 'object' ? p.units : {};
   return all[id] = all[id] || { cps:[] };
@@ -25,13 +27,16 @@ function planEnd(){
 }
 
 /* ---------- units in order, with progress ---------- */
-const planLearned = id => !!(((S.cards || {})[id] || {}).last || (((S.recall || {})[id] || {}).box || 0) >= 1);
+/* a card counts as learned once it has had a study round of its own. Getting it right in the placement check, an exam or a
+   checkpoint doesn't count: placement knowledge is what "skip ahead" is for, so a unit is never owed a checkpoint for cards never studied. */
+const planLearned = id => !!((S.cards || {})[id] || {}).last;
 function planUnitState(u, now = Date.now()){
   const r = planUnitRec(u.id), learned = u.cards.filter(planLearned).length, st = (S.path.map || {})[u.id] || 'new';
   if (r.passed) return { key:'closed', learned, r, st };
   if (r.repair && r.repair.length && !planRepairDone(u.id)) return { key:'repair', learned, r, st };
   if (r.retryAt && now < r.retryAt) return { key:'wait', learned, r, st };
-  if (learned >= u.cards.length || st === 'strong' || (r.cps || []).length) return { key:'ready', learned, r, st };
+  const last = (r.cps || [])[(r.cps || []).length - 1], skipMissed = last && last.skip && !last.pass;   // a missed skip-ahead costs nothing: learn it card by card
+  if (learned >= u.cards.length || (st === 'strong' && !skipMissed) || (last && !skipMissed)) return { key:'ready', learned, r, st };
   return { key:learned ? 'learning' : 'todo', learned, r, st };
 }
 /* closed units first (in the order they closed), then the rest by need: most-tested and weakest first */
@@ -41,7 +46,25 @@ function planOrder(now = Date.now()){
   const open = units.filter(u => u.state.key !== 'closed').sort((a, b) => a.rank - b.rank);
   return [...closed, ...open];
 }
-const planCurrent = (now = Date.now()) => planOrder(now).find(u => u.state.key !== 'closed') || null;
+/* a unit placement called Strong that hasn't been checked yet: one checkpoint can close it early ("skip ahead") */
+const planTestOut = u => !!u && u.state.key === 'ready' && u.state.st === 'strong' && !(u.state.r.cps || []).length && u.state.learned < u.cards.length;
+/* the unit being worked on now: the first open unit that isn't waiting on a retake or only a test-out.
+   Home's banner, Today's plan, the Study Path screen and the Study tab's Up Next all use this one answer. */
+function planCurrent(now = Date.now()){
+  const open = planOrder(now).filter(u => u.state.key !== 'closed');
+  return open.find(u => u.state.key !== 'wait' && !planTestOut(u)) || open.find(u => u.state.key !== 'wait') || open[0] || null;
+}
+/* the unit to learn new cards from, and its next new cards (a unit waiting on a checkpoint or a retake has none to teach) */
+const planFresh = u => u.cards.filter(id => !planLearned(id) && (typeof canStudyCard !== 'function' || canStudyCard(id)));
+function planLearnUnit(now = Date.now()){
+  const cur = planCurrent(now), open = planOrder(now).filter(u => u.state.key === 'learning' || u.state.key === 'todo');
+  return [cur, ...open].find(u => u && (u.state.key === 'learning' || u.state.key === 'todo') && planFresh(u).length) || null;
+}
+function planNextCards(n = 1, now = Date.now()){
+  if (!planActive()) return [];
+  const u = planLearnUnit(now);
+  return u ? planFresh(u).slice(0, n) : [];
+}
 
 /* ---------- checkpoints ---------- */
 function pickCheckpoint(unitId, n = CP_N, rand = Math.random){
@@ -58,11 +81,12 @@ function pickCheckpoint(unitId, n = CP_N, rand = Math.random){
   }
   return out;
 }
-const cpNeed = total => Math.ceil(total * CP_PASS);
+const cpNeed = total => total < 5 ? Math.max(1, total - 1) : Math.ceil(total * CP_PASS);   // a short checkpoint (a 1-card unit) allows one miss, not zero
 
 /* score it, feed recall and the miss log, and change the plan */
 function finishCheckpoint(cp, now = Date.now()){
-  const r = planUnitRec(cp.unit);
+  const r = planUnitRec(cp.unit), unit = pathUnits().find(u => u.id === cp.unit);
+  const skip = !!unit && !(r.cps || []).length && unit.cards.filter(planLearned).length < unit.cards.length;   // placement said Strong, but not every card has been studied yet
   let right = 0; const missed = [];
   cp.items.forEach((it, i) => {
     const ok = cp.answers[i] === it.a; if (ok) right++; else missed.push(it.cardId);
@@ -70,14 +94,15 @@ function finishCheckpoint(cp, now = Date.now()){
     if (!ok && typeof Weak === 'object' && Weak.logMiss) Weak.logMiss(it.cardId, it.q, cp.answers[i], 'checkpoint', false, now);
   });
   const total = cp.items.length, pass = right >= cpNeed(total);
-  r.cps = [...(r.cps || []), { at:now, right, total, pass }].slice(-10);
+  r.cps = [...(r.cps || []), { at:now, right, total, pass, ...(skip ? { skip:true } : {}) }].slice(-10);
   r.seen = [...new Set([...(r.seen || []), ...cp.items.map(it => it.q)])].slice(-60);
   S.path.map = S.path.map || {};
   if (pass) { r.passed = now; delete r.repair; delete r.retryAt; delete r.failAt; S.path.map[cp.unit] = 'strong'; }
+  else if (skip) S.path.map[cp.unit] = 'shaky';   // no repair, no wait: the unit is simply learned card by card
   else { r.repair = [...new Set(missed)]; r.failAt = Math.max(now, Date.now()) + 1;   /* after the answers just recorded, so only later reviews count */ r.retryAt = now + CP_RETRY_DAYS * PLAN_DAY; S.path.map[cp.unit] = 'new'; }
   if (typeof pathRankCache !== 'undefined') pathRankCache = {};
-  if (S.today) delete S.today;
-  return { right, total, pass, missed:[...new Set(missed)] };
+  planTodayChanged(now);
+  return { right, total, pass, skip, missed:[...new Set(missed)] };
 }
 /* the repair is done once every missed card has been answered again since the checkpoint */
 function planRepairDone(unitId){
@@ -117,7 +142,7 @@ function planFoldExam(now = Date.now()){
   });
   S.path.examSeen = L.result.at;
   if (typeof pathRankCache !== 'undefined') pathRankCache = {};
-  if (S.today) delete S.today;
+  planTodayChanged(now);
   return true;
 }
 
@@ -129,20 +154,38 @@ function planGoal(now = Date.now()){
   return { week, weeks, goal:Math.max(r0, goal) };
 }
 
-/* ---------- Today's plan items (today.js asks for one) ---------- */
-function planTodayItem(now = Date.now()){
-  if (!planActive()) return null;
+/* ---------- Today's plan items (today.js) ----------
+   lead: what Today opens with, in order: a due mock exam, a repair, the current unit's checkpoint, the day's new cards
+   (as many as the minutes a day fit: PATH_NEW_PER_DAY).
+   later: a "skip ahead" test-out for a unit placement called Strong, after the day's review: not in the first two days
+   (learn something first), and at most one a day. */
+const PLAN_SKIP_AFTER_DAYS = 2;
+const planNewPerDay = () => (typeof PATH_NEW_PER_DAY === 'object' && PATH_NEW_PER_DAY[(S.path || {}).minutes]) || 2;
+const planSkipToday = now => { const day = t => new Date(t).toDateString(); return planOrder(now).some(u => (u.state.r.cps || []).some(c => c.skip && day(c.at) === day(now))); };
+function planTodayItems(now = Date.now()){
+  const lead = [], later = [];
+  if (!planActive()) return { lead, later };
   planFoldExam(now);
   const m = planMockDue(now);
-  if (m) return { kind:'plan', sub:'mock', n:m.n, base:(S.examHistory || []).length };
-  const order = planOrder(now), cp = u => ({ kind:'plan', sub:'checkpoint', unit:u.id, base:(u.state.r.cps || []).length });
+  if (m) lead.push({ kind:'plan', sub:'mock', n:m.n, base:(S.examHistory || []).length });
+  const order = planOrder(now), cp = (u, skip) => ({ kind:'plan', sub:'checkpoint', unit:u.id, base:(u.state.r.cps || []).length, ...(skip ? { skip:true } : {}) });
   const fix = order.find(u => u.state.key === 'repair');
-  if (fix) return { kind:'plan', sub:'repair', unit:fix.id, ids:fix.state.r.repair.slice(0, 8) };
-  const cur = order.find(u => u.state.key !== 'closed' && u.state.key !== 'wait');
-  if (cur && cur.state.key === 'ready') return cp(cur);
-  // placement said Strong: one checkpoint confirms it and closes the unit (test out)
-  const out = order.find(u => u.state.key === 'ready' && u.state.st === 'strong' && !(u.state.r.cps || []).length);
-  return out ? cp(out) : null;
+  if (fix) lead.push({ kind:'plan', sub:'repair', unit:fix.id, ids:fix.state.r.repair.slice(0, 8) });
+  const cur = planCurrent(now), owed = order.find(u => u.state.key === 'ready' && !planTestOut(u));   // a unit with every card learned is owed its checkpoint, current or not
+  if (cur && cur.state.key === 'ready') lead.push(cp(cur, planTestOut(cur)));
+  else if (owed) lead.push(cp(owed));
+  planNextCards(planNewPerDay(), now).forEach(id => lead.push({ kind:'next', id, unit:pathUnitOf(byId(id)) }));
+  const out = now - planStart() >= PLAN_SKIP_AFTER_DAYS * PLAN_DAY && !planSkipToday(now) && order.find(u => (!cur || u.id !== cur.id) && planTestOut(u));
+  if (out) later.push(cp(out, true));
+  return { lead, later };
+}
+const planTodayItem = (now = Date.now()) => planTodayItems(now).lead.find(it => it.kind === 'plan') || null;
+/* a plan row Today already shows that still makes sense after the plan changed mid-day */
+function planItemLive(it, now = Date.now()){
+  const u = it.unit && planOrder(now).find(x => x.id === it.unit);
+  if (it.sub === 'checkpoint') return !!u && u.state.key === 'ready' && !!it.skip === planTestOut(u);
+  if (it.sub === 'repair') return !!u && u.state.key === 'repair';
+  return false;
 }
 function planItemDone(it){
   if (it.sub === 'mock') return (S.examHistory || []).length > (it.base || 0);
@@ -152,11 +195,13 @@ function planItemDone(it){
 }
 const planUnitName = id => (PATH_UNIT[id] || { name:'' }).name;
 function planItemRow(it){
+  if (it.skip) return { t:'Skip ahead: ' + planUnitName(it.unit), sub:'Placement says you know it · pass ' + cpNeed(CP_N) + ' of ' + CP_N + ' to close it early' };
   if (it.sub === 'mock') return { t:'Mock exam ' + it.n, sub:MOCK_N + ' questions · timed like the real test' };
   if (it.sub === 'repair') return { t:'Repair: ' + planUnitName(it.unit), sub:it.ids.length + ' missed card' + (it.ids.length === 1 ? '' : 's') + ' · about ' + Math.max(2, it.ids.length) + ' min' };
   return { t:'Checkpoint: ' + planUnitName(it.unit), sub:CP_N + ' questions · pass with ' + cpNeed(CP_N) };
 }
 function planItemHero(it){
+  if (it.skip) return { label:'STUDY PATH · SKIP AHEAD', title:planUnitName(it.unit), what:'Placement says you already know this unit. Get ' + cpNeed(CP_N) + ' of ' + CP_N + ' right to close it early.', cta:'TAKE THE CHECKPOINT' };
   if (it.sub === 'mock') return { label:'STUDY PATH · MOCK EXAM', title:'Mock exam ' + it.n, what:MOCK_N + ' questions from every subject, timed. The results re-rank your plan.', cta:'START THE MOCK' };
   if (it.sub === 'repair') return { label:'STUDY PATH · REPAIR', title:'Fix ' + planUnitName(it.unit), what:'Go over the ' + it.ids.length + ' card' + (it.ids.length === 1 ? '' : 's') + ' you missed in the checkpoint. Then retake it.', cta:'START REPAIR' };
   return { label:'STUDY PATH · CHECKPOINT', title:planUnitName(it.unit), what:CP_N + ' questions. Get ' + cpNeed(CP_N) + ' right to close this unit.', cta:'TAKE THE CHECKPOINT' };
@@ -184,17 +229,20 @@ function cpRender(){
   if (x.result) {
     const R = x.result, need = cpNeed(R.total), miss = x.items.map((it, i) => ({ it, i, ans:x.answers[i] })).filter(m => m.ans !== m.it.a);
     const L = (m, v) => 'ABCDEF'[m.it.c.indexOf(v)] + '. ' + esc(v);
-    const next = planCurrent();
+    const next = planCurrent(), order = planOrder(), closedN = order.filter(u => u.state.key === 'closed').length;
     const retry = new Date(planUnitRec(x.unit).retryAt || Date.now()).toLocaleDateString(undefined, { weekday:'long' });
     el.innerHTML = `<div class="spth sp-result"><span class="sp-lbl">CHECKPOINT · ${esc(name.toUpperCase())}</span>
-      <h2>${R.right} of ${R.total}. ${R.pass ? 'Unit closed!' : 'Not yet.'}</h2>
-      <div class="sp-counts"><span class="sp-stamp ${R.pass ? 'strong' : 'new'}">${R.pass ? 'Passed' : 'Need ' + need}</span></div>
+      <h2>${R.right} of ${R.total}. ${R.pass ? 'Unit closed!' : R.skip ? 'Not this time.' : 'Not yet.'}</h2>
+      <div class="sp-counts"><span class="sp-stamp ${R.pass ? 'strong' : R.skip ? 'shaky' : 'new'}">${R.pass ? 'Passed' : 'Need ' + need}</span></div>
+      ${R.pass ? `<div class="cp-closed"><b>${closedN} of ${order.length} units closed</b><div class="pl-bar" aria-hidden="true"><i style="width:${Math.round(closedN / Math.max(1, order.length) * 100)}%"></i></div></div>` : ''}
       <p class="sp-pace">${R.pass ? `This unit moves to review only.${next ? ' Next up: ' + esc(next.name) + '.' : ' Every unit is closed. Keep reviewing and take your mock exams.'}`
+        : R.skip ? `No harm done. You'll learn ${esc(name)} card by card, and its checkpoint comes at the end like any other unit.`
         : `Plan change: a repair review of the ${R.missed.length} card${R.missed.length === 1 ? '' : 's'} you missed is on Today's plan, then a retake with different questions from ${esc(retry)}.`}</p>
       ${miss.length ? `<h3 class="cp-h">What you missed</h3>${miss.map(m => `<details class="cp-q"><summary>${esc(typeof examText === 'function' ? examText(m.it) : m.it.q)}</summary>
         <p><em>Your answer:</em> ${L(m, m.ans)}</p><p class="cp-ok">Right answer: ${L(m, m.it.a)}</p>${m.it.w ? `<p class="cp-why">${esc(m.it.w)}</p>` : ''}</details>`).join('')}` : ''}
-      <button class="btn-big gold" data-act="cp-done">${R.pass ? 'BACK TO MY PATH' : 'START REPAIR NOW'}</button>
-      ${R.pass ? '' : `<button class="sp-back" data-act="cp-later">Later, as planned</button>`}</div>`;
+      <button class="btn-big gold" data-act="cp-done">${R.pass || R.skip ? 'BACK TO MY PATH' : 'START REPAIR NOW'}</button>
+      ${R.pass || R.skip ? '' : `<button class="sp-back" data-act="cp-later">Later, as planned</button>`}</div>`;
+    if (R.pass && !x.cheered) { x.cheered = true; if (typeof confetti === 'function') confetti(el); if (typeof nativeFeedback === 'function') nativeFeedback('levelup'); }
   } else {
     const i = x.at, it = x.items[i], topic = typeof examTopic === 'function' ? examTopic(it) : '';
     el.innerHTML = `<div class="spth sp-quiz"><div class="sp-qtop"><span class="sp-lbl">CHECKPOINT · ${i + 1} OF ${x.items.length}</span><button class="sp-later" data-act="cp-quit">Quit</button></div>
@@ -216,7 +264,7 @@ document.addEventListener('click', e => {
   }
   if (a === 'cp-quit') { cpClose(); return; }
   if (a === 'cp-later') { cpClose(); return; }
-  if (a === 'cp-done') { const x = cpState; cpClose(); if (x && x.result && !x.result.pass) planItemGo({ sub:'repair', unit:x.unit, ids:x.result.missed }); else if (typeof push === 'function') push('studypath'); return; }
+  if (a === 'cp-done') { const x = cpState; cpClose(); if (x && x.result && !x.result.pass && !x.result.skip) planItemGo({ sub:'repair', unit:x.unit, ids:x.result.missed }); else if (typeof push === 'function') push('studypath'); return; }
   if (a === 'pl-cp') { cpOpen(t.dataset.u); return; }
   if (a === 'pl-repair') { planItemGo({ sub:'repair', unit:t.dataset.u, ids:planUnitRec(t.dataset.u).repair || [] }); return; }
   if (a === 'pl-mock') { planItemGo({ sub:'mock', n:+t.dataset.n }); return; }
@@ -236,21 +284,22 @@ function planScreen(){
     <button class="btn-big gold" data-act="sp-retake">TAKE THE PLACEMENT CHECK</button></div>` };
   planFoldExam();
   if (S.path.r0 == null) S.path.r0 = Recall.readiness();
-  const now = Date.now(), p = S.path, order = planOrder(now), cur = order.find(u => u.state.key !== 'closed');
+  const now = Date.now(), p = S.path, order = planOrder(now), curU = planCurrent(now), cur = curU && order.find(u => u.id === curU.id);
   const days = pathDaysLeft(), pace = pathPacing(now), g = planGoal(now), rd = Recall.readiness();
   const track = (EXAM_TRACKS[examTrack()] || {}).short || 'Court Clerk';
   const closed = order.filter(u => u.state.key === 'closed').length;
+  const cardsAll = order.reduce((n, u) => n + u.cards.length, 0), cardsLearned = order.reduce((n, u) => n + u.state.learned, 0);
   const mocks = planMocks(), taken = examsSince(planStart()).length;
   const fmt = t => new Date(t).toLocaleDateString(undefined, { month:'short', day:'numeric' });
-  const nextFresh = u => u.cards.find(id => !planLearned(id));
+  const learnU = planLearnUnit(now), nextFresh = u => learnU && u.id === learnU.id ? planFresh(u)[0] : null;
   const node = u => {
     const s = u.state, cps = s.r.cps || [], lastCp = cps[cps.length - 1];
     let sub, btn = '';
     if (s.key === 'closed') sub = `Closed${lastCp ? ' · checkpoint ' + lastCp.right + '/' + lastCp.total : ''}`;
     else if (s.key === 'repair') { sub = `Missed the checkpoint · repair ${s.r.repair.length} card${s.r.repair.length === 1 ? '' : 's'}`; btn = `<button class="pl-btn" data-act="pl-repair" data-u="${u.id}">Repair</button>`; }
     else if (s.key === 'wait') sub = `Repair done · retake from ${new Date(s.r.retryAt).toLocaleDateString(undefined, { weekday:'short' })}`;
-    else if (s.key === 'ready') { sub = s.learned < u.cards.length ? `Placement says Strong · test out` : `All ${u.cards.length} cards learned`; btn = `<button class="pl-btn gold" data-act="pl-cp" data-u="${u.id}">Checkpoint</button>`; }
-    else { sub = `${s.learned} of ${u.cards.length} cards learned · rated ${PATH_STATUS[s.st]}`; const f = nextFresh(u); if (u === cur && f) btn = `<button class="pl-btn" data-act="pl-learn" data-id="${f}">Learn next</button>`; }
+    else if (s.key === 'ready') { sub = s.learned < u.cards.length ? `Placement says Strong · skip ahead` : (u.cards.length === 1 ? 'Card learned' : `All ${u.cards.length} cards learned`); btn = `<button class="pl-btn gold" data-act="pl-cp" data-u="${u.id}">Checkpoint</button>`; }
+    else { sub = `${s.learned} of ${u.cards.length} cards learned · rated ${PATH_STATUS[s.st]}`; const f = nextFresh(u); if (f) btn = `<button class="pl-btn" data-act="pl-learn" data-id="${f}">Learn next</button>`; }
     return `<li class="pl-node ${u === cur ? 'cur' : ''}"><span class="pl-dot ${PLAN_DOT[s.key] || ''}" aria-hidden="true"></span>
       <span class="pl-main"><b>${esc(u.name)}</b><small>${sub} · ${Math.max(1, Math.round(u.share * 100))}% of exam</small></span>${btn}</li>`;
   };
@@ -267,10 +316,11 @@ function planScreen(){
   const behind = pace.toLearn && !pace.ok;
   const lowest = behind ? order.filter(u => u.state.key !== 'closed').slice(-3).map(u => u.name) : [];
   return { title:'Study Path', body:`<div class="pl">
-    <div class="pl-head"><span class="sp-lbl">${esc(track.toUpperCase())} · ${days == null ? 'NO EXAM DATE YET' : days === 0 ? 'EXAM TODAY' : days + ' DAY' + (days === 1 ? '' : 'S') + ' TO GO'}</span>
+    <div class="pl-head"><span class="sp-lbl">${esc(track.toUpperCase())} · ${days == null ? '8-WEEK PLAN · ' + pace.days + ' DAY' + (pace.days === 1 ? '' : 'S') + ' LEFT' : days === 0 ? 'EXAM TODAY' : days + ' DAY' + (days === 1 ? '' : 'S') + ' TO GO'}</span>
       <b>Week ${g.week} of ${g.weeks}${cur ? ': ' + esc(cur.name) : ''}</b>
       <div class="pl-bar" aria-label="Readiness ${Math.round(rd * 100)} percent, goal ${Math.round(g.goal * 100)}"><i style="width:${Math.round(rd * 100)}%"></i><em style="left:${Math.round(g.goal * 100)}%"></em></div>
-      <small>Readiness ${Math.round(rd * 100)}% · this week's goal ${Math.round(g.goal * 100)}% · ${closed} of ${order.length} units closed</small></div>
+      <small>Readiness ${Math.round(rd * 100)}% · this week's goal ${Math.round(g.goal * 100)}%</small>
+      <small>${closed} of ${order.length} units closed · ${cardsLearned} of ${cardsAll} cards learned</small></div>
     <button class="btn-big gold" data-act="pl-today">TODAY'S SESSION</button>
     <div class="pl-pace ${behind ? 'behind' : ''}"><p>${esc(paceLine)}</p>
       ${behind ? `<p>Pick one: more minutes a day, or let the last units go: ${esc(lowest.join(', '))}. They're the least tested, so they come last anyway.</p>` : ''}
@@ -284,18 +334,55 @@ function planScreen(){
 }
 const PLAN_SCREENS = { studypath:planScreen };
 
+/* the Study tab's Up Next for Study Path players: the current unit's next new cards, the same ones Today offers */
+function planUpNextHTML(){
+  if (!planActive()) return '';
+  const u = planLearnUnit(), ids = planNextCards(5);
+  if (!u || !ids.length) return '';
+  const row = id => { const c = byId(id); return c ? `<button class="row" data-act="study" data-id="${c.id}">${typeof thumb === 'function' ? thumb(c) : ''}
+    <span class="row-main"><b>${esc(c.name)}</b><small>New card · 5 questions</small></span>${typeof chev !== 'undefined' ? chev : '›'}</button>` : ''; };
+  return `<div class="sec-h"><span>Up Next · ${esc(u.name)}</span><button class="sec-link" data-act="push" data-s="studypath" style="white-space:nowrap">See path</button></div><div class="list">${ids.map(row).join('')}</div>`;
+}
+
 /* a row on Home that opens the path */
 function planBannerHTML(){
   if (!planActive()) return '';
-  const cur = planCurrent(), d = pathDaysLeft(), g = planGoal();
-  return `<button class="pl-banner" data-act="push" data-s="studypath"><span><b>Study Path · week ${g.week} of ${g.weeks}</b>
-    <small>${cur ? esc(cur.name) : 'All units closed'}${d == null ? '' : ' · ' + d + ' day' + (d === 1 ? '' : 's') + ' to go'}</small></span>${typeof chev !== 'undefined' ? chev : '›'}</button>`;
+  const cur = planCurrent(), g = planGoal(), pace = pathPacing(), d = pace.days;
+  const where = !cur ? 'All units closed' : esc(cur.name) + ' · ' + planUnitProgress(cur);
+  const behind = pace.toLearn && !pace.ok;
+  return `<button class="pl-banner ${behind ? 'behind' : ''}" data-act="push" data-s="studypath"><span><b>Study Path · week ${g.week} of ${g.weeks}</b>
+    <small>${where} · ${d} day${d === 1 ? '' : 's'} ${pace.dated ? 'to go' : 'left in the plan'}</small>
+    ${behind ? `<small class="pl-warn">Behind pace: about ${pace.need} new cards a day needed</small>` : ''}</span>${typeof chev !== 'undefined' ? chev : '›'}</button>`;
+}
+/* one short line for a unit's progress, the same words everywhere: banner, round results */
+function planUnitProgress(u){
+  const s = u.state, n = u.cards.length;
+  if (s.key === 'closed') return 'closed';
+  if (s.key === 'repair') return 'repair due';
+  if (s.key === 'wait') return 'retake soon';
+  if (s.key === 'ready') return planTestOut(u) ? 'skip ahead ready' : 'checkpoint ready';
+  return s.learned + ' of ' + n + ' card' + (n === 1 ? '' : 's') + ' learned';
+}
+
+/* the round results for a Study Path card: its unit's progress, and how much of Today is done (index.html renderResults) */
+function planResultsHTML(id){
+  if (!planActive()) return '';
+  const uid = pathUnitOf(byId(id)), u = planOrder().find(x => x.id === uid); if (!u) return '';
+  const n = u.cards.length, k = Math.min(n, u.state.learned), key = u.state.key;
+  const line = key === 'ready' && !planTestOut(u) ? `All ${n} card${n === 1 ? '' : 's'} learned · checkpoint unlocked` : planUnitProgress(u).replace(/^./, ch => ch.toUpperCase());
+  const t = typeof todayCount === 'function' ? todayCount() : null;
+  const today = t && t.total ? (t.done >= t.total ? 'Done for today ✓' : `Today's plan · ${t.done} of ${t.total} done`) : '';
+  return `<div class="pl-res"><small>STUDY PATH · ${esc(u.name.toUpperCase())}</small><b>${esc(line)}</b>
+    <div class="pl-bar" aria-hidden="true"><i style="width:${key === 'closed' ? 100 : Math.round(k / Math.max(1, n) * 100)}%"></i></div>
+    ${today ? `<small class="${t.done >= t.total ? 'pl-ok' : ''}">${today}</small>` : ''}</div>`;
 }
 
 const PLAN_CSS = `
 #cp-root{position:fixed;inset:0;z-index:900;background:var(--bg);display:flex;overflow-y:auto}
 .cp-unit{margin:0;font:16px "Patrick Hand";color:var(--sub)}
 .cp-h{margin:6px 0 0;font:400 20px "Bangers";letter-spacing:.04em}
+.cp-closed{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:14px;background:var(--bg2);border:.5px solid var(--line);font:18px "Patrick Hand"}
+.cp-closed .pl-bar i{background:#5fd47a}
 .cp-q{padding:10px 12px;border-radius:12px;background:var(--bg2);border:.5px solid var(--line);font:17px/1.3 "Patrick Hand"}
 .cp-q summary{cursor:pointer;font:17px/1.3 "Patrick Hand";text-transform:none;letter-spacing:0}
 .cp-q p{margin:6px 0 0}.cp-ok{color:#5fd47a}.cp-why{color:var(--sub)}
@@ -337,5 +424,10 @@ const PLAN_CSS = `
 .pl-banner span{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .pl-banner b{font:400 20px/1 "Bangers";letter-spacing:.04em;color:var(--mustard)}
 .pl-banner small{font:16px/1.2 "Patrick Hand";opacity:.85}
+.pl-banner.behind{border-color:#ef7b6b}
+.pl-banner small.pl-warn{color:#ef7b6b;opacity:1}
+.pl-res{display:flex;flex-direction:column;gap:6px;margin:14px 0 4px;padding:12px 14px;border-radius:14px;border:1.5px solid var(--mustard);background:rgba(227,178,60,.08);text-align:left}
+.pl-res small{font:15px/1.2 "Patrick Hand";opacity:.85}.pl-res small.pl-ok{color:#5fd47a;opacity:1}
+.pl-res b{font:400 20px/1.1 "Bangers";letter-spacing:.04em;color:var(--mustard)}
 `;
 document.head.insertAdjacentHTML('beforeend', `<style>${PLAN_CSS}</style>`);
