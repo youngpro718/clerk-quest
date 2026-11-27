@@ -292,6 +292,7 @@ function pathAnswer(v){
     pathUnits().forEach(u => { if (!map[u.id]) map[u.id] = 'new'; });   // units with no question yet are still to learn
     feedPlacement(place);
     p.map = map; p.stage = 'done'; p.doneAt = Date.now(); pathRankCache = {};
+    if (typeof Recall === 'object' && Recall.readiness) p.r0 = Recall.readiness();   // the plan's weekly goals start here (study-plan.js)
     if (S.today) delete S.today;    // Today's plan rebuilds around the map
   }
   save(); showPath();
@@ -340,7 +341,8 @@ document.addEventListener('change', e => {
 function pathRowHTML(){
   if (!pathDone()) return `<button class="sp-row" data-act="sp-retake"><b>Take the placement check</b><small>About ${PATH_N} questions. Your study plan starts where you need it.</small></button>`;
   const units = pathUnits(), c = { strong:0, shaky:0, new:0 }; units.forEach(u => c[S.path.map[u.id] || 'new']++);
-  return `<button class="sp-row" data-act="sp-retake"><b>Retake the placement check</b><small>Last result: ${c.strong} Strong · ${c.shaky} Shaky · ${c.new} New</small></button>`;
+  return `<button class="sp-row" data-act="push" data-s="studypath"><b>Open my Study Path</b><small>Your units, checkpoints, mock exams and pace</small></button>
+    <button class="sp-row" data-act="sp-retake"><b>Retake the placement check</b><small>Last result: ${c.strong} Strong · ${c.shaky} Shaky · ${c.new} New</small></button>`;
 }
 
 const PATH_CSS = `

@@ -1727,11 +1727,12 @@ html.cq-reduce-motion .cq-brand-start .cq-brand-mark{animation:none}
 <script src="pattern-lessons.js?v=bd455b9f"></script>
 <script src="pattern-lessons-ui.js?v=3ace01b8"></script>
 <script src="exam-scope.js?v=f0ee6d62"></script>
-<script src="today.js?v=185b1361"></script>
+<script src="today.js?v=856e150a"></script>
 <script src="exam.js?v=58922473"></script>
 <script src="exam-questions.js?v=37d27577"></script>
 <script src="plain-test.js?v=467c1051"></script>
-<script src="study-path.js?v=1a3d1103"></script>
+<script src="study-path.js?v=9b0ad461"></script>
+<script src="study-plan.js?v=5b9e8a0e"></script>
 <script src="pack3d.js?v=175b3691"></script>
 <script src="pack3d-model.js?v=1860b3a0"></script>
 <script src="packfield.js?v=b72b00a2"></script>
@@ -3997,6 +3998,7 @@ const SCREENS = {
       title:'Becoming a Clerk', navTitle:'BECOMING <span>A CLERK</span>', homebar:true, hideLarge:true, titleOnScroll:true,
       right:`<button class="nb-avatar" data-act="tab" data-tab="profile" aria-label="Profile, level ${playerLevel()}">${ring((S.stats.xp % 250) / 250, 'L' + playerLevel(), 40)}</button>`,
       body:`
+        ${typeof planBannerHTML === 'function' ? planBannerHTML() : ''}
         ${typeof todayHTML === 'function' ? todayHTML() : ''}
         ${typeof rewardsStripHTML === 'function' ? rewardsStripHTML() : ''}
         ${typeof cloudUser === 'function' && !cloudUser() ? `<button class="home-save-top" data-act="cloud-signin" data-tab="signin"><span><b>Save your progress</b><small>Free account · keep your cards on every device</small></span><span class="hs-go">Sign in ${chev}</span></button>` : ''}
@@ -4280,7 +4282,7 @@ function renderTabbar(){
 const nav = { tab:'home', stacks:{} };
 TABS.forEach(([id]) => nav.stacks[id] = [{s:id, p:{}}]);
 const topEntry = () => { const st = nav.stacks[nav.tab]; return st[st.length - 1]; };
-Object.assign(SCREENS, STUDY_SCREENS, STORE_SCREENS, BINDER_SCREENS, ACCOUNT_SCREENS, ADMIN_SCREENS, STICKER_SCREENS, DOCKET_SCREENS, typeof EXAM_SCREENS === 'object' ? EXAM_SCREENS : {}, typeof EXAM_TRACK_SCREENS === 'object' ? EXAM_TRACK_SCREENS : {});
+Object.assign(SCREENS, STUDY_SCREENS, STORE_SCREENS, BINDER_SCREENS, ACCOUNT_SCREENS, ADMIN_SCREENS, STICKER_SCREENS, DOCKET_SCREENS, typeof EXAM_SCREENS === 'object' ? EXAM_SCREENS : {}, typeof EXAM_TRACK_SCREENS === 'object' ? EXAM_TRACK_SCREENS : {}, typeof PLAN_SCREENS === 'object' ? PLAN_SCREENS : {});
 function currentScreenEl(){ return document.querySelector('#screens .screen.current'); }
 function saveScroll(){ const el = currentScreenEl(); if (el && el._entry) el._entry.scroll = el.querySelector('.scr').scrollTop; }
 function buildScreen(entry, depth = nav.stacks[nav.tab].length - 1){

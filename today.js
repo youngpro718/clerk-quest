@@ -56,12 +56,14 @@ function buildTodayItems(now = Date.now()){
   const items = [], o = onb();
   const gs = !o.finished && !o.hidden && STEPS.find(s => !s.test());
   if (gs) items.push({ kind:'gs', id:gs.id });
+  const plan = typeof planTodayItem === 'function' ? planTodayItem(now) : null;   // Study Path: a checkpoint, repair or mock exam (study-plan.js)
+  if (plan) items.push(plan);
   const pile = reviewPile(now);
   if (pile.length) items.push({ kind:'review', id:pile[0], ids:pile.slice(0, REVIEW_MAX) });
   const next = nextCard();
   if (next) items.push({ kind:'next', id:next });
   else if (S.packs > 0) items.push({ kind:'pack', base:S.packsOpened || 0 });
-  if (examDue(now)) items.push({ kind:'exam', base:(S.examHistory || []).length });
+  if (examDue(now) && !(typeof planActive === 'function' && planActive())) items.push({ kind:'exam', base:(S.examHistory || []).length });
   const d = liveDocket();
   if (d) items.push({ kind:'docket', id:d.id, base:docketProgress(d.id) });
   if (!gs) {
@@ -86,6 +88,7 @@ function itemDone(it){
     case 'pack': return (S.packsOpened || 0) > (it.base || 0);
     case 'docket': return docketProgress(it.id) > (it.base || 0);
     case 'quest': { const q = DAILY_QUESTS.find(x => x.id === it.id); return !q || questState(q, 'daily').done; }
+    case 'plan': return typeof planItemDone === 'function' ? planItemDone(it) : true;
     case 'exam': return (S.examHistory || []).length > (it.base || 0) || (Array.isArray(S.examHistory) && S.examHistory[0] && onToday(S.examHistory[0].at));
   }
   return true;
@@ -101,6 +104,7 @@ function todayRow(it){
     case 'next': { const k = CARD_VIDEOS[it.id], v = k && LESSON_VIDEOS[k];
       return v ? { t:'Watch, then practice: ' + c.name, sub:'Video ' + v.len + ' · then 5 questions' } : { t:'Next: ' + c.name, sub:'New card · 5 questions' }; }
     case 'pack': return { t:'Open a pack for new cards', sub:'New cards to study' };
+    case 'plan': return planItemRow(it);
     case 'exam': return { t:'Weekly practice exam', sub:EXAM_TODAY_N + ' questions · about ' + Math.round(EXAM_TODAY_N * 1.2) + ' min · misses come back in review' };
     case 'docket': { const d = HOT_DOCKETS.find(x => x.id === it.id), n = d ? daysLeft(d) : 0;
       return { t:'Hot Docket: ' + (d ? d.title : ''), sub:n + ' day' + (n === 1 ? '' : 's') + ' left · finish one page' }; }
@@ -142,6 +146,8 @@ function todayHeroText(it, done, total){
     art = `<img src="${artSrc('docket_folder')}" alt="">`; name = '';
   } else if (it.kind === 'gs') {
     label = 'GETTING STARTED'; title = r.t; what = '+' + ONB.stepCoins + ' coins for this step.'; cta = 'START';
+  } else if (it.kind === 'plan') {
+    ({ label, title, what, cta } = planItemHero(it));
   } else if (it.kind === 'exam') {
     label = 'WEEKLY CHECK-UP'; title = 'Practice exam'; what = EXAM_TODAY_N + ' questions from every subject, timed like the real test. What you miss comes back in your review.'; cta = 'START THE EXAM';
   } else if (it.kind === 'pack') {
@@ -171,7 +177,7 @@ function todayTile(it, i, just){
   const art = c ? thumb(c)
     : it.kind === 'docket' ? `<span class="th td-art"><img src="${artSrc('docket_folder')}" alt=""></span>`
     : it.kind === 'pack' ? `<span class="th td-art"><img src="${nextPackArt()}" alt=""></span>`
-    : `<span class="th emo gi">${ICO(it.kind === 'quest' ? 'trophy' : it.kind === 'exam' ? 'page' : 'check')}</span>`;
+    : `<span class="th emo gi">${ICO(it.kind === 'quest' ? 'trophy' : it.kind === 'exam' || it.kind === 'plan' ? 'page' : 'check')}</span>`;
   return `<button class="${['td-tile', d && 'done', just && 'just'].filter(Boolean).join(' ')}" data-act="today-go" data-i="${i}" ${d ? 'disabled' : ''}>${art}
     <span class="td-main"><b><span>${esc(r.t)}</span></b><small>${esc(r.sub)}</small></span><span class="td-tick">${d ? ICO('check') : ''}</span></button>`;
 }
@@ -225,6 +231,7 @@ function todayGo(it){
     case 'next': { const k = CARD_VIDEOS[it.id]; if (k && LESSON_VIDEOS[k]) openLessonVideo(k, 'intro', it.id); else studyCard(it.id); return; }
     case 'pack': if (S.packs) openPack(); else push('packs'); return;
     case 'docket': push('docket', { id:it.id }); return;
+    case 'plan': planItemGo(it); return;
     case 'exam': examOpen(); return;   // the start page: the player picks 25, 50 or 90
     case 'quest': { const card = todayPlan().items.find(x => (x.kind === 'review' || x.kind === 'next') && !itemDone(x));
       if (card) todayGo(card); else switchTab('study'); return; }
