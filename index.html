@@ -4020,7 +4020,7 @@ const SCREENS = {
         ${typeof docketPracticeHTML === 'function' ? docketPracticeHTML() : ''}
         ${cold.length ? `<div class="sec-h"><span>${ICO('thermo_snow')} Cold Cases</span></div><div class="list">${cold.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('')}</div>` : ''}
         ${almost.length ? `<div class="sec-h"><span>${ICO('almost')} Almost Leveled Up</span></div><div class="carousel">${almost.map(c => miniCard(c)).join('')}</div>` : ''}
-        <div class="sec-h"><span>Up Next</span></div><div class="list">${upNext.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('') || `<p class="empty">Every card you own is mastered or cold. ${ICO('celebrate')}</p>`}</div>
+        ${typeof planUpNextHTML === 'function' && planUpNextHTML() || `<div class="sec-h"><span>Up Next</span></div><div class="list">${upNext.map(c => cardRow(c, `data-act="study" data-id="${c.id}"`)).join('') || `<p class="empty">Every card you own is mastered or cold. ${ICO('celebrate')}</p>`}</div>`}
         <div class="sec-h"><span>By Subject</span></div><div class="list">${subjects().map(s => groupRow(s.g, s.label, 'subject', 'studyset')).join('')}</div>`;
     } else if (tab === 'read') {
       body += readTabHTML(p);
@@ -5275,6 +5275,7 @@ function renderResults(){
       <div class="sub">correct answers</div>
       ${Weak.backOnTrack(sess) ? `<div class="sub">Back on track ✓</div>` : ''}
       <div class="rchips"><span class="chip">+${sess.xp} XP</span>${resultsHeadlineChip(st, leveled)}</div>
+      ${typeof planResultsHTML === 'function' ? planResultsHTML(c.id) : ''}
       ${weakReportHTML(Weak.since(sess.startedAt))}
       <div class="rcard">${cardEl(c, st)}</div>
       <div class="panel">
